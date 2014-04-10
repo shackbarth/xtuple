@@ -1,0 +1,962 @@
+<!DOCTYPE openRPTDef>
+<report>
+ <title>Inventory Availability by Source Vendor</title>
+ <name>InventoryAvailabilityBySourceVendor</name>
+ <description></description>
+ <grid>
+  <snap/>
+  <show/>
+  <x>0.05</x>
+  <y>0.05</y>
+ </grid>
+ <size>Letter</size>
+ <portrait/>
+ <topmargin>50</topmargin>
+ <bottommargin>50</bottommargin>
+ <rightmargin>50</rightmargin>
+ <leftmargin>50</leftmargin>
+ <querysource>
+  <name>head</name>
+  <sql>SELECT &lt;? if exists("byDays") ?>
+         (text('Look ahead ') || text(&lt;? value("byDays") ?>) || text(' days'))
+       &lt;? elseif exists("byDate") ?>
+         (text('Cutoff date ') || formatDate(&lt;? value("byDate") ?>))
+       &lt;? elseif exists("byDates") ?>
+         (text('Dates from ') || formatDate(&lt;? value("startDate") ?>) || text(' to ') || formatDate(&lt;? value("endDate") ?>))
+       &lt;? else ?>
+         text('Item Site Lead Time')
+       &lt;? endif ?>
+       AS ltcriteria</sql>
+ </querysource>
+ <querysource>
+  <name>detail</name>
+  <sql>SELECT item_number,
+       item_descrip1,
+       item_descrip2,
+       warehous_code,
+       vend_number,
+       itemsite_leadtime,
+       formatQty(qtyonhand) AS f_qtyonhand,
+       formatQty(noNeg(qtyonhand - allocated)) AS f_unallocated,
+       formatQty(noNeg(allocated)) AS f_allocated,
+       formatQty(ordered) AS f_ordered,
+       formatQty(reorderlevel) AS f_reorderlevel,
+       formatQty(outlevel) AS f_outlevel,
+       (qtyonhand - allocated + ordered) AS available,
+       formatQty(qtyonhand - allocated + ordered) AS f_available
+  FROM (SELECT 
+           &lt;? if reExists("[vV]end") ?>
+             DISTINCT
+           &lt;? endif ?>
+             itemsite_id,
+             CASE WHEN (item_type IN ('P', 'O')) THEN 1
+                  WHEN (item_type IN ('M')) THEN 2
+                  ELSE 0
+             END AS altId,
+             item_number, item_descrip1, item_descrip2, item_inv_uom_id,
+             warehous_id, warehous_code, itemsite_leadtime,
+             itemsite_qtyonhand AS qtyonhand,
+             CASE WHEN itemsite_useparams THEN itemsite_reorderlevel
+                  ELSE 0.0
+             END AS reorderlevel,
+             CASE WHEN itemsite_useparams THEN itemsite_ordertoqty
+                  ELSE 0.0
+             END AS outlevel,
+             &lt;? if exists("byVend") ?>
+               vend_number,
+             &lt;? else ?>
+               NULL AS vend_number,
+             &lt;? endif ?>
+             &lt;? if exists("byLeadTime") ?>
+               qtyAllocated(itemsite_id, itemsite_leadtime) AS allocated,
+               qtyOrdered(itemsite_id,   itemsite_leadtime) AS ordered, 
+               qtypr(itemsite_id,   itemsite_leadtime) AS requests
+             &lt;? elseif exists("byDays") ?>
+               qtyAllocated(itemsite_id, CAST(&lt;? value("byDays") ?> AS INTEGER)) AS allocated,
+               qtyOrdered(itemsite_id,   CAST(&lt;? value("byDays") ?> AS INTEGER)) AS ordered,
+               qtypr(itemsite_id,   CAST(&lt;? value("byDays") ?> AS INTEGER)) AS requests  
+             &lt;? elseif exists("byDate") ?>
+               qtyAllocated(itemsite_id, (&lt;? value("byDate") ?> - CURRENT_DATE)) AS allocated,
+               qtyOrdered(itemsite_id,   (&lt;? value("byDate") ?> - CURRENT_DATE)) AS ordered,
+               qtypr(itemsite_id,   (&lt;? value("byDate") ?> - CURRENT_DATE)) AS requests 
+             &lt;? elseif exists("byDates") ?>
+               qtyAllocated(itemsite_id, &lt;? value("startDate") ?>, &lt;? value("endDate") ?>) AS allocated,
+               qtyOrdered(itemsite_id,   &lt;? value("startDate") ?>, &lt;? value("endDate") ?>) AS ordered,
+               qtypr(itemsite_id,   &lt;? value("startDate") ?>, &lt;? value("endDate") ?>) AS requests
+             &lt;? endif ?>
+      FROM item, itemsite, whsinfo
+           &lt;? if reExists("[vV]end") ?>
+             , vendinfo JOIN itemsrc ON (itemsrc_vend_id=vend_id)
+           &lt;? endif ?>
+      WHERE ( (itemsite_active)
+          AND (itemsite_item_id=item_id)
+          AND (itemsite_warehous_id=warehous_id)
+          &lt;? if exists("warehous_id") ?>
+            AND (warehous_id=&lt;? value("warehous_id") ?>)
+          &lt;? endif ?>
+          &lt;? if exists("item_id") ?>
+            AND (item_id=&lt;? value("item_id") ?>)
+          &lt;? elseif exists("classcode_id") ?>
+            AND (item_classcode_id=&lt;? value("classcode_id") ?>)
+          &lt;? elseif exists("classcode_pattern") ?>
+            AND (item_classcode_id IN (SELECT classcode_id
+                                       FROM classcode
+                                       WHERE (classcode_code ~ &lt;? value("classcode_pattern") ?>)))
+          &lt;? elseif exists("plancode_id") ?>
+            AND (itemsite_plancode_id=&lt;? value("plancode_id") ?>)
+          &lt;? elseif exists("plancode_pattern") ?>
+            AND (itemsite_plancode_id IN (SELECT plancode_id
+                                          FROM plancode
+                                          WHERE (plancode_code ~ &lt;? value("plancode_pattern") ?>)))
+          &lt;? elseif exists("itemgrp_id") ?>
+            AND (item_id IN (SELECT itemgrpitem_item_id
+                             FROM itemgrpitem
+                             WHERE (itemgrpitem_itemgrp_id=&lt;? value("itemgrp_id") ?>)))
+          &lt;? elseif exists("itemgrp_pattern") ?>
+            AND (item_id IN (SELECT itemgrpitem_item_id
+                             FROM itemgrpitem, itemgrp
+                             WHERE ( (itemgrpitem_itemgrp_id=itemgrp_id)
+                                    AND (itemgrp_name ~ &lt;? value("itemgrp_pattern") ?>) ) ))
+          &lt;? elseif exists("itemgrp") ?>
+            AND (item_id IN (SELECT DISTINCT itemgrpitem_item_id FROM itemgrpitem))
+          &lt;? endif ?>
+          &lt;? if reExists("[vV]end") ?>
+            AND (itemsrc_item_id=item_id)
+          &lt;? endif ?>
+          &lt;? if exists("vend_id") ?>
+            AND (vend_id=&lt;? value("vend_id") ?>)
+          &lt;? elseif exists("vendtype_id") ?>
+            AND (vend_vendtype_id=&lt;? value("vendtype_id") ?>)
+          &lt;? elseif exists("vendtype_pattern") ?>
+            AND (vend_vendtype_id IN (SELECT vendtype_id
+                                      FROM vendtype
+                                      WHERE (vendtype_code ~ &lt;? value("vendtype_pattern") ?>)))
+          &lt;? endif ?>
+      ) ) AS data
+&lt;? if exists("showReorder") ?>
+ WHERE ( ((qtyonhand - allocated + ordered) &lt;= reorderlevel)
+  &lt;? if exists("ignoreReorderAtZero") ?>
+   AND (NOT ( ((qtyonhand - allocated + ordered) = 0) AND (reorderlevel = 0)))
+  &lt;? endif ?>
+  )
+&lt;? elseif exists("showShortages") ?>
+ WHERE ((qtyonhand - allocated + ordered) &lt; 0)
+&lt;? endif ?>
+ORDER BY vend_number, item_number, warehous_code DESC;</sql>
+ </querysource>
+ <rpthead>
+  <height>221</height>
+  <label>
+   <rect>
+    <x>330</x>
+    <y>185</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>QOH</string>
+  </label>
+  <label>
+   <rect>
+    <x>5</x>
+    <y>185</y>
+    <width>45</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Site</string>
+  </label>
+  <label>
+   <rect>
+    <x>434</x>
+    <y>185</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Allocated</string>
+  </label>
+  <label>
+   <rect>
+    <x>540</x>
+    <y>185</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>On Order</string>
+  </label>
+  <line>
+   <xstart>5</xstart>
+   <ystart>215</ystart>
+   <xend>745</xend>
+   <yend>215</yend>
+   <weight>2</weight>
+  </line>
+  <label>
+   <rect>
+    <x>645</x>
+    <y>185</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Available</string>
+  </label>
+  <label>
+   <rect>
+    <x>195</x>
+    <y>10</y>
+    <width>530</width>
+    <height>38</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>18</size>
+    <weight>bold</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Inventory Availability by Source Vendor</string>
+  </label>
+  <field>
+   <rect>
+    <x>135</x>
+    <y>43</y>
+    <width>280</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>ltcriteria</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>5</x>
+    <y>200</y>
+    <width>45</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>LT</string>
+  </label>
+  <label>
+   <rect>
+    <x>645</x>
+    <y>200</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>OUT Level</string>
+  </label>
+  <label>
+   <rect>
+    <x>434</x>
+    <y>200</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Unallocated</string>
+  </label>
+  <label>
+   <rect>
+    <x>540</x>
+    <y>200</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Reorder Level</string>
+  </label>
+  <label>
+   <rect>
+    <x>55</x>
+    <y>185</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Vendor #</string>
+  </label>
+  <label>
+   <rect>
+    <x>160</x>
+    <y>185</y>
+    <width>106</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Item Number</string>
+  </label>
+  <label>
+   <rect>
+    <x>0</x>
+    <y>43</y>
+    <width>130</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Availability as of: </string>
+  </label>
+  <label>
+   <rect>
+    <x>160</x>
+    <y>200</y>
+    <width>106</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Description</string>
+  </label>
+  <text>
+   <rect>
+    <x>10</x>
+    <y>63</y>
+    <width>725</width>
+    <height>15</height>
+   </rect>
+   <bottompad>12</bottompad>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <top/>
+   <data>
+    <query>Parameter Query</query>
+    <column>filter</column>
+   </data>
+  </text>
+ </rpthead>
+ <pghead>
+  <firstpage/>
+  <height>6</height>
+ </pghead>
+ <pghead>
+  <height>36</height>
+  <label>
+   <rect>
+    <x>540</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>On Order</string>
+  </label>
+  <label>
+   <rect>
+    <x>160</x>
+    <y>0</y>
+    <width>106</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Item Number</string>
+  </label>
+  <label>
+   <rect>
+    <x>5</x>
+    <y>15</y>
+    <width>45</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>LT</string>
+  </label>
+  <label>
+   <rect>
+    <x>330</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>QOH</string>
+  </label>
+  <label>
+   <rect>
+    <x>645</x>
+    <y>15</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>OUT Level</string>
+  </label>
+  <label>
+   <rect>
+    <x>434</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Allocated</string>
+  </label>
+  <label>
+   <rect>
+    <x>434</x>
+    <y>15</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Unallocated</string>
+  </label>
+  <label>
+   <rect>
+    <x>540</x>
+    <y>15</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Reorder Level</string>
+  </label>
+  <line>
+   <xstart>5</xstart>
+   <ystart>30</ystart>
+   <xend>745</xend>
+   <yend>30</yend>
+   <weight>2</weight>
+  </line>
+  <label>
+   <rect>
+    <x>5</x>
+    <y>0</y>
+    <width>45</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Site</string>
+  </label>
+  <label>
+   <rect>
+    <x>160</x>
+    <y>15</y>
+    <width>106</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Description</string>
+  </label>
+  <label>
+   <rect>
+    <x>55</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Vendor #</string>
+  </label>
+  <label>
+   <rect>
+    <x>645</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Available</string>
+  </label>
+ </pghead>
+ <section>
+  <name>detail</name>
+  <detail>
+   <key>
+    <query>detail</query>
+   </key>
+   <height>56</height>
+   <field>
+    <rect>
+     <x>645</x>
+     <y>0</y>
+     <width>100</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_available</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>330</x>
+     <y>0</y>
+     <width>100</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_qtyonhand</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>160</x>
+     <y>0</y>
+     <width>150</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>item_number</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>55</x>
+     <y>0</y>
+     <width>100</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>vend_number</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>540</x>
+     <y>15</y>
+     <width>100</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_reorderlevel</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>645</x>
+     <y>15</y>
+     <width>100</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_outlevel</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>5</x>
+     <y>15</y>
+     <width>45</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <hcenter/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>itemsite_leadtime</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>434</x>
+     <y>0</y>
+     <width>100</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_allocated</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>540</x>
+     <y>0</y>
+     <width>100</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_ordered</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>160</x>
+     <y>15</y>
+     <width>250</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>item_descrip1</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>160</x>
+     <y>30</y>
+     <width>250</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>item_descrip2</column>
+    </data>
+   </field>
+   <line>
+    <xstart>5</xstart>
+    <ystart>50</ystart>
+    <xend>745</xend>
+    <yend>50</yend>
+    <weight>0</weight>
+   </line>
+   <field>
+    <rect>
+     <x>434</x>
+     <y>15</y>
+     <width>100</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_unallocated</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>5</x>
+     <y>0</y>
+     <width>45</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <hcenter/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>warehous_code</column>
+    </data>
+   </field>
+  </detail>
+ </section>
+ <pgfoot>
+  <height>16</height>
+  <field>
+   <rect>
+    <x>705</x>
+    <y>0</y>
+    <width>40</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>Context Query</query>
+    <column>page_number</column>
+   </data>
+  </field>
+  <field>
+   <rect>
+    <x>85</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>Context Query</query>
+    <column>report_date</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>5</x>
+    <y>0</y>
+    <width>75</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Report Date:</string>
+  </label>
+  <label>
+   <rect>
+    <x>625</x>
+    <y>0</y>
+    <width>75</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Page:</string>
+  </label>
+ </pgfoot>
+</report>

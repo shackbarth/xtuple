@@ -1,0 +1,939 @@
+<!DOCTYPE openRPTDef>
+<report>
+ <title>Count Tag Edit List</title>
+ <name>CountTagEditList</name>
+ <description></description>
+ <size>Letter</size>
+ <portrait/>
+ <topmargin>50</topmargin>
+ <bottommargin>50</bottommargin>
+ <rightmargin>50</rightmargin>
+ <leftmargin>50</leftmargin>
+ <querysource>
+  <name>head</name>
+  <sql>SELECT &lt;? if exists("warehous_id") ?>
+         ( SELECT warehous_code
+                   FROM whsinfo
+                   WHERE (warehous_id=&lt;? value("warehous_id") ?>) )
+       &lt;? else ?>
+         text('All Sites')
+       &lt;? endif ?>
+       AS warehouse,
+       &lt;? if exists("classcode_id") ?>
+         ( SELECT (classcode_code ||'-'||classcode_descrip)
+             FROM classcode
+            WHERE (classcode_id=&lt;? value("classcode_id") ?>) ) AS code,
+	  text('Class Code:') AS codelbl
+       &lt;? elseif exists("classcode_pattern") ?>
+         text(&lt;? value("classcode_pattern") ?>) AS code,
+         text('Class Code:') AS codelbl
+       &lt;? elseif exists("plancode_id") ?>
+         ( SELECT (plancode_code ||'-'|| plancode_name)
+             FROM plancode
+            WHERE (plancode_id=&lt;? value("plancode_id") ?>) ) AS code,
+	  text('Planner Code:') AS codelbl
+       &lt;? elseif exists("plancode_pattern") ?>
+         text(&lt;? value("plancode_pattern") ?>) AS code,
+         text('Planner Code:') AS codelbl
+       &lt;? else ?>
+         text('') AS code,
+         text('') AS codelbl
+       &lt;? endif ?>
+       </sql>
+ </querysource>
+ <querysource>
+  <name>detail</name>
+  <sql>SELECT formatBoolYN(invcnt_priority) AS f_priority,
+       CASE WHEN (invcnt_tagnumber IS NULL) THEN 'Misc.'
+            ELSE invcnt_tagnumber
+       END AS f_tagnumber, 
+       formatDate(invcnt_tagdate) AS f_tagdate,
+       item_number,
+       item_descrip1,
+       item_descrip2,
+       warehous_code,
+       CASE WHEN (invcnt_location_id IS NOT NULL)
+                 THEN (SELECT formatQty(SUM(itemloc_qty))
+                         FROM itemloc
+                        WHERE ((itemloc_itemsite_id=itemsite_id)
+                          AND  (itemloc_location_id=invcnt_location_id)) )
+            ELSE formatQty(itemsite_qtyonhand)
+       END AS f_qoh,
+       CASE WHEN (location_id IS NOT NULL)
+                 THEN location_name
+            ELSE 'All' END AS location_name,
+       CASE WHEN (invcnt_qoh_after IS NULL) THEN ''
+            ELSE formatQty(invcnt_qoh_after)
+       END AS f_cntqty,
+       CASE WHEN (invcnt_qoh_after IS NULL) THEN ''
+            ELSE formatQty(invcnt_qoh_after - itemsite_qtyonhand)
+       END AS f_variance,
+       CASE WHEN (invcnt_qoh_after IS NULL) THEN ''
+            WHEN ((itemsite_qtyonhand = 0) AND (invcnt_qoh_after > 0)) THEN formatPrcnt(1)
+            WHEN ((itemsite_qtyonhand = 0) AND (invcnt_qoh_after &lt; 0)) THEN formatPrcnt(-1)
+            WHEN ((itemsite_qtyonhand = 0) AND (invcnt_qoh_after = 0)) THEN formatPrcnt(0)
+            ELSE formatPrcnt((1 - (invcnt_qoh_after / itemsite_qtyonhand)) * -1)
+       END AS f_percent,
+       formatExtPrice(stdcost(item_id) * (invcnt_qoh_after - itemsite_qtyonhand)) AS f_amount
+  FROM invcnt LEFT OUTER JOIN location ON (invcnt_location_id=location_id),
+       item, whsinfo, itemsite
+ WHERE ((invcnt_itemsite_id=itemsite_id)
+   AND (itemsite_item_id=item_id)
+   AND (itemsite_warehous_id=warehous_id)
+   AND (NOT invcnt_posted)
+&lt;? if exists("warehous_id") ?>
+   AND (itemsite_warehous_id=&lt;? value("warehous_id") ?>)
+&lt;? endif ?>
+&lt;? if exists("classcode_id") ?>
+   AND (item_classcode_id=&lt;? value("classcode_id") ?>)
+&lt;? elseif exists("classcode_pattern") ?>
+   AND (item_classcode_id IN ( SELECT classcode_id
+                                 FROM classcode
+                                WHERE (classcode_code ~ &lt;? value("classcode_pattern") ?>)))
+&lt;? elseif exists("plancode_id") ?>
+   AND (itemsite_plancode_id=&lt;? value("plancode_id") ?>)
+&lt;? elseif exists("plancode_pattern") ?>
+   AND (itemsite_plancode_id IN ( SELECT plancode_id
+                                 FROM plancode
+                                WHERE (plancode_code ~ &lt;? value("plancode_pattern") ?>)))
+&lt;? endif ?>
+)
+ORDER BY f_priority DESC, item_number
+&lt;? if exists("maxTags") ?>
+    LIMIT &lt;? value("maxTags") ?>
+&lt;? endif ?></sql>
+ </querysource>
+ <rpthead>
+  <height>205</height>
+  <label>
+   <rect>
+    <x>5</x>
+    <y>185</y>
+    <width>45</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Priority</string>
+  </label>
+  <label>
+   <rect>
+    <x>375</x>
+    <y>10</y>
+    <width>350</width>
+    <height>38</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>18</size>
+    <weight>bold</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Count Tag Edit List</string>
+  </label>
+  <label>
+   <rect>
+    <x>295</x>
+    <y>185</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Tag Date</string>
+  </label>
+  <line>
+   <xstart>5</xstart>
+   <ystart>200</ystart>
+   <xend>745</xend>
+   <yend>200</yend>
+   <weight>2</weight>
+  </line>
+  <label>
+   <rect>
+    <x>10</x>
+    <y>170</y>
+    <width>35</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Site</string>
+  </label>
+  <field>
+   <rect>
+    <x>100</x>
+    <y>100</y>
+    <width>330</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>warehouse</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>60</x>
+    <y>170</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Item Number</string>
+  </label>
+  <label>
+   <rect>
+    <x>580</x>
+    <y>170</y>
+    <width>75</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Variance</string>
+  </label>
+  <label>
+   <rect>
+    <x>408</x>
+    <y>170</y>
+    <width>75</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>QOH</string>
+  </label>
+  <label>
+   <rect>
+    <x>60</x>
+    <y>185</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Description</string>
+  </label>
+  <label>
+   <rect>
+    <x>580</x>
+    <y>185</y>
+    <width>75</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>%</string>
+  </label>
+  <label>
+   <rect>
+    <x>15</x>
+    <y>100</y>
+    <width>80</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Site:</string>
+  </label>
+  <field>
+   <rect>
+    <x>100</x>
+    <y>80</y>
+    <width>330</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>code</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>494</x>
+    <y>170</y>
+    <width>75</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Count Qty</string>
+  </label>
+  <field>
+   <rect>
+    <x>0</x>
+    <y>80</y>
+    <width>95</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>codelbl</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>295</x>
+    <y>170</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Tag #</string>
+  </label>
+  <label>
+   <rect>
+    <x>408</x>
+    <y>185</y>
+    <width>75</width>
+    <height>12</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Location</string>
+  </label>
+  <label>
+   <rect>
+    <x>665</x>
+    <y>170</y>
+    <width>75</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Amount</string>
+  </label>
+ </rpthead>
+ <pghead>
+  <firstpage/>
+  <height>8</height>
+ </pghead>
+ <pghead>
+  <height>38</height>
+  <label>
+   <rect>
+    <x>300</x>
+    <y>15</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Tag Date</string>
+  </label>
+  <label>
+   <rect>
+    <x>10</x>
+    <y>0</y>
+    <width>35</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Site</string>
+  </label>
+  <label>
+   <rect>
+    <x>494</x>
+    <y>0</y>
+    <width>75</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Count Qty</string>
+  </label>
+  <label>
+   <rect>
+    <x>580</x>
+    <y>15</y>
+    <width>75</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>%</string>
+  </label>
+  <label>
+   <rect>
+    <x>408</x>
+    <y>15</y>
+    <width>75</width>
+    <height>12</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Location</string>
+  </label>
+  <label>
+   <rect>
+    <x>300</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Tag #</string>
+  </label>
+  <label>
+   <rect>
+    <x>60</x>
+    <y>15</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Description</string>
+  </label>
+  <label>
+   <rect>
+    <x>408</x>
+    <y>0</y>
+    <width>75</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>QOH</string>
+  </label>
+  <label>
+   <rect>
+    <x>665</x>
+    <y>0</y>
+    <width>75</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>$</string>
+  </label>
+  <line>
+   <xstart>5</xstart>
+   <ystart>30</ystart>
+   <xend>745</xend>
+   <yend>30</yend>
+   <weight>2</weight>
+  </line>
+  <label>
+   <rect>
+    <x>60</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Item Number</string>
+  </label>
+  <label>
+   <rect>
+    <x>5</x>
+    <y>15</y>
+    <width>45</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Priority</string>
+  </label>
+  <label>
+   <rect>
+    <x>580</x>
+    <y>0</y>
+    <width>75</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Variance</string>
+  </label>
+ </pghead>
+ <section>
+  <name>detail</name>
+  <detail>
+   <key>
+    <query>detail</query>
+   </key>
+   <height>55</height>
+   <field>
+    <rect>
+     <x>580</x>
+     <y>0</y>
+     <width>75</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_variance</column>
+    </data>
+   </field>
+   <line>
+    <xstart>5</xstart>
+    <ystart>45</ystart>
+    <xend>745</xend>
+    <yend>45</yend>
+    <weight>0</weight>
+   </line>
+   <field>
+    <rect>
+     <x>295</x>
+     <y>15</y>
+     <width>104</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_tagdate</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>408</x>
+     <y>15</y>
+     <width>75</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>normal</weight>
+    </font>
+    <hcenter/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>location_name</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>580</x>
+     <y>15</y>
+     <width>75</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_percent</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>494</x>
+     <y>0</y>
+     <width>75</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_cntqty</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>60</x>
+     <y>0</y>
+     <width>225</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>item_number</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>665</x>
+     <y>0</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_amount</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>295</x>
+     <y>0</y>
+     <width>104</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_tagnumber</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>408</x>
+     <y>0</y>
+     <width>75</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_qoh</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>10</x>
+     <y>0</y>
+     <width>35</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <hcenter/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>warehous_code</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>10</x>
+     <y>15</y>
+     <width>35</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <hcenter/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_priority</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>60</x>
+     <y>15</y>
+     <width>225</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>item_descrip1</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>60</x>
+     <y>30</y>
+     <width>225</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>item_descrip2</column>
+    </data>
+   </field>
+  </detail>
+ </section>
+ <pgfoot>
+  <height>21</height>
+  <field>
+   <rect>
+    <x>90</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>Context Query</query>
+    <column>report_date</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>615</x>
+    <y>0</y>
+    <width>85</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Page:</string>
+  </label>
+  <field>
+   <rect>
+    <x>705</x>
+    <y>0</y>
+    <width>40</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>Context Query</query>
+    <column>page_number</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>85</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Report Date:</string>
+  </label>
+ </pgfoot>
+</report>

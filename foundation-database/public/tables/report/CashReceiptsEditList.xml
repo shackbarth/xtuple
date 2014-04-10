@@ -1,0 +1,646 @@
+<!DOCTYPE openRPTDef>
+<report>
+ <title>Cash Receipt Edit List</title>
+ <name>CashReceiptsEditList</name>
+ <description></description>
+ <grid>
+  <snap/>
+  <show/>
+  <x>0.05</x>
+  <y>0.05</y>
+ </grid>
+ <size>Letter</size>
+ <portrait/>
+ <topmargin>50</topmargin>
+ <bottommargin>50</bottommargin>
+ <rightmargin>50</rightmargin>
+ <leftmargin>50</leftmargin>
+ <querysource>
+  <name>detail</name>
+  <sql>SELECT cashrcpt_id, 1 AS orderBy,
+       cust_number, cust_name,
+       formatDate(cashrcpt_distdate) AS f_distdate,
+       CASE WHEN (cashrcpt_fundstype = 'C') THEN &lt;? value("check") ?>
+            WHEN (cashrcpt_fundstype = 'T') THEN &lt;? value("certifiedCheck") ?>
+            WHEN (cashrcpt_fundstype = 'M') THEN &lt;? value("masterCard") ?>
+            WHEN (cashrcpt_fundstype = 'V') THEN &lt;? value("visa") ?>
+            WHEN (cashrcpt_fundstype = 'A') THEN &lt;? value("americanExpress") ?>
+            WHEN (cashrcpt_fundstype = 'D') THEN &lt;? value("discoverCard") ?>
+            WHEN (cashrcpt_fundstype = 'R') THEN &lt;? value("otherCreditCard") ?>
+            WHEN (cashrcpt_fundstype = 'K') THEN &lt;? value("cash") ?>
+            WHEN (cashrcpt_fundstype = 'W') THEN &lt;? value("wireTransfer") ?>
+            ELSE &lt;? value("other") ?>
+       END AS f_fundstype,
+       'C/R' AS doctype,
+       cashrcpt_docnumber AS docnumber,
+       cashrcpt_amount AS amount,
+       formatMoney(cashrcpt_amount) AS f_amount,
+       0 AS detailedamount,
+       formatMoney(0) AS f_detailedamount,
+       bankaccnt_name
+FROM cashrcpt, bankaccnt, custinfo
+WHERE ( (cashrcpt_bankaccnt_id=bankaccnt_id)
+  AND   (cashrcpt_cust_id=cust_id)
+  AND   (NOT cashrcpt_posted)
+  AND   (NOT cashrcpt_void) )
+
+UNION
+SELECT cashrcpt_id, 2 AS orderBy,
+       '' AS cust_number, '' AS cust_name,
+       '' AS f_distdate,
+       '' AS f_fundstype,
+       aropen_doctype AS doctype,
+       aropen_docnumber AS docnumber,
+       0 AS amount,
+       formatMoney(0) AS f_amount,
+       cashrcptitem_amount AS detailedamount,
+       formatMoney(cashrcptitem_amount) AS f_detailedamount,
+       '' AS bankaccnt_name
+FROM cashrcptitem, cashrcpt, aropen
+WHERE ( (cashrcptitem_cashrcpt_id=cashrcpt_id)
+  AND   (cashrcptitem_aropen_id=aropen_id)
+  AND   (NOT cashrcpt_posted)
+  AND   (NOT cashrcpt_void) )
+
+UNION
+SELECT cashrcpt_id, 3 AS orderBy,
+       '' AS cust_number, '' AS cust_name,
+       '' AS f_distdate,
+       '' AS f_fundstype,
+       'Misc.' AS doctype,
+       (formatGLAccount(accnt_id) || '-' || accnt_descrip) AS docnumber,
+       0 AS amount,
+       formatMoney(0) AS f_amount,
+       cashrcptmisc_amount AS detailedamount,
+       formatMoney(cashrcptmisc_amount) AS f_detailedamount,
+       '' AS bankaccnt_name
+FROM cashrcptmisc, cashrcpt, accnt
+WHERE ( (cashrcptmisc_cashrcpt_id=cashrcpt_id)
+  AND   (cashrcptmisc_accnt_id=accnt_id)
+  AND   (NOT cashrcpt_posted)
+  AND   (NOT cashrcpt_void) )
+
+ORDER BY cashrcpt_id, orderBy;
+
+</sql>
+ </querysource>
+ <rpthead>
+  <height>145</height>
+  <label>
+   <rect>
+    <x>80</x>
+    <y>100</y>
+    <width>125</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Customer</string>
+  </label>
+  <label>
+   <rect>
+    <x>525</x>
+    <y>113</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Amount Applied</string>
+  </label>
+  <label>
+   <rect>
+    <x>525</x>
+    <y>100</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Amount</string>
+  </label>
+  <label>
+   <rect>
+    <x>85</x>
+    <y>113</y>
+    <width>155</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Document/Account Number</string>
+  </label>
+  <label>
+   <rect>
+    <x>5</x>
+    <y>113</y>
+    <width>75</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Doc. Type</string>
+  </label>
+  <label>
+   <rect>
+    <x>315</x>
+    <y>100</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Payment Type</string>
+  </label>
+  <label>
+   <rect>
+    <x>10</x>
+    <y>100</y>
+    <width>60</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Cust #</string>
+  </label>
+  <label>
+   <rect>
+    <x>265</x>
+    <y>5</y>
+    <width>465</width>
+    <height>38</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>18</size>
+    <weight>bold</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Cash Receipts Edit List</string>
+  </label>
+  <line>
+   <xstart>5</xstart>
+   <ystart>130</ystart>
+   <xend>745</xend>
+   <yend>130</yend>
+   <weight>2</weight>
+  </line>
+  <label>
+   <rect>
+    <x>229</x>
+    <y>100</y>
+    <width>60</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Dist. Date</string>
+  </label>
+  <label>
+   <rect>
+    <x>415</x>
+    <y>100</y>
+    <width>70</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Reference #</string>
+  </label>
+  <label>
+   <rect>
+    <x>610</x>
+    <y>100</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Bank Account</string>
+  </label>
+ </rpthead>
+ <section>
+  <name>detail</name>
+  <group>
+   <name>detail</name>
+   <column>cashrcpt_id</column>
+   <head>
+    <height>18</height>
+    <field>
+     <rect>
+      <x>540</x>
+      <y>0</y>
+      <width>60</width>
+      <height>15</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>bold</weight>
+     </font>
+     <right/>
+     <vcenter/>
+     <data>
+      <query>detail</query>
+      <column>f_amount</column>
+     </data>
+    </field>
+    <field>
+     <rect>
+      <x>85</x>
+      <y>0</y>
+      <width>130</width>
+      <height>15</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>bold</weight>
+     </font>
+     <hcenter/>
+     <vcenter/>
+     <data>
+      <query>detail</query>
+      <column>cust_name</column>
+     </data>
+    </field>
+    <field>
+     <rect>
+      <x>615</x>
+      <y>0</y>
+      <width>125</width>
+      <height>15</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>bold</weight>
+     </font>
+     <left/>
+     <vcenter/>
+     <data>
+      <query>detail</query>
+      <column>bankaccnt_name</column>
+     </data>
+    </field>
+    <field>
+     <rect>
+      <x>10</x>
+      <y>0</y>
+      <width>60</width>
+      <height>15</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>bold</weight>
+     </font>
+     <hcenter/>
+     <vcenter/>
+     <data>
+      <query>detail</query>
+      <column>cust_number</column>
+     </data>
+    </field>
+    <field>
+     <rect>
+      <x>315</x>
+      <y>0</y>
+      <width>80</width>
+      <height>15</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>bold</weight>
+     </font>
+     <hcenter/>
+     <vcenter/>
+     <data>
+      <query>detail</query>
+      <column>f_fundstype</column>
+     </data>
+    </field>
+    <field>
+     <rect>
+      <x>409</x>
+      <y>0</y>
+      <width>110</width>
+      <height>15</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>bold</weight>
+     </font>
+     <right/>
+     <vcenter/>
+     <data>
+      <query>detail</query>
+      <column>docnumber</column>
+     </data>
+    </field>
+    <field>
+     <rect>
+      <x>229</x>
+      <y>0</y>
+      <width>60</width>
+      <height>15</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>bold</weight>
+     </font>
+     <left/>
+     <vcenter/>
+     <data>
+      <query>detail</query>
+      <column>f_distdate</column>
+     </data>
+    </field>
+   </head>
+   <foot>
+    <height>41</height>
+    <field>
+     <rect>
+      <x>670</x>
+      <y>5</y>
+      <width>75</width>
+      <height>15</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>bold</weight>
+     </font>
+     <right/>
+     <vcenter/>
+     <data>
+      <query>detail</query>
+      <column>detailedamount</column>
+     </data>
+     <format builtin="true">extprice</format>
+     <tracktotal subtotal="true"/>
+    </field>
+    <line>
+     <xstart>5</xstart>
+     <ystart>25</ystart>
+     <xend>740</xend>
+     <yend>25</yend>
+     <weight>2</weight>
+    </line>
+    <label>
+     <rect>
+      <x>585</x>
+      <y>5</y>
+      <width>80</width>
+      <height>15</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>normal</weight>
+     </font>
+     <right/>
+     <vcenter/>
+     <string>Applications:</string>
+    </label>
+   </foot>
+  </group>
+  <detail>
+   <key>
+    <query>detail</query>
+   </key>
+   <height>18</height>
+   <field>
+    <rect>
+     <x>85</x>
+     <y>0</y>
+     <width>315</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>docnumber</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>15</x>
+     <y>0</y>
+     <width>50</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <hcenter/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>doctype</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>540</x>
+     <y>0</y>
+     <width>60</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_detailedamount</column>
+    </data>
+   </field>
+  </detail>
+ </section>
+ <pgfoot>
+  <height>28</height>
+  <field>
+   <rect>
+    <x>90</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>Context Query</query>
+    <column>report_date</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>615</x>
+    <y>0</y>
+    <width>85</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Page:</string>
+  </label>
+  <field>
+   <rect>
+    <x>705</x>
+    <y>0</y>
+    <width>40</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>Context Query</query>
+    <column>page_number</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>85</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Report Date:</string>
+  </label>
+ </pgfoot>
+ <rptfoot>
+  <height>43</height>
+  <field>
+   <rect>
+    <x>670</x>
+    <y>5</y>
+    <width>75</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <data>
+    <query>detail</query>
+    <column>amount</column>
+   </data>
+   <format builtin="true">extprice</format>
+   <tracktotal/>
+  </field>
+  <label>
+   <rect>
+    <x>585</x>
+    <y>5</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Total Receipts:</string>
+  </label>
+  <line>
+   <xstart>7</xstart>
+   <ystart>28</ystart>
+   <xend>742</xend>
+   <yend>28</yend>
+   <weight>2</weight>
+  </line>
+ </rptfoot>
+</report>

@@ -1,0 +1,2165 @@
+<!DOCTYPE openRPTDef>
+<report>
+ <title>Invoice</title>
+ <name>Invoice</name>
+ <description>With Logo - With Invoice Currency</description>
+ <parameter default="97" active="true" listtype="dynamic" type="string" name="invchead_id">
+  <description></description>
+  <query>SELECT invchead_id, invchead_invcnumber FROM invchead ORDER BY invchead_invcnumber;</query>
+ </parameter>
+ <watermark>
+  <data>
+   <query>Parameter Query</query>
+   <column>watermark</column>
+  </data>
+  <opacity>25</opacity>
+ </watermark>
+ <grid>
+  <snap/>
+  <show/>
+  <x>0.05</x>
+  <y>0.05</y>
+ </grid>
+ <size>Letter</size>
+ <portrait/>
+ <topmargin>50</topmargin>
+ <bottommargin>50</bottommargin>
+ <rightmargin>50</rightmargin>
+ <leftmargin>50</leftmargin>
+ <querysource>
+  <name>GroupHead</name>
+  <sql>SELECT 
+
+--Due Date
+formatDate(determineDueDate(invchead_terms_id, invchead_invcdate)) AS due_date,
+--Discount Date
+formatDate(determineDiscountDate(invchead_terms_id, invchead_invcdate)) AS dis_date,
+
+      --remitto.*,
+remitto_name,
+formatAddr(remitto_address1, remitto_address2, remitto_address3, remitto_citystatezip, remitto_country) AS remitto_adr,
+      invchead_invcnumber AS invoicenumber,
+      formatDate(invchead_invcdate) AS f_invoicedate,
+      cust_number,
+      invchead_billto_name,
+      formatAddr(invchead_billto_address1, invchead_billto_address2, invchead_billto_address3, ( invchead_billto_city || '  ' || invchead_billto_state || '  ' || invchead_billto_zipcode ), invchead_billto_country) AS f_billtoaddress,
+      invchead_billto_phone,
+      invchead_shipto_name,
+      formatAddr(invchead_shipto_address1, invchead_shipto_address2, invchead_shipto_address3, ( invchead_shipto_city || '  ' || invchead_shipto_state || ' ' || invchead_shipto_zipcode ), invchead_shipto_country) AS f_shiptoaddress,
+      invchead_ordernumber AS ordernumber,
+      invchead_ponumber,
+      formatDate(invchead_orderdate) AS f_orderdate,
+      formatDate(invchead_shipdate) AS f_shipdate,
+      invchead_fob, terms_descrip, invchead_shipvia
+FROM remitto, custinfo, invchead, terms
+WHERE ( (invchead_cust_id=cust_id)
+AND (invchead_terms_id=terms_id)
+AND (invchead_id=&lt;? value("invchead_id") ?>) )
+ORDER BY ordernumber;</sql>
+ </querysource>
+ <querysource>
+  <name>Detail</name>
+  <sql>SELECT invcitem_linenumber,
+      formatQty(invcitem_billed) AS f_billed,
+      (select uom_name from uom where uom_id = invcitem_qty_uom_id) AS invuom,
+      CASE WHEN (item_number IS NULL) THEN invcitem_number
+           WHEN (invcitem_custpn != '') THEN invcitem_custpn
+           else item_number
+      END AS number,
+      CASE WHEN (item_number IS NULL) THEN invcitem_descrip
+           WHEN (invcitem_custpn != '' AND itemalias_usedescrip=TRUE) THEN itemalias_descrip1
+           ELSE item_descrip1
+      END AS descrip1,
+      CASE WHEN (invcitem_custpn != '' AND itemalias_usedescrip=TRUE) THEN itemalias_descrip2
+           ELSE item_descrip2
+      END AS descrip2,
+      CASE WHEN (&lt;? value("showcosts") ?>=FALSE) THEN '---'
+           ELSE formatPrice(invcitem_qty_invuomratio * invcitem_price / COALESCE(invcitem_price_invuomratio,1))
+      END AS f_unitprice,
+      CASE WHEN (&lt;? value("showcosts") ?>=FALSE) THEN '---'
+           ELSE formatMoney(round((invcitem_billed * invcitem_qty_invuomratio) * (invcitem_price / COALESCE(invcitem_price_invuomratio,1)),2)) 
+      END AS f_extprice,
+      invcitem_notes,
+      getInvcitemLotSerial(invcitem_id) AS lotserial,
+--Sub-select updated for 3.1 to support kitting
+      characteristicsToString('SI',invcitem_coitem_id, '=', ', ') 
+      AS coitem_characteristics
+FROM invcitem LEFT OUTER JOIN (item JOIN uom ON (item_inv_uom_id=uom_id)) ON (invcitem_item_id=item_id) LEFT OUTER JOIN itemalias ON (itemalias_item_id=item_id AND itemalias_number=invcitem_custpn)
+WHERE (invcitem_invchead_id=&lt;? value("invchead_id") ?>)
+ORDER BY invcitem_linenumber;</sql>
+ </querysource>
+ <querysource>
+  <name>foot</name>
+  <sql>SELECT formatMoney(SUM(round((invcitem_billed * invcitem_qty_invuomratio) * (invcitem_price / COALESCE(invcitem_price_invuomratio,1)),2))) AS f_extprice&#xd;
+FROM invcitem LEFT OUTER JOIN item on (invcitem_item_id=item_id)&#xd;
+WHERE (invcitem_invchead_id=&lt;? value("invchead_id") ?>);</sql>
+ </querysource>
+ <querysource>
+  <name>GroupExtended</name>
+  <sql>SELECT *,
+       formatMoney(invchead_misc_amount) AS f_misc,
+       formatMoney(tax)                  AS f_tax,
+       formatMoney(invchead_freight)     AS f_freight,
+       formatMoney(invchead_payment)     AS f_payment,
+       formatMoney(noNeg(invchead_freight + invchead_misc_amount + tax +
+                         itemtotal - total_allocated)) AS f_totaldue,
+       formatMoney(noNeg(invchead_freight + invchead_misc_amount + tax +
+                         itemtotal - total_allocated)) AS f_netdue,
+       formatMoney(total_allocated) AS f_allocated
+ FROM (SELECT invchead_misc_amount, invchead_freight,
+              invchead_payment, invchead_notes, invchead_misc_descrip,
+              (SELECT COALESCE(SUM(tax),0) 
+                FROM (
+                SELECT ROUND(SUM(taxdetail_tax),2) AS tax 
+                FROM tax 
+                 JOIN calculateTaxDetailSummary('I', &lt;? value("invchead_id") ?>, 'T') ON (taxdetail_tax_id=tax_id)
+	   GROUP BY tax_id) AS data) AS tax,
+              SUM(COALESCE(ROUND(invcitem_billed *
+                                 invcitem_qty_invuomratio *
+                                 invcitem_price /
+                                 COALESCE(invcitem_price_invuomratio,1), 2), 0))
+              AS itemtotal,
+              COALESCE(
+              CASE WHEN invchead_posted THEN
+                 (SELECT SUM(COALESCE(currToCurr(arapply_curr_id, t.aropen_curr_id,
+                                                 arapply_applied, t.aropen_docdate), 0))
+                  FROM arapply, aropen s, aropen t
+                  WHERE ( (s.aropen_id=arapply_source_aropen_id)
+                    AND   (arapply_target_aropen_id=t.aropen_id)
+                    AND   (arapply_target_doctype='I')
+                    AND   (arapply_target_docnumber=invchead_invcnumber)
+                    AND   (arapply_reftype='S')
+                    AND   (arapply_source_aropen_id=s.aropen_id)))
+              ELSE
+                 (SELECT SUM(COALESCE(CASE WHEN((aropen_amount - aropen_paid) >=
+                                                currToCurr(aropenalloc_curr_id, aropen_curr_id,
+                                                           aropenalloc_amount, aropen_docdate))
+                                           THEN currToCurr(aropenalloc_curr_id, invchead_curr_id,
+                                                           aropenalloc_amount, aropen_docdate)
+                                           ELSE currToCurr(aropen_curr_id, invchead_curr_id,
+                                                           aropen_amount - aropen_paid,
+                                                           aropen_docdate)
+                                      END, 0))
+                   FROM aropenalloc, aropen
+                        LEFT OUTER JOIN cohead ON (cohead_number=invchead_ordernumber)
+                  WHERE ( (aropenalloc_aropen_id=aropen_id)
+                    AND   ((aropenalloc_doctype='S' AND aropenalloc_doc_id=cohead_id) OR
+                           (aropenalloc_doctype='I' AND aropenalloc_doc_id=invchead_id))
+                    AND   ((aropen_amount - aropen_paid) > 0)))
+              END, 0) AS total_allocated
+       FROM invchead
+            LEFT OUTER JOIN invcitem ON (invcitem_invchead_id=invchead_id)
+       WHERE (invchead_id=&lt;? value("invchead_id") ?>)
+       GROUP BY invchead_freight, invchead_misc_amount, tax,
+                invchead_payment, invchead_notes, invchead_misc_descrip,
+                total_allocated
+ ) AS dummy_outer
+ ;</sql>
+ </querysource>
+ <querysource>
+  <name>allocatedCMs</name>
+  <sql>SELECT cohead_id,
+      aropen_docnumber,
+      formatMoney(aropen_amount) AS f_total,
+      formatMoney(aropen_paid) AS f_paid,
+      formatMoney(aropen_amount - aropen_paid) AS f_balance,
+      CASE WHEN((aropen_amount - aropen_paid) >= currToCurr(aropenalloc_curr_id,
+							     aropen_curr_id,
+							     aropenalloc_amount,
+							     aropen_docdate))
+	    THEN currToCurr(aropenalloc_curr_id, aropen_curr_id,
+			    aropenalloc_amount, aropen_docdate)
+           ELSE (aropen_amount - aropen_paid)
+      END AS allocated,
+      CASE WHEN((aropen_amount - aropen_paid) >= currToCurr(aropenalloc_curr_id,
+							     aropen_curr_id,
+							     aropenalloc_amount,
+							     aropen_docdate))
+	    THEN formatMoney(currToCurr(aropenalloc_curr_id, aropen_curr_id,
+					aropenalloc_amount, aropen_docdate))
+           ELSE formatMoney(aropen_amount - aropen_paid)
+      END AS f_allocated,
+      CASE WHEN((aropen_amount - aropen_paid) >= currToCurr(aropenalloc_curr_id,
+							     aropen_curr_id,
+							     aropenalloc_amount,
+							     aropen_docdate))
+	    THEN currToCurr(aropenalloc_curr_id, invchead_curr_id,
+			    aropenalloc_amount, aropen_docdate)
+           ELSE currToCurr(aropen_curr_id, invchead_curr_id,
+                           aropen_amount - aropen_paid, aropen_docdate)
+      END AS allocated_invccurr,
+      CASE WHEN((aropen_amount - aropen_paid) >= currToCurr(aropenalloc_curr_id,
+							     aropen_curr_id,
+							     aropenalloc_amount,
+							     aropen_docdate))
+	    THEN formatMoney(currToCurr(aropenalloc_curr_id, invchead_curr_id,
+					aropenalloc_amount, aropen_docdate))
+           ELSE formatMoney(currToCurr(aropen_curr_id, invchead_curr_id,
+                                       aropen_amount - aropen_paid,
+                                       aropen_docdate))
+      END AS f_allocated_invccurr,
+      curr_symbol AS aropen_currsymbol
+ FROM invchead LEFT OUTER JOIN cohead ON (cohead_number=invchead_ordernumber)
+               JOIN aropenalloc ON ((aropenalloc_doctype='S' AND aropenalloc_doc_id=cohead_id) OR
+                                    (aropenalloc_doctype='I' AND aropenalloc_doc_id=invchead_id))
+               JOIN aropen ON (aropenalloc_aropen_id=aropen_id)
+               JOIN curr_symbol ON (aropen_curr_id=curr_id)
+WHERE  ((aropen_amount - aropen_paid) > 0)
+  AND   (NOT invchead_posted)
+  AND   (invchead_id=&lt;? value("invchead_id") ?>)
+UNION
+SELECT cohead_id,
+      arapply_source_docnumber AS aropen_docnumber,
+      formatMoney(s.aropen_amount) AS f_total,
+      formatMoney(s.aropen_paid -
+                  currToCurr(arapply_curr_id, s.aropen_curr_id,
+                             arapply_applied, arapply_postdate)) AS f_paid,
+      formatMoney(s.aropen_amount - s.aropen_paid +
+                  currToCurr(arapply_curr_id, s.aropen_curr_id,
+                             arapply_applied, arapply_postdate)) AS f_balance,
+      currToCurr(arapply_curr_id, s.aropen_curr_id,
+                 arapply_applied, arapply_postdate) AS allocated,
+      formatMoney(currToCurr(arapply_curr_id, s.aropen_curr_id,
+                             arapply_applied,
+                             arapply_postdate)) AS f_allocated,
+      currToCurr(arapply_curr_id, invchead_curr_id,
+                 arapply_applied, t.aropen_docdate) AS allocated_invccurr,
+      formatMoney(currToCurr(arapply_curr_id, invchead_curr_id,
+                             arapply_applied,
+                             t.aropen_docdate)) AS f_allocated_invccurr,
+      curr_symbol AS aropen_currsymbol
+ FROM arapply, aropen s, aropen t, cohead, invchead, curr_symbol
+WHERE ( (s.aropen_id=arapply_source_aropen_id)
+  AND   (arapply_target_aropen_id=t.aropen_id)
+  AND   (arapply_target_doctype='I')
+  AND   (arapply_target_docnumber=invchead_invcnumber)
+  AND   (arapply_source_aropen_id=s.aropen_id)
+  AND   (arapply_curr_id=curr_id)
+  AND   (arapply_reftype='S')
+  AND   (cohead_number=invchead_ordernumber)
+  AND   (invchead_posted)
+  AND   (invchead_id=&lt;? value("invchead_id") ?>) )
+ORDER BY aropen_docnumber;</sql>
+ </querysource>
+ <querysource>
+  <name>currency</name>
+  <sql>SELECT currConcat(curr_id) AS currConcat, curr_symbol
+FROM invchead, curr_symbol
+WHERE (invchead_id = &lt;? value("invchead_id") ?>)
+ AND  (invchead_curr_id = curr_id);</sql>
+ </querysource>
+ <querysource>
+  <name>logo</name>
+  <sql>SELECT image_data &#xd;
+FROM image &#xd;
+WHERE ((image_name='logo'));</sql>
+ </querysource>
+ <querysource>
+  <name>tracknum</name>
+  <sql>select formatdate(shiphead_shipdate) AS f_shipdate, shiphead_tracknum, shiphead_shipvia from cohead, shiphead, invchead &#xd;
+where &#xd;
+cohead_id = shiphead_order_id&#xd;
+and shiphead_order_type = 'SO'&#xd;
+and cohead_number = invchead_ordernumber&#xd;
+and invchead_id = &lt;? value("invchead_id") ?>&#xd;
+order by shiphead_shipdate;</sql>
+ </querysource>
+ <pghead>
+  <firstpage/>
+  <height>360</height>
+  <image>
+   <rect>
+    <x>215</x>
+    <y>5</y>
+    <width>270</width>
+    <height>111</height>
+   </rect>
+   <mode>stretch</mode>
+   <data>
+    <query>logo</query>
+    <column>image_data</column>
+   </data>
+  </image>
+  <label>
+   <rect>
+    <x>500</x>
+    <y>5</y>
+    <width>247</width>
+    <height>40</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>20</size>
+    <weight>bold</weight>
+   </font>
+   <right/>
+   <top/>
+   <string>Invoice</string>
+  </label>
+  <text>
+   <rect>
+    <x>430</x>
+    <y>220</y>
+    <width>300</width>
+    <height>20</height>
+   </rect>
+   <bottompad>0</bottompad>
+   <font>
+    <face>Arial</face>
+    <size>12</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>GroupHead</query>
+    <column>f_shiptoaddress</column>
+   </data>
+  </text>
+  <label>
+   <rect>
+    <x>5</x>
+    <y>200</y>
+    <width>80</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Bill To:</string>
+  </label>
+  <field>
+   <rect>
+    <x>129</x>
+    <y>140</y>
+    <width>111</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <data>
+    <query>GroupHead</query>
+    <column>invoicenumber</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>495</x>
+    <y>115</y>
+    <width>80</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>F.O.B.</string>
+  </label>
+  <field>
+   <rect>
+    <x>430</x>
+    <y>200</y>
+    <width>300</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Luciduxsans</face>
+    <size>12</size>
+    <weight>48</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>GroupHead</query>
+    <column>invchead_shipto_name</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>5</x>
+    <y>125</y>
+    <width>80</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Order #</string>
+  </label>
+  <field>
+   <rect>
+    <x>55</x>
+    <y>200</y>
+    <width>270</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Luciduxsans</face>
+    <size>12</size>
+    <weight>48</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>GroupHead</query>
+    <column>invchead_billto_name</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>5</x>
+    <y>155</y>
+    <width>120</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>P.O. Number</string>
+  </label>
+  <field>
+   <rect>
+    <x>5</x>
+    <y>5</y>
+    <width>200</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>GroupHead</query>
+    <column>remitto_name</column>
+   </data>
+  </field>
+  <field>
+   <rect>
+    <x>140</x>
+    <y>125</y>
+    <width>100</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <data>
+    <query>GroupHead</query>
+    <column>ordernumber</column>
+   </data>
+  </field>
+  <field>
+   <rect>
+    <x>120</x>
+    <y>155</y>
+    <width>120</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <data>
+    <query>GroupHead</query>
+    <column>invchead_ponumber</column>
+   </data>
+  </field>
+  <field>
+   <rect>
+    <x>650</x>
+    <y>100</y>
+    <width>95</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <data>
+    <query>GroupHead</query>
+    <column>f_orderdate</column>
+   </data>
+  </field>
+  <field>
+   <rect>
+    <x>95</x>
+    <y>170</y>
+    <width>145</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <data>
+    <query>GroupHead</query>
+    <column>cust_number</column>
+   </data>
+  </field>
+  <text>
+   <rect>
+    <x>5</x>
+    <y>25</y>
+    <width>203</width>
+    <height>16</height>
+   </rect>
+   <bottompad>10</bottompad>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <top/>
+   <data>
+    <query>GroupHead</query>
+    <column>remitto_adr</column>
+   </data>
+  </text>
+  <text>
+   <rect>
+    <x>55</x>
+    <y>220</y>
+    <width>300</width>
+    <height>20</height>
+   </rect>
+   <bottompad>0</bottompad>
+   <font>
+    <face>Arial</face>
+    <size>12</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>GroupHead</query>
+    <column>f_billtoaddress</column>
+   </data>
+  </text>
+  <label>
+   <rect>
+    <x>350</x>
+    <y>200</y>
+    <width>80</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Ship To:</string>
+  </label>
+  <label>
+   <rect>
+    <x>495</x>
+    <y>100</y>
+    <width>70</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Order Date</string>
+  </label>
+  <label>
+   <rect>
+    <x>5</x>
+    <y>170</y>
+    <width>110</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Customer #:</string>
+  </label>
+  <line>
+   <xstart>5</xstart>
+   <ystart>350</ystart>
+   <xend>745</xend>
+   <yend>350</yend>
+   <weight>2</weight>
+  </line>
+  <field>
+   <rect>
+    <x>555</x>
+    <y>115</y>
+    <width>190</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <data>
+    <query>GroupHead</query>
+    <column>invchead_fob</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>5</x>
+    <y>140</y>
+    <width>85</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Invoice #:</string>
+  </label>
+  <field>
+   <rect>
+    <x>620</x>
+    <y>40</y>
+    <width>125</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <data>
+    <query>GroupHead</query>
+    <column>f_invoicedate</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>495</x>
+    <y>40</y>
+    <width>121</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Invoice Date:</string>
+  </label>
+  <label>
+   <rect>
+    <x>495</x>
+    <y>55</y>
+    <width>121</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Due Date:</string>
+  </label>
+  <field>
+   <rect>
+    <x>620</x>
+    <y>55</y>
+    <width>125</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <data>
+    <query>GroupHead</query>
+    <column>due_date</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>495</x>
+    <y>70</y>
+    <width>121</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Discount Date:</string>
+  </label>
+  <field>
+   <rect>
+    <x>615</x>
+    <y>70</y>
+    <width>130</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <data>
+    <query>GroupHead</query>
+    <column>dis_date</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>495</x>
+    <y>85</y>
+    <width>65</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Terms:</string>
+  </label>
+  <field>
+   <rect>
+    <x>545</x>
+    <y>85</y>
+    <width>200</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <data>
+    <query>GroupHead</query>
+    <column>terms_descrip</column>
+   </data>
+  </field>
+ </pghead>
+ <section>
+  <name>tracknumber</name>
+  <group>
+   <name>tracknum</name>
+   <column>shiphead_shipdate</column>
+   <head>
+    <height>41</height>
+    <line>
+     <xstart>40</xstart>
+     <ystart>35</ystart>
+     <xend>745</xend>
+     <yend>35</yend>
+     <weight>0</weight>
+    </line>
+    <label>
+     <rect>
+      <x>390</x>
+      <y>15</y>
+      <width>70</width>
+      <height>20</height>
+     </rect>
+     <font>
+      <face>Sans Serif</face>
+      <size>10</size>
+      <weight>normal</weight>
+     </font>
+     <left/>
+     <vcenter/>
+     <string>Tracking #</string>
+    </label>
+    <label>
+     <rect>
+      <x>40</x>
+      <y>0</y>
+      <width>240</width>
+      <height>20</height>
+     </rect>
+     <font>
+      <face>Sans Serif</face>
+      <size>10</size>
+      <weight>bold</weight>
+     </font>
+     <left/>
+     <vcenter/>
+     <string>Shipment Details</string>
+    </label>
+    <label>
+     <rect>
+      <x>40</x>
+      <y>15</y>
+      <width>70</width>
+      <height>20</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>10</size>
+      <weight>normal</weight>
+     </font>
+     <left/>
+     <vcenter/>
+     <string>Ship Date</string>
+    </label>
+    <label>
+     <rect>
+      <x>160</x>
+      <y>15</y>
+      <width>120</width>
+      <height>20</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>10</size>
+      <weight>normal</weight>
+     </font>
+     <left/>
+     <vcenter/>
+     <string>Carrier</string>
+    </label>
+   </head>
+   <foot>
+    <height>12</height>
+    <line>
+     <xstart>40</xstart>
+     <ystart>5</ystart>
+     <xend>745</xend>
+     <yend>5</yend>
+     <weight>0</weight>
+    </line>
+   </foot>
+  </group>
+  <detail>
+   <key>
+    <query>tracknum</query>
+   </key>
+   <height>21</height>
+   <field>
+    <rect>
+     <x>160</x>
+     <y>0</y>
+     <width>225</width>
+     <height>20</height>
+    </rect>
+    <font>
+     <face>Sans Serif</face>
+     <size>10</size>
+     <weight>normal</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>tracknum</query>
+     <column>shiphead_shipvia</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>390</x>
+     <y>0</y>
+     <width>280</width>
+     <height>20</height>
+    </rect>
+    <font>
+     <face>Sans Serif</face>
+     <size>10</size>
+     <weight>normal</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>tracknum</query>
+     <column>shiphead_tracknum</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>40</x>
+     <y>0</y>
+     <width>100</width>
+     <height>20</height>
+    </rect>
+    <font>
+     <face>Sans Serif</face>
+     <size>10</size>
+     <weight>normal</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>tracknum</query>
+     <column>f_shipdate</column>
+    </data>
+   </field>
+  </detail>
+ </section>
+ <section>
+  <name>ColumnHeadings</name>
+  <detail>
+   <key>
+    <query>GroupHead</query>
+   </key>
+   <height>41</height>
+   <label>
+    <rect>
+     <x>360</x>
+     <y>10</y>
+     <width>120</width>
+     <height>20</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>10</size>
+     <weight>normal</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <string>Invoice Currency:</string>
+   </label>
+   <label>
+    <rect>
+     <x>575</x>
+     <y>10</y>
+     <width>75</width>
+     <height>20</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>10</size>
+     <weight>normal</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <string>Unit Price</string>
+   </label>
+   <label>
+    <rect>
+     <x>40</x>
+     <y>15</y>
+     <width>120</width>
+     <height>20</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>10</size>
+     <weight>normal</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <string>Qty. Shipped</string>
+   </label>
+   <field>
+    <rect>
+     <x>490</x>
+     <y>10</y>
+     <width>71</width>
+     <height>20</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>10</size>
+     <weight>normal</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>currency</query>
+     <column>currConcat</column>
+    </data>
+   </field>
+   <line>
+    <xstart>40</xstart>
+    <ystart>35</ystart>
+    <xend>745</xend>
+    <yend>35</yend>
+    <weight>2</weight>
+   </line>
+   <label>
+    <rect>
+     <x>170</x>
+     <y>15</y>
+     <width>80</width>
+     <height>20</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>10</size>
+     <weight>normal</weight>
+    </font>
+    <hcenter/>
+    <vcenter/>
+    <string>UOM</string>
+   </label>
+   <label>
+    <rect>
+     <x>255</x>
+     <y>15</y>
+     <width>120</width>
+     <height>20</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>10</size>
+     <weight>normal</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <string>Item Description</string>
+   </label>
+   <label>
+    <rect>
+     <x>675</x>
+     <y>10</y>
+     <width>100</width>
+     <height>20</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>10</size>
+     <weight>normal</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <string>Ext. Price</string>
+   </label>
+   <label>
+    <rect>
+     <x>255</x>
+     <y>0</y>
+     <width>120</width>
+     <height>20</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>10</size>
+     <weight>normal</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <string>Item Number</string>
+   </label>
+  </detail>
+ </section>
+ <section>
+  <name>items</name>
+  <detail>
+   <key>
+    <query>Detail</query>
+   </key>
+   <height>93</height>
+   <field>
+    <rect>
+     <x>25</x>
+     <y>5</y>
+     <width>120</width>
+     <height>20</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>10</size>
+     <weight>normal</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>Detail</query>
+     <column>f_billed</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>260</x>
+     <y>45</y>
+     <width>480</width>
+     <height>14</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>normal</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>Detail</query>
+     <column>coitem_characteristics</column>
+    </data>
+   </field>
+   <text>
+    <rect>
+     <x>440</x>
+     <y>70</y>
+     <width>365</width>
+     <height>14</height>
+    </rect>
+    <bottompad>0</bottompad>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>normal</weight>
+    </font>
+    <left/>
+    <top/>
+    <data>
+     <query>Detail</query>
+     <column>lotserial</column>
+    </data>
+   </text>
+   <label>
+    <rect>
+     <x>440</x>
+     <y>60</y>
+     <width>100</width>
+     <height>11</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>6</size>
+     <weight>normal</weight>
+    </font>
+    <left/>
+    <top/>
+    <string>Serial #/Lot Information:</string>
+   </label>
+   <field>
+    <rect>
+     <x>171</x>
+     <y>5</y>
+     <width>80</width>
+     <height>20</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>10</size>
+     <weight>normal</weight>
+    </font>
+    <hcenter/>
+    <vcenter/>
+    <data>
+     <query>Detail</query>
+     <column>invuom</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>492</x>
+     <y>5</y>
+     <width>31</width>
+     <height>20</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>10</size>
+     <weight>normal</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>currency</query>
+     <column>curr_symbol</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>645</x>
+     <y>5</y>
+     <width>100</width>
+     <height>20</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>10</size>
+     <weight>normal</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>Detail</query>
+     <column>f_extprice</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>260</x>
+     <y>35</y>
+     <width>300</width>
+     <height>11</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>normal</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>Detail</query>
+     <column>descrip2</column>
+    </data>
+   </field>
+   <label>
+    <rect>
+     <x>70</x>
+     <y>60</y>
+     <width>40</width>
+     <height>11</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>6</size>
+     <weight>normal</weight>
+    </font>
+    <left/>
+    <top/>
+    <string>Notes:</string>
+   </label>
+   <field>
+    <rect>
+     <x>540</x>
+     <y>5</y>
+     <width>100</width>
+     <height>20</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>10</size>
+     <weight>normal</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>Detail</query>
+     <column>f_unitprice</column>
+    </data>
+   </field>
+   <text>
+    <rect>
+     <x>70</x>
+     <y>70</y>
+     <width>365</width>
+     <height>14</height>
+    </rect>
+    <bottompad>0</bottompad>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>normal</weight>
+    </font>
+    <left/>
+    <top/>
+    <data>
+     <query>Detail</query>
+     <column>invcitem_notes</column>
+    </data>
+   </text>
+   <field>
+    <rect>
+     <x>260</x>
+     <y>5</y>
+     <width>220</width>
+     <height>20</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>10</size>
+     <weight>normal</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>Detail</query>
+     <column>number</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>260</x>
+     <y>25</y>
+     <width>300</width>
+     <height>11</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>normal</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>Detail</query>
+     <column>descrip1</column>
+    </data>
+   </field>
+  </detail>
+ </section>
+ <section>
+  <name>allocatedCMs</name>
+  <group>
+   <name>unnamed</name>
+   <column>cohead_id</column>
+   <head>
+    <height>41</height>
+    <label>
+     <rect>
+      <x>45</x>
+      <y>15</y>
+      <width>90</width>
+      <height>20</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>10</size>
+      <weight>normal</weight>
+     </font>
+     <left/>
+     <vcenter/>
+     <string>Doc #</string>
+    </label>
+    <line>
+     <xstart>45</xstart>
+     <ystart>35</ystart>
+     <xend>750</xend>
+     <yend>35</yend>
+     <weight>0</weight>
+    </line>
+    <label>
+     <rect>
+      <x>180</x>
+      <y>15</y>
+      <width>90</width>
+      <height>20</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>10</size>
+      <weight>normal</weight>
+     </font>
+     <right/>
+     <vcenter/>
+     <string>Total Credit</string>
+    </label>
+    <label>
+     <rect>
+      <x>490</x>
+      <y>15</y>
+      <width>100</width>
+      <height>20</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>10</size>
+      <weight>normal</weight>
+     </font>
+     <hcenter/>
+     <vcenter/>
+     <string>Allocated</string>
+    </label>
+    <line>
+     <xstart>45</xstart>
+     <ystart>0</ystart>
+     <xend>750</xend>
+     <yend>0</yend>
+     <weight>0</weight>
+    </line>
+    <label>
+     <rect>
+      <x>45</x>
+      <y>0</y>
+      <width>240</width>
+      <height>20</height>
+     </rect>
+     <font>
+      <face>Sans Serif</face>
+      <size>10</size>
+      <weight>bold</weight>
+     </font>
+     <left/>
+     <vcenter/>
+     <string>Pre-Allocated Credits</string>
+    </label>
+    <label>
+     <rect>
+      <x>600</x>
+      <y>15</y>
+      <width>140</width>
+      <height>20</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>10</size>
+      <weight>normal</weight>
+     </font>
+     <hcenter/>
+     <vcenter/>
+     <string>Allocated</string>
+    </label>
+    <label>
+     <rect>
+      <x>280</x>
+      <y>15</y>
+      <width>90</width>
+      <height>20</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>10</size>
+      <weight>normal</weight>
+     </font>
+     <hcenter/>
+     <vcenter/>
+     <string>Prev. Applied</string>
+    </label>
+    <label>
+     <rect>
+      <x>380</x>
+      <y>15</y>
+      <width>90</width>
+      <height>20</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>10</size>
+      <weight>normal</weight>
+     </font>
+     <hcenter/>
+     <vcenter/>
+     <string>Balance</string>
+    </label>
+   </head>
+   <foot>
+    <height>21</height>
+    <field>
+     <rect>
+      <x>600</x>
+      <y>0</y>
+      <width>31</width>
+      <height>20</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>10</size>
+      <weight>normal</weight>
+     </font>
+     <right/>
+     <vcenter/>
+     <data>
+      <query>currency</query>
+      <column>curr_symbol</column>
+     </data>
+    </field>
+    <label>
+     <rect>
+      <x>340</x>
+      <y>0</y>
+      <width>240</width>
+      <height>20</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>10</size>
+      <weight>normal</weight>
+     </font>
+     <right/>
+     <vcenter/>
+     <string>Total Allocated:</string>
+    </label>
+    <field>
+     <rect>
+      <x>640</x>
+      <y>0</y>
+      <width>100</width>
+      <height>20</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>10</size>
+      <weight>normal</weight>
+     </font>
+     <right/>
+     <vcenter/>
+     <data>
+      <query>allocatedCMs</query>
+      <column>allocated_invccurr</column>
+     </data>
+     <format builtin="true">extprice</format>
+     <tracktotal/>
+    </field>
+   </foot>
+  </group>
+  <detail>
+   <key>
+    <query>allocatedCMs</query>
+   </key>
+   <height>21</height>
+   <field>
+    <rect>
+     <x>140</x>
+     <y>0</y>
+     <width>40</width>
+     <height>20</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>10</size>
+     <weight>normal</weight>
+    </font>
+    <hcenter/>
+    <vcenter/>
+    <data>
+     <query>allocatedCMs</query>
+     <column>aropen_currsymbol</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>640</x>
+     <y>0</y>
+     <width>100</width>
+     <height>20</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>10</size>
+     <weight>normal</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>allocatedCMs</query>
+     <column>f_allocated_invccurr</column>
+    </data>
+   </field>
+   <line>
+    <xstart>590</xstart>
+    <ystart>0</ystart>
+    <xend>590</xend>
+    <yend>30</yend>
+    <weight>0</weight>
+   </line>
+   <field>
+    <rect>
+     <x>280</x>
+     <y>0</y>
+     <width>90</width>
+     <height>20</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>10</size>
+     <weight>normal</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>allocatedCMs</query>
+     <column>f_paid</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>180</x>
+     <y>0</y>
+     <width>90</width>
+     <height>20</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>10</size>
+     <weight>normal</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>allocatedCMs</query>
+     <column>f_total</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>480</x>
+     <y>0</y>
+     <width>100</width>
+     <height>20</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>10</size>
+     <weight>normal</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>allocatedCMs</query>
+     <column>f_allocated</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>600</x>
+     <y>0</y>
+     <width>31</width>
+     <height>20</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>10</size>
+     <weight>normal</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>currency</query>
+     <column>curr_symbol</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>40</x>
+     <y>0</y>
+     <width>90</width>
+     <height>20</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>10</size>
+     <weight>normal</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>allocatedCMs</query>
+     <column>aropen_docnumber</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>380</x>
+     <y>0</y>
+     <width>90</width>
+     <height>20</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>10</size>
+     <weight>normal</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>allocatedCMs</query>
+     <column>f_balance</column>
+    </data>
+   </field>
+  </detail>
+ </section>
+ <pgfoot>
+  <firstpage/>
+  <height>167</height>
+  <field>
+   <rect>
+    <x>605</x>
+    <y>5</y>
+    <width>31</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <data>
+    <query>currency</query>
+    <column>curr_symbol</column>
+   </data>
+  </field>
+  <field>
+   <rect>
+    <x>640</x>
+    <y>25</y>
+    <width>100</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <data>
+    <query>GroupExtended</query>
+    <column>f_freight</column>
+   </data>
+  </field>
+  <field>
+   <rect>
+    <x>20</x>
+    <y>25</y>
+    <width>540</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>GroupExtended</query>
+    <column>invchead_notes</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>500</x>
+    <y>25</y>
+    <width>100</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Freight:</string>
+  </label>
+  <field>
+   <rect>
+    <x>605</x>
+    <y>85</y>
+    <width>31</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <data>
+    <query>currency</query>
+    <column>curr_symbol</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>500</x>
+    <y>5</y>
+    <width>100</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Subtotal:</string>
+  </label>
+  <field>
+   <rect>
+    <x>605</x>
+    <y>25</y>
+    <width>31</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <data>
+    <query>currency</query>
+    <column>curr_symbol</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>285</x>
+    <y>145</y>
+    <width>40</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Page:</string>
+  </label>
+  <label>
+   <rect>
+    <x>457</x>
+    <y>85</y>
+    <width>140</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Pre-Allocated Credit</string>
+  </label>
+  <field>
+   <rect>
+    <x>640</x>
+    <y>103</y>
+    <width>100</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <data>
+    <query>GroupExtended</query>
+    <column>f_totaldue</column>
+   </data>
+  </field>
+  <field>
+   <rect>
+    <x>640</x>
+    <y>5</y>
+    <width>100</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <data>
+    <query>foot</query>
+    <column>f_extprice</column>
+   </data>
+  </field>
+  <field>
+   <rect>
+    <x>605</x>
+    <y>103</y>
+    <width>31</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <data>
+    <query>currency</query>
+    <column>curr_symbol</column>
+   </data>
+  </field>
+  <field>
+   <rect>
+    <x>640</x>
+    <y>45</y>
+    <width>100</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <data>
+    <query>GroupExtended</query>
+    <column>f_misc</column>
+   </data>
+  </field>
+  <field>
+   <rect>
+    <x>640</x>
+    <y>85</y>
+    <width>100</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <data>
+    <query>GroupExtended</query>
+    <column>f_allocated</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>500</x>
+    <y>45</y>
+    <width>100</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Misc. Charge:</string>
+  </label>
+  <field>
+   <rect>
+    <x>640</x>
+    <y>65</y>
+    <width>100</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <data>
+    <query>GroupExtended</query>
+    <column>f_tax</column>
+   </data>
+  </field>
+  <field>
+   <rect>
+    <x>605</x>
+    <y>45</y>
+    <width>31</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <data>
+    <query>currency</query>
+    <column>curr_symbol</column>
+   </data>
+  </field>
+  <field>
+   <rect>
+    <x>605</x>
+    <y>65</y>
+    <width>31</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <data>
+    <query>currency</query>
+    <column>curr_symbol</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>500</x>
+    <y>65</y>
+    <width>100</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Sales Tax:</string>
+  </label>
+  <line>
+   <xstart>5</xstart>
+   <ystart>5</ystart>
+   <xend>745</xend>
+   <yend>5</yend>
+   <weight>2</weight>
+  </line>
+  <field>
+   <rect>
+    <x>325</x>
+    <y>145</y>
+    <width>20</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <top/>
+   <data>
+    <query>Context Query</query>
+    <column>page_number</column>
+   </data>
+  </field>
+  <field>
+   <rect>
+    <x>20</x>
+    <y>45</y>
+    <width>540</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>GroupExtended</query>
+    <column>invchead_misc_descrip</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>500</x>
+    <y>103</y>
+    <width>100</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Total Due:</string>
+  </label>
+ </pgfoot>
+ <pgfoot>
+  <height>27</height>
+  <field>
+   <rect>
+    <x>330</x>
+    <y>0</y>
+    <width>20</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <top/>
+   <data>
+    <query>Context Query</query>
+    <column>page_number</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>290</x>
+    <y>0</y>
+    <width>40</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Page:</string>
+  </label>
+ </pgfoot>
+</report>
