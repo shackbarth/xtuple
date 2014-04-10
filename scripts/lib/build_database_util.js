@@ -270,7 +270,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             scriptCallback(err);
             return;
           }
-          var beforeNoticeSql = "do $$ BEGIN RAISE NOTICE 'Loading file " + fullFilename +
+          var beforeNoticeSql = "do $$ BEGIN RAISE NOTICE 'Loading file " + path.basename(fullFilename) +
               "'; END $$ language plpgsql;\n",
             extname = path.extname(fullFilename).substring(1);
 
