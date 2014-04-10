@@ -1,0 +1,57 @@
+-- Group: itemCost
+-- Name: list
+-- Notes: used by maintainItemCosts, bomItem
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+-- The order of checking for item_id first is important.
+
+<? if exists("item_id") ?>
+
+SELECT itemcost_id,
+       CASE WHEN (costelem_sys) THEN 1
+            ELSE 0
+       END,
+       CASE WHEN itemcost_costelem_id = -1 THEN :error
+	    ELSE costelem_type
+       END AS costelem_type, itemcost_lowlevel,
+       itemcost_stdcost, currConcat(baseCurrID()) AS baseCurr,
+       itemcost_posted,
+       itemcost_actcost, currConcat(itemcost_curr_id) AS costCurr,
+       itemcost_updated,
+       currToBase(itemcost_curr_id, itemcost_actcost, CURRENT_DATE) AS actcostBase,
+       itemcost_curr_id,
+       CASE WHEN (COALESCE(itemcost_posted, startOfTime()) <= startOfTime()) THEN :never
+       END AS itemcost_posted_qtdisplayrole,
+       'cost' AS itemcost_stdcost_xtnumericrole,
+       'cost' AS itemcost_actcost_xtnumericrole
+FROM itemcost LEFT OUTER JOIN costelem ON (itemcost_costelem_id=costelem_id)
+WHERE (itemcost_item_id=<? value("item_id") ?>)
+ORDER BY itemcost_lowlevel, costelem_type;
+
+<? elseif exists("bomitem_id") ?>
+
+SELECT bomitemcost_id AS itemcost_id,
+       CASE WHEN (costelem_sys) THEN 1
+            ELSE 0
+       END,
+       CASE WHEN bomitemcost_costelem_id = -1 THEN :error
+	    ELSE costelem_type
+       END AS costelem_type,
+       bomitemcost_lowlevel AS itemcost_lowlevel,
+       bomitemcost_stdcost AS itemcost_stdcost, currConcat(baseCurrID()) AS baseCurr,
+       bomitemcost_posted AS itemcost_posted,
+       bomitemcost_actcost AS itemcost_actcost,
+       currConcat(bomitemcost_curr_id) AS costCurr,
+       bomitemcost_updated AS itemcost_updated,
+       currToBase(bomitemcost_curr_id, bomitemcost_actcost, CURRENT_DATE) AS actcostBase,
+       bomitemcost_curr_id AS itemcost_curr_id,
+       CASE WHEN (COALESCE(bomitemcost_posted, startOfTime()) <= startOfTime()) THEN :never
+       END AS itemcost_posted_qtdisplayrole,
+       'cost' AS itemcost_stdcost_xtnumericrole,
+       'cost' AS itemcost_actcost_xtnumericrole
+FROM bomitemcost LEFT OUTER JOIN costelem ON (bomitemcost_costelem_id=costelem_id)
+WHERE (bomitemcost_bomitem_id=<? value("bomitem_id") ?>)
+ORDER BY bomitemcost_lowlevel, costelem_type;
+
+<? endif ?>

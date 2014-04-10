@@ -1,0 +1,128 @@
+-- Group: arHistory
+-- Name: detail
+-- Notes: used by dspCustomerARHistory, dspCustomerInformation
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT aropen_id, applyid,
+       sortdate, sortnumber, type,
+       docnumber, open, documenttype,
+       docdate, duedate, amount, balance, base_balance, currAbbr,
+       formatBoolYN(open) AS f_open,
+       formatDate(docdate) AS f_docdate, formatDate(duedate) AS f_duedate,
+       'curr' AS amount_xtnumericrole,
+       'curr' AS balance_xtnumericrole,
+       'curr' AS base_balance_xtnumericrole,
+       0 AS base_balance_xttotalrole,
+       type AS xtindentrole
+  FROM (
+    SELECT 0 AS type, aropen_id, -1 AS applyid,
+           aropen_docdate AS sortdate, (aropen_docnumber || aropen_doctype) AS sortnumber,
+           aropen_docnumber AS docnumber,
+           aropen_open AS open,
+           CASE WHEN (aropen_doctype='I') THEN <? value("invoice") ?>
+                WHEN (aropen_doctype='C') THEN <? value("creditMemo") ?>
+                WHEN (aropen_doctype='D') THEN <? value("debitMemo") ?>
+                WHEN (aropen_doctype='R') then <? value("cashdeposit") ?>
+                ELSE <? value("other") ?>
+           END AS documenttype,
+           aropen_docdate AS docdate,
+           aropen_duedate AS duedate,
+           aropen_amount AS amount,
+           (aropen_amount - aropen_paid) AS balance,
+           CASE WHEN (aropen_doctype IN ('C', 'R')) THEN
+                        (currtobase(aropen_curr_id,(aropen_amount - aropen_paid),aropen_docdate) * -1.0)
+                ELSE currtobase(aropen_curr_id,(aropen_amount - aropen_paid),aropen_docdate)
+           END AS base_balance,
+           currConcat(aropen_curr_id) AS currAbbr
+     FROM aropen
+    WHERE ( (aropen_cust_id=<? value("cust_id") ?>) 
+    <? if exists("startDate") ?>
+      AND   (aropen_docdate BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+    <? endif ?> )
+
+    UNION
+    SELECT 1 AS type, -1 AS aropen_id, arapply_source_aropen_id AS applyid,
+           aropen_docdate AS sortdate, (aropen_docnumber || aropen_doctype) AS sortnumber,
+           CASE WHEN (arapply_source_doctype IN ('C','R')) THEN arapply_source_docnumber
+                WHEN (arapply_source_doctype='K') THEN arapply_refnumber
+                ELSE <? value("error") ?>
+           END AS docnumber,
+           NULL AS open,
+           CASE WHEN (arapply_source_doctype='C') THEN <? value("creditMemo") ?>
+                WHEN (arapply_source_doctype='R') THEN <? value("cashdeposit") ?>
+                WHEN (arapply_fundstype='C') THEN <? value("check") ?>
+                WHEN (arapply_fundstype='T') THEN <? value("certifiedCheck") ?>
+                WHEN (arapply_fundstype='M') THEN <? value("masterCard") ?>
+                WHEN (arapply_fundstype='V') THEN <? value("visa") ?>
+                WHEN (arapply_fundstype='A') THEN <? value("americanExpres") ?>
+                WHEN (arapply_fundstype='D') THEN <? value("discoverCard") ?>
+                WHEN (arapply_fundstype='R') THEN <? value("otherCreditCard") ?>
+                WHEN (arapply_fundstype='K') THEN <? value("cash") ?>
+                WHEN (arapply_fundstype='W') THEN <? value("wireTransfer") ?>
+                WHEN (arapply_fundstype='O') THEN <? value("other") ?>
+           END AS documenttype,
+           COALESCE(cashrcpt_docdate, arapply_postdate) AS docdate,
+           arapply_distdate AS duedate,
+           arapply_applied AS amount,
+           0 AS balance,
+           0 AS base_balance,
+           currConcat(arapply_curr_id) AS currAbbr
+     FROM arapply JOIN aropen ON (arapply_target_aropen_id=aropen_id)
+                  LEFT OUTER JOIN cashrcptitem ON ( (arapply_reftype='CR') AND
+                                                    (arapply_ref_id=cashrcptitem_id) )
+                  LEFT OUTER JOIN cashrcpt ON (cashrcpt_id=cashrcptitem_cashrcpt_id)
+    WHERE ( (arapply_target_doctype IN ('I', 'D'))
+      AND   (arapply_cust_id=<? value("cust_id") ?>)
+      AND   (aropen_cust_id=<? value("cust_id") ?>)
+    <? if exists("startDate") ?>
+      AND   (aropen_docdate BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+    <? endif ?> )
+
+    UNION
+    SELECT 2 AS type, -1 AS aropen_id, arapply_target_aropen_id AS applyid,
+           aropen_docdate AS sortdate, (aropen_docnumber || aropen_doctype) AS sortnumber,
+           arapply_target_docnumber AS docnumber,
+           NULL AS open,
+           CASE WHEN (arapply_target_doctype='I') THEN <? value("invoice") ?>
+                WHEN (arapply_target_doctype='D') THEN <? value("debitMemo") ?>
+                ELSE <? value("other") ?>
+           END AS documenttype,
+           arapply_postdate AS docdate,
+           arapply_distdate AS duedate,
+           arapply_applied AS amount,
+           0 AS balance,
+           0 AS base_balance,
+           currConcat(arapply_curr_id) AS currAbbr
+     FROM arapply, aropen
+    WHERE ( (arapply_source_doctype IN ('K', 'C', 'R'))
+      AND  (arapply_source_aropen_id=aropen_id)
+      AND  (arapply_cust_id=<? value("cust_id") ?>)
+      AND  (aropen_cust_id=<? value("cust_id") ?>)
+    <? if exists("startDate") ?>
+      AND   (aropen_docdate BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+    <? endif ?> )
+
+    UNION
+    SELECT 0 AS type, -1 AS aropen_id, -1 AS applyid,
+           invchead_invcdate AS sortdate, (invchead_invcnumber || 'I') AS sortnumber,
+           invchead_invcnumber AS docnumber,
+           false AS open,
+           <? value("zeroinvoice") ?> AS documenttype,
+           invchead_invcdate AS docdate,
+           invchead_invcdate AS duedate,
+           0 AS amount,
+           0 AS balance,
+           0 AS base_balance,
+           currConcat(invchead_curr_id) AS currAbbr
+     FROM invchead
+    WHERE ( (invchead_cust_id=<? value("cust_id") ?>) 
+    <? if exists("startDate") ?>
+      AND   (invchead_invcdate BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+    <? endif ?>
+      AND   (invchead_posted)
+      AND   ((SELECT SUM(invcitem_price)
+              FROM invcitem
+             WHERE (invcitem_invchead_id=invchead_id))=0) )
+  ) AS data
+  ORDER BY sortdate, sortnumber, type;

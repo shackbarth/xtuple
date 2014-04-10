@@ -1,0 +1,41 @@
+-- Group: pricingFreight
+-- Name: detail
+-- Notes: used by itemPricingScheduleItem
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT ipsfreight.*
+  FROM ipsfreight
+ WHERE ( (true)
+<? if exists("checkDup") ?>
+ <? if exists("ipshead_id") ?>
+   AND (ipsfreight_ipshead_id=<? value("ipshead_id") ?>)
+ <? endif ?>
+ <? if exists("warehous_id") ?>
+   AND (ipsfreight_warehous_id=<? value("warehous_id") ?>)
+ <? else ?>
+   AND (ipsfreight_warehous_id IS NULL)
+ <? endif ?>
+ <? if exists("shipzone_id") ?>
+   AND (ipsfreight_shipzone_id=<? value("shipzone_id") ?>)
+ <? else ?>
+   AND (ipsfreight_shipzone_id IS NULL)
+ <? endif ?>
+ <? if exists("freightclass_id") ?>
+   AND (ipsfreight_freightclass_id=<? value("freightclass_id") ?>)
+ <? else ?>
+   AND (ipsfreight_freightclass_id IS NULL)
+ <? endif ?>
+ <? if exists("shipvia") ?>
+   AND (ipsfreight_shipvia=<? value("shipvia") ?>)
+ <? else ?>
+   AND (ipsfreight_shipvia IS NULL)
+ <? endif ?>
+ <? if exists("qtybreak") ?>
+   AND (ipsfreight_qtybreak=<? value("qtybreak") ?>)
+ <? endif ?>
+   AND (ipsfreight_id <> <? value("ipsfreight_id") ?>)
+<? elseif exists("ipsfreight_id") ?>
+   AND (ipsfreight_id=<? value("ipsfreight_id") ?>)
+<? endif ?>
+      );

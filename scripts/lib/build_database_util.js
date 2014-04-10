@@ -14,6 +14,151 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     dataSource = require('../../node-datasource/lib/ext/datasource').dataSource,
     winston = require('winston');
 
+  var convertFromMetasql = function (content, filename) {
+    var lines = content.split("\n"),
+      schema = filename.indexOf('manufacturing') >= 0 ?
+        "'xtmfg'" :
+        "NULL",
+      group,
+      i = 2,
+      name,
+      notes = "",
+      grade = 0,
+      deleteSql,
+      insertSql;
+
+    if (lines[0].indexOf("-- Group: ") !== 0 ||
+        lines[1].indexOf("-- Name: ") !== 0 ||
+        lines[2].indexOf("-- Notes:") !== 0) {
+      throw new Error("Improperly formatted metasql: " + filename);
+    }
+    group = lines[0].substring("-- Group: ".length).trim();
+    name = lines[1].substring("-- Name: ".length).trim();
+    while (lines[i].indexOf("--") === 0) {
+      notes = notes + lines[i].substring(2) + "\n";
+      i++;
+    }
+    notes = notes.substring(" Notes:".length);
+    if (notes.indexOf("must be grade 10") >= 0) {
+      grade = 10;
+    }
+
+    insertSql = "select saveMetasql (" +
+      "'" + group + "'," +
+      "'" + name + "'," +
+      "$$" + notes + "$$," +
+      "$$" + content + "$$," +
+      "true, " + schema + ", " + grade + ");";
+
+    return insertSql;
+  };
+
+  var convertFromReport = function (content, filename) {
+    var lines = content.split("\n"),
+      name,
+      tableName = filename.indexOf('manufacturing') >= 0 ?
+        "xtmfg.pkgreport" :
+        "report",
+      description,
+      disableSql,
+      deleteSql,
+      insertSql,
+      enableSql;
+
+    if (lines[3].indexOf(" <name>") !== 0 ||
+        lines[4].indexOf(" <description>") !== 0) {
+      throw new Error("Improperly formatted report");
+    }
+    name = lines[3].substring(" <name>".length).trim();
+    name = name.substring(0, name.indexOf("<"));
+    description = lines[4].substring(" <description>".length).trim();
+    description = description.substring(0, name.indexOf("<"));
+
+    disableSql = "ALTER TABLE " + tableName + " DISABLE TRIGGER ALL;";
+
+    deleteSql = "delete from " + tableName + " " +
+      "where report_name = '" + name +
+      "' and report_grade = 0;";
+
+    insertSql = "insert into " + tableName + " (report_name, report_descrip, " +
+      "report_source, report_loaddate, report_grade) VALUES (" +
+      "'" + name + "'," +
+      "'" + description + "'," +
+      "$$" + content + "$$," +
+      "now(), 0);";
+
+    enableSql = "ALTER TABLE " + tableName + " ENABLE TRIGGER ALL;";
+
+    return disableSql + deleteSql + insertSql + enableSql;
+  };
+
+  var convertFromScript = function (content, filename) {
+    var name = path.basename(filename, '.js'),
+      tableName = filename.indexOf('manufacturing') >= 0 ?
+        "xtmfg.pkgscript" :
+        "unknown",
+      notes = "xtMfg package",
+      disableSql,
+      deleteSql,
+      insertSql,
+      enableSql;
+
+    disableSql = "ALTER TABLE " + tableName + " DISABLE TRIGGER ALL;";
+
+    deleteSql = "delete from " + tableName + " " +
+      "where script_name = '" + name +
+      "';";
+
+    insertSql = "insert into " + tableName + " (script_name, script_order, script_enabled, " +
+      "script_source, script_notes) VALUES (" +
+      "'" + name + "', 0, TRUE, " +
+      "$$" + content + "$$," +
+      "'" + notes + "');";
+
+    enableSql = "ALTER TABLE " + tableName + " ENABLE TRIGGER ALL;";
+
+    return disableSql + deleteSql + insertSql + enableSql;
+  };
+
+  var convertFromUiform = function (content, filename) {
+    var name = path.basename(filename, '.ui'),
+      tableName = filename.indexOf('manufacturing') >= 0 ?
+        "xtmfg.pkguiform" :
+        "unknown",
+      notes = "xtMfg package",
+      disableSql,
+      deleteSql,
+      insertSql,
+      enableSql;
+
+    disableSql = "ALTER TABLE " + tableName + " DISABLE TRIGGER ALL;";
+
+    deleteSql = "delete from " + tableName + " " +
+      "where uiform_name = '" + name +
+      "';";
+
+    insertSql = "insert into " + tableName + " (uiform_name, uiform_order, uiform_enabled, " +
+      "uiform_source, uiform_notes) VALUES (" +
+      "'" + name + "', 0, TRUE, " +
+      "$$" + content + "$$," +
+      "'" + notes + "');";
+
+    enableSql = "ALTER TABLE " + tableName + " ENABLE TRIGGER ALL;";
+
+    return disableSql + deleteSql + insertSql + enableSql;
+  };
+
+  var conversionMap = {
+    mql: convertFromMetasql,
+    xml: convertFromReport,
+    js: convertFromScript,
+    ui: convertFromUiform,
+    sql: function (content) {
+      // no op
+      return content;
+    }
+  };
+
   var explodeManifest = function (manifestFilename, options, manifestCallback) {
     var dbSourceRoot = path.dirname(manifestFilename);
     //
@@ -82,6 +227,15 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       // not sure if this is necessary, but it would look like
       // -e ../private-extensions/source/inventory/foundation-database
 
+      if (options.useFoundationScripts) {
+        extraManifest = fs.readFileSync(path.join(dbSourceRoot, "../../foundation-database/manifest.js"));
+        extraManifestScripts = JSON.parse(extraManifest).databaseScripts;
+        extraManifestScripts = _.map(extraManifestScripts, function (path) {
+          return "../../foundation-database/" + path;
+        });
+        databaseScripts.unshift(extraManifestScripts);
+        databaseScripts = _.flatten(databaseScripts);
+      }
       if (options.useFrozenScripts) {
         // Frozen files are not idempotent and should only be run upon first registration
         extraManifestPath = alterPaths ?
@@ -95,15 +249,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             return "../../foundation-database/" + path;
           });
         }
-        databaseScripts.unshift(extraManifestScripts);
-        databaseScripts = _.flatten(databaseScripts);
-      }
-      if (options.useFoundationScripts) {
-        extraManifest = fs.readFileSync(path.join(dbSourceRoot, "../../foundation-database/manifest.js"));
-        extraManifestScripts = JSON.parse(extraManifest).databaseScripts;
-        extraManifestScripts = _.map(extraManifestScripts, function (path) {
-          return "../../foundation-database/" + path;
-        });
         databaseScripts.unshift(extraManifestScripts);
         databaseScripts = _.flatten(databaseScripts);
       }
@@ -126,8 +271,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             return;
           }
           var beforeNoticeSql = "do $$ BEGIN RAISE NOTICE 'Loading file " + fullFilename +
-            "'; END $$ language plpgsql;\n";
+              "'; END $$ language plpgsql;\n",
+            extname = path.extname(fullFilename).substring(1);
 
+          // convert special files: metasql, uiforms, reports, uijs
+          scriptContents = conversionMap[extname](scriptContents, fullFilename);
           //
           // Allow inclusion of js files in manifest. If it is a js file,
           // use plv8 to execute it.

@@ -1,0 +1,66 @@
+-- Group: briefSalesHistory
+-- Name: detail
+-- Notes: 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT
+       COALESCE(cohead_id,-1) AS cohead_id, cust_id, cohist_ponumber,
+       cust_custtype_id, custtype_code,
+       cohist_cust_id, SUM(extcost) AS extcost,
+       'curr' AS extcost_xtnumericrole,
+       0 AS extcost_xttotalrole,
+       cohist_ordernumber,
+       cust_number, cust_name, invoicenumber,
+       cohist_orderdate, cohist_invcdate,
+       SUM(baseextprice) AS extended,
+       'curr' AS extended_xtnumericrole,
+       0 AS extended_xttotalrole
+FROM saleshistory
+  LEFT OUTER JOIN cohead ON (cohead_number=cohist_ordernumber)
+WHERE ((cohist_invcdate BETWEEN <? value("startDate") ?> AND  <? value("endDate") ?>)
+<? if exists("cust_id") ?>
+   AND (cohist_cust_id=<? value("cust_id") ?>)
+<? endif ?>
+<? if exists("shipto_id") ?>
+   AND (cohist_shipto_id=<? value("shipto_id") ?>)
+<? endif ?>
+<? if exists("custtype_id") ?>
+   AND (cust_custtype_id=<? value("custtype_id") ?>)
+<? endif ?>
+<? if exists("custtype_pattern") ?>
+   AND (custtype_code ~ <? value("custtype_pattern") ?>)
+<? endif ?>
+<? if exists("custgrp_id") ?>
+  AND (cust_id IN (SELECT DISTINCT custgrpitem_cust_id
+                   FROM custgrpitem
+                   WHERE (custgrpitem_custgrp_id=<? value("custgrp_id") ?>)))
+<? endif ?>
+<? if exists("custgrp_pattern") ?>
+  AND (cust_id IN (SELECT DISTINCT custgrpitem_cust_id
+                   FROM custgrp, custgrpitem
+                   WHERE ( (custgrpitem_custgrp_id=custgrp_id)
+                     AND   (custgrp_name ~ <? value("custgrp_pattern") ?>) )) )
+<? endif ?>
+<? if exists("warehous_id") ?>
+   AND (itemsite_warehous_id=<? value("warehous_id") ?>)
+<? endif ?>
+<? if exists("item_id") ?>
+  AND  (itemsite_item_id=<? value("item_id") ?>)
+<? endif ?>
+<? if exists("prodcat_id") ?>
+   AND (item_prodcat_id=<? value("prodcat_id") ?>)
+<? endif ?>
+<? if exists("prodcat_pattern") ?>
+   AND (item_prodcat_id IN (SELECT prodcat_id
+                            FROM prodcat
+                            WHERE (prodcat_code ~ <? value("prodcat_pattern") ?>)))
+<? endif ?>
+<? if exists("salesrep_id") ?>
+   AND (cohist_salesrep_id=<? value("salesrep_id") ?>)
+<? endif ?>
+      )
+GROUP BY cohead_id, cust_id,cust_number,cust_custtype_id,cohist_cust_id,custtype_code,
+         cust_name,cohist_ordernumber, cohist_ponumber,
+         invoicenumber,cohist_orderdate, cohist_invcdate
+ORDER BY cohist_invcdate, cohist_orderdate;

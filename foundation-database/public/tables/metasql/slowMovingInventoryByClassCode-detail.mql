@@ -1,0 +1,50 @@
+-- Group: slowMovingInventoryByClassCode
+-- Name: detail
+-- Notes: used by dspSlowMovingInventoryByClassCode
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT itemsite_id, warehous_code, item_number,
+       (item_descrip1 || ' ' || item_descrip2) AS itemdescrip, uom_name,
+       itemsite_qtyonhand, itemsite_datelastused, cost,
+       noNeg(cost * itemsite_qtyonhand) AS value,
+       CASE WHEN (COALESCE(itemsite_datelastused, startOfTime()) <= startOfTime()) THEN 'N/A'
+       END AS itemsite_datelastused_qtdisplayrole,
+       'qty' AS itemsite_qtyonhand_xtnumericrole,
+       'cost' AS cost_xtnumericrole,
+       'curr' AS value_xtnumericrole,
+       0 AS itemsite_qtyonhand_xttotalrole,
+       0 AS value_xttotalrole
+FROM ( SELECT itemsite_id, warehous_code, item_number,
+              item_descrip1, item_descrip2, uom_name,
+              itemsite_qtyonhand, itemsite_datelastused,
+            <? if exists("useActualCosts") ?>
+              actcost(itemsite_item_id) 
+            <? else ?>
+              stdcost(itemsite_item_id) 
+            <? endif ?> AS cost 
+       FROM itemsite, item, whsinfo, uom
+       WHERE ((itemsite_item_id=item_id)
+          AND (item_inv_uom_id=uom_id)
+          AND (itemsite_warehous_id=warehous_id)
+          AND (itemsite_active)
+          AND (itemsite_datelastused < <? value("cutoffDate") ?>)
+        <? if exists("warehous_id") ?>
+          AND (itemsite_warehous_id=<? value("warehous_id") ?>)
+        <? endif ?>
+        <? if exists("classcode_id") ?>
+          AND (item_classcode_id=<? value("classcode_id") ?>)
+        <? elseif exists("classcode_pattern") ?>
+          AND (item_classcode_id IN (SELECT classcode_id FROM classcode WHERE classcode_code ~ <? value("classcode_pattern") ?>))
+        <? endif ?>
+              )
+     ) AS data 
+ORDER BY warehous_code, 
+     <? if exists("sortByItem") ?>
+       item_number
+     <? elseif exists("sortByDate") ?>
+       itemsite_datelastused
+     <? else ?>
+       noNeg(cost * itemsite_qtyonhand) DESC
+     <? endif ?>
+;

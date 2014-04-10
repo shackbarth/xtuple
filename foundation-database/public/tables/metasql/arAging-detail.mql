@@ -1,0 +1,39 @@
+-- Group: arAging
+-- Name: detail
+-- Notes: used by dspTimePhasedOpenARItems
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT araging_cust_id, araging_cust_number, araging_cust_name,
+       SUM(araging_total_val) AS araging_total_val_sum,
+       SUM(araging_cur_val) AS araging_cur_val_sum,
+       SUM(araging_thirty_val) AS araging_thirty_val_sum,
+       SUM(araging_sixty_val) AS araging_sixty_val_sum,
+       SUM(araging_ninety_val) AS araging_ninety_val_sum,
+       SUM(araging_plus_val) AS araging_plus_val_sum,
+       'curr' AS araging_total_val_sum_xtnumericrole,
+       'curr' AS araging_cur_val_sum_xtnumericrole,
+       'curr' AS araging_thirty_val_sum_xtnumericrole,
+       'curr' AS araging_sixty_val_sum_xtnumericrole,
+       'curr' AS araging_ninety_val_sum_xtnumericrole,
+       'curr' AS araging_plus_val_sum_xtnumericrole,
+       0 AS araging_total_val_sum_xttotalrole,
+       0 AS araging_cur_val_sum_xttotalrole,
+       0 AS araging_thirty_val_sum_xttotalrole,
+       0 AS araging_sixty_val_sum_xttotalrole,
+       0 AS araging_ninety_val_sum_xttotalrole,
+       0 AS araging_plus_val_sum_xttotalrole
+
+FROM araging(<? value("relDate") ?>, <? value("useDocDate") ?>) 
+<? if exists("cust_id") ?>
+WHERE (araging_cust_id=<? value("cust_id") ?>)
+<? elseif exists("custtype_id") ?>
+WHERE (araging_cust_custtype_id=<? value("custtype_id") ?>)
+<? elseif exists("custgrp_id") ?>
+LEFT OUTER JOIN custgrpitem ON (araging_cust_id = custgrpitem_cust_id)
+WHERE (custgrpitem_custgrp_id=<? value("custgrp_id") ?>)
+<? elseif exists("custtype_pattern") ?>
+WHERE (araging_custtype_code ~ <? value("custtype_pattern") ?>)
+<? endif ?>
+GROUP BY araging_cust_number,araging_cust_id,araging_cust_name
+ORDER BY araging_cust_number;

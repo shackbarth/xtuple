@@ -1,0 +1,40 @@
+-- Group: salesOrderStatus
+-- Name: detail
+-- Notes: used by dspSalesOrderStatus
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT coitem_id, coitem_linenumber, item_number,
+       (item_descrip1 || ' ' || item_descrip2) AS itemdescrip,
+       warehous_code,
+       coitem_qtyord, coitem_qtyshipped, coitem_qtyreturned,
+       SUM(COALESCE(cobill_qty, 0)) AS invoiced,
+       noNeg(coitem_qtyord - coitem_qtyshipped + coitem_qtyreturned) AS balance,
+       CASE WHEN (coitem_status='C') THEN coitem_closedate END AS closedate,
+       CASE WHEN (coitem_status='C') THEN coitem_close_username END AS closeuser,
+       CASE WHEN (coitem_order_id=-1) THEN ''
+            WHEN (coitem_order_type='W') THEN ( SELECT (formatWoNumber(wo_id) || '/' || wo_status)
+                                                FROM wo
+                                                WHERE (wo_id=coitem_order_id) )
+         ELSE ''
+       END AS childinfo,
+       'qty' AS coitem_qtyord_xtnumericrole,
+       'qty' AS coitem_qtyshipped_xtnumericrole,
+       'qty' AS coitem_qtyreturned_xtnumericrole,
+       'qty' AS invoiced_xtnumericrole,
+       'qty' AS balance_xtnumericrole 
+FROM itemsite, item, whsinfo, coitem LEFT OUTER JOIN
+     cobill ON (coitem_id=cobill_coitem_id AND
+                cobill_invcitem_id IS NOT NULL)
+WHERE ( (coitem_itemsite_id=itemsite_id)
+    AND (coitem_status <> 'X')
+    AND (itemsite_item_id=item_id)
+    AND (itemsite_warehous_id=warehous_id)
+    AND (coitem_cohead_id=<? value("sohead_id") ?>) ) 
+GROUP BY coitem_id, coitem_linenumber, item_number, 
+         item_descrip1, item_descrip2, warehous_code, 
+         coitem_qtyord, coitem_qtyshipped, coitem_status, 
+         coitem_closedate, coitem_close_username, 
+         coitem_qtyreturned, coitem_order_id, 
+         coitem_order_type 
+ORDER BY coitem_linenumber;

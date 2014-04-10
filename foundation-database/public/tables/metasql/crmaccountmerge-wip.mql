@@ -1,0 +1,62 @@
+-- Group: crmaccountmerge
+-- Name:  wip
+-- Notes: show an indented list of crm account merges that have
+--        data to purge. this includes those that have been started
+--        but not completed as well as those that have been completed
+--        but neither purged nor undone.
+--        Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+--        See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT DISTINCT
+       d.crmacct_id,     d.crmacct_id,
+       d.crmacct_number, d.crmacct_name,
+       d.crmacct_number AS destnumber,
+       <? value('mergedKey') ?>    AS status,
+       <? value('mergedParent') ?> AS status_qtdisplayrole,
+       0 AS xtindentrole
+  FROM crmacct d
+  JOIN mrgundo ON (d.crmacct_id=mrgundo_base_id
+               AND mrgundo_base_schema='public'
+               AND mrgundo_base_table='crmacct')
+<? if exists('destid') ?>
+ WHERE d.crmacct_id = <? value("destid") ?>
+<? endif ?>
+UNION ALL
+SELECT s.crmacct_id,     d.crmacct_id,
+       s.crmacct_number, s.crmacct_name,
+       d.crmacct_number AS destnumber,
+       <? value('mergedKey') ?> AS status,
+       <? value('merged') ?>    AS status_qtdisplayrole,
+<? if exists('sourceAccountOnly') ?>
+       0
+<? else ?>
+       1
+<? endif ?>
+  FROM crmacct s
+  JOIN mrgundo ON (mrgundo_schema='public'
+               AND mrgundo_table='crmacct'
+               AND mrgundo_pkey_col='crmacct_id'
+               AND mrgundo_pkey_id=s.crmacct_id
+               AND mrgundo_col IS NULL)
+  JOIN crmacct d ON (mrgundo_base_id=d.crmacct_id
+                 AND mrgundo_base_schema='public')
+<? if exists('destid') ?>
+ WHERE d.crmacct_id = <? value("destid") ?>
+<? endif ?>
+UNION
+SELECT s.crmacct_id,     d.crmacct_id,
+       s.crmacct_number, s.crmacct_name,
+       d.crmacct_number AS destnumber, 
+       <? value('selectedKey') ?> AS status,
+       <? value('selected') ?>    AS status_qtdisplayrole,
+       CASE WHEN s.crmacct_id=d.crmacct_id THEN 0
+            ELSE 1
+       END
+  FROM crmacct d
+  JOIN crmacctsel ON (d.crmacct_id=crmacctsel_dest_crmacct_id)
+  JOIN crmacct s  ON (crmacctsel_src_crmacct_id=s.crmacct_id)
+<? if exists('destid') ?>
+ WHERE d.crmacct_id = <? value("destid") ?>
+<? endif ?>
+
+ORDER BY destnumber, xtindentrole, crmacct_number;

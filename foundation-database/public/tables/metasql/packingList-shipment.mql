@@ -1,0 +1,20 @@
+-- Group: packingList
+-- Name: shipment
+-- Notes: used by printPackingList
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT shiphead_order_id, shiphead_order_type, shiphead_shipform_id, cohead_number AS number
+FROM shiphead, cohead
+WHERE ((shiphead_id=<? value("shiphead_id") ?>)
+  AND  (cohead_id=shiphead_order_id)
+  AND  (shiphead_order_type='SO'))
+<? if exists("MultiWhs") ?>
+UNION
+SELECT shiphead_order_id, shiphead_order_type, shiphead_shipform_id, tohead_number AS number
+FROM shiphead, tohead
+WHERE ((shiphead_id=<? value("shiphead_id") ?>)
+  AND  (tohead_id=shiphead_order_id)
+  AND  (shiphead_order_type='TO'))
+<? endif ?>
+;

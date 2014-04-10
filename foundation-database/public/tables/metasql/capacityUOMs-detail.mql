@@ -1,0 +1,39 @@
+-- Group: capacityUOMs
+-- Name: detail
+-- Notes: used by dspCapacityUOMsByClassCode, dspCapacityUOMsByProductCategory
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT item_id, item_number,
+<? if exists("getclasscode") ?>
+       classcode_code,
+<? endif ?>
+       (item_descrip1 || ' ' || item_descrip2) AS descrip,
+       uom_name,
+       itemcapuom(item_id)       AS capuom,
+       itemcapinvrat(item_id)    AS capinvrat,
+       itemaltcapuom(item_id)    AS altcapuom,
+       itemaltcapinvrat(item_id) AS altcapinvrat,
+       'uomratio' AS capinvrat_xtnumericrole,
+       'uomratio' AS altcapinvrat_xtnumericrole
+FROM item
+     JOIN uom ON (item_inv_uom_id=uom_id)
+<? if exists("getclasscode") ?>
+     LEFT OUTER JOIN classcode ON (item_classcode_id=classcode_id)
+<? endif ?>
+WHERE (
+<? if exists("getclasscode") ?> true <? else ?> item_sold <? endif ?>
+<? if exists("prodcat_id") ?>
+   AND (item_prodcat_id=<? value("prodcat_id") ?>)
+<? elseif exists("prodcat_pattern") ?>
+   AND (item_prodcat_id IN (SELECT prodcat_id
+                            FROM prodcat
+                            WHERE (prodcat_code ~ <? value("prodcat_pattern") ?>)))
+<? elseif exists("classcode_id") ?>
+   AND (classcode_id=<? value("classcode_id") ?>)
+<? elseif exists("classcode_pattern") ?>
+   AND (classcode_code ~ <? value("classcode_pattern") ?>)
+<? endif ?>
+)
+ORDER BY <? if exists("getclasscode") ?> classcode_code, <? endif ?>
+         item_number;

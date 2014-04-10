@@ -101,8 +101,8 @@ var  async = require('async'),
           manifestOptions = {
             useSafeFoundationToolkit: isFoundation && !isFoundationExtension && extensions.length === 1,
             useFrozenScripts: spec.frozen,
-            useFoundationScripts: (baseName.indexOf('inventory') >= 0 || baseName.indexOf('manufacturing') >= 0) &&
-              extensions.length === 1,
+            useFoundationScripts: baseName.indexOf('inventory') >= 0 ||
+              baseName.indexOf('manufacturing') >= 0,
             registerExtension: !isFoundation && !isLibOrm && !isApplicationCore,
             runJsInit: !isFoundation && !isLibOrm,
             wipeViews: isApplicationCore && spec.wipeViews,

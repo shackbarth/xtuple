@@ -1,0 +1,46 @@
+-- Group: reservations
+-- Name: detail
+-- Notes: used by dspReservations
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT source_id, order_number, scheddate,
+       totalqty, relievedqty, reservedqty, balanceqty,
+       CASE WHEN (scheddate < CURRENT_DATE) THEN 'error' END AS scheddate_qtforegroundrold,
+       'qty' AS totalqty_xtnumericrole,
+       'qty' AS relievedqty_xtnumericrole,
+       'qty' AS reservedqty_xtnumericrole,
+       'qty' AS balanceqty_xtnumericrole,
+       0 AS balanceqty_xtrunningrole,
+       level AS xtindentrole
+FROM (
+SELECT coitem_scheddate AS sortkey, 0 AS level, coitem_id AS source_id,
+       formatSoNumber(coitem_id) AS order_number,
+       (coitem_qtyord * coitem_qty_invuomratio) AS totalqty,
+       ((coitem_qtyshipped + qtyAtShipping(coitem_id) - coitem_qtyreturned) * coitem_qty_invuomratio) as relievedqty,
+       (coitem_qtyreserved * coitem_qty_invuomratio) AS reservedqty,
+       (coitem_qtyreserved * coitem_qty_invuomratio) AS balanceqty,
+       coitem_scheddate AS scheddate
+FROM cohead, coitem, itemsite, item 
+WHERE((coitem_cohead_id=cohead_id)
+  AND (coitem_itemsite_id=itemsite_id)
+  AND (coitem_qtyreserved > 0)
+  AND (itemsite_item_id=item_id)
+  AND (itemsite_warehous_id=<? value("warehous_id") ?>)
+  AND (itemsite_item_id=<? value("item_id") ?>))
+UNION
+SELECT coitem_scheddate AS sortkey, 1 AS level, coitem_id AS source_id,
+      (formatLocationName(itemloc_location_id) || ' ' || formatLotSerialNumber(itemloc_ls_id)) AS order_number,
+       NULL AS totalqty, NULL AS relievedqty,
+       (reserve_qty * coitem_qty_invuomratio) AS reservedqty,
+       NULL AS balanceqty, NULL AS scheddate
+FROM reserve, itemloc, coitem, itemsite
+WHERE ( (itemloc_id=reserve_supply_id)
+  AND (reserve_supply_type='I')
+  AND (coitem_id=reserve_demand_id)
+  AND (reserve_demand_type='SO')
+  AND (itemsite_id=coitem_itemsite_id)
+  AND (itemsite_warehous_id=<? value("warehous_id") ?>)
+  AND (itemsite_item_id=<? value("item_id") ?>) )
+    ) AS data
+ORDER BY sortkey, source_id, level;

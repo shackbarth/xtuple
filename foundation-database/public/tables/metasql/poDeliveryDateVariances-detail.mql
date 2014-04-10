@@ -1,0 +1,77 @@
+-- Group: poDeliveryDateVariances
+-- Name: detail
+-- Notes: used by dspPoDeliveryDateVariancesByItem, dspPoDeliveryDateVariancesByVendor
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT <? if exists("byItem") ?>
+         recv.*, vend_name,
+         firstLine(recv_vend_item_number) AS itemnumber,
+         firstLine(recv_vend_item_descrip) AS itemdescrip,
+         DATE(recv_rlsd_duedate) - DATE(COALESCE(pohead_released, pohead_orderdate)) AS req_leadtime,
+         DATE(recv_duedate) - DATE(COALESCE(pohead_released, pohead_orderdate)) AS agrd_leadtime,
+         DATE(recv_date) - DATE(COALESCE(pohead_released, pohead_orderdate)) AS real_leadtime,
+         DATE(recv_date) - DATE(recv_rlsd_duedate) AS req_diff,
+	 DATE(recv_date) - DATE(recv_duedate) AS argd_diff,
+         DATE(recv_date) AS receivedate,
+         formatDate(COALESCE(pohead_released, pohead_orderdate)) AS orderdate,
+         formatDate(recv_date) AS f_recv_date,
+         recv_rlsd_duedate AS release_duedate,  
+	 recv_duedate AS argd_duedate,
+         CASE WHEN (DATE(recv_date) - DATE(recv_rlsd_duedate) > 0) THEN 'error'
+              END AS req_diff_qtforegroundrole,
+         CASE WHEN (DATE(recv_date) - DATE(recv_duedate) > 0) THEN 'error'
+              END AS argd_diff_qtforegroundrole, 
+	 CASE WHEN (DATE(recv_date) > DATE(recv_duedate)) THEN 'error'			   
+              END AS receivedate_qtforegroundrole,			  
+         'qty' AS recv_qty_xtnumericrole
+       <? elseif exists("byVendor") ?>
+         recv_id, recv_order_number, vend_name,
+         DATE(recv_date) AS receivedate,
+         formatDate(COALESCE(pohead_released, pohead_orderdate)) AS orderdate,
+         firstLine(recv_vend_item_number) AS venditemnumber,
+         firstLine(recv_vend_item_descrip) AS venditemdescrip,
+         recv_qty, recv_duedate, recv_date,
+         formatDate(recv_date) AS f_recv_date,
+         DATE(recv_rlsd_duedate) - DATE(COALESCE(pohead_released, pohead_orderdate)) AS req_leadtime,
+         DATE(recv_duedate) - DATE(COALESCE(pohead_released, pohead_orderdate)) AS agrd_leadtime,
+   DATE(recv_date) - DATE(COALESCE(pohead_released, pohead_orderdate)) AS real_leadtime,
+   DATE(recv_date) - DATE(recv_rlsd_duedate) AS req_diff,
+         DATE(recv_date) - DATE(recv_duedate) AS argd_diff,
+         firstLine(item.item_number) AS  itemnumber,
+         recv_rlsd_duedate AS release_duedate,
+   recv_duedate AS argd_duedate,
+   CASE WHEN (DATE(recv_date) - DATE(recv_rlsd_duedate) > 0) THEN 'error'
+              END AS req_diff_qtforegroundrole,
+   CASE WHEN (DATE(recv_date) - DATE(recv_duedate) > 0) THEN 'error'
+              END AS argd_diff_qtforegroundrole,
+   CASE WHEN (DATE(recv_date) > DATE(recv_duedate)) THEN 'error'
+              END AS receivedate_qtforegroundrole,
+         'qty' AS recv_qty_xtnumericrole
+       <? endif ?>
+
+FROM recv LEFT OUTER JOIN vendinfo ON (vend_id=recv_vend_id)
+          LEFT OUTER JOIN pohead ON (pohead_number=recv_order_number AND recv_order_type='PO')
+          LEFT OUTER JOIN (itemsite JOIN item ON (item_id=itemsite_item_id)) ON (itemsite_id=recv_itemsite_id)
+WHERE ( TRUE
+<? if exists("item_id") ?>
+  AND  (itemsite_item_id=<? value("item_id") ?>)
+<? endif ?>
+<? if exists("startDate") ?>
+  AND  (DATE(recv_date) BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+<? endif ?>
+<? if exists("warehous_id") ?>
+  AND (itemsite_warehous_id=<? value("warehous_id") ?>)
+<? endif ?>
+<? if exists("agentUsername") ?>
+  AND (recv_agent_username=<? value("agentUsername") ?>)
+<? endif ?>
+<? if exists("vend_id") ?>
+  AND (vend_id=<? value("vend_id") ?>)
+<? endif ?>
+<? if exists("selectedPurchasingAgent") ?>
+  AND (recv_agent_username=<? value("username") ?>)
+<? endif ?>
+      )
+ORDER BY
+  recv_date DESC;

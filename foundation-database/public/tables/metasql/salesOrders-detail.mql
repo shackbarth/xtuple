@@ -1,0 +1,59 @@
+-- Group: salesOrders
+-- Name: detail
+-- Notes: used by dspSalesOrdersByCustomer, dspSalesOrdersByCustomerPO, dspSalesOrdersByParameterList
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT cohead_id, cust_id,
+       cohead.*,
+       cust_number, cust_name,
+       getSoSchedDate(cohead_id) AS min_scheddate,
+       CASE
+         WHEN ( (SELECT COUNT(*)
+                   FROM coitem
+                  WHERE ((coitem_status<>'X') AND (coitem_cohead_id=cohead_id))) = 0) THEN <? value("noLines") ?>
+         WHEN ( ( (SELECT COUNT(*)
+                     FROM coitem
+                    WHERE ((coitem_status='C')
+                      AND (coitem_cohead_id=cohead_id))) > 0)
+                      AND ( (SELECT COUNT(*)
+                               FROM coitem
+                              WHERE ((coitem_status NOT IN ('C','X'))
+                                AND (coitem_cohead_id=cohead_id))) = 0) ) THEN <? value("closed") ?>
+         WHEN ( ( (SELECT COUNT(*)
+                     FROM coitem
+                    WHERE ((coitem_status='C')
+                      AND (coitem_cohead_id=cohead_id))) = 0)
+                      AND ( (SELECT COUNT(*)
+                               FROM coitem
+                              WHERE ((coitem_status NOT IN ('C','X'))
+                                AND (coitem_cohead_id=cohead_id))) > 0) ) THEN <? value("open") ?>
+         ELSE <? value("partial") ?>
+       END AS order_status
+FROM cohead JOIN custinfo ON (cust_id=cohead_cust_id)
+WHERE ( (1=1)
+<? if exists("cust_id") ?>
+  AND  (cohead_cust_id=<? value("cust_id") ?>)
+<? endif ?>
+<? if exists("custtype_id") ?>
+  AND  (cust_custtype_id=<? value("custtype_id") ?>)
+<? endif ?>
+<? if exists("custtype_pattern") ?>
+  AND  (cust_custtype_id IN (SELECT custtype_id FROM custtype WHERE (custtype_code ~ <? value("custtype_pattern") ?>)))
+<? endif ?>
+<? if exists("poNumber") ?>
+  AND  (cohead_custponumber~*<? value("poNumber") ?>)
+<? endif ?>
+<? if exists("startDate") ?>
+  AND  (cohead_orderdate BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+<? endif ?>
+  AND   ((SELECT COUNT(*)
+         FROM coitem JOIN itemsite ON (itemsite_id=coitem_itemsite_id)
+                     JOIN site() ON (warehous_id=itemsite_warehous_id)
+        WHERE (coitem_cohead_id=cohead_id)) > 0) )
+<? if exists("orderByCust") ?>
+  ORDER BY cust_number, cohead_number;
+<? else ?>
+ORDER BY cohead_number;
+<? endif ?>
+

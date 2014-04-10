@@ -1,0 +1,52 @@
+-- Group: inventoryAvailabilitybyWorkorder
+-- Name: detail
+-- Notes: used by dspInventoryAvailabilityByWorkOrder
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT *, 'qty' AS woinvav_qoh_xtnumericrole,
+       'qty' AS woinvav_balance_xtnumericrole,
+       'qty' AS woinvav_allocated_xtnumericrole,
+       'qty' AS woinvav_ordered_xtnumericrole,
+       'qty' AS woinvav_woavail_xtnumericrole,
+       'qty' AS woinvav_totalavail_xtnumericrole,
+       CASE WHEN (woinvav_womatl_id) = -1 THEN 'altemphasis'
+            WHEN (woinvav_qoh < 0) THEN 'error'
+            WHEN (woinvav_qoh < woinvav_reorderlevel) THEN 'warning'
+            WHEN ((woinvav_qoh - woinvav_balance) < 0) THEN 'altemphasis'
+            WHEN ((woinvav_qoh - woinvav_allocated) < 0) THEN 'altemphasis'
+       END AS woinvav_qoh_qtforegroundrole,
+       CASE WHEN (woinvav_womatl_id) = -1 THEN 'altemphasis'
+            WHEN ((woinvav_qoh + woinvav_ordered - woinvav_balance) < 0) THEN 'error'
+            WHEN ((woinvav_qoh + woinvav_ordered - woinvav_balance) < woinvav_reorderlevel) THEN 'warning'
+       END AS woinvav_woavail_qtforegroundrole,
+       CASE WHEN (woinvav_womatl_id) = -1 THEN 'altemphasis'
+            WHEN ((woinvav_qoh + woinvav_ordered - woinvav_allocated) < 0) THEN 'error'
+            WHEN ((woinvav_qoh + woinvav_ordered - woinvav_allocated) < woinvav_reorderlevel) THEN 'warning'
+       END AS woinvav_totalavail_qtforegroundrole,
+       CASE WHEN (woinvav_womatl_id = -1) THEN 'altemphasis'
+         ELSE null
+       END AS qtforegroundrole,
+       woinvav_level AS xtindentrole
+FROM woinvavail(<? value("wo_id") ?>,
+<? if exists("IndentedParentChild") ?>
+                true,
+<? else ?>
+                false,
+<? endif ?>
+<? if exists("summarizedParentChild") ?>
+                true,
+<? else ?>
+                false,
+<? endif ?>
+<? if exists("onlyShowShortages") ?>
+                true,
+<? else ?>
+                false,
+<? endif ?>
+<? if exists("onlyShowInsufficientInventory") ?>
+                true
+<? else ?>
+                false
+<? endif ?>
+               ) AS data;

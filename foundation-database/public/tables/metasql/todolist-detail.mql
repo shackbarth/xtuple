@@ -1,0 +1,416 @@
+-- Group: todolist
+-- Name:  detail
+-- Notes: 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT * FROM (
+/*        ---------TO DO-------------- */
+  SELECT todoitem_id AS id, 
+         1 AS altId, 
+         <? value("todo") ?> AS type, 
+         CAST(incdt_number AS text) AS number,
+         todoitem_name AS name,
+         CASE WHEN (todoitem_active AND todoitem_status != 'C') THEN TRUE
+              ELSE FALSE
+         END AS active,
+         CASE WHEN (todoitem_status='C') THEN <? value("complete") ?>
+              WHEN (todoitem_status='D') THEN <? value("deferred") ?>
+              WHEN (todoitem_status='P') THEN <? value("pending") ?>
+              WHEN (todoitem_status='I') THEN <? value("inprocess") ?>
+              WHEN (todoitem_status='N') THEN <? value("new") ?>
+              ELSE '?'
+         END AS stage,
+         incdtpriority_name AS priority, 
+         incdtpriority_order AS seq,
+         todoitem_owner_username AS owner, 
+         todoitem_username AS assigned, 
+         firstLine(todoitem_description) AS notes, 
+         todoitem_start_date as start, 
+         todoitem_due_date AS due, 
+         formatDate(todoitem_due_date) AS f_due, 
+         todoitem_start_date is not null AS hasStartDate,
+         todoitem_due_date is not null AS hasDueDate,
+         crmacct_id,
+         crmacct_number, 
+         crmacct_name, 
+         CASE WHEN (todoitem_ophead_id IS NOT NULL) THEN
+           'OPP'
+              WHEN (todoitem_incdt_id IS NOT NULL) THEN
+           'INCDT'
+         END AS parent,
+         CASE WHEN (todoitem_ophead_id IS NOT NULL) THEN
+           <? value("opportunity") ?> || '-' || ophead_number
+              WHEN (todoitem_incdt_id IS NOT NULL) THEN
+           <? value("incident") ?> || '-' || incdt_number
+         END AS parent_qtdisplayrole,
+         CASE WHEN (todoitem_ophead_id IS NOT NULL) THEN
+           <? value("opportunity") ?> || '-' || ophead_number
+              WHEN (todoitem_incdt_id IS NOT NULL) THEN
+           <? value("incident") ?> || '-' || incdt_number
+         END AS f_parent,
+         COALESCE(todoitem_ophead_id, todoitem_incdt_id) AS parent_xtidrole,
+         COALESCE(crmacct_cust_id,-1) > 0 AS cust_qtdisplayrole,
+         crmacct_cust_id AS cust,
+         CASE WHEN (todoitem_active AND todoitem_due_date < CURRENT_DATE) THEN 'expired'
+              WHEN (todoitem_active AND todoitem_due_date > CURRENT_DATE) THEN 'future'
+         END AS due_qtforegroundrole 
+<? if exists("hasContext") ?>
+    FROM todoitem
+<? else ?>
+    FROM todoitem() 
+<? endif ?>
+      LEFT OUTER JOIN incdt ON (incdt_id=todoitem_incdt_id) 
+      LEFT OUTER JOIN ophead ON (ophead_id=todoitem_ophead_id)
+      LEFT OUTER JOIN crmacct ON (crmacct_id=todoitem_crmacct_id) 
+      LEFT OUTER JOIN incdtpriority ON (incdtpriority_id=todoitem_priority_id) 
+<? if not exists("todoList")?>
+    WHERE false
+<? else ?>
+    WHERE true
+<? endif ?>
+<? if exists("startStartDate") ?>
+  AND (todoitem_start_date <= <? value("startStartDate") ?>)
+<? endif ?>
+<? if exists("startEndDate") ?>
+  AND (todoitem_start_date >= <? value("startEndDate") ?>)
+<? endif ?>
+<? if exists("dueStartDate") ?>
+  AND (todoitem_due_date <= <? value("dueStartDate") ?>)
+<? endif ?>
+<? if exists("dueEndDate") ?>
+  AND (todoitem_due_date >= <? value("dueEndDate") ?>)
+<? endif ?>
+<? if exists("crmacct_id") ?>
+  AND (crmacct_id =<? value("crmacct_id") ?>)
+<? endif ?>
+<? if exists("completedonly") ?>
+  AND (todoitem_status = 'C')			
+<? elseif not exists("completed") ?>
+  AND (todoitem_status != 'C')			
+<? endif ?>
+<? if exists("username") ?>
+  AND (<? value("username") ?> IN (todoitem_username, todoitem_owner_username))
+<? endif ?>
+<? if exists("assigned_username") ?> 
+  AND (todoitem_username=<? value("assigned_username") ?>) 
+<? elseif exists("assigned_usr_pattern") ?>
+  AND (todoitem_username ~ <? value("assigned_usr_pattern") ?>) 
+<? endif ?>
+<? if exists("owner_username") ?> 
+  AND (todoitem_owner_username=<? value("owner_username") ?>) 
+<? elseif exists("owner_usr_pattern") ?>
+  AND (todoitem_owner_username ~ <? value("owner_usr_pattern") ?>) 
+<? endif ?>
+UNION ALL
+/*        ---------INCIDENT-------------- */
+  SELECT incdt_id AS id, 
+         2 AS altId, 
+         <? value("incident") ?> AS type, 
+         CAST(incdt_number AS text) AS number,
+         incdt_summary AS name, 
+         incdt_status != 'L' AS active,
+         CASE WHEN (incdt_status='N') THEN <? value("new") ?>
+              WHEN (incdt_status='F') THEN <? value("feedback") ?>
+              WHEN (incdt_status='C') THEN <? value("confirmed") ?>
+              WHEN (incdt_status='A') THEN <? value("assigned") ?>
+              WHEN (incdt_status='R') THEN <? value("resolved") ?>
+              WHEN (incdt_status='L') THEN <? value("closed") ?>
+              ELSE '?'
+         END AS stage,
+         incdtpriority_name AS priority,
+         incdtpriority_order AS seq,
+         incdt_owner_username AS owner, 
+         incdt_assigned_username AS assigned,
+         firstLine(incdt_descrip) AS notes, 
+         CAST(incdt_timestamp AS date) AS start, 
+         null AS due, 
+         null AS f_due, 
+         false AS hasStartDate,
+         false AS hasDueDate,
+         crmacct_id,
+         crmacct_number, 
+         crmacct_name,
+         '' AS parent,
+         '' AS parent_qtdisplay_role,
+         '' AS f_parent,
+         NULL AS parent_xtidrole,
+         COALESCE(crmacct_cust_id,-1) > 0 AS cust_qtdisplayrole,
+         COALESCE(crmacct_cust_id,-1) AS cust,
+         NULL AS due_qtforegroundrole 
+<? if exists("hasContext") ?>
+         FROM incdt
+<? else ?>
+         FROM incdt()
+<? endif ?>
+           LEFT OUTER JOIN crmacct ON (crmacct_id=incdt_crmacct_id) 
+           LEFT OUTER JOIN custinfo ON (cust_id=crmacct_cust_id)
+           LEFT OUTER JOIN incdtpriority ON (incdtpriority_id=incdt_incdtpriority_id) 
+<? if not exists("incidents")?>
+    WHERE false
+<? else ?>
+    WHERE true
+<? endif ?>
+<? if exists("startStartDate") ?>
+  AND (incdt_timestamp::date <= <? value("startStartDate") ?>)
+<? endif ?>
+<? if exists("startEndDate") ?>
+  AND (incdt_timestamp::date >= <? value("startEndDate") ?>)
+<? endif ?>
+<? if exists("dueStartDate") ?>
+  AND false
+<? endif ?>
+<? if exists("dueEndDate") ?>
+  AND false
+<? endif ?>
+<? if exists("crmacct_id") ?>
+  AND (crmacct_id =<? value("crmacct_id") ?>)
+<? endif ?>
+<? if exists("completedonly") ?>
+  AND (incdt_status = 'L')			
+<? elseif not exists("completed") ?>
+  AND (incdt_status != 'L')			
+<? endif ?>
+<? if exists("username") ?>
+  AND (<? value("username") ?> IN (incdt_assigned_username, incdt_owner_username))
+<? endif ?>
+<? if exists("assigned_username") ?> 
+  AND (incdt_assigned_username=<? value("assigned_username") ?>) 
+<? elseif exists("assigned_usr_pattern") ?>
+  AND (incdt_assigned_username ~ <? value("assigned_usr_pattern") ?>) 
+<? endif ?>
+<? if exists("owner_username") ?> 
+  AND (incdt_owner_username=<? value("owner_username") ?>) 
+<? elseif exists("owner_usr_pattern") ?>
+  AND (incdt_owner_username ~ <? value("owner_usr_pattern") ?>) 
+<? endif ?>
+UNION ALL
+/*        ---------PROJECT TASK-------------- */
+    SELECT prjtask_id AS id, 
+           3 AS altId, 
+           <? value("task") ?> AS type,
+           prjtask_number AS number,
+           prjtask_name AS name, 
+           prjtask_status != 'C' AS active,
+           CASE WHEN (prjtask_status='P') THEN <? value("concept") ?>
+                WHEN (prjtask_status='O') THEN <? value("inprocess") ?>
+                WHEN (prjtask_status='C') THEN <? value("complete") ?>
+                ELSE '?'
+           END AS stage,
+           NULL AS priority, 
+           NULL AS seq, 
+           prjtask_owner_username AS owner, 
+           prjtask_username AS assigned, 
+           firstLine(prjtask_descrip) AS notes, 
+           prjtask_start_date AS start, 
+           prjtask_due_date AS due, 
+           formatDate(prjtask_due_date) AS f_due, 
+           prjtask_start_date is not null AS hasStartDate,
+           prjtask_due_date is not null AS hasDueDate,
+           NULL AS crmacct_id,
+           '' AS crmacct_number, 
+           '' AS crmacct_name,
+           'PRJ' AS parent,
+           <? value("project") ?> || '-' || prj_number AS parent_qtdisplay_role,
+           <? value("project") ?> || '-' || prj_number AS f_parent,
+           prjtask_prj_id AS parent_xtidrole,
+           false AS cust_qtdisplayrole, 
+           null AS cust,
+           CASE WHEN (prjtask_status != 'C' AND prjtask_due_date < CURRENT_DATE) THEN 'expired'
+                WHEN (prjtask_status != 'C' AND prjtask_due_date > CURRENT_DATE) THEN 'future'
+           END AS due_qtforegroundrole 
+<? if exists("hasContext") ?>
+     FROM prjtask
+<? else ?>
+     FROM prjtask()
+<? endif ?>
+       JOIN prj ON (prj_id=prjtask_prj_id)
+<? if not exists("projects")?>
+    WHERE false
+<? else ?>
+    WHERE true
+<? endif ?>
+<? if exists("startStartDate") ?>
+  AND (prjtask_start_date <= <? value("startStartDate") ?>)
+<? endif ?>
+<? if exists("startEndDate") ?>
+  AND (prjtask_start_date >= <? value("startEndDate") ?>)
+<? endif ?>
+<? if exists("dueStartDate") ?>
+  AND (prjtask_due_date <= <? value("dueStartDate") ?>)
+<? endif ?>
+<? if exists("dueEndDate") ?>
+  AND (prjtask_due_date >= <? value("dueEndDate") ?>)
+<? endif ?>
+<? if exists("completedonly") ?>
+  AND (prjtask_status = 'C')			
+<? elseif not exists("completed") ?>
+  AND (prjtask_status != 'C')			
+<? endif ?>
+<? if exists("username") ?>
+  AND (<? value("username") ?> IN (prjtask_username, prjtask_owner_username))
+<? endif ?>
+<? if exists("assigned_username") ?> 
+  AND (prjtask_username=<? value("assigned_username") ?>) 
+<? elseif exists("assigned_usr_pattern") ?>
+  AND (prjtask_username ~ <? value("assigned_usr_pattern") ?>) 
+<? endif ?>
+<? if exists("owner_username") ?> 
+  AND (prjtask_owner_username=<? value("owner_username") ?>) 
+<? elseif exists("owner_usr_pattern") ?>
+  AND (prjtask_owner_username ~ <? value("owner_usr_pattern") ?>) 
+<? endif ?>
+UNION ALL
+/*        ---------PROJECT-------------- */
+    SELECT prj_id AS id, 
+           4 AS altId, 
+           <? value("project") ?> AS type,
+           prj_number AS number,
+           prj_name AS name, 
+           prj_status != 'C' AS active,
+           CASE WHEN (prj_status='P') THEN <? value("concept") ?>
+                WHEN (prj_status='O') THEN <? value("inprocess") ?>
+                WHEN (prj_status='C') THEN <? value("complete") ?>
+                ELSE '?'
+           END AS stage,
+           NULL AS priority, 
+           NULL AS seq,
+           prj_owner_username AS owner, 
+           prj_username AS assigned,
+           firstLine(prj_descrip) AS notes, 
+           prj_start_date AS start, 
+           prj_due_date AS due, 
+           formatDate(prj_due_date) AS f_due, 
+           prj_start_date IS NOT NULL AS hasStartDate,
+           prj_due_date IS NOT NULL AS hasDueDate,
+           null AS crmacct_id,
+           '' AS crmacct_number, 
+           '' AS crmacct_name,
+           '' AS parent,
+           '' AS parent_qtdisplayrole,
+           '' AS f_parent,
+           NULL AS parent_xtidrole,
+           false AS cust_qtdisplayrole, 
+           null AS cust,
+           CASE WHEN (prj_status != 'C'AND prj_due_date < CURRENT_DATE) THEN 'expired'
+                WHEN (prj_status != 'C'AND prj_due_date > CURRENT_DATE) THEN 'future'
+           END AS due_qtforegroundrole 
+<? if exists("hasContext") ?>
+       FROM prj
+<? else ?>
+       FROM prj()
+<? endif ?>
+<? if not exists("projects")?>
+    WHERE false
+<? else ?>
+    WHERE true
+<? endif ?>
+<? if exists("startStartDate") ?>
+  AND (prj_start_date <= <? value("startStartDate") ?>)
+<? endif ?>
+<? if exists("startEndDate") ?>
+  AND (prj_start_date >= <? value("startEndDate") ?>)
+<? endif ?>
+<? if exists("dueStartDate") ?>
+  AND (prj_due_date <= <? value("dueStartDate") ?>)
+<? endif ?>
+<? if exists("dueEndDate") ?>
+  AND (prj_due_date >= <? value("dueEndDate") ?>)
+<? endif ?>
+<? if exists("completedonly") ?>
+  AND (prj_status = 'C')			
+<? elseif not exists("completed") ?>
+  AND (prj_status != 'C')			
+<? endif ?>
+<? if exists("username") ?>
+  AND (<? value("username") ?> IN (prj_username, prj_owner_username))
+<? endif ?>
+<? if exists("assigned_username") ?> 
+  AND (prj_username=<? value("assigned_username") ?>) 
+<? elseif exists("assigned_usr_pattern") ?>
+  AND (prj_username ~ <? value("assigned_usr_pattern") ?>) 
+<? endif ?>
+<? if exists("owner_username") ?> 
+  AND (prj_owner_username=<? value("owner_username") ?>) 
+<? elseif exists("owner_usr_pattern") ?>
+  AND (prj_owner_username ~ <? value("owner_usr_pattern") ?>) 
+<? endif ?>
+UNION ALL
+/*        ---------OPPORTUNITY-------------- */
+  SELECT ophead_id AS id, 
+         5 AS altId, 
+         <? value("opportunity") ?> AS type, 
+         ophead_number AS number,
+         ophead_name AS name, 
+         ophead_active AS active,
+         opstage_descrip AS stage,         
+         incdtpriority_name AS priority, 
+         incdtpriority_order AS seq,
+         ophead_owner_username AS owner, 
+         ophead_username AS assigned, 
+         firstLine(ophead_notes) AS notes, 
+         ophead_start_date AS start, 
+         ophead_target_date AS due, 
+         formatDate(ophead_target_date) AS f_due,
+         ophead_start_date is not null AS hasStartDate,
+         ophead_target_date is not null AS hasDueDate,
+         crmacct_id,
+         crmacct_number, 
+         crmacct_name, 
+         '' AS parent,
+         '' AS parent_qtdisplayrole,
+         '' AS f_parent,
+         NULL AS parent_xtidrole,
+         COALESCE(crmacct_cust_id,-1) > 0 AS cust_qtdisplayrole,
+         crmacct_cust_id AS cust,
+         CASE WHEN (ophead_active AND ophead_target_date < CURRENT_DATE) THEN 'expired'
+              WHEN (ophead_active AND ophead_target_date > CURRENT_DATE) THEN 'future'
+         END AS due_qtforegroundrole 
+<? if exists("hasContext") ?>
+    FROM ophead
+<? else ?>
+    FROM ophead()
+<? endif ?>
+      JOIN opstage ON (ophead_opstage_id=opstage_id)
+      LEFT OUTER JOIN crmacct ON (crmacct_id=ophead_crmacct_id) 
+      LEFT OUTER JOIN incdtpriority ON (incdtpriority_id=ophead_priority_id) 
+<? if not exists("opportunities")?>
+    WHERE false
+<? else ?>
+    WHERE true
+<? endif ?>
+<? if exists("startStartDate") ?>
+  AND (ophead_start_date <= <? value("startStartDate") ?>)
+<? endif ?>
+<? if exists("startEndDate") ?>
+  AND (ophead_start_date >= <? value("startEndDate") ?>)
+<? endif ?>
+<? if exists("dueStartDate") ?>
+  AND (ophead_target_date <= <? value("dueStartDate") ?>)
+<? endif ?>
+<? if exists("dueEndDate") ?>
+  AND (ophead_target_date >= <? value("dueEndDate") ?>)
+<? endif ?>
+<? if exists("crmacct_id") ?>
+  AND (crmacct_id =<? value("crmacct_id") ?>)
+<? endif ?>
+<? if exists("completedonly") ?>
+  AND (NOT ophead_active)			
+<? elseif not exists("completed") ?>
+  AND (ophead_active)			
+<? endif ?>
+<? if exists("username") ?>
+  AND (<? value("username") ?> IN (ophead_username, ophead_owner_username))
+<? endif ?>
+<? if exists("assigned_username") ?> 
+  AND (ophead_username=<? value("assigned_username") ?>) 
+<? elseif exists("assigned_usr_pattern") ?>
+  AND (ophead_username ~ <? value("assigned_usr_pattern") ?>) 
+<? endif ?>
+<? if exists("owner_username") ?> 
+  AND (ophead_owner_username=<? value("owner_username") ?>) 
+<? elseif exists("owner_usr_pattern") ?>
+  AND (ophead_owner_username ~ <? value("owner_usr_pattern") ?>) 
+<? endif ?>
+) AS data
+ORDER BY hasDueDate desc, due, hasStartDate desc, start
