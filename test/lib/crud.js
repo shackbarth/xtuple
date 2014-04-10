@@ -223,7 +223,9 @@ var _ = require("underscore"),
       model.on('statusChange', modelCallback);
     } else {
       model.on('change:id', modelCallback);
-      model.on('change:' + model.idAttribute, modelCallback);
+      if (model.idAttribute !== 'id') {
+        model.on('change:' + model.idAttribute, modelCallback);
+      }
     }
     model.initialize(null, {isNew: true});
   };

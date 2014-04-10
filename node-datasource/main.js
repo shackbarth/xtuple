@@ -377,9 +377,11 @@ app.all('/:org/client/build/client-code', routes.clientCode);
 app.all('/:org/email', routes.email);
 app.all('/:org/export', routes.exxport);
 app.get('/:org/file', routes.file);
+app.all('/:org/oauth/generate-key', routes.generateOauthKey);
 app.get('/:org/generate-report', routes.generateReport);
 app.get('/:org/locale', routes.locale);
 app.get('/:org/reset-password', routes.resetPassword);
+app.post('/:org/oauth/revoke-token', routes.revokeOauthToken);
 app.get('/:org/queryOlap', routes.queryOlapCatalog);
 app.all('/:org/vcfExport', routes.vcfExport);
 

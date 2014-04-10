@@ -1,0 +1,47 @@
+.xv-navigator {
+
+  .xv-header {
+    background-color: @white;
+    padding: 6px 12px;
+    border-bottom: 1px solid @smoke;
+    height: 28px;
+    color: @bright-orange;
+    font-size: small;
+    font-weight: bold;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  >.xv-content-panel {
+
+    /**
+     * The enyo List height calculations really like to override this and make
+     * the list shorter and not consume all the space available.
+     */
+    height: 100%;
+  }
+
+  .xv-menu-container {
+    .xv-panels {
+      height: 100%;
+    }
+
+    .xv-navigator-menu {
+      .xv-list-item {
+        padding: 12px 10px;
+        color: @near-black;
+        background-color: @white;
+        border-bottom: 1px solid @smoke;
+
+        &.onyx-selected {
+          background-color: @slate-blue;
+          color: @white;
+          border-bottom: 2px solid @gray;
+        }
+      }
+    }
+  }
+
+}

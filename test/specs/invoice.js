@@ -310,7 +310,7 @@ TODO deferred to later sprint:
         @memberof InvoiceLine
         @description Contains the tax of an invoice line.
         @property {String} uuid The ID attribute ()
-        @property {TaxType} taxType 
+        @property {TaxType} taxType
         @property {TaxCode} taxCode
         @property {Money} amount
       */
@@ -1197,10 +1197,10 @@ TODO deferred to later sprint:
 
         enyo.platform.touch = true;
         workspace = new XV.InvoiceWorkspace();
-        assert.equal(workspace.$.lineItemsPanel.children[0].kind, "XV.InvoiceLineItemBox");
+        assert.equal(workspace.$.invoiceLineItemBox.kind, "XV.InvoiceLineItemBox");
         enyo.platform.touch = false;
         workspace = new XV.InvoiceWorkspace();
-        assert.equal(workspace.$.lineItemsPanel.children[0].kind, "XV.InvoiceLineItemGridBox");
+        assert.equal(workspace.$.invoiceLineItemBox.kind, "XV.InvoiceLineItemGridBox");
       });
       /**
         @member Navigation

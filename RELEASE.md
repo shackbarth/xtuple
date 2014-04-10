@@ -1,3 +1,50 @@
+4.4.0 (2014/04/04)
+==================
+
+Critical deployment changes
+---------------------------
+- The `oauth2` extension is now part of core. If you had its routes referenced
+  in your `config.js`'s `extensionRoutes` attribute, you should remove it.
+- Make sure you `git submodule update --init --recursive`
+
+Features and bugfixes
+---------------------
+- Completed 
+  issue #[22131](http://www.xtuple.org/xtincident/view/bugs/22131) 
+  _Drilldown support in analytic charts_ 
+- Implemented 
+  issue #[22656](http://www.xtuple.org/xtincident/view/bugs/22656) 
+  _Refactor panels and change visual presentation_ 
+- Fixed 
+  issue #[23012](http://www.xtuple.org/xtincident/view/bugs/23012) 
+  _Roles don't pull in translations_ 
+- Fixed 
+  issue #[23028](http://www.xtuple.org/xtincident/view/bugs/23028) 
+  _install_bi.sh NEEDS path to config file option_ 
+- Implemented 
+  issue #[23046](http://www.xtuple.org/xtincident/view/bugs/23046) 
+  _Update MW to create dynamic class id for enyo list items_ 
+- Implemented 
+  issue #[23086](http://www.xtuple.org/xtincident/view/bugs/23086) 
+  _Unified database build_ 
+- Fixed 
+  issue #[23094](http://www.xtuple.org/xtincident/view/bugs/23094) 
+  _Name/Date Overlap on Sales Order_ 
+- Implemented 
+  issue #[23108](http://www.xtuple.org/xtincident/view/bugs/23108) 
+  _Optimize XT.Data's buildClause to use joins on underlying tables and views_ 
+- Implemented 
+  issue #[23168](http://www.xtuple.org/xtincident/view/bugs/23168) 
+  _move OAUTH2 extension to core_ 
+- Fixed 
+  issue #[23183](http://www.xtuple.org/xtincident/view/bugs/23183) 
+  _*Converting sales order_ 
+- Fixed 
+  issue #[23260](http://www.xtuple.org/xtincident/view/bugs/23260) 
+  _Converting Quote to SO does not work_ 
+
+
+
 1.8.1 (2014/03/12)
 ==================
 

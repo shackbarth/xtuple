@@ -3,128 +3,59 @@
 */
 
 /* Pullout */
-.xv-pullout-header {
-  text-align: center;
-  padding: 10px 0;
-}
+.xv-pullout {
+  .xv-header {
+    .xv-navigator > .xv-header;
+    // TODO: for some reason the height is off
+    height: 15px;
+    border: none;
+  }
 
-.pullout {
+  .xv-app-panel;
   position: absolute;
-  top: 57px;
-  left: 0px;
+  top: @toolbarHeight;
+  left: 0;
   bottom: 0;
-  width: 320px;
-  background: @smoke;
-
-  .pullout-scroller {
-    position: relative;
-    margin-right: 4px;
-  }
-
-  .pullout-shadow {
-    position: absolute;
-    height: 100%;
-    width: 2px;
-    right: -2px;
-    /**
-      TODO: this is weird and indicates the REAL need to change the
-      whatever the css system is...this relative path is different...
-    **/
-    background: url(../../../../../../assets/sliding-shadow.png) repeat-y;
-    background-size: 20px 2px;
-  }
+  background-color: @white;
+  .box-shadow(4px 4px 10px rgba(0,0,0,0.20));
 
   .pullout-grabbutton {
     position: absolute;
     height: 54px;
     width: 50px;
-    bottom: 20px;
-    right: -46px;
+    bottom: 25px;
+    right: -50px;
     background-color: @smoke;
-    box-shadow: 4px 4px 4px rgba(0,0,0,0.3);
-    .border-radius-all(0, 10px, 10px, 0);
+    box-shadow: 4px 4px 4px rgba(0,0,0,0.25);
+    .border-top-right-radius(10px);
+    .border-bottom-right-radius(10px);
   }
 
-  .pullout-toolbar {
-    padding-top: 4px;
-    text-align: center;
-  }
-}
+  .xv-parameter-panel {
+    .xv-workspace-container > .xv-workspace > .xv-workspace-panel;
+    width: 100%;
+    margin: 0 4px 6px 0;
 
-.xv-groupbox {
-  &.xv-parameter {
-    min-width: 280px;
-    max-width: 320px;
-    margin: 4px 0 8px 4px;
-    padding: 0;
-
-    .top-drawer {
-      border-top: @silver 1px solid;
-      background-color: @smoke;
-      color: @header-gray;
-      padding: 7px 0 7px 5px;
-      > * {
-        margin-right: 10px;
-      }
+    .xv-buttons {
+      text-align: center;
     }
+
     .xv-filter-form {
-      .button-row {
-        background-color: @white;
-        padding: 7px;
-        text-align: center;
-        .onyx-button {
-          margin-right: 3px;
-        }
-      }
       .xv-list {
         height: 150px;
       }
     }
   }
-}
 
-#app_pullout_container,
-#app_pullout_help,
-#app_pullout_help_helpPage {
- height: 100%;
-}
-#app_pullout_help_helpPage {
-  border: none;
-  height: 100%;
-  width: 100%;
-}
-
-/* Parameter Widget */
-.xv-parameter-item {
-  background-color: @white;
-  .xv-label {
-    color: @black;
-  }
-  .xv-flexible-label {
-    color: @black;
+  .help-panel {
+    border: none;
+    height: 100%;
+    width: 100%;
   }
 
-  .xv-picker {
-    width: 150px;
-  }
-
-  .xv-radiogroup {
-    padding: 6px;
-    margin-left: 130px;
-  }
-}
-
-/* Layout Widget */
-.xv-tree {
-  background-color: @white;
-  .xv-tree-node {
-    /* These picker styles are for the ListAttr node */
-    .xv-pickerwidget {
-      display: inline-block;
-      padding: 4px;
-      .xv-picker-label {
-        width: 50px;
-      }
+  .history-panel {
+    .xv-list-item {
+      .xv-navigator > .xv-menu-container > .xv-navigator-menu > .xv-list-item;
     }
   }
 }

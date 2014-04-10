@@ -10,32 +10,12 @@
   padding-top: 4px;
   padding-bottom: 4px;
   border-bottom: 1px solid @silver;
+
   .xv-list-column {
     &.last {
       border-right: none;
     }
-    &.name-column {
-      padding-left: 7px;
-    }
-    &.first {
-      padding-left: 7px;
-    }
-    &.second {
-      padding-left: 7px;
-    }
-    &.third {
-      padding-left: 7px;
-    }
-    &.short {
-      padding-left: 7px;
-    }
-    &.small {
-      padding-left: 7px;
-    }
-    &.medium {
-      padding-left: 7px;
-    }
-    &.descr {
+    &.name-column, &.first, &.second, &.third, &.short, &.small, &.medium, &.descr {
       padding-left: 7px;
     }
   }
@@ -89,8 +69,7 @@
 }
 
 .xv-list {
-  background-color: @white;
-
+  background: @ghost;
   .xv-list-item > * {
     display: inline-block;
     vertical-align: middle;

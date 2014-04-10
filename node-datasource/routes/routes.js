@@ -37,12 +37,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     olapData = require('./olapdata'),
     file = require('./file'),
     generateReport = require('./generate_report'),
+    generateOauthKey = require('./generate_oauth_key'),
     locale = require('./locale'),
     passport = require('passport'),
     redirector = require('./redirector'),
     recover = require('./recover'),
     restDiscovery = require('./restDiscovery'),
     restRouter = require('./restRouter'),
+    revokeOauthToken = require('./revoke_oauth_token'),
     vcfExport = require('./vcfExport');
 
   //
@@ -96,11 +98,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.email = [ensureLogin, email.email];
   exports.exxport = [ensureLogin, exxport.exxport];
   exports.file = [ensureLogin, file.file];
+  exports.generateOauthKey = [ensureLogin, generateOauthKey.generateKey];
   exports.generateReport = [ensureLogin, generateReport.generateReport];
   exports.locale = [ensureLogin, locale.locale];
   exports.redirect = redirector.redirect;
   exports.analysis = [ensureLogin, analysis.analysis];
   exports.resetPassword = [ensureLogin, changePassword.resetPassword];
+  exports.revokeOauthToken = [ensureLogin, revokeOauthToken.revokeToken];
   exports.vcfExport = [ensureLogin, vcfExport.vcfExport];
 
 }());

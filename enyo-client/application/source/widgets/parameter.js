@@ -231,7 +231,6 @@ trailing:true, white:true, strict:false*/
     name: "XV.ContactListParameters",
     kind: "XV.ParameterWidget",
     characteristicsRole: "isContacts",
-    showLayout: true,
     components: [
       {kind: "onyx.GroupboxHeader", content: "_contact".loc()},
       {name: "isActive", attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",
