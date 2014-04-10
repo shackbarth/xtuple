@@ -1,0 +1,489 @@
+<!DOCTYPE openRPTDef>
+<report>
+ <title>Time Phased Planned Revenue/Expenses By Planner Code</title>
+ <name>TimePhasedPlannedRevenueExpensesByPlannerCode</name>
+ <description></description>
+ <size>Letter</size>
+ <portrait/>
+ <topmargin>50</topmargin>
+ <bottommargin>50</bottommargin>
+ <rightmargin>50</rightmargin>
+ <leftmargin>50</leftmargin>
+ <querysource>
+  <name>head</name>
+  <sql>SELECT &lt;? if exists(&quot;warehous_id&quot;) ?>
+         ( SELECT warehous_code
+             FROM whsinfo
+            WHERE (warehous_id=&lt;? value(&quot;warehous_id&quot;) ?>) )
+       &lt;? else ?>
+         text('All Sites')
+       &lt;? endif ?>
+       AS warehouse,
+       &lt;? if exists(&quot;plancode_id&quot;) ?>
+         ( SELECT (plancode_code || '-' || plancode_name)
+             FROM plancode
+            WHERE (plancode_id=&lt;? value(&quot;plancode_id&quot;) ?>) )
+       &lt;? elseif exists(&quot;plancode_pattern&quot;) ?>
+         text(&lt;? value(&quot;plancode_pattern&quot;) ?>)
+       &lt;? else ?>
+         text('All Planner Codes')
+       &lt;? endif ?>
+       AS plncode;</sql>
+ </querysource>
+ <querysource>
+  <name>detail</name>
+  <sql>SELECT (formatDate(calitem_startdate) || '-' || formatDate(calitem_enddate)) AS period,
+       formatMoney(COALESCE(cost,0.0)) AS f_cost,
+       formatMoney(COALESCE(revenue,0.0)) AS f_revenue,
+       formatMoney(COALESCE(revenue,0.0) - COALESCE(cost,0.0)) AS f_profit
+  FROM ( SELECT calitem_startdate,
+                calitem_enddate,
+                SUM(plannedCost(plancode_id, warehous_id,
+                    &lt;? if exists(&quot;actualCost&quot;) ?>'A'&lt;? else ?>'S'&lt;? endif ?>
+                    , calitem_id))
+                 AS cost,
+                &lt;? if exists(&quot;averagePrice&quot;) ?>
+                  SUM(plannedRevenue(plancode_id, warehous_id, 'A', calitem_id,
+                    &lt;? value(&quot;startEvalDate&quot;) ?>, &lt;? value(&quot;endEvalDate&quot;) ?>))
+                &lt;? else ?>
+                  SUM(plannedRevenue(plancode_id, warehous_id, 'L', calitem_id))
+                &lt;? endif ?>
+                AS revenue
+           FROM plancode, whsinfo,
+                ( SELECT rcalitem_id AS calitem_id,
+                         findPeriodStart(rcalitem_id) AS calitem_startdate,
+                         findPeriodEnd(rcalitem_id) AS calitem_enddate
+                    FROM rcalitem
+                   WHERE (rcalitem_id in (
+&lt;? foreach(&quot;period_id_list&quot;) ?>
+  &lt;? if not isfirst(&quot;period_id_list&quot;) ?>
+    ,
+  &lt;? endif ?>
+  &lt;? value(&quot;period_id_list&quot;) ?>
+&lt;? endforeach ?>
+                                         ))
+                   UNION
+                  SELECT acalitem_id AS calitem_id,
+                         findPeriodStart(acalitem_id) AS calitem_startdate,
+                         findPeriodEnd(acalitem_id) AS calitem_enddate
+                    FROM acalitem
+                   WHERE (acalitem_id in (
+&lt;? foreach(&quot;period_id_list&quot;) ?>
+  &lt;? if not isfirst(&quot;period_id_list&quot;) ?>
+    ,
+  &lt;? endif ?>
+  &lt;? value(&quot;period_id_list&quot;) ?>
+&lt;? endforeach ?>
+                                         ))
+                 ) AS calitem
+          WHERE ((TRUE)
+&lt;? if exists(&quot;warehous_id&quot;) ?>
+            AND  (warehous_id=&lt;? value(&quot;warehous_id&quot;) ?>)
+&lt;? endif ?>
+&lt;? if exists(&quot;plancode_id&quot;) ?>
+            AND  (plancode_id=&lt;? value(&quot;plancode_id&quot;) ?>)
+&lt;? elseif exists(&quot;plancode_pattern&quot;) ?>
+            AND  (plancode_code ~ &lt;? value(&quot;plancode_pattern&quot;) ?>)
+&lt;? endif ?>
+                )
+       GROUP BY calitem_startdate, calitem_enddate
+       ) AS data
+ORDER BY calitem_startdate</sql>
+ </querysource>
+ <rpthead>
+  <height>221</height>
+  <field>
+   <rect>
+    <x>140</x>
+    <y>105</y>
+    <width>200</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>warehouse</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>15</x>
+    <y>80</y>
+    <width>120</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Planner Code:</string>
+  </label>
+  <label>
+   <rect>
+    <x>5</x>
+    <y>10</y>
+    <width>740</width>
+    <height>38</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>18</size>
+    <weight>bold</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Time Phased Planned Revenue/Expenses By Planner Code</string>
+  </label>
+  <label>
+   <rect>
+    <x>30</x>
+    <y>105</y>
+    <width>105</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Site:</string>
+  </label>
+  <label>
+   <rect>
+    <x>535</x>
+    <y>200</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Revenue</string>
+  </label>
+  <label>
+   <rect>
+    <x>640</x>
+    <y>200</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Gross Profit</string>
+  </label>
+  <label>
+   <rect>
+    <x>430</x>
+    <y>200</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Cost</string>
+  </label>
+  <label>
+   <rect>
+    <x>10</x>
+    <y>200</y>
+    <width>250</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Period</string>
+  </label>
+  <field>
+   <rect>
+    <x>140</x>
+    <y>80</y>
+    <width>300</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>plncode</column>
+   </data>
+  </field>
+  <line>
+   <xstart>5</xstart>
+   <ystart>215</ystart>
+   <xend>745</xend>
+   <yend>215</yend>
+   <weight>2</weight>
+  </line>
+ </rpthead>
+ <pghead>
+  <firstpage/>
+  <height>6</height>
+ </pghead>
+ <pghead>
+  <height>26</height>
+  <label>
+   <rect>
+    <x>640</x>
+    <y>5</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Gross Profit</string>
+  </label>
+  <label>
+   <rect>
+    <x>430</x>
+    <y>5</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Cost</string>
+  </label>
+  <label>
+   <rect>
+    <x>10</x>
+    <y>5</y>
+    <width>250</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Period</string>
+  </label>
+  <line>
+   <xstart>5</xstart>
+   <ystart>20</ystart>
+   <xend>745</xend>
+   <yend>20</yend>
+   <weight>2</weight>
+  </line>
+  <label>
+   <rect>
+    <x>535</x>
+    <y>5</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Revenue</string>
+  </label>
+ </pghead>
+ <section>
+  <name>detail</name>
+  <detail>
+   <key>
+    <query>detail</query>
+   </key>
+   <height>16</height>
+   <field>
+    <rect>
+     <x>430</x>
+     <y>0</y>
+     <width>100</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_cost</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>10</x>
+     <y>0</y>
+     <width>250</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <hcenter/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>period</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>640</x>
+     <y>0</y>
+     <width>100</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_profit</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>535</x>
+     <y>0</y>
+     <width>100</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_revenue</column>
+    </data>
+   </field>
+  </detail>
+ </section>
+ <pgfoot>
+  <height>16</height>
+  <field>
+   <rect>
+    <x>690</x>
+    <y>0</y>
+    <width>51</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>Context Query</query>
+    <column>page_number</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>600</x>
+    <y>0</y>
+    <width>85</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Page:</string>
+  </label>
+  <field>
+   <rect>
+    <x>95</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>Context Query</query>
+    <column>report_date</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>5</x>
+    <y>0</y>
+    <width>85</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Report Date:</string>
+  </label>
+ </pgfoot>
+</report>
