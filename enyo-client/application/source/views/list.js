@@ -187,7 +187,7 @@ Globalize:true, async:true, console:true*/
         yesLabel: "_reassign".loc(),
         noLabel: "_cancel".loc(),
         component: {kind: "XV.UserAccountWidget", attr: "assignedTo.username",
-          label: "_assignedTo".loc()}
+          label: "_assignTo".loc()}
       });
     },
     getWorkspace: function () {
