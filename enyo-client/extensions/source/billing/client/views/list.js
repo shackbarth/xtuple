@@ -11,7 +11,6 @@ XT.extensions.billing.initLists = function () {
     view: 'XM.SalesCategoryView',
     label: '_salesCategories'.loc(),
     collection: 'XM.SalesCategoryCollection',
-
     components: [
       {kind: 'XV.ListItemDecorator', components: [
         {name: 'listItem', kind: 'XV.SalesCategoryListItem'}

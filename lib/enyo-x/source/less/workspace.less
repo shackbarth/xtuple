@@ -1,0 +1,113 @@
+@panelSpacing: 4px;
+@labelWidth: 120px;
+@decoratorPadding: 8px;
+@fieldDecoratorWidth: 180px;
+@fieldWidth: @fieldDecoratorWidth - (2 * @decoratorPadding);
+@iconWidth: 16px;
+@iconPadding: 4px;
+@iconFieldWidth: @fieldWidth - @iconWidth - (2 * @iconPadding);
+
+.xv-workspace-container {
+
+  background: @white;
+  .box-shadow(-2px -2px 6px rgba(0,0,0,0.20));
+
+  .xv-content-panel {
+    .xv-header {
+      .xv-navigator > .xv-header;
+      padding: 6px 12px;
+      border: none;
+    }
+  }
+
+  >.xv-menu-container {
+    .xv-navigator > .xv-menu-container;
+    .xv-header {
+      .xv-navigator > .xv-header;
+    }
+  }
+
+  .xv-workspace {
+    background-color: @white;
+
+    >.enyo-panels {
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    .panel {
+      .xv-buttons {
+        background-color: @lightest-gray;
+        margin: 0;
+
+        .onyx-button {
+          border: 1px solid @smoke;
+          border-radius: 0;
+          margin: 0;
+        }
+      }
+    }
+
+    .xv-workspace-panel {
+
+      .onyx-groupbox-header {
+        padding: 6px 10px;
+        border-bottom: 1px solid @smoke;
+        background: @lightest-gray;
+        color: @near-black;
+        i {
+          margin-right: 10px;
+        }
+      }
+
+      width: @defaultPanelWidth;
+      margin: 0 @panelSpacing 0 2px;
+      padding: 0;
+      background: @ghost;
+      text-overflow: ellipsis;
+      border: 1px solid @smoke;
+
+      &.small-panel {
+        width: 600px;
+      }
+      &.medium-panel {
+        width: 700px;
+      }
+      &.large-panel {
+        width: 800px;
+      }
+
+      // fix labels with widget refactor
+      .xv-label, .xv-decorated-label, .xv-flexible-label {
+        width: @labelWidth !important;
+        max-width: 100%;
+        padding: 0 8px 0 6px;
+        text-align: right;
+        vertical-align: middle;
+      }
+      &.xv-assignment-box {
+        .xv-flexible-label, .xv-label {
+          width: 200px !important;
+        }
+      }
+
+      .xv-input {
+        border-bottom: 1px solid @smoke;
+        margin: 0px;
+      }
+
+      .enyo-fittable-columns-layout > * {
+        vertical-align: middle;
+      }
+    }
+
+    .xv-totals-panel {
+      .onyx-input-decorator > input, * {
+        font-size: @totalsFontSize;
+      }
+      .xv-input {
+        border: none;
+      }
+    }
+  }
+}

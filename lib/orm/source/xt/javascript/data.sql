@@ -245,7 +245,7 @@ select xt.install_js('XT','Data','xtuple', $$
                   params[pcount] += ' ' + op + ' ARRAY[' + param.value.join(',') + ']' + pgType;
                 } else {
                   childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
-                  sourceTableAlias = n === 0 ? "t1" : "jt" + joins.length - 1;
+                  sourceTableAlias = n === 0 ? "t1" : "jt" + (joins.length - 1);
                   joinIdentifiers.push(
                     this.getNamespaceFromNamespacedTable(childOrm.table),
                     this.getTableFromNamespacedTable(childOrm.table),
@@ -259,10 +259,26 @@ select xt.install_js('XT','Data','xtuple', $$
               }
             } else {
               prop = XT.Orm.getProperty(orm, param.attribute);
-              if (!prop) {
-                plv8.elog(ERROR, 'Attribute not found in object map: ' + param.attribute[c]);
+              pertinentExtension = XT.Orm.getProperty(orm, param.attribute, true);
+              if(pertinentExtension.isChild || pertinentExtension.isExtension) {
+                /* We'll need to join this orm extension */
+                fromKeyProp = XT.Orm.getProperty(orm, pertinentExtension.relations[0].inverse);
+                joinIdentifiers.push(
+                  this.getNamespaceFromNamespacedTable(pertinentExtension.table),
+                  this.getTableFromNamespacedTable(pertinentExtension.table),
+                  fromKeyProp.attr.column,
+                  pertinentExtension.relations[0].column);
+                joins.push("left join %" + (joinIdentifiers.length - 3) + "$I.%" + (joinIdentifiers.length - 2)
+                  + "$I jt" + joins.length + " on t1.%"
+                  + (joinIdentifiers.length - 1) + "$I = jt" + joins.length + ".%" + joinIdentifiers.length + "$I");
               }
-              identifiers.push("t1");
+              if (!prop) {
+                plv8.elog(ERROR, 'Attribute not found in object map: ' + param.attribute);
+              }
+
+              identifiers.push(pertinentExtension.isChild || pertinentExtension.isExtension ? 
+                "jt" + (joins.length - 1) : 
+                "t1");
               identifiers.push(prop.attr.column);
               pgType = this.getPgTypeFromOrmType(
                 this.getNamespaceFromNamespacedTable(orm.table),
@@ -341,7 +357,7 @@ select xt.install_js('XT','Data','xtuple', $$
                         params[pcount] = "lower(" + params[pcount] + ")";
                       }
                     } else {
-                      sourceTableAlias = n === 0 ? "t1" : "jt" + joins.length - 1;
+                      sourceTableAlias = n === 0 ? "t1" : "jt" + (joins.length - 1);
                       if (prop.toOne && prop.toOne.type) {
                         childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
                         joinIdentifiers.push(
@@ -370,7 +386,7 @@ select xt.install_js('XT','Data','xtuple', $$
                 /* Validate attribute. */
                 prop = XT.Orm.getProperty(orm, param.attribute[c]);
                 pertinentExtension = XT.Orm.getProperty(orm, param.attribute[c], true);
-                if(pertinentExtension.isChild) {
+                if(pertinentExtension.isChild || pertinentExtension.isExtension) {
                   /* We'll need to join this orm extension */
                   fromKeyProp = XT.Orm.getProperty(orm, pertinentExtension.relations[0].inverse);
                   joinIdentifiers.push(
@@ -386,7 +402,9 @@ select xt.install_js('XT','Data','xtuple', $$
                   plv8.elog(ERROR, 'Attribute not found in object map: ' + param.attribute[c]);
                 }
 
-                identifiers.push(pertinentExtension.isChild ? "jt" + (joins.length - 1) : "t1");
+                identifiers.push(pertinentExtension.isChild || pertinentExtension.isExtension ? 
+                  "jt" + (joins.length - 1) : 
+                  "t1");
                 identifiers.push(prop.attr.column);
 
                 /* Do a persional privs array search e.g. 'admin' = ANY (usernames_array). */
@@ -472,7 +490,7 @@ select xt.install_js('XT','Data','xtuple', $$
               } else {
                 orderByParams[pcount] = "(" + orderByParams[pcount] + ").";
                 orm = this.fetchOrm(nameSpace, prop.toOne.type);
-                sourceTableAlias = n === 0 ? "t1" : "jt" + joins.length - 1;
+                sourceTableAlias = n === 0 ? "t1" : "jt" + (joins.length - 1);
                 joinIdentifiers.push(
                   this.getNamespaceFromNamespacedTable(orm.table),
                   this.getTableFromNamespacedTable(orm.table),
@@ -493,7 +511,13 @@ select xt.install_js('XT','Data','xtuple', $$
             }
             orderByIdentifiers.push(orderBy[i].attribute);
             orderByColumnIdentifiers.push("t1");
-            orderByColumnIdentifiers.push(prop.attr.column);
+            /*
+              We might need to look at toOne if the client is asking for a toOne without specifying
+              the path. Unfortunately, if they do specify the path, then sql2 will fail. So this does
+              work, although we're really sorting by the primary key of the toOne, whereas the 
+              user probably wants us to sort by the natural key TODO
+            */
+            orderByColumnIdentifiers.push(prop.attr ? prop.attr.column : prop.toOne.column);
             orderByParams.push("%" + orderByIdentifiers.length + "$I");
             orderByColumnParams.push("%" + (orderByColumnIdentifiers.length - 1) + "$I.%" + orderByColumnIdentifiers.length + "$I");
             groupByColumnParams.push("%" + (orderByColumnIdentifiers.length - 1) + "$I.%" + orderByColumnIdentifiers.length + "$I");
@@ -1736,7 +1760,7 @@ select xt.install_js('XT','Data','xtuple', $$
       }
 
       pgType = plv8.execute(sql, values);
-      pgType = pgType ? pgType[0].data_type : false;
+      pgType = pgType && pgType[0] ? pgType[0].data_type : false;
 
       return pgType;
     },

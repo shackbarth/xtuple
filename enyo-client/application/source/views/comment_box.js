@@ -93,10 +93,8 @@ white:true*/
           ]
         }]
       },
-      {kind: 'FittableColumns', classes: "xv-groupbox-buttons",
-        components: [
-        {kind: "onyx.Button", name: "newButton", onclick: "newItem",
-          content: "_new".loc(), classes: "xv-groupbox-button-single"}
+      {kind: 'FittableColumns', classes: "xv-buttons", components: [
+        {kind: "onyx.Button", name: "newButton", onclick: "newItem", classes: "icon-plus"}
       ]}
     ]
   });
