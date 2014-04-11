@@ -41,14 +41,14 @@ BEGIN
 
   INSERT INTO prj
   ( prj_id, prj_number, prj_name, 
-    prj_descrip, prj_status,
+    prj_descrip, prj_status, prj_prjtype_id,
     prj_so, prj_wo, prj_po,
     prj_owner_username, prj_start_date,
     prj_due_date, prj_assigned_date, prj_completed_date,
     prj_username, prj_recurring_prj_id,
     prj_crmacct_id, prj_cntct_id )
   SELECT _prjid, UPPER(pPrjNumber), pPrjName,
-         prj_descrip, 'P',
+         prj_descrip, 'P', prj_prjtype_id,
          prj_so, prj_wo, prj_po,
          prj_owner_username, NULL,
          (prj_due_date + COALESCE(_offset, 0)),
@@ -96,3 +96,4 @@ $BODY$
   COST 100;
 ALTER FUNCTION copyproject(integer, text, text, date)
   OWNER TO admin;
+
