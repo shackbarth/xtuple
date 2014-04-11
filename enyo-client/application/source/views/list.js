@@ -1,7 +1,8 @@
 /*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true, white:true, strict: false*/
-/*global XT:true, XM:true, XV:true, _:true, window: true, enyo:true, Globalize:true*/
+/*global XT:true, XM:true, XV:true, _:true, window: true, enyo:true,
+Globalize:true, async:true, console:true*/
 
 (function () {
 
@@ -83,8 +84,18 @@ trailing:true, white:true, strict: false*/
     published: {
       activityActions: []
     },
+    actions: [
+      {
+        name: "reassignUser",
+        method: "reassignUser",
+        //privilege: need to create "ReassignWorkflow" priv
+        isViewMethod: true,
+        notify: false
+      }
+    ],
     events: {
-      "onNotify": ""
+      onNotify: "",
+      onPopupWorkspace: ""
     },
     query: {orderBy: [
       {attribute: 'dueDate'},
@@ -92,6 +103,7 @@ trailing:true, white:true, strict: false*/
       {attribute: 'uuid'}
     ]},
     allowPrint: true,
+    multiSelect: true,
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
@@ -113,12 +125,73 @@ trailing:true, white:true, strict: false*/
           {kind: "XV.ListColumn", fit: true, components: [
             {kind: "XV.ListAttr", attr: "owner.username",
               placeholder: "_noOwner".loc()},
-            {kind: "XV.ListAttr", attr: "assignedTo.username",
+            {kind: "XV.ListAttr", attr: "assignedTo.username", name: "assignedTo",
               placeholder: "_noAssignedTo".loc()}
           ]}
         ]}
       ]}
     ],
+    selectedModels: function () {
+      var collection = this.getValue(),
+        models = [],
+        selected;
+      if (collection.length) {
+        selected = _.keys(this.getSelection().selected);
+        // Using the selected index keys, go grab the models and return them in an array
+        models.push(_.map(selected, function (index) {
+          return XT.app.$.postbooks.$.navigator.$.contentPanels.$.activityList.getModel(index);
+        }));
+      }
+      return models;
+    },
+    reassignUser: function () {
+      var callback = function (resp) {
+        if (!resp.answer) {
+          return;
+        } else if (!resp.componentValue) {
+          this.$.navigator.$.contentPanels.getActive().doNotify({
+            type: XM.Model.WARNING,
+            message: "_noUserSelected".loc()
+          });
+        } else {
+          // Gather selected models, assemble dispatch params object and send dispatch to server
+          var options = {},
+            params = [],
+            result = {},
+            navigator = this.$.navigator,
+            models = navigator.$.contentPanels.getActive().selectedModels()[0],
+            assignedTo = resp.componentValue.id,
+            ids = _.map(models, function (model) {
+              return model.id;
+            });
+          // Loop through and assemble dispatch param object
+          for (var i = 0; i < ids.length; i++) {
+            params.push({
+              activityId: ids[0],
+              username: assignedTo
+            });
+          }
+
+          options.success = function (resp) {
+            navigator.requery();
+            return;
+          };
+
+          // Send to server with dispath. Need to pass options.error callback for error handling
+          XM.Model.prototype.dispatch("XM.Activity", "reassignUser", params, options);
+        }
+      };
+      // NOTE - just make my own notifyPopup on this view if there are roadblocks here
+      this.doNotify({
+        type: XM.Model.QUESTION,
+        callback: callback,
+        message: "_reassignSelectedActivities".loc(),
+        yesLabel: "_reassign".loc(),
+        noLabel: "_cancel".loc(),
+        component: {kind: "XV.UserAccountWidget", attr: "assignedTo.username",
+          label: "_assignedTo".loc()}
+      });
+    },
     getWorkspace: function () {
       var collection = this.getValue(),
         model = collection.at(this._lastTapIndex),
@@ -166,7 +239,7 @@ trailing:true, white:true, strict: false*/
         this.inherited(arguments);
         model.id = oldId;
       }
-    },
+    }
   });
 
   // ..........................................................
