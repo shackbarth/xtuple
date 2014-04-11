@@ -1,0 +1,37 @@
+-- Group: countTags
+-- Name: create
+-- Notes: used by createCountTagsByParameterList
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT createCountTag(itemsite_id, <? value("comments") ?>, <? value("priority") ?>, <? value("freeze") ?>, <? value("location_id") ?>)
+FROM ( SELECT itemsite_id
+       FROM itemsite JOIN item ON (item_id=itemsite_item_id)
+<? if exists("location_id") ?>
+                     JOIN itemloc ON ( (itemloc_location_id=<? value("location_id") ?>)
+                                   AND (itemloc_itemsite_id = itemsite_id)
+                                   AND (validLocation(<? value("location_id") ?>, itemsite_id)) )
+<? endif ?>
+       WHERE (itemsite_active)
+         AND (item_active)
+<? if exists("warehous_id") ?>
+         AND (itemsite_warehous_id=<? value("warehous_id") ?>)
+<? endif ?>
+<? if exists("classcode_id") ?>
+         AND (item_classcode_id=<? value("classcode_id") ?>)
+<? elseif exists("classcode_pattern") ?>
+         AND (item_classcode_id IN (SELECT classcode_id
+                                    FROM classcode
+                                    WHERE (classcode_code ~ <? value("classcode_pattern") ?>)))
+<? endif ?>
+<? if exists("plancode_id") ?>
+  AND (itemsite_plancode_id=<? value("plancode_id") ?>)
+<? elseif exists("plancode_pattern") ?>
+  AND (itemsite_plancode_id IN (SELECT plancode_id
+                                FROM plancode
+                                WHERE (plancode_code ~ <? value("plancode_pattern") ?>)))
+<? endif ?>
+<? if exists("ignoreZeroBalance") ?>
+         AND (itemsite_qtyonhand <> 0.0)
+<? endif ?>
+       ORDER BY item_number ) AS data;

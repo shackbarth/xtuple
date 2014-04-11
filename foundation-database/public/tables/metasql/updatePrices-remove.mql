@@ -1,0 +1,12 @@
+-- Group: updateprices
+-- Name: remove
+-- Notes:
+-- Notes:
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+DELETE FROM selsched
+<? if exists("ipshead_id") ?>
+WHERE (selsched_ipshead_id=<? value("ipshead_id") ?>)
+<? endif ?>
+;

@@ -1,0 +1,28 @@
+-- Group: updateprices
+-- Name: add
+-- Notes:
+-- Notes:
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+  INSERT INTO selsched
+<? if exists("ipshead_id") ?>
+  VALUES (<? value("ipshead_id") ?>);
+<? else ?>
+  SELECT ipshead_id
+  FROM ipshead
+  WHERE ( (ipshead_id NOT IN (
+  	SELECT selsched_ipshead_id
+  	FROM selsched
+  	WHERE (selsched_ipshead_id=ipshead_id)))
+<? if not exists("showEffective") ?>
+  AND (ipshead_effective <= CURRENT_DATE)
+<? endif ?>
+<? if not exists("showExpired") ?>
+  AND (ipshead_expires > CURRENT_DATE)
+<? endif ?>
+<? if not exists("showCurrent") ?>
+  AND (CURRENT_DATE NOT BETWEEN ipshead_effective AND ipshead_expires -1)
+<? endif ?>
+ );
+

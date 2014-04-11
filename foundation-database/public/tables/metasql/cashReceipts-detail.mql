@@ -1,0 +1,300 @@
+-- Group: cashReceipts
+-- Name: detail
+-- Notes: used by dspCashReceipts
+-- There are 2 display modes for this query:
+-- 1) Legacy mode which uses A/R Application information
+-- 2) Version 3.3.0 upgrade mode which uses Cash Receipt information
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+<? if exists("LegacyDisplayMode") ?>
+
+-- Posted cash receipts
+SELECT arapply_id, 1 AS type, '' AS cashrcpt_number, cust_number, cust_name,
+       false AS voided, true AS posted, arapply_postdate AS postdate,
+       ( CASE WHEN (arapply_source_doctype='C') THEN <? value("creditMemo") ?>
+              WHEN (arapply_source_doctype='R') THEN <? value("cashdeposit") ?>
+              WHEN (arapply_fundstype='C') THEN <? value("check") ?>
+              WHEN (arapply_fundstype='T') THEN <? value("certifiedCheck") ?>
+              WHEN (arapply_fundstype='M') THEN <? value("masterCard") ?>
+              WHEN (arapply_fundstype='V') THEN <? value("visa") ?>
+              WHEN (arapply_fundstype='A') THEN <? value("americanExpress") ?>
+              WHEN (arapply_fundstype='D') THEN <? value("discoverCard") ?>
+              WHEN (arapply_fundstype='R') THEN <? value("otherCreditCard") ?>
+              WHEN (arapply_fundstype='K') THEN <? value("cash") ?>
+              WHEN (arapply_fundstype='W') THEN <? value("wireTransfer") ?>
+              WHEN (arapply_fundstype='O') THEN <? value("other") ?>
+         END || ' ' ||
+         CASE WHEN (arapply_source_doctype IN ('C','R')) THEN TEXT(arapply_source_docnumber)
+              ELSE arapply_refnumber
+         END ) AS source,
+       COALESCE(cashrcptitem_cashrcpt_id,cashrcptmisc_cashrcpt_id,-1) AS source_xtidrole,
+       ( CASE WHEN (arapply_target_doctype='D') THEN <? value("debitMemo") ?>
+              WHEN (arapply_target_doctype='I') THEN <? value("invoice") ?>
+              ELSE <? value("other") ?>
+         END || ' ' || TEXT(arapply_target_docnumber) ) AS target,
+       COALESCE(arapply_target_aropen_id,-1) AS target_xtidrole,
+       arapply_applied AS applied,
+       'curr' AS applied_xtnumericrole,
+       currtobase(arapply_curr_id,arapply_applied,arapply_postdate) AS base_applied,
+<? if exists("includeFormatted") ?>
+       formatDate(arapply_postdate) AS f_postdate,
+       formatMoney(arapply_applied) AS f_applied,
+       formatMoney(currtobase(arapply_curr_id,arapply_applied,arapply_postdate)) AS f_base_applied,
+<? endif ?>
+       'curr' AS base_applied_xtnumericrole,
+       0 AS base_applied_xttotalrole,
+       currConcat(arapply_curr_id) AS currAbbr,
+       arapply_postdate AS sortdate
+FROM custinfo LEFT OUTER JOIN custgrpitem ON (custgrpitem_cust_id=cust_id), arapply
+  LEFT OUTER JOIN cashrcptitem ON ((arapply_reftype='CRA')
+                               AND (arapply_ref_id=cashrcptitem_id))
+  LEFT OUTER JOIN cashrcptmisc ON ((arapply_reftype='CRD')
+                               AND (arapply_ref_id=cashrcptmisc_id))
+WHERE ( (arapply_cust_id=cust_id)
+  AND   (arapply_postdate BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+  AND   (arapply_source_doctype ='K')
+<? if exists("cust_id") ?>
+  AND   (cust_id=<? value("cust_id") ?>)
+<? elseif exists("custtype_id") ?>
+  AND   (cust_custtype_id=<? value("custtype_id") ?>)
+<? elseif exists("custgrp_id") ?>
+  AND   (custgrpitem_custgrp_id=<? value("custgrp_id") ?>)
+<? elseif exists("custtype_pattern") ?>
+  AND   (cust_custtype_id IN (SELECT custtype_id FROM custtype WHERE (custtype_code ~ <? value("custtype_pattern") ?>)))
+<? endif ?>
+      )
+
+-- Unposted cash receipts
+UNION
+SELECT cashrcpt_id, 2 AS type, '' AS cashrcpt_number, cust_number, cust_name,
+       false AS voided, false AS posted, cashrcpt_distdate AS postdate,
+       ( CASE WHEN (cashrcpt_fundstype='C') THEN <? value("check") ?>
+              WHEN (cashrcpt_fundstype='T') THEN <? value("certifiedCheck") ?>
+              WHEN (cashrcpt_fundstype='M') THEN <? value("masterCard") ?>
+              WHEN (cashrcpt_fundstype='V') THEN <? value("visa") ?>
+              WHEN (cashrcpt_fundstype='A') THEN <? value("americanExpress") ?>
+              WHEN (cashrcpt_fundstype='D') THEN <? value("discoverCard") ?>
+              WHEN (cashrcpt_fundstype='R') THEN <? value("otherCreditCard") ?>
+              WHEN (cashrcpt_fundstype='K') THEN <? value("cash") ?>
+              WHEN (cashrcpt_fundstype='W') THEN <? value("wireTransfer") ?>
+              WHEN (cashrcpt_fundstype='O') THEN <? value("other") ?>
+         END || ' ' || cashrcpt_docnumber ) AS source,
+      cashrcpt_id AS source_xtidrole,
+       <? value("unposted") ?> AS target,
+       -1 AS target_xtidrole,
+       cashrcpt_amount AS applied,
+       'curr' AS applied_xtnumericrole,
+       (cashrcpt_amount / cashrcpt_curr_rate) AS base_applied,
+<? if exists("includeFormatted") ?>
+       formatDate(cashrcpt_distdate) AS f_postdate,
+       formatMoney(cashrcpt_amount) AS f_applied,
+       formatMoney(cashrcpt_amount / cashrcpt_curr_rate) AS f_base_applied,
+<? endif ?>
+       'curr' AS base_applied_xtnumericrole,
+       0 AS base_applied_xttotalrole,
+       currConcat(cashrcpt_curr_id) AS currAbbr,
+       cashrcpt_distdate AS sortdate
+FROM cashrcpt, custinfo LEFT OUTER JOIN custgrpitem ON (custgrpitem_cust_id=cust_id)
+WHERE ( (NOT cashrcpt_posted)
+  AND   (cashrcpt_cust_id=cust_id)
+  AND   (cashrcpt_distdate BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+<? if exists("cust_id") ?>
+  AND   (cust_id=<? value("cust_id") ?>)
+<? elseif exists("custtype_id") ?>
+  AND   (cust_custtype_id=<? value("custtype_id") ?>)
+<? elseif exists("custgrp_id") ?>
+  AND   (custgrpitem_custgrp_id=<? value("custgrp_id") ?>)
+<? elseif exists("custtype_pattern") ?>
+  AND   (cust_custtype_id IN (SELECT custtype_id FROM custtype WHERE (custtype_code ~ <? value("custtype_pattern") ?>)))
+<? endif ?>
+      )
+
+-- Cash Advance
+UNION
+SELECT aropen_id, 3 AS type, '' AS cashrcpt_number, cust_number, cust_name,
+       false AS voided, true AS posted, aropen_docdate AS postdate,
+       ( CASE WHEN (substr(aropen_notes, 16, 1)='C') THEN <? value("check") ?>
+              WHEN (substr(aropen_notes, 16, 1)='T') THEN <? value("certifiedCheck") ?>
+              WHEN (substr(aropen_notes, 16, 1)='M') THEN <? value("masterCard") ?>
+              WHEN (substr(aropen_notes, 16, 1)='V') THEN <? value("visa") ?>
+              WHEN (substr(aropen_notes, 16, 1)='A') THEN <? value("americanExpress") ?>
+              WHEN (substr(aropen_notes, 16, 1)='D') THEN <? value("discoverCard") ?>
+              WHEN (substr(aropen_notes, 16, 1)='R') THEN <? value("otherCreditCard") ?>
+              WHEN (substr(aropen_notes, 16, 1)='K') THEN <? value("cash") ?>
+              WHEN (substr(aropen_notes, 16, 1)='W') THEN <? value("wireTransfer") ?>
+              WHEN (substr(aropen_notes, 16, 1)='O') THEN <? value("other") ?>
+         END || ' ' ||
+         substr(aropen_notes, 18) ) AS source,
+       cashrcptitem_cashrcpt_id AS source_xtidrole,
+       CASE WHEN aropen_doctype = 'R' THEN
+         <? value("cashdeposit") ?> 
+       ELSE <? value("creditMemo") ?> 
+       END AS target,
+       aropen_id AS target_xtidrole,
+       aropen_amount AS applied,
+       'curr' AS applied_xtnumericrole,
+       aropen_amount / aropen_curr_rate AS base_applied,
+<? if exists("includeFormatted") ?>
+       formatDate(aropen_docdate) AS f_postdate,
+       formatMoney(aropen_amount) AS f_applied,
+       formatMoney(aropen_amount / aropen_curr_rate) AS f_base_applied,
+<? endif ?>
+       'curr' AS base_applied_xtnumericrole,
+       0 AS base_applied_xttotalrole,
+       currConcat(aropen_curr_id) AS currAbbr,
+       aropen_duedate AS sortdate
+FROM custinfo LEFT OUTER JOIN custgrpitem ON (custgrpitem_cust_id=cust_id), aropen
+  JOIN cashrcptitem ON (aropen_id=cashrcptitem_aropen_id)
+WHERE ( (aropen_cust_id=cust_id)
+  AND   (aropen_doctype IN ('R','C'))
+  AND   (aropen_docdate BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+<? if exists("cust_id") ?>
+  AND   (cust_id=<? value("cust_id") ?>)
+<? elseif exists("custtype_id") ?>
+  AND   (cust_custtype_id=<? value("custtype_id") ?>)
+<? elseif exists("custgrp_id") ?>
+  AND   (custgrpitem_custgrp_id=<? value("custgrp_id") ?>)
+<? elseif exists("custtype_pattern") ?>
+  AND   (cust_custtype_id IN (SELECT custtype_id FROM custtype WHERE (custtype_code ~ <? value("custtype_pattern") ?>)))
+<? endif ?>
+      )
+ORDER BY sortdate, source;
+
+<? else ?>
+
+--  New Display Mode
+
+SELECT id, type, cashrcpt_number, cust_number, cust_name,
+       postdate, posted, voided,
+       source, source_xtidrole,
+       posted,
+       target, target_xtidrole,
+       applied,
+       base_applied,
+<? if exists("includeFormatted") ?>
+       formatDate(postdate) AS f_postdate,
+       formatMoney(applied) AS f_applied,
+       formatMoney(base_applied) AS f_base_applied,
+<? endif ?>
+       currAbbr,
+       sortdate,
+       'curr' AS applied_xtnumericrole,
+       'curr' AS base_applied_xtnumericrole,
+       base_applied_xttotalrole,
+       type AS xtindentrole
+FROM (
+
+--  Cash Receipt headers
+SELECT cashrcpt_id AS id, 0 AS type, cashrcpt_number, cust_number, cust_name,
+       cashrcpt_distdate AS postdate, cashrcpt_posted AS posted, cashrcpt_void AS voided,
+       ( CASE WHEN (cashrcpt_fundstype='C') THEN <? value("check") ?>
+              WHEN (cashrcpt_fundstype='T') THEN <? value("certifiedCheck") ?>
+              WHEN (cashrcpt_fundstype='M') THEN <? value("masterCard") ?>
+              WHEN (cashrcpt_fundstype='V') THEN <? value("visa") ?>
+              WHEN (cashrcpt_fundstype='A') THEN <? value("americanExpress") ?>
+              WHEN (cashrcpt_fundstype='D') THEN <? value("discoverCard") ?>
+              WHEN (cashrcpt_fundstype='R') THEN <? value("otherCreditCard") ?>
+              WHEN (cashrcpt_fundstype='K') THEN <? value("cash") ?>
+              WHEN (cashrcpt_fundstype='W') THEN <? value("wireTransfer") ?>
+              WHEN (cashrcpt_fundstype='O') THEN <? value("other") ?>
+         END || ' ' || cashrcpt_docnumber ) AS source,
+       cashrcpt_id AS source_xtidrole,
+       CASE WHEN (cashrcpt_void) THEN <? value("voided") ?>
+            WHEN (NOT cashrcpt_posted) THEN <? value("unposted") ?>
+            ELSE                           ''
+       END AS target,
+       -1 AS target_xtidrole,
+       cashrcpt_amount AS applied,
+       (cashrcpt_amount / cashrcpt_curr_rate) AS base_applied,
+       currConcat(cashrcpt_curr_id) AS currAbbr,
+       cashrcpt_distdate AS sortdate,
+       0 AS base_applied_xttotalrole,
+       -1 AS arapply_id
+FROM cashrcpt JOIN custinfo ON (cust_id=cashrcpt_cust_id) LEFT OUTER JOIN custgrpitem ON (custgrpitem_cust_id=cust_id)
+WHERE ( (cashrcpt_distdate BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+<? if exists("cust_id") ?>
+  AND   (cust_id=<? value("cust_id") ?>)
+<? elseif exists("custtype_id") ?>
+  AND   (cust_custtype_id=<? value("custtype_id") ?>)
+<? elseif exists("custgrp_id") ?>
+  AND   (custgrpitem_custgrp_id=<? value("custgrp_id") ?>)
+<? elseif exists("custtype_pattern") ?>
+  AND   (cust_custtype_id IN (SELECT custtype_id FROM custtype WHERE (custtype_code ~ <? value("custtype_pattern") ?>)))
+<? endif ?>
+      )
+
+--  Cash Receipt items
+UNION
+SELECT cashrcpt_id AS id, 1 AS type, '', '', '',
+       cashrcpt_distdate AS postdate, cashrcpt_posted AS posted, cashrcpt_void AS voided,
+       '' AS source,
+       cashrcpt_id AS source_xtidrole,
+       ( CASE WHEN (aropen_doctype='D') THEN <? value("debitMemo") ?>
+              WHEN (aropen_doctype='I') THEN <? value("invoice") ?>
+              WHEN (aropen_doctype='C') THEN <? value("creditMemo") ?>
+              WHEN (aropen_doctype='R') THEN <? value("cashdeposit") ?>
+              ELSE <? value("other") ?>
+         END || ' ' || TEXT(aropen_docnumber) ) AS target,
+       aropen_id AS target_xtidrole,
+       COALESCE(arapply_applied, cashrcptitem_amount) AS applied,
+       (COALESCE(arapply_applied,cashrcptitem_amount) / cashrcpt_curr_rate) AS base_applied,
+       currConcat(cashrcpt_curr_id) AS currAbbr,
+       cashrcpt_distdate AS sortdate,
+       -1 AS base_applied_xttotalrole,
+       arapply_id
+FROM cashrcpt JOIN custinfo ON (cust_id=cashrcpt_cust_id)
+              LEFT OUTER JOIN custgrpitem ON (custgrpitem_cust_id=cust_id)
+              JOIN cashrcptitem ON (cashrcptitem_cashrcpt_id=cashrcpt_id)
+              JOIN aropen ON (aropen_id=cashrcptitem_aropen_id)
+              LEFT OUTER JOIN arapply ON ((arapply_target_aropen_id=aropen_id OR
+                                          arapply_source_aropen_id=aropen_id) AND
+                                          arapply_reftype='CRA' AND
+                                          arapply_ref_id=cashrcptitem_id)
+WHERE ( (cashrcpt_distdate BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+<? if exists("cust_id") ?>
+  AND   (cust_id=<? value("cust_id") ?>)
+<? elseif exists("custtype_id") ?>
+  AND   (cust_custtype_id=<? value("custtype_id") ?>)
+<? elseif exists("custgrp_id") ?>
+  AND   (custgrpitem_custgrp_id=<? value("custgrp_id") ?>)
+<? elseif exists("custtype_pattern") ?>
+  AND   (cust_custtype_id IN (SELECT custtype_id FROM custtype WHERE (custtype_code ~ <? value("custtype_pattern") ?>)))
+<? endif ?>
+      )
+
+--  Cash Receipt misc
+UNION
+SELECT cashrcpt_id AS id, 1 AS type, '', '', '',
+       cashrcpt_distdate AS postdate, cashrcpt_posted AS posted, cashrcpt_void AS voided,
+       '' AS source,
+       cashrcpt_id AS source_xtidrole,
+       formatGLAccount(cashrcptmisc_accnt_id) AS target,
+       -1 AS target_xtidrole,
+       COALESCE(arapply_applied, cashrcptmisc_amount) AS applied,
+       (COALESCE(arapply_applied, cashrcptmisc_amount) / cashrcpt_curr_rate) AS base_applied,
+       currConcat(cashrcpt_curr_id) AS currAbbr,
+       cashrcpt_distdate AS sortdate,
+       -1 AS base_applied_xttotalrole,
+       arapply_id
+FROM cashrcpt JOIN custinfo ON (cust_id=cashrcpt_cust_id)
+              LEFT OUTER JOIN custgrpitem ON (custgrpitem_cust_id=cust_id)
+              JOIN cashrcptmisc ON (cashrcptmisc_cashrcpt_id=cashrcpt_id)
+              LEFT OUTER JOIN arapply ON (arapply_reftype='CRD' AND
+                                          arapply_ref_id=cashrcptmisc_id)
+WHERE ( (cashrcpt_distdate BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+<? if exists("cust_id") ?>
+  AND   (cust_id=<? value("cust_id") ?>)
+<? elseif exists("custtype_id") ?>
+  AND   (cust_custtype_id=<? value("custtype_id") ?>)
+<? elseif exists("custgrp_id") ?>
+  AND   (custgrpitem_custgrp_id=<? value("custgrp_id") ?>)
+<? elseif exists("custtype_pattern") ?>
+  AND   (cust_custtype_id IN (SELECT custtype_id FROM custtype WHERE (custtype_code ~ <? value("custtype_pattern") ?>)))
+<? endif ?>
+      )
+  ) AS data
+ORDER BY sortdate, id, type, target;
+
+<? endif ?>
+

@@ -1,0 +1,25 @@
+-- Group: summarizedBacklogByWarehouse
+-- Name: totals
+-- Notes: 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT COUNT(cohead_id) AS totalorders 
+		     FROM ( SELECT DISTINCT cohead_id 
+                FROM cohead, coitem, itemsite, custinfo
+		            WHERE ( (coitem_cohead_id=cohead_id)
+		             AND (coitem_itemsite_id=itemsite_id)
+		             AND (cohead_cust_id=cust_id)
+		             AND (coitem_status NOT IN ('C','X'))
+		      AND (coitem_scheddate BETWEEN <? value("startDate") ?>
+		                                AND <? value("endDate") ?>)
+		     <? if exists("warehous_id") ?>
+		      AND (itemsite_warehous_id=<? value("warehous_id") ?>)
+		     <? endif ?>
+		     <? if exists("custtype_id") ?>
+		      AND (cust_custtype_id=<? value("custtype_id") ?>)
+		     <? elseif exists("custtype_pattern") ?>
+		      AND (cust_custtype_id IN (SELECT custtype_id FROM custtype
+		       WHERE (custtype_code ~ <? value("custtype_pattern") ?>)))
+		     <? endif ?>
+		     ) ) AS data;

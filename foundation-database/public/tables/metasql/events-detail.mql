@@ -1,0 +1,22 @@
+-- Group: events
+-- Name: detail
+-- Notes: used by eventManager
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT evntlog_id, evntlog_ord_id, evntlog_newdate,
+       evntlog_newvalue, warehous_code,
+       evntlog_evnttime,
+       evntlog_dispatched,
+       evnttype_name, evntlog_number 
+  FROM evnttype, evntlog LEFT OUTER JOIN whsinfo ON (evntlog_warehous_id=warehous_id)
+WHERE ( (evntlog_evnttype_id=evnttype_id)
+ AND (evntlog_username=<? value("username") ?>)
+<? if exists("warehous_id") ?>
+ AND (warehous_id=<? value("warehous_id") ?>)
+<? endif ?>
+<? if not exists("showAcknowledged") ?>
+ AND (evntlog_dispatched IS NULL)
+<? endif ?>
+) 
+ORDER BY evntlog_evnttime;

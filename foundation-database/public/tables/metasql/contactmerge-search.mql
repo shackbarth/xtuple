@@ -1,0 +1,50 @@
+-- Group: contactmerge
+-- Name: search
+-- Notes: Search for contacts
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT cntct_id,
+  CASE
+    WHEN (cntctsel_cntct_id IS NOT NULL AND cntctsel_target) THEN
+      1 -- Selected as target contact
+    WHEN (cntctsel_cntct_id IS NOT NULL AND NOT cntctsel_target) THEN
+      2 -- Selected as contact to merge
+    WHEN (cntctmrgd_cntct_id IS NOT NULL AND cntctUsed(cntctmrgd_cntct_id)=false) THEN
+      3 -- Already merged contact
+    WHEN (cntctmrgd_cntct_id IS NOT NULL) THEN
+      4 -- Already merged contact, but still has relationships
+    ELSE
+      0 -- No status
+  END AS status,
+  cntctdups.*, 
+  cntctdup_level AS xtindentrole,
+  CASE
+    WHEN (cntctsel_cntct_id IS NOT NULL AND cntctsel_target) THEN
+      'altemphasis' -- Selected as target contact
+    WHEN (cntctsel_cntct_id IS NOT NULL AND NOT cntctsel_target) THEN
+      'emphasis' -- Selected as contact to merge
+    WHEN (cntctmrgd_cntct_id IS NOT NULL AND cntctUsed(cntctmrgd_cntct_id)=false) THEN
+      'warning' -- Already merged contact
+    WHEN (cntctmrgd_cntct_id IS NOT NULL) THEN
+      'error' -- Already merged contact, but still has relationships
+  END AS qtforegroundrole
+FROM cntctdups(
+  <? value("searchText") ?>, 
+  <? value("searchContactName") ?>, 
+  <? value("searchPhone") ?>, 
+  <? value("searchEmail") ?>, 
+  <? value("searchNumber") ?>, 
+  <? value("searchName") ?>, 
+  <? value("showInactive") ?>, 
+  <? value("ignoreBlanks") ?>,
+  <? value("IndentedDups") ?>, 
+  <? value("CheckHnfc") ?>, 
+  <? value("CheckFirst") ?>, 
+  <? value("CheckMiddle") ?>, 
+  <? value("CheckLast") ?>, 
+  <? value("CheckSuffix") ?>, 
+  <? value("CheckPhone") ?>, 
+  <? value("CheckEmail") ?>)
+  LEFT OUTER JOIN cntctsel ON (cntct_id=cntctsel_cntct_id)
+  LEFT OUTER JOIN cntctmrgd ON (cntct_id=cntctmrgd_cntct_id);

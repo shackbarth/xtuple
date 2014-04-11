@@ -1,0 +1,55 @@
+-- Group: unpostedCashReceipts
+-- Name: detail
+-- Notes: Used by arWorkBench, cashReceiptsEditList
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT DISTINCT
+       cashrcpt_id, 
+       cashrcpt_number,
+       cust_number,
+       cust_name,
+       cashrcpt_docnumber, 
+       bankaccnt_name,
+       cashrcpt_distdate,
+       cashrcpt_amount, 
+       currConcat(cashrcpt_curr_id) AS currabbr,
+       CASE
+              WHEN (cashrcpt_fundstype ='C') THEN <? value("check") ?>
+              WHEN (cashrcpt_fundstype ='T') THEN <? value("certifiedCheck") ?>
+              WHEN (cashrcpt_fundstype ='M') THEN <? value("masterCard") ?>
+              WHEN (cashrcpt_fundstype ='V') THEN <? value("visa") ?>
+              WHEN (cashrcpt_fundstype ='A') THEN <? value("americanExpress") ?>
+              WHEN (cashrcpt_fundstype ='D') THEN <? value("discoverCard") ?>
+              WHEN (cashrcpt_fundstype ='R') THEN <? value("otherCreditCard") ?>
+              WHEN (cashrcpt_fundstype ='K') THEN <? value("cash") ?>
+              WHEN (cashrcpt_fundstype ='W') THEN <? value("wireTransfer") ?>
+              WHEN (cashrcpt_fundstype ='O') THEN <? value("other") ?>
+         END AS cashrcpt_fundstype,
+       'curr' AS cashrcpt_amount_xtnumericrole 
+FROM cashrcpt, bankaccnt, custinfo
+<? if exists("custgrp_id") ?>
+  JOIN custgrpitem ON (custgrpitem_cust_id=cust_id)
+  JOIN custgrp ON (custgrp_id=custgrpitem_custgrp_id)
+<? endif ?>
+, custtype
+WHERE ( (NOT cashrcpt_posted)
+  AND   (NOT cashrcpt_void)
+  AND   (cashrcpt_bankaccnt_id=bankaccnt_id)
+  AND   (cashrcpt_cust_id=cust_id)
+  AND   (cust_custtype_id=custtype_id)
+<? if exists("cust_id") ?>
+  AND   (cashrcpt_cust_id=<? value("cust_id") ?>)
+<? endif ?>
+<? if exists("custgrp_id") ?>
+  AND  (custgrp_id=<? value("custgrp_id") ?>)
+<? endif ?>
+<? if exists("custtype_id") ?>
+  AND   (custtype_id=<? value("custtype_id") ?>)
+<? endif ?>
+<? if exists("custtype_pattern") ?>
+  AND   (custtype_code~<? value("custtype_pattern") ?>)
+<? endif ?>
+)
+ORDER BY cashrcpt_distdate;
+

@@ -1,0 +1,60 @@
+-- Group: expiredInventory
+-- Name: detail
+-- Notes: used by dspExpiredInventoryByClassCode
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT itemsite_id, itemloc_id, warehous_code, item_number, uom_name,
+       ls_number, itemloc_expiration,
+       itemloc_qty, costmethod, cost,
+       noNeg(cost * itemloc_qty) AS value,
+       'qty' AS itemloc_qty_xtnumericrole,
+       'cost' AS cost_xtnumericrole,
+       'curr' AS value_xtnumericrole,
+       'red' AS qtforegroundrole 
+FROM ( SELECT itemsite_id, itemloc_id, warehous_code, item_number,
+              uom_name, ls_number,
+              CASE WHEN <? value("expiretype") ?>='Perishability' THEN 
+                   itemloc_expiration
+                ELSE itemloc_warrpurc
+              END AS itemloc_expiration,
+              itemloc_qty,
+              CASE WHEN(itemsite_costmethod='A') THEN 'Average'
+                   WHEN(itemsite_costmethod='S') THEN 'Standard'
+                   WHEN(itemsite_costmethod='J') THEN 'Job'
+                   WHEN(itemsite_costmethod='N') THEN 'None'
+                ELSE 'UNKNOWN'
+              END AS costmethod,
+            <? if exists("useStandardCosts") ?>
+              stdcost(itemsite_item_id) AS cost
+            <? elseif exists("useActualCosts") ?>
+              actcost(itemsite_item_id) AS cost
+            <? else ?>
+              (itemsite_value / CASE WHEN(itemsite_qtyonhand=0) THEN 1 ELSE itemsite_qtyonhand END) AS cost
+            <? endif ?>
+       FROM itemloc, itemsite, item, whsinfo, uom, ls
+       WHERE ((itemloc_itemsite_id=itemsite_id)
+          AND (itemsite_item_id=item_id)
+          AND (item_inv_uom_id=uom_id)
+          AND (itemsite_warehous_id=warehous_id)
+          AND (itemloc_ls_id=ls_id)
+        <? if exists("perishability") ?>
+          AND (itemsite_perishable)
+          AND (itemloc_expiration < (CURRENT_DATE + <? value("thresholdDays") ?>))
+        <? else ?>
+          AND (itemsite_warrpurc)
+          AND (itemloc_warrpurc < (CURRENT_DATE + <? value("thresholdDays") ?>))
+        <? endif ?>
+        <? if exists("warehous_id") ?>
+          AND (itemsite_warehous_id=<? value("warehous_id") ?>)
+        <? endif ?>
+        <? if exists("classcode_id") ?>
+          AND (item_classcode_id=<? value("classcode_id") ?>)
+        <? elseif exists("classcode_pattern") ?>
+          AND (item_classcode_id IN (SELECT classcode_id
+                                     FROM classcode
+                                     WHERE classcode_code ~ <? value("classcode_pattern") ?>))
+        <? endif ?>
+             )
+     ) AS data
+ORDER BY warehous_code, item_number;

@@ -1,0 +1,779 @@
+<!DOCTYPE openRPTDef>
+<report>
+ <title>Uninvoiced Receipts</title>
+ <name>UninvoicedReceipts</name>
+ <description></description>
+ <size>Letter</size>
+ <portrait/>
+ <topmargin>50</topmargin>
+ <bottommargin>50</bottommargin>
+ <rightmargin>50</rightmargin>
+ <leftmargin>50</leftmargin>
+ <querysource>
+  <name>head</name>
+  <sql>SELECT &lt;? if exists("warehous_id") ?>&#xd;
+         ( SELECT warehous_code&#xd;
+             FROM whsinfo&#xd;
+            WHERE (warehous_id=&lt;? value("warehous_id") ?>) )&#xd;
+       &lt;? else ?>&#xd;
+         text('All Sites')&#xd;
+       &lt;? endif ?>&#xd;
+       AS warehouse,&#xd;
+       &lt;? if exists("agentUsername") ?>&#xd;
+       TEXT(&lt;? value("agentUsername" ?>)&#xd;
+       &lt;? else ?>&#xd;
+       TEXT('All Agents')&#xd;
+       &lt;? endif ?>&#xd;
+       AS agentUsername;&#xd;
+</sql>
+ </querysource>
+ <querysource>
+  <name>detail</name>
+  <sql>SELECT recv_id,
+       formatDate(recv_date) as f_date,
+       recv_trans_usr_name as f_user,
+       recv_order_number AS f_ponumber, poitem_linenumber,
+       vend_name, 
+       COALESCE(item_number, ('Misc. - ' || recv_vend_item_number)) AS item_number,
+       formatQty(recv_qty) as f_qty,
+       'Receipt' AS f_type,
+       recv_value AS value,
+       formatMoney(recv_value) AS f_value
+  FROM recv
+    LEFT OUTER JOIN itemsite ON (recv_itemsite_id=itemsite_id)
+    LEFT OUTER JOIN item ON (itemsite_item_id=item_id),
+    poitem, vendinfo
+ WHERE ((recv_orderitem_id=poitem_id)
+   AND  (recv_order_type='PO')
+   AND  (recv_vend_id=vend_id)
+   AND  (recv_posted)
+   AND  (recv_vohead_id IS NULL)
+   AND  (NOT recv_invoiced)
+&lt;? if exists("warehous_id") ?>
+   AND  (itemsite_warehous_id=&lt;? value("warehous_id") ?>)
+&lt;? endif ?>
+&lt;? if exists("agentUsername") ?>
+   AND  (recv_agent_username=&lt;? value("agentUsername") ?>)
+&lt;? endif ?>
+)
+UNION
+SELECT poreject_id,
+       formatDate(poreject_date) as f_date,
+       poreject_trans_username as f_user,
+       poreject_ponumber AS f_ponumber, poitem_linenumber,
+       vend_name, 
+       COALESCE(item_number, ('Misc. - ' || poreject_vend_item_number)) AS item_number,
+       formatQty(poreject_qty) as f_qty,
+       'Return' AS f_type,
+       poreject_value *-1 AS value,
+       formatMoney(poreject_value*-1) AS f_value
+  FROM poreject
+    LEFT OUTER JOIN itemsite ON (poreject_itemsite_id=itemsite_id)
+    LEFT OUTER JOIN item ON (itemsite_item_id=item_id),
+    poitem, vendinfo
+ WHERE ((poreject_poitem_id=poitem_id)
+--   AND  (poreject_itemsite_id=itemsite_id)
+--   AND  (itemsite_item_id=item_id)
+   AND  (poreject_vend_id=vend_id)
+   AND  (poreject_posted)
+   AND  (NOT poreject_invoiced)
+&lt;? if exists("warehous_id") ?>
+   AND  (itemsite_warehous_id=&lt;? value("warehous_id") ?>)
+&lt;? endif ?>
+&lt;? if exists("agentUsername") ?>
+   AND  (poreject_agent_username=&lt;? value("agentUsername") ?>)
+&lt;? endif ?>
+)
+ORDER BY f_ponumber, poitem_linenumber;</sql>
+ </querysource>
+ <rpthead>
+  <height>221</height>
+  <label>
+   <rect>
+    <x>175</x>
+    <y>200</y>
+    <width>65</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>P/O #</string>
+  </label>
+  <field>
+   <rect>
+    <x>145</x>
+    <y>90</y>
+    <width>200</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>warehouse</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>400</x>
+    <y>200</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Item Number</string>
+  </label>
+  <label>
+   <rect>
+    <x>85</x>
+    <y>200</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>By</string>
+  </label>
+  <label>
+   <rect>
+    <x>590</x>
+    <y>200</y>
+    <width>60</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Type</string>
+  </label>
+  <label>
+   <rect>
+    <x>50</x>
+    <y>110</y>
+    <width>90</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Purch. Agent:</string>
+  </label>
+  <label>
+   <rect>
+    <x>665</x>
+    <y>200</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Value</string>
+  </label>
+  <label>
+   <rect>
+    <x>520</x>
+    <y>200</y>
+    <width>60</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Uninvoiced</string>
+  </label>
+  <label>
+   <rect>
+    <x>290</x>
+    <y>200</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Vendor</string>
+  </label>
+  <line>
+   <xstart>5</xstart>
+   <ystart>215</ystart>
+   <xend>745</xend>
+   <yend>215</yend>
+   <weight>2</weight>
+  </line>
+  <label>
+   <rect>
+    <x>10</x>
+    <y>200</y>
+    <width>70</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Date</string>
+  </label>
+  <label>
+   <rect>
+    <x>215</x>
+    <y>10</y>
+    <width>509</width>
+    <height>37</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>18</size>
+    <weight>bold</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Uninvoiced Receipts and Returns</string>
+  </label>
+  <label>
+   <rect>
+    <x>245</x>
+    <y>200</y>
+    <width>35</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>#</string>
+  </label>
+  <label>
+   <rect>
+    <x>60</x>
+    <y>90</y>
+    <width>80</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Site:</string>
+  </label>
+  <field>
+   <rect>
+    <x>145</x>
+    <y>110</y>
+    <width>200</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>agentUsername</column>
+   </data>
+  </field>
+ </rpthead>
+ <pghead>
+  <firstpage/>
+  <height>6</height>
+ </pghead>
+ <pghead>
+  <height>29</height>
+  <label>
+   <rect>
+    <x>585</x>
+    <y>5</y>
+    <width>60</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Type</string>
+  </label>
+  <line>
+   <xstart>5</xstart>
+   <ystart>20</ystart>
+   <xend>745</xend>
+   <yend>20</yend>
+   <weight>2</weight>
+  </line>
+  <label>
+   <rect>
+    <x>245</x>
+    <y>5</y>
+    <width>35</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>#</string>
+  </label>
+  <label>
+   <rect>
+    <x>85</x>
+    <y>5</y>
+    <width>75</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>By</string>
+  </label>
+  <label>
+   <rect>
+    <x>280</x>
+    <y>5</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Vendor</string>
+  </label>
+  <label>
+   <rect>
+    <x>10</x>
+    <y>5</y>
+    <width>70</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Date</string>
+  </label>
+  <label>
+   <rect>
+    <x>520</x>
+    <y>5</y>
+    <width>60</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Uninvoiced</string>
+  </label>
+  <label>
+   <rect>
+    <x>665</x>
+    <y>5</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Value</string>
+  </label>
+  <label>
+   <rect>
+    <x>170</x>
+    <y>5</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>P/O #</string>
+  </label>
+  <label>
+   <rect>
+    <x>405</x>
+    <y>5</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Item Number</string>
+  </label>
+ </pghead>
+ <section>
+  <name>detail</name>
+  <detail>
+   <key>
+    <query>detail</query>
+   </key>
+   <height>18</height>
+   <field>
+    <rect>
+     <x>85</x>
+     <y>0</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <hcenter/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_user</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>520</x>
+     <y>0</y>
+     <width>60</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_qty</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>170</x>
+     <y>0</y>
+     <width>65</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_ponumber</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>285</x>
+     <y>0</y>
+     <width>150</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>vend_name</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>400</x>
+     <y>0</y>
+     <width>150</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>item_number</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>5</x>
+     <y>0</y>
+     <width>70</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <hcenter/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_date</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>245</x>
+     <y>0</y>
+     <width>35</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <hcenter/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>poitem_linenumber</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>590</x>
+     <y>0</y>
+     <width>60</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_type</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>665</x>
+     <y>0</y>
+     <width>75</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_value</column>
+    </data>
+   </field>
+  </detail>
+ </section>
+ <pgfoot>
+  <height>18</height>
+  <field>
+   <rect>
+    <x>705</x>
+    <y>0</y>
+    <width>40</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>Context Query</query>
+    <column>page_number</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>85</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Report Date:</string>
+  </label>
+  <label>
+   <rect>
+    <x>615</x>
+    <y>0</y>
+    <width>85</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Page:</string>
+  </label>
+  <field>
+   <rect>
+    <x>90</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>Context Query</query>
+    <column>report_date</column>
+   </data>
+  </field>
+ </pgfoot>
+ <rptfoot>
+  <height>104</height>
+  <label>
+   <rect>
+    <x>615</x>
+    <y>0</y>
+    <width>37</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Total:</string>
+  </label>
+  <field>
+   <rect>
+    <x>665</x>
+    <y>0</y>
+    <width>75</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <data>
+    <query>detail</query>
+    <column>value</column>
+   </data>
+   <tracktotal builtin="true" >qty</tracktotal>
+  </field>
+ </rptfoot>
+</report>

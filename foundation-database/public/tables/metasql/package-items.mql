@@ -1,0 +1,141 @@
+-- Group: package
+-- Name:  items
+-- Notes: replace the not-so-old pkgitem table with direct query of catalogs
+--        and tables so we never miss anything and do not have to maintain the
+--        data
+-- TODO: is there a better sort order?
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT *,
+       CASE WHEN pkgitem_type='C' THEN <? value("script") ?>
+            WHEN pkgitem_type='D' THEN <? value("cmd") ?>
+            WHEN pkgitem_type='F' THEN <? value("function") ?>
+            WHEN pkgitem_type='G' THEN <? value("trigger") ?>
+            WHEN pkgitem_type='I' THEN <? value("image") ?>
+            WHEN pkgitem_type='M' THEN <? value("metasql") ?>
+            WHEN pkgitem_type='P' THEN <? value("priv") ?>
+            WHEN pkgitem_type='R' THEN <? value("report") ?>
+            WHEN pkgitem_type='S' THEN <? value("schema") ?>
+            WHEN pkgitem_type='T' THEN <? value("table") ?>
+            WHEN pkgitem_type='U' THEN <? value("uiform") ?>
+            WHEN pkgitem_type='V' THEN <? value("view") ?>
+            WHEN pkgitem_type='sequence' THEN <? value("sequence") ?>
+            WHEN pkgitem_type='index'    THEN <? value("index") ?>
+       ELSE pkgitem_type END AS pkgitem_type_qtdisplayrole
+FROM (
+SELECT script_id AS pkgitem_id, 'C' AS pkgitem_type,
+       script_id AS pkgitem_item_id,
+       script_name AS pkgitem_name,
+       script_notes AS pkgitem_descrip
+  FROM <? literal("pkgname") ?>.pkgscript 
+UNION 
+SELECT cmd_id AS pkgitem_id, 'D' AS pkgitem_type,
+       cmd_id AS pkgitem_item_id,
+       cmd_name AS pkgitem_name,
+       cmd_descrip AS pkgitem_descrip 
+  FROM <? literal("pkgname") ?>.pkgcmd 
+UNION 
+SELECT pg_proc.oid AS pkgitem_id, 'F' AS pkgitem_type,
+       pg_proc.oid AS pkgitem_item_id,
+       proname || '(' || oidvectortypes(proargtypes)
+               || ')' AS pkgitem_name,
+       pg_catalog.obj_description(pg_proc.oid, 'pg_proc') AS pkgitem_descrip 
+  FROM pg_proc
+       JOIN pg_namespace ON (pronamespace=pg_namespace.oid)
+ WHERE (nspname=<? value("pkgname") ?>) 
+UNION 
+SELECT t.oid AS pkgitem_id, 'G' AS pkgitem_type,
+       t.oid AS pkgitem_item_id,
+       tgname AS pkgitem_name,
+       pg_catalog.obj_description(t.oid, 'pg_trigger') AS pkgitem_descrip 
+  FROM pg_trigger t
+       JOIN pg_class ON (tgrelid=pg_class.oid)
+       JOIN pg_namespace ON (relnamespace=pg_namespace.oid)
+ WHERE ((nspname=<? value("pkgname") ?>) 
+<? if not exists("showsystemdetails") ?>
+    AND (tgconstraint = 0)
+   AND  (tgname !~ '^pkg(cmd(arg)?|image|metasql|priv|report|script|uiform)')
+<? endif ?>
+    )
+UNION 
+SELECT image_id AS pkgitem_id, 'I' AS pkgitem_type,
+       image_id AS pkgitem_item_id,
+       image_name AS pkgitem_name,
+       image_descrip AS pkgitem_descrip 
+  FROM <? literal("pkgname") ?>.pkgimage 
+UNION 
+SELECT metasql_id AS pkgitem_id, 'M' AS pkgitem_type,
+       metasql_id AS pkgitem_item_id,
+       metasql_group || '-' || metasql_name AS pkgitem_name,
+       metasql_notes AS pkgitem_descrip 
+  FROM <? literal("pkgname") ?>.pkgmetasql 
+UNION 
+SELECT priv_id AS pkgitem_id, 'P' AS pkgitem_type,
+       priv_id AS pkgitem_item_id,
+       priv_module || '.' || priv_name AS pkgitem_name,
+       priv_descrip AS pkgitem_descrip 
+  FROM <? literal("pkgname") ?>.pkgpriv 
+UNION 
+SELECT report_id AS pkgitem_id, 'R' AS pkgitem_type,
+       report_id AS pkgitem_item_id,
+       report_name AS pkgitem_name,
+       report_descrip AS pkgitem_descrip 
+  FROM <? literal("pkgname") ?>.pkgreport 
+UNION 
+SELECT n.oid AS pkgitem_id, 'S' AS pkgitem_type,
+       n.oid AS pkgitem_item_id,
+       nspname AS pkgitem_name,
+       pg_catalog.obj_description(n.oid, 'pg_namespace') AS pkgitem_descrip 
+  FROM pg_namespace n
+ WHERE (nspname=<? value("pkgname") ?>) 
+UNION 
+SELECT c.oid AS pkgitem_id, 'T' AS pkgitem_type,
+       c.oid AS pkgitem_item_id,
+       relname AS pkgitem_name,
+       pg_catalog.obj_description(c.oid, 'pg_class') AS pkgitem_descrip 
+  FROM pg_class c
+       JOIN pg_namespace ON (relnamespace=pg_namespace.oid)
+ WHERE ((nspname=<? value("pkgname") ?>)
+   AND  (relkind='r')
+<? if not exists("showsystemdetails") ?>
+   AND  (relname !~ '^pkg(cmd(arg)?|image|metasql|priv|report|script|uiform)$')
+<? endif ?>
+   )
+UNION 
+SELECT uiform_id AS pkgitem_id, 'U' AS pkgitem_type,
+       uiform_id AS pkgitem_item_id,
+       uiform_name AS pkgitem_name,
+       uiform_notes AS pkgitem_descrip 
+  FROM <? literal("pkgname") ?>.pkguiform 
+UNION 
+SELECT c.oid AS pkgitem_id, 'V' AS pkgitem_type,
+       c.oid AS pkgitem_item_id,
+       relname AS pkgitem_name,
+       pg_catalog.obj_description(c.oid, 'pg_class') AS pkgitem_descrip 
+  FROM pg_class c
+       JOIN pg_namespace ON (relnamespace=pg_namespace.oid)
+ WHERE ((nspname=<? value("pkgname") ?>)
+   AND  (relkind='v'))
+<? if exists("showsystemdetails") ?>
+UNION
+SELECT c.oid AS pkgitem_id, 'sequence' AS pkgitem_type,
+       c.oid AS pkgitem_item_id,
+       relname AS pkgitem_name,
+       pg_catalog.obj_description(c.oid, 'pg_class') AS pkgitem_descrip 
+  FROM pg_class c
+       JOIN pg_namespace ON (relnamespace=pg_namespace.oid)
+ WHERE ((nspname=<? value("pkgname") ?>)
+   AND  (relkind='S'))
+UNION
+SELECT c.oid AS pkgitem_id, 'index' AS pkgitem_type,
+       c.oid AS pkgitem_item_id,
+       relname AS pkgitem_name,
+       pg_catalog.obj_description(c.oid, 'pg_class') AS pkgitem_descrip 
+  FROM pg_class c
+       JOIN pg_namespace ON (relnamespace=pg_namespace.oid)
+ WHERE ((nspname=<? value("pkgname") ?>)
+   AND  (relkind='i'))
+<? endif ?>
+) AS pkgitem 
+ORDER BY pkgitem_type_qtdisplayrole, pkgitem_name;

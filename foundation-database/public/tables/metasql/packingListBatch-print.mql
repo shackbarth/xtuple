@@ -1,0 +1,37 @@
+-- Group: packingListBatch
+-- Name: print
+-- Notes: used by packingListBatch
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT DISTINCT
+       pack_id, pack_head_id, pack_head_type, pack_shiphead_id,
+       COALESCE(shipform_report_name, findCustomerForm(cohead_cust_id, 'P')) AS packform,
+       findCustomerForm(cohead_cust_id, 'L') AS pickform 
+FROM pack JOIN cohead ON (cohead_id=pack_head_id)
+          JOIN coitem ON (coitem_cohead_id=cohead_id)
+          JOIN itemsite ON (itemsite_id=coitem_itemsite_id)
+          LEFT OUTER JOIN shipform ON (shipform_id=cohead_shipform_id)
+WHERE ( (checkSOSitePrivs(cohead_id))
+  AND   (pack_head_type='SO')
+  AND   (NOT pack_printed) 
+<? if exists("warehous_id") ?>
+  AND   (itemsite_warehous_id = <? value("warehous_id") ?>)
+<? endif ?>
+      )
+
+<? if exists("MultiWhs") ?>
+UNION ALL
+SELECT pack_id, pack_head_id, pack_head_type, pack_shiphead_id,
+       COALESCE(shipform_report_name, findTOForm(tohead_id, 'P')) AS packform,
+       findTOForm(tohead_id, 'L') AS pickform 
+FROM pack JOIN tohead ON (tohead_id=pack_head_id)
+          LEFT OUTER JOIN shipform ON (shipform_id=tohead_shipform_id)
+WHERE ( (pack_head_type='TO')
+  AND   (NOT pack_printed)
+<? if exists("warehous_id") ?>
+  AND   (tohead_src_warehous_id = <? value("warehous_id") ?>)
+<? endif ?>
+      )
+<? endif ?>
+;

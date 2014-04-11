@@ -1,0 +1,36 @@
+-- Group: briefEarnedCommission
+-- Name: detail
+-- Notes: used by dspBriefEarnedCommissions
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT cohist_salesrep_id, salesrep_number, salesrep_name, cust_number, cust_name,
+       cohist_ordernumber, cohist_invcnumber, cohist_invcdate, currAbbr,
+       SUM(extprice) AS sumextprice,
+       SUM(cohist_commission) AS sumcommission,
+       SUM(baseextprice) AS sumbaseextprice,
+       SUM(basecommission) AS sumbasecommission,
+       'curr' AS sumextprice_xtnumericrole,
+       'curr' AS sumcommission_xtnumericrole,
+       'curr' AS sumbaseextprice_xtnumericrole,
+       'curr' AS sumbasecommission_xtnumericrole,
+       0 AS sumbaseextprice_xttotalrole,
+       0 AS sumbasecommission_xttotalrole
+<? if exists("includeMisc") ?>
+FROM saleshistorymisc
+<? else ?>
+FROM saleshistory
+<? endif ?>
+WHERE ((cohist_commission <> 0)
+    AND(cohist_invcdate BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+    <? if exists("includeMisc") ?>
+    AND (COALESCE(cohist_misc_type, '') <> 'T')
+    AND (COALESCE(cohist_misc_type, '') <> 'F')
+    <? endif ?>
+    <? if exists("salesrep_id") ?>
+    AND (cohist_salesrep_id=<? value("salesrep_id") ?>)
+    <? endif ?>
+      )
+GROUP BY cohist_salesrep_id, salesrep_number, salesrep_name, cust_number, cust_name,
+         cohist_ordernumber, cohist_invcnumber, cohist_invcdate, currAbbr
+ORDER BY salesrep_number, cust_number, cohist_invcdate;

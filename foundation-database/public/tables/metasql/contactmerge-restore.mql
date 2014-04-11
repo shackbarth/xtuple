@@ -1,0 +1,12 @@
+-- Group: contactmerge
+-- Name: restore
+-- Notes: Restore a contact that was previously merged
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT cntctrestore(cntctmrgd_cntct_id) AS result
+FROM cntctmrgd
+<? if exists("cntct_id") ?>
+WHERE (cntctmrgd_cntct_id=<? value("cntct_id") ?>)
+<? endif ?>
+;

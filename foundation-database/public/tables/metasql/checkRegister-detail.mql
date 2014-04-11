@@ -1,0 +1,149 @@
+-- Group: checkRegister
+-- Name: detail
+-- Notes: used by dspCheckRegister and viewCheckRun;
+--        shows all the checks for a given date range, bank account, 
+--        check number(optional), and recipient(optional), optionally restricted
+--        to 'new' (un-posted/replaced/deleted) checks for viewing check runs.
+--        fills in the check item detail if showDetail is passed.
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT checkhead_id AS checkid,
+       CASE WHEN(checkhead_void) THEN -1
+            WHEN(checkhead_posted) THEN 1
+            ELSE 0
+       END AS extra,
+       -1 AS checkitem_id,
+       checkhead_void, checkhead_misc,
+       checkhead_printed, checkhead_posted,
+       CASE when checkhead_number = -1 THEN
+         'Unspecified'
+       ELSE TEXT(checkhead_number) END AS number,
+       COALESCE((SELECT checkrecip_number || '-' || checkrecip_name
+                 FROM checkrecip
+                 WHERE ((checkhead_recip_id=checkrecip_id)
+		   AND  (checkhead_recip_type=checkrecip_type)))
+                ,
+		checkhead_recip_type || '-' || checkhead_recip_id ) AS description,
+       checkhead_checkdate AS checkdate,
+       checkhead_amount AS amount, 
+       checkhead_amount / checkhead_curr_rate AS base_amount, 
+       currConcat(checkhead_curr_id) AS currAbbr,
+       checkhead_number,
+       checkhead_ach_batch,
+       1 AS orderby,
+       'curr' AS amount_xtnumericrole,
+       'curr' AS base_amount_xtnumericrole,
+       NULL AS checkhead_void_qtdisplayrole,    NULL AS checkhead_misc_qtdisplayrole,
+       NULL AS checkhead_printed_qtdisplayrole, NULL AS checkhead_posted_qtdisplayrole,
+       0 AS xtindentrole
+  FROM checkhead
+ WHERE ((checkhead_bankaccnt_id=<? value("bankaccnt_id") ?>)
+   <? if exists("startDate") ?>
+     AND (checkhead_checkdate BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+   <? elseif exists("newOnly") ?>
+     AND (NOT checkhead_posted)
+     AND (NOT checkhead_replaced)
+     AND (NOT checkhead_deleted)
+   <? endif ?>
+   <? if exists("check_number") ?>
+      AND   (CAST(checkhead_number AS text) ~ <? value("check_number") ?>)
+   <? endif ?>
+   <? if exists("recip") ?>
+      <? if exists("recip_type_v") ?>
+         AND   (checkhead_recip_type = 'V' )
+      <? endif ?>
+      <? if exists("recip_type_c") ?>
+         AND   (checkhead_recip_type = 'C' )
+      <? endif ?>
+      <? if exists("recip_type_t") ?>
+         AND   (checkhead_recip_type = 'T' )
+      <? endif ?>
+      <? if exists("recip_id") ?>
+         AND   (checkhead_recip_id = <? value("recip_id") ?> )
+      <? endif ?>
+   <? endif ?>
+   <? if exists("vend_id") ?>
+     AND (checkhead_recip_type = 'V')
+     AND (checkhead_recip_id = <? value("vend_id") ?>)
+   <? elseif exists("vendtype_id") ?>
+     AND (checkhead_recip_type = 'V')
+     AND (checkhead_recip_id IN (SELECT vend_id
+                                 FROM vendinfo
+                                 WHERE (vend_vendtype_id=<? value("vendtype_id") ?>)))
+   <? elseif exists("vendtype_pattern") ?>
+     AND (checkhead_recip_type = 'V')
+     AND (checkhead_recip_id IN (SELECT vend_id
+                                 FROM vendinfo, vendtype
+                                 WHERE  (vend_vendtype_id=vendtype_id)
+                                   AND  (vendtype_code ~ <? value("vendtype_pattern") ?>)))
+   <? endif ?>
+)
+<? if exists("showDetail") ?>
+UNION
+SELECT checkitem_checkhead_id AS checkid, 0 AS extra, checkitem_id,
+       checkhead_void, checkhead_misc,
+       checkhead_printed, checkhead_posted,
+       (CASE apopen_doctype WHEN 'V' THEN <? value("voucher") ?>
+                            WHEN 'D' THEN <? value("debitMemo") ?>
+                            WHEN 'C' THEN <? value("creditMemo") ?>
+                            ELSE ''
+        END || '-' || CAST(COALESCE(checkitem_ranumber, checkitem_vouchernumber) AS TEXT)) AS number,
+       CAST(COALESCE(checkitem_invcnumber, checkitem_cmnumber) AS TEXT) AS description,
+       CAST(NULL AS DATE) AS checkdate,
+       checkitem_amount AS amount,
+       currtobase(checkhead_curr_id,checkitem_amount,checkhead_checkdate) AS base_amount, 
+       currConcat(checkitem_curr_id) AS currAbbr, 
+       checkhead_number, 
+       NULL AS checkhead_ach_batch,
+       2 AS orderby,
+       'curr' AS amount_xtnumericrole,
+       'curr' AS base_amount_xtnumericrole,
+       '' AS checkhead_void_qtdisplayrole,    '' AS checkhead_misc_qtdisplayrole,
+       '' AS checkhead_printed_qtdisplayrole, '' AS checkhead_posted_qtdisplayrole,
+       1 AS xtindentrole
+  FROM checkhead JOIN checkitem ON (checkitem_checkhead_id=checkhead_id)
+                 LEFT OUTER JOIN apopen ON (apopen_id=checkitem_apopen_id)
+ WHERE ((checkhead_bankaccnt_id=<? value("bankaccnt_id") ?>)
+   <? if exists("startDate") ?>
+     AND   (checkhead_checkdate BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+   <? elseif exists("newOnly") ?>
+     AND (NOT checkhead_posted)
+     AND (NOT checkhead_replaced)
+     AND (NOT checkhead_deleted)
+   <? endif ?>
+   <? if exists("check_number") ?>
+      AND   (CAST(checkhead_number AS text) ~ <? value("check_number") ?>)
+   <? endif ?>
+   <? if exists("recip") ?>
+      <? if exists("recip_type_v") ?>
+         AND   (checkhead_recip_type = 'V' )
+      <? endif ?>
+      <? if exists("recip_type_c") ?>
+         AND   (checkhead_recip_type = 'C' )
+      <? endif ?>
+      <? if exists("recip_type_t") ?>
+         AND   (checkhead_recip_type = 'T' )
+      <? endif ?>
+      <? if exists("recip_id") ?>
+         AND   (checkhead_recip_id = <? value("recip_id") ?> )
+      <? endif ?>
+   <? endif ?>
+   <? if exists("vend_id") ?>
+     AND (checkhead_recip_type = 'V')
+     AND (checkhead_recip_id = <? value("vend_id") ?>)
+   <? elseif exists("vendtype_id") ?>
+     AND (checkhead_recip_type = 'V')
+     AND (checkhead_recip_id IN (SELECT vend_id
+                                 FROM vendinfo
+                                 WHERE (vend_vendtype_id=<? value("vendtype_id") ?>)))
+   <? elseif exists("vendtype_pattern") ?>
+     AND (checkhead_recip_type = 'V')
+     AND (checkhead_recip_id IN (SELECT vend_id
+                                 FROM vendinfo, vendtype
+                                 WHERE  (vend_vendtype_id=vendtype_id)
+                                   AND  (vendtype_code ~ <? value("vendtype_pattern") ?>)))
+   <? endif ?>
+   )
+<? endif ?>
+ ORDER BY checkhead_number, checkid, orderby;

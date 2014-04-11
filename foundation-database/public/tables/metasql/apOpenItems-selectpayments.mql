@@ -1,0 +1,107 @@
+-- Group: apOpenItems
+-- Name:  selectpayments
+-- Notes: 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT *,
+       CASE WHEN (apopen_doctype='V') THEN <? value("voucher") ?>
+            WHEN (apopen_doctype='D') THEN <? value("debitMemo") ?>
+            WHEN (apopen_doctype='C') THEN <? value("creditMemo") ?>
+       END AS doctype,
+       CASE WHEN (apopen_duedate < CURRENT_DATE) THEN 'error'
+            WHEN(apopen_duedate > CURRENT_DATE) THEN 'emphasis'
+            WHEN(CURRENT_DATE <= determineDiscountDate(apopen_terms_id, apopen_docdate)) THEN 'altemphasis'
+       END AS apopen_duedate_qtforegroundrole, 
+       CASE WHEN (apopen_status = 'H') THEN 'error' END AS qtforegroundrole,
+       'curr' AS amount_xtnumericrole,
+       'curr' AS selected_xtnumericrole,
+       'curr' AS running_selected_xtnumericrole,
+       'curr' AS running_amount_xtnumericrole,
+       'curr' AS discount_xtnumericrole,
+       'curr' AS base_amount_xtnumericrole,
+       'curr' AS base_selected_xtnumericrole,
+       'curr' AS base_discount_xtnumericrole,
+       0      AS base_amount_xttotalrole,
+       0      AS base_selected_xttotalrole,
+       0      AS base_discount_xttotalrole,
+       0      AS running_selected_xtrunninginit,
+       0      AS running_amount_xtrunninginit,
+       1      AS running_selected_xtrunningrole,
+       1      AS running_amount_xtrunningrole
+ FROM (
+-- Vouchers and Debits
+SELECT apopen_id, COALESCE(apselect_id, -1) AS apselectid,
+       (vend_number || '-' || vend_name) AS vendor,
+       apopen_doctype, apopen_docnumber, apopen_ponumber, apopen_invcnumber,
+       apopen_duedate, apopen_terms_id, apopen_docdate, apopen_status,
+       (apopen_amount - apopen_paid - apCheckPending(apopen_id)) AS amount,
+       ((apopen_amount - apopen_paid - apCheckPending(apopen_id)) / apopen_curr_rate) AS base_amount,
+       ((apopen_amount - apopen_paid - apCheckPending(apopen_id)) / apopen_curr_rate) AS running_amount,
+       COALESCE(apselect_amount, 0.0) AS selected,
+       (COALESCE(apselect_amount, 0.0) / apopen_curr_rate) AS base_selected,
+       (COALESCE(apselect_amount, 0.0) / apopen_curr_rate) AS running_selected,
+       COALESCE(apselect_discount,0.0) AS discount,
+       (COALESCE(apselect_discount,0.0) / apopen_curr_rate)AS base_discount,
+       currConcat(apopen_curr_id) AS curr_concat
+FROM vendinfo JOIN apopen ON (apopen_vend_id=vend_id)
+              LEFT OUTER JOIN apselect ON (apselect_apopen_id=apopen_id)
+WHERE ( (apopen_open)
+ AND (apopen_doctype IN ('V', 'D'))
+<? if exists("vend_id") ?>
+ AND (vend_id=<? value("vend_id") ?>)
+<? elseif exists("vendtype_id") ?>
+ AND (vend_vendtype_id=<? value("vendtype_id") ?>)
+<? elseif exists("vendtype_pattern") ?>
+ AND (vend_vendtype_id IN (SELECT vendtype_id
+                           FROM vendtype
+                           WHERE (vendtype_code ~ <? value("vendtype_pattern") ?>)))
+<? endif ?>
+<? if exists("olderDate") ?>
+ AND (apopen_duedate <= <? value("olderDate") ?>)
+<? elseif exists("startDate") ?>
+ AND (apopen_duedate BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+<? endif ?>
+<? if exists("curr_id") ?>
+ AND (apopen_curr_id=<? value("curr_id") ?>)
+<? endif ?>
+)
+UNION
+-- Credits
+SELECT apopen_id, COALESCE(apselect_id, -1) AS apselectid,
+       (vend_number || '-' || vend_name) AS vendor,
+       apopen_doctype, apopen_docnumber, apopen_ponumber, apopen_invcnumber,
+       apopen_duedate, apopen_terms_id, apopen_docdate, apopen_status,
+       (apopen_amount - apopen_paid - apCheckPending(apopen_id)) AS amount,
+       ((apopen_amount - apopen_paid - apCheckPending(apopen_id)) / apopen_curr_rate) AS base_amount,
+       ((apopen_amount - apopen_paid - apCheckPending(apopen_id)) / apopen_curr_rate) * -1.0 AS running_amount,
+       COALESCE(apselect_amount, 0.0) AS selected,
+       (COALESCE(apselect_amount, 0.0) / apopen_curr_rate) AS base_selected,
+       (COALESCE(apselect_amount, 0.0) / apopen_curr_rate) * -1.0 AS running_selected,
+       COALESCE(apselect_discount,0.0) AS discount,
+       (COALESCE(apselect_discount,0.0) / apopen_curr_rate)AS base_discount,
+       currConcat(apopen_curr_id) AS curr_concat
+FROM vendinfo JOIN apopen ON (apopen_vend_id=vend_id)
+              LEFT OUTER JOIN apselect ON (apselect_apopen_id=apopen_id)
+WHERE ( (apopen_open)
+ AND (apopen_doctype = 'C')
+<? if exists("vend_id") ?>
+ AND (vend_id=<? value("vend_id") ?>)
+<? elseif exists("vendtype_id") ?>
+ AND (vend_vendtype_id=<? value("vendtype_id") ?>)
+<? elseif exists("vendtype_pattern") ?>
+ AND (vend_vendtype_id IN (SELECT vendtype_id
+                           FROM vendtype
+                           WHERE (vendtype_code ~ <? value("vendtype_pattern") ?>)))
+<? endif ?>
+<? if exists("olderDate") ?>
+ AND (apopen_duedate <= <? value("olderDate") ?>)
+<? elseif exists("startDate") ?>
+ AND (apopen_duedate BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+<? endif ?>
+<? if exists("curr_id") ?>
+ AND (apopen_curr_id=<? value("curr_id") ?>)
+<? endif ?>
+)
+ORDER BY apopen_duedate, amount DESC) AS data
+WHERE (amount != 0);

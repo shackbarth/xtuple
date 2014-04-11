@@ -1,0 +1,22 @@
+-- Group: projectTasks
+-- Name:  detail
+-- Notes: 
+-- Copyright (c) 1999-2013 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT prjtask_id, prjtask_number, prjtask_name,
+       COALESCE(prjtask_hours_budget - prjtask_hours_actual, 0.0) as prjtaskhrbal,
+       COALESCE(prjtask_exp_budget - prjtask_exp_actual, 0.0) as prjtaskexpbal,
+       firstLine(prjtask_descrip) AS prjtask_descrip,
+       totalhrbud, totalhract, totalhrbal,
+       totalexpbud, totalexpact, totalexpbal
+FROM (SELECT COALESCE(SUM(prjtask_hours_budget), 0.0) AS totalhrbud,
+             COALESCE(SUM(prjtask_hours_actual), 0.0) AS totalhract,
+             COALESCE(SUM(prjtask_hours_budget - prjtask_hours_actual), 0.0) AS totalhrbal,
+             COALESCE(SUM(prjtask_exp_budget), 0.0) AS totalexpbud,
+             COALESCE(SUM(prjtask_exp_actual), 0.0) AS totalexpact,
+             COALESCE(SUM(prjtask_exp_budget - prjtask_exp_actual), 0.0) AS totalexpbal
+      FROM prjtask
+      WHERE prjtask_prj_id = <? value("prj_id") ?>) foo, prjtask
+WHERE (prjtask_prj_id=<? value("prj_id") ?>)
+ORDER BY prjtask_number;

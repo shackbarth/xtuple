@@ -1,0 +1,71 @@
+-- Group: glseries
+-- Name:  detail
+-- Notes: 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT *, 
+                          CASE WHEN <? literal("table") ?>_id = -1 THEN 0
+                          ELSE 1 END AS xtindentrole,
+                          CASE WHEN <? literal("table") ?>_id = -1 THEN <? literal("table") ?>_date
+                          END AS transdate,   
+                          'curr' AS debit_xtnumericrole,
+                          'curr' AS credit_xtnumericrole 
+                   FROM (SELECT DISTINCT 
+                          <? literal("table") ?>_sequence AS sequence, 
+                          -1 AS <? literal("table") ?>_id, 
+                          <? literal("table") ?>_date, 
+                          <? literal("table") ?>_source AS source, 
+                          <? literal("table") ?>_journalnumber AS journalnumber,
+                          <? literal("table") ?>_doctype AS doctype, '' AS docnumber,
+                          -1 AS accnt_id, firstLine(<? literal("table") ?>_notes) AS accnt_id_qtdisplayrole,
+                          0.0 AS amount,
+                          CAST(NULL AS NUMERIC) AS debit,
+                          CAST(NULL AS NUMERIC) AS credit,
+                          <? literal("table") ?>_posted AS posted 
+                   FROM <? literal("table") ?> 
+                   WHERE ( (true) 
+                   <? if exists("gltrans") ?>
+                    AND (NOT gltrans_deleted) 
+                   <? endif ?>
+                    AND (<? literal("table") ?>_date BETWEEN <? value("startDate") ?>
+                                            AND <? value("endDate") ?>)
+                   <? if exists("source") ?>
+                      AND (<? literal("table") ?>_source=<? value("source") ?>)
+                   <? endif ?>
+                   <? if exists("startJrnlnum") ?>
+                      AND (<? literal("table") ?>_journalnumber BETWEEN <? value("startJrnlnum") ?>
+                                                     AND <? value("endJrnlnum") ?>)
+                   <? endif ?>
+                   ) 
+                   UNION ALL 
+                   SELECT <? literal("table") ?>_sequence AS sequence, 
+                          <? literal("table") ?>_id, 
+                          <? literal("table") ?>_date, 
+                          NULL, NULL,
+                          NULL, <? literal("table") ?>_docnumber AS docnumber,
+                          accnt_id, (formatGLAccount(accnt_id) || ' - ' || accnt_descrip) AS accnt_id_qtdisplayrole,
+                          <? literal("table") ?>_amount,
+                          CASE WHEN (<? literal("table") ?>_amount < 0) THEN (<? literal("table") ?>_amount * -1)
+                          END AS debit,
+                          CASE WHEN (<? literal("table") ?>_amount > 0) THEN <? literal("table") ?>_amount 
+                          END AS credit,
+                          NULL AS posted 
+                   FROM <? literal("table") ?> JOIN accnt ON (<? literal("table") ?>_accnt_id=accnt_id) 
+                   WHERE ( (true) 
+                   <? if exists("gltrans") ?>
+                    AND (NOT gltrans_deleted) 
+                   <? endif ?>
+                     AND (<? literal("table") ?>_date BETWEEN <? value("startDate") ?>
+                                            AND <? value("endDate") ?>)
+                   <? if exists("source") ?>
+                      AND (<? literal("table") ?>_source=<? value("source") ?>)
+                   <? endif ?>
+                   <? if exists("startJrnlnum") ?>
+                      AND (<? literal("table") ?>_journalnumber BETWEEN <? value("startJrnlnum") ?>
+                                                     AND <? value("endJrnlnum") ?>)
+                   <? endif ?>
+                    ) 
+                   ) AS dummy 
+                   ORDER BY sequence,
+                            xtindentrole, amount;

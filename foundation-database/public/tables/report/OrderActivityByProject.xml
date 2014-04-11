@@ -1,0 +1,890 @@
+<!DOCTYPE openRPTDef>
+<report>
+ <title>Order Activity By Project</title>
+ <name>OrderActivityByProject</name>
+ <description>Order Activity Report</description>
+ <grid>
+  <snap/>
+  <show/>
+  <x>0.05</x>
+  <y>0.05</y>
+ </grid>
+ <size>Letter</size>
+ <portrait/>
+ <topmargin>50</topmargin>
+ <bottommargin>50</bottommargin>
+ <rightmargin>50</rightmargin>
+ <leftmargin>50</leftmargin>
+ <querysource>
+  <name>head</name>
+  <sql>SELECT prj_name, prj_number
+  FROM prj
+ WHERE (prj_id=&lt;? value("prj_id") ?>);</sql>
+ </querysource>
+ <querysource>
+  <name>detail</name>
+  <sql>-- Group: orderActivityByProject
+-- Name:  detail
+-- Notes: 
+
+SELECT *, 
+  formatQty(qty) AS f_qty,
+  formatMoney(value) AS f_value,
+  'curr' AS qty_xtnumericrole,
+  'curr' AS value_xtnumericrole
+FROM (
+&lt;? if exists("showSo") ?>
+----- QUOTES -----
+SELECT quhead_id AS id, 
+       15 AS type,
+       quhead_number::text AS subtype,
+       1 AS section,
+       &lt;? value("quotes") ?> AS section_qtdisplayrole,
+       quhead_number::text AS name,
+       CASE WHEN (quhead_status = 'C') THEN 
+         &lt;? value("converted") ?>
+            WHEN (quhead_status = 'X') THEN
+         &lt;? value("canceled") ?>
+            WHEN (COALESCE(quhead_expire, current_date + 1) > current_date) THEN
+         &lt;? value("open") ?>
+            ELSE
+         &lt;? value("expired") ?>
+       END AS status,
+       NULL::text AS item,
+       NULL::text AS descrip,
+       NULL AS qty,
+       NULL::text AS uom,
+       NULL AS value,
+       0.0 AS ordertotal,
+       1 AS xtindentrole
+  FROM quhead
+    JOIN quitem ON (quitem_quhead_id = quhead_id)
+ WHERE (quhead_prj_id = &lt;? value("prj_id") ?>)
+GROUP BY quhead_id, quhead_number, quhead_status, quhead_expire, quhead_freight, quhead_misc
+
+UNION ALL
+
+SELECT quitem_id AS id, 
+       17 AS type,
+       quhead_number::text AS subtype,
+       1 AS section,
+       &lt;? value("quotes") ?> AS section_qtdisplayrole,
+       quitem_linenumber::text AS name, 
+       CASE WHEN (quhead_status = 'C') THEN 
+         &lt;? value("converted") ?>
+            WHEN (quhead_status = 'X') THEN
+         &lt;? value("canceled") ?>
+            WHEN (COALESCE(quhead_expire, current_date + 1) > current_date) THEN
+         &lt;? value("open") ?>
+            ELSE
+         &lt;? value("Expired") ?>
+       END AS status,
+       item_number AS item,
+       item_descrip1 || ' ' || item_descrip2 AS descrip,
+       quitem_qtyord,
+       uom_name AS uom,
+       (quitem_qtyord * quitem_qty_invuomratio) * (quitem_price / quitem_price_invuomratio) AS value,
+       0.0 AS ordertotal,
+       2 AS xtindentrole
+  FROM quhead
+    JOIN quitem ON (quitem_quhead_id = quhead_id)
+    JOIN uom ON (quitem_qty_uom_id = uom_id)
+    JOIN itemsite ON (quitem_itemsite_id = itemsite_id)
+    JOIN item ON (itemsite_item_id = item_id)
+ WHERE (quhead_prj_id = &lt;? value("prj_id") ?>)
+
+UNION ALL
+
+SELECT quhead_id AS id, 
+       18 AS type,
+       quhead_number::text AS subtype,
+       1 AS section,
+       &lt;? value("quotes") ?> AS section_qtdisplayrole,
+       &lt;? value("total") ?> AS name,
+       NULL AS status,
+       NULL::text AS item,
+       NULL::text AS descrip,
+       NULL AS qty,
+       NULL::text AS uom,
+       SUM((quitem_qtyord * quitem_qty_invuomratio) * (quitem_price / quitem_price_invuomratio)) AS value,
+       SUM((quitem_qtyord * quitem_qty_invuomratio) * (quitem_price / quitem_price_invuomratio)) AS ordertotal,
+       1 AS xtindentrole
+  FROM quhead
+    JOIN quitem ON (quitem_quhead_id = quhead_id)
+ WHERE (quhead_prj_id = &lt;? value("prj_id") ?>)
+GROUP BY quhead_id, quhead_number
+
+UNION ALL
+
+------ SALES ORDERS ------
+SELECT cohead_id AS id, 
+       25 AS type,
+       cohead_number::text AS subtype,
+       2 AS section,
+       &lt;? value("sos") ?> AS section_qtdisplayrole,
+       cohead_number::text AS name,
+      COALESCE((SELECT 
+                  CASE WHEN (coitem_status = 'O') THEN
+                    &lt;? value("open") ?>
+                       WHEN (coitem_status = 'C') THEN
+                    &lt;? value("closed" ?>
+                      ELSE
+                    &lt;? value("canceled") ?>
+                  END
+                FROM 
+               (SELECT coitem_status,
+                   CASE 
+                     WHEN (coitem_status = 'O') THEN 1
+                     WHEN (coitem_status = 'C') then 2
+                     ELSE  3
+                  END AS type
+                  FROM coitem
+                 WHERE (coitem_cohead_id=cohead_id)
+                 ORDER BY type
+                 LIMIT 1) AS sts) ,'O')
+        AS status,
+       NULL::text AS item,
+       NULL::text AS descrip,
+       NULL AS qty,
+       NULL::text AS uom,
+       NULL AS value,
+       0.0 AS ordertotal,
+       1 AS xtindentrole
+  FROM cohead
+    JOIN coitem ON (coitem_cohead_id = cohead_id)
+ WHERE (cohead_prj_id = &lt;? value("prj_id") ?>)
+GROUP BY cohead_id, cohead_number
+
+UNION ALL
+
+SELECT coitem_id AS id, 
+       27 AS type,
+       cohead_number::text AS subtype,
+       2 AS section,
+       &lt;? value("sos") ?> AS section_qtdisplayrole,
+       coitem_linenumber::text AS name, 
+       CASE WHEN (coitem_status = 'O') THEN
+         &lt;? value("open") ?>
+            WHEN (coitem_status = 'C') THEN
+         &lt;? value("closed") ?>
+            WHEN (coitem_status = 'X') THEN
+         &lt;? value("canceled") ?>
+       END AS status,
+       item_number AS item,
+       item_descrip1 || ' ' || item_descrip2 AS descrip,
+       coitem_qtyord,
+       uom_name AS uom,
+       (coitem_qtyord * coitem_qty_invuomratio) * (coitem_price / coitem_price_invuomratio) AS value,
+       0.0 AS ordertotal,
+       2 AS xtindentrole
+  FROM cohead
+    JOIN coitem ON (coitem_cohead_id = cohead_id)
+    JOIN uom ON (coitem_qty_uom_id = uom_id)
+    JOIN itemsite ON (coitem_itemsite_id = itemsite_id)
+    JOIN item ON (itemsite_item_id = item_id)
+ WHERE (cohead_prj_id = &lt;? value("prj_id") ?>)
+
+UNION ALL
+
+SELECT cohead_id AS id, 
+       28 AS type,
+       cohead_number::text AS subtype,
+       2 AS section,
+       &lt;? value("sos") ?> AS section_qtdisplayrole,
+       &lt;? value("total") ?> AS name,
+       NULL AS status,
+       NULL::text AS item,
+       NULL::text AS descrip,
+       NULL AS qty,
+       NULL::text AS uom,
+       SUM((coitem_qtyord * coitem_qty_invuomratio) * (coitem_price / coitem_price_invuomratio)) AS value,
+       SUM((coitem_qtyord * coitem_qty_invuomratio) * (coitem_price / coitem_price_invuomratio)) AS ordertotal,
+       1 AS xtindentrole
+  FROM cohead
+    JOIN coitem ON (coitem_cohead_id = cohead_id)
+ WHERE (cohead_prj_id = &lt;? value("prj_id") ?>)
+GROUP BY cohead_id, cohead_number
+
+UNION ALL
+
+------ INVOICES -------
+SELECT invchead_id AS id,
+       35 AS type,
+       invchead_invcnumber::text AS subtype,
+       3 AS section,
+       &lt;? value("invoices") ?> AS section_qtdisplayrole,
+       invchead_invcnumber::text AS name,
+       CASE WHEN (invchead_posted) THEN
+         &lt;? value("posted") ?>
+       ELSE &lt;? value("unposted") ?>
+       END AS status,
+       NULL::text AS item,
+       NULL::text AS descrip,
+       NULL AS qty,
+       NULL::text AS uom,
+       NULL AS value,
+       0.0 AS ordertotal,
+       1 AS xtindentrole
+  FROM invchead
+    JOIN invcitem ON (invcitem_invchead_id = invchead_id)
+ WHERE (invchead_prj_id = &lt;? value("prj_id") ?>)
+GROUP BY invchead_id, invchead_invcnumber, invchead_freight, invchead_misc_amount, invchead_posted
+
+UNION ALL
+
+SELECT invcitem_id AS id, 
+       37 AS type,
+       invchead_invcnumber::text AS subtype,
+       3 AS section,
+       &lt;? value("invoices") ?> AS section_qtdisplayrole,
+       invcitem_linenumber::text AS name, 
+       CASE WHEN (invchead_posted) THEN
+         &lt;? value("posted") ?>
+       ELSE &lt;? value("unposted") ?>
+       END AS status,
+       COALESCE(item_number,invcitem_number) AS item,
+       COALESCE(item_descrip1 || ' ' || item_descrip2,invcitem_descrip) AS descrip,
+       invcitem_billed AS qty,
+       uom_name AS uom,
+       (invcitem_billed * invcitem_qty_invuomratio) * (invcitem_price / invcitem_price_invuomratio) AS value,
+       0.0 AS ordertotal,
+       2 AS xtindentrole
+  FROM invchead
+    JOIN invcitem ON (invcitem_invchead_id = invchead_id)
+    LEFT OUTER JOIN item ON (invcitem_item_id = item_id)
+    LEFT OUTER JOIN uom ON (invcitem_qty_uom_id = uom_id)
+ WHERE (invchead_prj_id = &lt;? value("prj_id") ?>)
+
+UNION ALL
+
+SELECT invchead_id AS id, 
+       38 AS type,
+       invchead_invcnumber::text AS subtype,
+       3 AS section,
+       &lt;? value("invoices") ?> AS section_qtdisplayrole,
+       &lt;? value("total") ?> AS name,
+       NULL AS status,
+       NULL::text AS item,
+       NULL::text AS descrip,
+       NULL AS qty,
+       NULL::text AS uom,
+       SUM((invcitem_billed * invcitem_qty_invuomratio) * (invcitem_price / invcitem_price_invuomratio)) AS value,
+       SUM((invcitem_billed * invcitem_qty_invuomratio) * (invcitem_price / invcitem_price_invuomratio)) AS ordertotal,
+       1 AS xtindentrole
+  FROM invchead
+    JOIN invcitem ON (invcitem_invchead_id = invchead_id)
+ WHERE (invchead_prj_id = &lt;? value("prj_id") ?>)
+GROUP BY invchead_id, invchead_invcnumber
+
+&lt;? endif ?>
+
+
+&lt;? if exists("showWo") ?>
+
+&lt;?   if exists("showSo") ?>
+
+UNION ALL
+
+&lt;?   endif ?>
+
+------ WORK ORDERS -------
+SELECT wo_id AS id, 
+       45 AS type,
+       formatWoNumber(wo_id) AS subtype,
+       4 AS section,
+       &lt;? value("wos") ?> AS section_qtdisplayrole,
+       formatWoNumber(wo_id) AS name,
+       CASE WHEN (wo_status = 'O') THEN
+         &lt;? value("open") ?>
+            WHEN (wo_status = 'E') THEN
+         &lt;? value("exploded") ?>
+            WHEN (wo_status = 'R') THEN
+         &lt;? value("released") ?>
+            WHEN (wo_status = 'I') THEN
+         &lt;? value("inprocess") ?>
+            WHEN (wo_status = 'C') THEN
+         &lt;? value("closed") ?>
+       END AS status,
+       item_number AS item,
+       item_descrip1 || ' ' || item_descrip2 AS descrip,
+       wo_qtyord AS qty,
+       uom_name AS uom,
+       wo_postedvalue AS value,
+       wo_postedvalue AS ordertotal,
+       1 AS xtindentrole
+  FROM wo
+    JOIN itemsite ON (itemsite_id=wo_itemsite_id)
+    JOIN item ON (itemsite_item_id=item_id)
+    JOIN uom ON (item_inv_uom_id=uom_id)
+ WHERE (wo_prj_id = &lt;? value("prj_id") ?>)
+
+&lt;? endif ?>
+
+
+&lt;? if exists("showPo") ?>
+&lt;?   if exists("showSo") ?>
+ UNION ALL
+&lt;? elseif exists("showWo") ?>
+ UNION ALL
+
+&lt;? endif ?>
+------ PURCHASE REQUESTS ------
+SELECT pr_id AS id, 
+       55 AS type,
+       pr_number::text || '-' || pr_subnumber::text AS subtype,
+       5 AS section,
+       &lt;? value("prs") ?> AS section_qtdisplayrole,
+       pr_number::text || '-' || pr_subnumber::text AS name,
+       &lt;? value("open") ?> AS status, 
+       item_number AS item,
+       (item_descrip1 || ' ' || item_descrip2) AS descrip,
+       pr_qtyreq AS qty,
+       uom_name AS uom,
+       stdcost(item_id) * pr_qtyreq AS value,
+       stdcost(item_id) * pr_qtyreq AS ordertotal,
+       1 AS xtindentrole
+  FROM pr
+    JOIN itemsite ON (itemsite_id = pr_itemsite_id)
+    JOIN item ON (itemsite_item_id = item_id)
+    JOIN uom ON (item_inv_uom_id = uom_id)
+ WHERE (pr_prj_id=&lt;? value("prj_id") ?>)
+
+UNION ALL
+
+------ PURCHASE ORDERS ------
+SELECT pohead_id AS id,
+       65 AS type,
+       pohead_number::text AS subtype,
+       6 AS section,
+       &lt;? value("pos") ?> AS section_qtdisplayrole,
+       pohead_number::text AS name,
+       CASE WHEN (pohead_status = 'U') THEN
+         &lt;? value("unreleased") ?>
+            WHEN (pohead_status = 'O') THEN
+         &lt;? value("open") ?>
+            WHEN (pohead_status = 'C') THEN
+         &lt;? value("closed") ?>
+       END AS status,
+       NULL::text AS item,
+       NULL::text AS descrip,
+       NULL AS qty,
+       NULL AS uom,
+       NULL AS value,
+       0.0 AS ordertotal,
+       1 AS xtindentrole
+  FROM pohead
+    JOIN poitem ON (poitem_pohead_id = pohead_id)
+ WHERE (poitem_prj_id = &lt;? value("prj_id") ?>)
+GROUP BY pohead_id, pohead_number, pohead_freight, pohead_status
+
+UNION ALL
+
+SELECT poitem_id AS id, 
+       67 AS type,
+       pohead_number::text AS subtype,
+       6 AS section,
+       &lt;? value("pos") ?> AS section_qtdisplayrole,
+       poitem_linenumber::text AS name, 
+       CASE WHEN (poitem_status = 'U') THEN
+         &lt;? value("unreleased") ?>
+            WHEN (poitem_status = 'O') THEN
+         &lt;? value("open") ?>
+            WHEN (poitem_status = 'C') THEN
+         &lt;? value("closed") ?>
+       END AS status,
+       COALESCE(item_number,poitem_vend_item_number) AS item,
+       COALESCE((item_descrip1 || ' ' || item_descrip2),poitem_vend_item_descrip) AS descrip,
+       poitem_qty_ordered,
+       poitem_vend_uom AS uom,
+       (poitem_qty_ordered * poitem_unitprice) AS value,
+       0.0 AS ordertotal,
+       2 AS xtindentrole
+  FROM pohead
+    JOIN poitem ON (poitem_pohead_id = pohead_id)
+    LEFT OUTER JOIN itemsite ON (poitem_itemsite_id=itemsite_id)
+    LEFT OUTER JOIN item ON (itemsite_item_id = item_id)
+ WHERE (poitem_prj_id = &lt;? value("prj_id") ?>)
+
+UNION ALL
+
+SELECT pohead_id AS id, 
+       68 AS type,
+       pohead_number::text AS subtype,
+       6 AS section,
+       &lt;? value("pos") ?> AS section_qtdisplayrole,
+       &lt;? value("total") ?> AS name,
+       NULL AS status,
+       NULL::text AS item,
+       NULL::text AS descrip,
+       NULL AS qty,
+       NULL::text AS uom,
+       SUM(poitem_qty_ordered * poitem_unitprice) AS value,
+       SUM(poitem_qty_ordered * poitem_unitprice) AS ordertotal,
+       1 AS xtindentrole
+  FROM pohead
+    JOIN poitem ON (poitem_pohead_id = pohead_id)
+ WHERE (poitem_prj_id = &lt;? value("prj_id") ?>)
+GROUP BY pohead_id, pohead_number
+
+&lt;? endif ?>
+
+) data
+ORDER BY section, subtype, type, id;</sql>
+ </querysource>
+ <rpthead>
+  <height>75</height>
+  <label>
+   <rect>
+    <x>5</x>
+    <y>25</y>
+    <width>105</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Project Number:</string>
+  </label>
+  <field>
+   <rect>
+    <x>140</x>
+    <y>25</y>
+    <width>200</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>prj_number</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>30</x>
+    <y>45</y>
+    <width>80</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Name:</string>
+  </label>
+  <field>
+   <rect>
+    <x>140</x>
+    <y>45</y>
+    <width>509</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>prj_name</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>397</x>
+    <y>5.85</y>
+    <width>350</width>
+    <height>38</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>18</size>
+    <weight>bold</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Order Activity by Project</string>
+  </label>
+ </rpthead>
+ <section>
+  <name>section</name>
+  <group>
+   <name>type</name>
+   <column>section</column>
+   <head>
+    <height>53</height>
+    <label>
+     <rect>
+      <x>395</x>
+      <y>30</y>
+      <width>135</width>
+      <height>15</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>normal</weight>
+     </font>
+     <right/>
+     <vcenter/>
+     <string>Quantity Ordered / Billed</string>
+    </label>
+    <line>
+     <xstart>0</xstart>
+     <ystart>45</ystart>
+     <xend>750</xend>
+     <yend>45</yend>
+     <weight>2</weight>
+    </line>
+    <label>
+     <rect>
+      <x>660</x>
+      <y>30</y>
+      <width>50</width>
+      <height>15</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>normal</weight>
+     </font>
+     <right/>
+     <vcenter/>
+     <string>Value</string>
+    </label>
+    <label>
+     <rect>
+      <x>209</x>
+      <y>30</y>
+      <width>85</width>
+      <height>15</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>normal</weight>
+     </font>
+     <left/>
+     <vcenter/>
+     <string>Status</string>
+    </label>
+    <line>
+     <xstart>77</xstart>
+     <ystart>45</ystart>
+     <xend>77</xend>
+     <yend>45</yend>
+     <weight>0</weight>
+    </line>
+    <label>
+     <rect>
+      <x>100</x>
+      <y>30</y>
+      <width>104</width>
+      <height>15</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>normal</weight>
+     </font>
+     <left/>
+     <vcenter/>
+     <string>Order Number - Line</string>
+    </label>
+    <label>
+     <rect>
+      <x>0</x>
+      <y>5</y>
+      <width>90</width>
+      <height>16</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>10</size>
+      <weight>bold</weight>
+     </font>
+     <left/>
+     <vcenter/>
+     <string>Order Type:</string>
+    </label>
+    <field>
+     <rect>
+      <x>90</x>
+      <y>5</y>
+      <width>610</width>
+      <height>15</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>10</size>
+      <weight>bold</weight>
+     </font>
+     <left/>
+     <vcenter/>
+     <data>
+      <query>detail</query>
+      <column>section_qtdisplayrole</column>
+     </data>
+    </field>
+    <label>
+     <rect>
+      <x>305</x>
+      <y>30</y>
+      <width>95</width>
+      <height>15</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>normal</weight>
+     </font>
+     <left/>
+     <vcenter/>
+     <string>Item</string>
+    </label>
+   </head>
+   <foot>
+    <height>33</height>
+    <label>
+     <rect>
+      <x>440</x>
+      <y>10</y>
+      <width>140</width>
+      <height>15</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>10</size>
+      <weight>bold</weight>
+     </font>
+     <right/>
+     <top/>
+     <string>Section Total:</string>
+    </label>
+    <line>
+     <xstart>305</xstart>
+     <ystart>5</ystart>
+     <xend>750</xend>
+     <yend>5</yend>
+     <weight>0</weight>
+    </line>
+    <field>
+     <rect>
+      <x>610</x>
+      <y>10</y>
+      <width>100</width>
+      <height>15</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>bold</weight>
+     </font>
+     <right/>
+     <vcenter/>
+     <data>
+      <query>detail</query>
+      <column>ordertotal</column>
+     </data>
+     <format builtin="true">money</format>
+     <tracktotal subtotal="true"/>
+    </field>
+   </foot>
+  </group>
+  <detail>
+   <key>
+    <query>detail</query>
+   </key>
+   <height>18</height>
+   <field>
+    <rect>
+     <x>305</x>
+     <y>0</y>
+     <width>135</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>item</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>100</x>
+     <y>0</y>
+     <width>95</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>name</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>209</x>
+     <y>0</y>
+     <width>85</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>status</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>444</x>
+     <y>0</y>
+     <width>85</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_qty</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>544</x>
+     <y>0</y>
+     <width>165</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_value</column>
+    </data>
+   </field>
+  </detail>
+ </section>
+ <pgfoot>
+  <height>41</height>
+  <label>
+   <rect>
+    <x>610</x>
+    <y>15</y>
+    <width>85</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Page:</string>
+  </label>
+  <field>
+   <rect>
+    <x>700</x>
+    <y>15</y>
+    <width>40</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>Context Query</query>
+    <column>page_number</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>0</x>
+    <y>15</y>
+    <width>85</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Report Date:</string>
+  </label>
+  <line>
+   <xstart>0</xstart>
+   <ystart>5</ystart>
+   <xend>750</xend>
+   <yend>5</yend>
+   <weight>2</weight>
+  </line>
+  <field>
+   <rect>
+    <x>75</x>
+    <y>15</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>Context Query</query>
+    <column>report_date</column>
+   </data>
+  </field>
+ </pgfoot>
+</report>

@@ -1,0 +1,52 @@
+-- Group: apApplications
+-- Name: detail
+-- Notes: used by dspAPApplications
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT apapply.*,
+       vend_number, vend_name,
+       CASE 
+         WHEN apapply_source_doctype = 'K' THEN
+            apapply_checkhead_id
+         ELSE
+            apapply_source_apopen_id 
+       END AS apapply_source_docnumber_xtidrole,
+       CASE WHEN (apapply_source_doctype='C') THEN <? value("creditMemo") ?>
+            WHEN (apapply_source_doctype='K') THEN <? value("check") ?>
+            ELSE apapply_source_doctype
+       END AS apapply_source_doctype_qtdisplayrole,
+       CASE WHEN (apapply_target_doctype='D') THEN apapply_target_apopen_id
+            WHEN (apapply_target_doctype='V') THEN (SELECT vohead_id
+                                                    FROM vohead
+                                                    WHERE (vohead_number=apapply_target_docnumber))
+       END AS apapply_target_docnumber_xtidrole,
+       CASE WHEN (apapply_target_doctype='C') THEN <? value("creditMemo") ?>
+            WHEN (apapply_target_doctype='D') THEN <? value("debitMemo") ?>
+            WHEN (apapply_target_doctype='V') THEN <? value("voucher") ?>
+            WHEN (apapply_target_doctype='K') THEN <? value("check") ?>
+            ELSE apapply_target_doctype
+       END AS apapply_target_doctype_qtdisplayrole,
+       formatDate(apapply_postdate) AS f_postdate,-- for openrpt
+       formatMoney(apapply_amount) AS f_amount,   -- for openrpt
+       currConcat(apapply_curr_id) AS currAbbr,
+       currtobase(apapply_curr_id,apapply_amount,apapply_postdate) AS base_applied,
+       'curr' AS apapply_amount_xtnumericrole,
+       'curr' AS base_applied_xtnumericrole,
+       0 AS base_applied_xttotalrole
+FROM apapply, vendinfo
+WHERE ( (apapply_vend_id=vend_id)
+  AND   (apapply_postdate BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+<? if exists("doctypeList") ?>
+  AND   (apapply_source_doctype IN (<? literal("doctypeList") ?>))
+<? endif ?>
+<? if exists("vend_id") ?>
+  AND   (vend_id=<? value("vend_id") ?>)
+<? elseif exists("vendtype_id") ?>
+  AND   (vend_vendtype_id=<? value("vendtype_id") ?>)
+<? elseif exists("vendtype_pattern") ?>
+  AND   (vend_vendtype_id IN (SELECT vendtype_id FROM vendtype
+                              WHERE (vendtype_code ~ <? value("vendtype_pattern") ?>)))
+<? endif ?>
+      )
+ORDER BY apapply_postdate, apapply_source_docnumber;

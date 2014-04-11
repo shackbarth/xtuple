@@ -1,0 +1,398 @@
+-- Group: arOpenItems
+-- Name: detail
+-- Notes: used by arWorkBench, dspAROpenItems
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+<? if exists("totalOnly") ?>
+SELECT SUM(CASE WHEN (aropen_doctype IN ('C', 'R')) THEN
+                    (aropen_amount - aropen_paid) / aropen_curr_rate * -1
+                ELSE (aropen_amount - aropen_paid) / aropen_curr_rate
+           END) AS total_balance
+FROM aropen JOIN custinfo ON (aropen_cust_id=cust_id)
+            LEFT OUTER JOIN custtype ON (cust_custtype_id=custtype_id)
+            LEFT OUTER JOIN custgrpitem ON (custgrpitem_cust_id=cust_id)
+WHERE ( (aropen_open)
+<? if exists("cust_id") ?>
+  AND   (aropen_cust_id=<? value("cust_id") ?>)
+<? endif ?>
+<? if exists("custtype_id") ?>
+  AND   (custtype_id=<? value("custtype_id") ?>)
+<? endif ?>
+<? if exists("custtype_pattern") ?>
+  AND   (custtype_code~<? value("custtype_pattern") ?>)
+<? endif ?>
+<? if exists("custgrp_id") ?>
+  AND   (custgrpitem_custgrp_id=<? value("custgrp_id") ?>)
+<? endif ?>
+      )
+;
+<? else ?>
+
+-- Get unposted invoices
+<? if exists("showUnposted") ?>
+<? if not exists("creditsOnly") ?>
+SELECT -1 AS id,
+       0 AS altId,
+       invchead_invcnumber AS docnumber,
+       invchead_id AS docnumber_xtidrole,
+       invchead_posted AS posted,
+       invchead_invcdate AS docdate,
+       NULL::date AS aropen_duedate,
+       invchead_ordernumber AS ordernumber,
+       cohead_id AS ordernumber_xtidrole,
+       <? value("invoice") ?>  AS doctype,
+       NULL AS doctype_qtforegroundrole,
+       invoicetotal(invchead_id) AS amount,
+       currtobase(invchead_curr_id, invoicetotal(invchead_id), invchead_invcdate) AS base_amount,
+       0 AS paid,
+       0 AS base_paid,
+       0 AS balance,
+       currConcat(invchead_curr_id) AS currAbbr,
+       0 AS base_balance,
+<? if exists("includeFormatted") ?>
+       formatDate(invchead_invcdate) AS f_docdate,
+       NULL::text AS f_duedate,
+       formatMoney(0) AS f_amount,
+       formatMoney(0) AS f_paid,
+       formatMoney(0) AS f_balance,
+<? endif ?>
+       cust_id, cust_number, cust_name,
+       (invchead_recurring_invchead_id IS NOT NULL) AS recurring,
+       false AS open,
+       NULL AS ccard_number,
+       'curr' AS amount_xtnumericrole,
+       'curr' AS base_amount_xtnumericrole,
+       0 AS base_amount_xttotalrole,
+       'curr' AS paid_xtnumericrole,
+       'curr' AS base_paid_xtnumericrole,
+       0 AS base_paid_xttotalrole,
+       'curr' AS balance_xtnumericrole,
+       'curr' AS base_balance_xtnumericrole,
+       0 AS base_balance_xttotalrole,
+       NULL::text AS aropen_docnumber_qtdisplayrole,
+       NULL::text AS aropen_docdate_qtdisplayrole,
+       0 AS xtindentrole,
+       '' AS aropen_duedate_qtforegroundrole,
+       NULL::integer AS ccard_number_xtidrole,
+       firstLine(invchead_notes) AS notes
+FROM invchead
+           LEFT OUTER JOIN cohead ON (invchead_ordernumber=cohead_number)
+           JOIN custinfo ON (invchead_cust_id=cust_id)
+           JOIN custtype ON (cust_custtype_id=custtype_id)
+	   LEFT OUTER JOIN custgrpitem ON (custgrpitem_cust_id=cust_id)
+WHERE ((NOT invchead_posted)
+<? if exists("cust_id") ?>
+  AND   (invchead_cust_id=<? value("cust_id") ?>)
+<? endif ?>
+<? if exists("custtype_id") ?>
+  AND   (custtype_id=<? value("custtype_id") ?>)
+<? endif ?>
+<? if exists("custtype_pattern") ?>
+  AND   (custtype_code~<? value("custtype_pattern") ?>)
+<? endif ?>
+<? if exists("custgrp_id") ?>
+  AND   (custgrpitem_custgrp_id=<? value("custgrp_id") ?>)
+<? endif ?>
+<? if exists("startDate") ?>
+  AND   (invchead_invcdate BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+<? endif ?>
+      )
+  GROUP BY id,                      altId,                  invchead_id,
+           invchead_invcdate,       invchead_posted,        invchead_curr_id,
+           invchead_recurring,      invchead_invcnumber,    invchead_posted,
+           invchead_ordernumber,    cohead_id,
+           cust_id,                 cust_number,            cust_name,
+           invchead_recurring_invchead_id, invchead_notes
+
+UNION
+<? endif ?>
+<? endif ?>
+
+-- Get unposted credit memos
+<? if exists("showUnposted") ?>
+<? if not exists("debitsOnly") ?>
+SELECT -1 AS id,
+       1 AS altId,
+       cmhead_number AS docnumber,
+       cmhead_id AS docnumber_xtidrole,
+       cmhead_posted AS posted,
+       cmhead_docdate AS docdate,
+       NULL::date AS aropen_duedate,
+       NULL::text AS ordernumber,
+       -1 AS ordernumber_xtidrole,
+       <? value("return") ?>  AS doctype,
+       CASE WHEN (NOT cmhead_posted) THEN 'emphasis'
+       END AS doctype_qtforegroundrole,
+       creditmemototal(cmhead_id) AS amount,
+       currtobase(cmhead_curr_id, creditmemototal(cmhead_id), cmhead_docdate) AS base_amount,
+       0 AS paid,
+       0 AS base_paid,
+       0 AS balance,
+       currConcat(cmhead_curr_id) AS currAbbr,
+       0  AS base_balance,
+<? if exists("includeFormatted") ?>
+       formatDate(cmhead_docdate) AS f_docdate,
+       NULL::text AS f_duedate,
+       formatMoney(creditmemototal(cmhead_id)) AS f_amount,
+       formatMoney(0) AS f_paid,
+       formatMoney(0) AS f_balance,
+<? endif ?>
+       cust_id, cust_number, cust_name,
+       false AS recurring,
+       false AS open,
+       NULL AS ccard_number,
+       'curr' AS amount_xtnumericrole,
+       'curr' AS base_amount_xtnumericrole,
+       0 AS base_amount_xttotalrole,
+       'curr' AS paid_xtnumericrole,
+       'curr' AS base_paid_xtnumericrole,
+       0 AS base_paid_xttotalrole,
+       'curr' AS balance_xtnumericrole,
+       'curr' AS base_balance_xtnumericrole,
+       0 AS base_balance_xttotalrole,
+       NULL::text AS aropen_docnumber_qtdisplayrole,
+       NULL::text AS aropen_docdate_qtdisplayrole,
+       0 AS xtindentrole,
+       '' AS aropen_duedate_qtforegroundrole,
+       NULL::integer AS ccard_number_xtidrole,
+       firstLine(cmhead_comments) AS notes
+FROM cmhead
+            JOIN custinfo ON (cmhead_cust_id=cust_id)
+            JOIN custtype ON (cust_custtype_id=custtype_id)
+	    LEFT OUTER JOIN custgrpitem ON (custgrpitem_cust_id=cust_id)
+WHERE ((NOT cmhead_posted)
+<? if exists("cust_id") ?>
+  AND   (cmhead_cust_id=<? value("cust_id") ?>)
+<? endif ?>
+<? if exists("custtype_id") ?>
+  AND   (custtype_id=<? value("custtype_id") ?>)
+<? endif ?>
+<? if exists("custtype_pattern") ?>
+  AND   (custtype_code~<? value("custtype_pattern") ?>)
+<? endif ?>
+<? if exists("custgrp_id") ?>
+  AND   (custgrpitem_custgrp_id=<? value("custgrp_id") ?>)
+<? endif ?>
+<? if exists("startDate") ?>
+  AND   (cmhead_docdate BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+<? endif ?>
+      )
+  GROUP BY id,                      altId,                  cmhead_id,
+           cmhead_docdate,          cmhead_posted,          cmhead_curr_id,
+           cmhead_number,           cmhead_posted,          cmhead_comments,
+           cust_id,                 cust_number,            cust_name
+
+UNION
+<? endif ?>
+<? endif ?>
+
+-- Get Posted AR Open
+SELECT aropen_id AS id,
+       CASE WHEN (aropen_doctype='I') THEN 0
+            WHEN (aropen_doctype='C') THEN 1
+            WHEN (aropen_doctype='D') THEN 2
+            WHEN (aropen_doctype='R') THEN 3
+            ELSE -1
+       END AS altId,
+       aropen_docnumber AS docnumber,
+       COALESCE(invchead_id,cmhead_id,-1) AS docnumber_xtidrole,
+       true AS posted,
+       aropen_docdate AS docdate,
+       aropen_duedate,
+       aropen_ordernumber AS ordernumber,
+       COALESCE(cohead_id,-1) AS ordernumber_xtidrole,
+       CASE WHEN (aropen_doctype='I') THEN <? value("invoice") ?>
+            WHEN (aropen_doctype='C') THEN <? value("creditMemo") ?>
+            WHEN (aropen_doctype='D') THEN <? value("debitMemo") ?>
+            WHEN (aropen_doctype='R') THEN <? value("cashdeposit") ?>
+            ELSE <? value("other") ?>
+       END AS doctype,
+       CASE WHEN (aropen_doctype='C') THEN 'emphasis' 
+         ELSE CASE WHEN(aropen_doctype='R')THEN 'altemphasis'
+         END
+       END AS doctype_qtforegroundrole,
+       aropen_amount AS amount,
+       aropen_amount/aropen_curr_rate AS base_amount,
+       (aropen_paid - (COALESCE(SUM(arapply_target_paid),0))) AS paid,
+       (aropen_paid - (COALESCE(SUM(arapply_target_paid),0))/aropen_curr_rate) AS base_paid,
+        (((aropen_amount-aropen_paid+COALESCE(SUM(arapply_target_paid),0))) *
+        CASE WHEN (aropen_doctype IN ('C', 'R')) THEN -1 ELSE 1 END) AS balance,
+       currConcat(aropen_curr_id) AS currAbbr,
+        (((aropen_amount-aropen_paid+COALESCE(SUM(arapply_target_paid),0)))/aropen_curr_rate *
+        CASE WHEN (aropen_doctype IN ('C', 'R')) THEN -1 ELSE 1 END)  AS base_balance,
+<? if exists("includeFormatted") ?>
+       formatDate(aropen_docdate) AS f_docdate,
+       formatDate(aropen_duedate) AS f_duedate,
+       formatMoney(aropen_amount) AS f_amount,
+       formatMoney(aropen_paid - (COALESCE(SUM(arapply_target_paid),0))) AS f_paid,
+       formatMoney((((aropen_amount-aropen_paid+COALESCE(SUM(arapply_target_paid),0))) *
+        CASE WHEN (aropen_doctype IN ('C', 'R')) THEN -1 ELSE 1 END)) AS f_balance,
+<? endif ?>
+       cust_id, cust_number, cust_name,
+       COALESCE(invchead_recurring_invchead_id IS NOT NULL, false) AS recurring,
+       aropen_open AS open,
+       formatccnumber(decrypt(setbytea(ccard_number),
+                              setbytea(<? value("key") ?>), 'bf')) AS ccard_number,
+       'curr' AS amount_xtnumericrole,
+       'curr' AS base_amount_xtnumericrole,
+       0 AS base_amount_xttotalrole,
+       'curr' AS paid_xtnumericrole,
+       'curr' AS base_paid_xtnumericrole,
+       0 AS base_paid_xttotalrole,
+       'curr'AS balance_xtnumericrole,
+       'curr' AS base_balance_xtnumericrole,
+       0 AS base_balance_xttotalrole,
+       NULL AS aropen_docnumber_qtdisplayrole,
+       NULL AS aropen_docdate_qtdisplayrole,
+       0 AS xtindentrole,
+       CASE WHEN ((COALESCE(aropen_duedate,current_date) < current_date) AND COALESCE(aropen_open,FALSE)) THEN 'error' 
+       END AS aropen_duedate_qtforegroundrole,
+       ccpay_id AS ccard_number_xtidrole,
+       firstLine(aropen_notes) AS notes
+FROM aropen 
+<? if exists("incidentsOnly") ?>
+            JOIN incdt ON (incdt_aropen_id=aropen_id)
+<? endif ?>
+            JOIN custinfo ON (aropen_cust_id=cust_id)
+            JOIN custtype ON (cust_custtype_id=custtype_id)
+	    LEFT OUTER JOIN custgrpitem ON (custgrpitem_cust_id=cust_id)
+            LEFT OUTER JOIN invchead ON ((aropen_docnumber=invchead_invcnumber)
+                                   AND (aropen_doctype='I'))
+            LEFT OUTER JOIN cohead ON (invchead_ordernumber=cohead_number)
+            LEFT OUTER JOIN cmhead ON ((aropen_docnumber=cmhead_number)
+                                   AND (aropen_doctype='C'))
+            LEFT OUTER JOIN arapply ON (((aropen_id=arapply_source_aropen_id)
+                             OR (aropen_id=arapply_target_aropen_id))
+                             AND (arapply_distdate>COALESCE(<? value("asofDate") ?>,current_date)))
+            LEFT OUTER JOIN payaropen ON (payaropen_aropen_id=aropen_id)
+            LEFT OUTER JOIN ccpay     ON (payaropen_ccpay_id=ccpay_id)
+            LEFT OUTER JOIN ccard     ON (ccpay_ccard_id=ccard_id)
+WHERE ((true)
+<? if not exists("showClosed") ?>
+  AND (aropen_docdate <= COALESCE(<? value("asofDate") ?>, current_date))
+  AND (COALESCE(aropen_closedate, DATE(<? value("asofDate") ?>) + 1, current_date + 1) > COALESCE(<? value("asofDate") ?>, current_date)) 
+<? endif ?>
+<? if exists("debitsOnly") ?>
+  AND   (aropen_doctype IN ('D','I'))
+<? elseif exists("creditsOnly") ?>
+  AND   (aropen_doctype IN ('C', 'R'))
+<? endif ?>
+<? if exists("cust_id") ?>
+  AND   (aropen_cust_id=<? value("cust_id") ?>)
+<? endif ?>
+<? if exists("custtype_id") ?>
+  AND   (custtype_id=<? value("custtype_id") ?>)
+<? endif ?>
+<? if exists("custgrp_id") ?>
+  AND   (custgrpitem_custgrp_id=<? value("custgrp_id") ?>)
+<? endif ?>
+<? if exists("custtype_pattern") ?>
+  AND   (custtype_code~<? value("custtype_pattern") ?>)
+<? endif ?>
+<? if exists("startDate") ?>
+  AND   (aropen_docdate BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+<? endif ?>
+<? if exists("startDueDate") ?>
+  AND   (aropen_duedate >= <? value("startDueDate") ?>)
+<? endif ?>
+<? if exists("endDueDate") ?>
+  AND   (aropen_duedate <= <? value("endDueDate") ?>)
+<? endif ?>
+      )
+  GROUP BY id,                      altId,	            invchead_id,
+           aropen_docdate,          aropen_duedate,         aropen_doctype,         
+           aropen_docnumber,        aropen_amount,          
+           aropen_notes,            aropen_posted,          aropen_ordernumber,
+           aropen_paid,             aropen_open,            aropen_curr_id,
+           aropen_closedate,        aropen_curr_rate,       cmhead_id,
+           cust_id, 		    cust_number,            cust_name,
+           cohead_id,               ccpay_id,               ccard_number,
+           invchead_recurring_invchead_id
+UNION
+SELECT -1,
+       4 AS altId,
+       aropen_docnumber AS docnumber,
+       -1 AS docnumber_xtidrole,
+       NULL AS posted, 
+       aropen_docdate AS docdate,
+       NULL AS aropen_duedate,
+       CAST(incdt_number AS text) AS ordernumber,
+       incdt_id AS ordernumber_xtidrole,
+       NULL AS doctype,
+       NULL AS doctype_qtforegroundrole,
+       NULL AS amount,
+       NULL AS base_amount,
+       NULL AS paid,
+       NULL AS base_paid,
+       NULL AS balance,
+       NULL AS currAbbr,
+       NULL AS base_balance,
+<? if exists("includeFormatted") ?>
+       NULL AS f_docdate,
+       NULL AS f_duedate,
+       NULL AS f_amount,
+       NULL AS f_paid,
+       NULL AS f_balance,
+<? endif ?>
+       NULL,incdt_assigned_username, incdt_summary,
+       NULL AS recurring, NULL AS open,
+       NULL AS ccard_number,
+       'curr' AS amount_xtnumericrole,
+       'curr' AS base_amount_xtnumericrole,
+       0 AS base_amount_xttotalrole,
+       'curr' AS paid_xtnumericrole,
+       'curr' AS base_paid_xtnumericrole,
+       0 AS base_paid_xttotalrole,
+       'curr' AS balance_xtnumericrole,
+       'curr' AS base_balance_xtnumericrole,
+       0 AS base_balance_xttotalrole,
+       '' AS aropen_docnumber_qtdisplayrole,
+       '' AS aropen_docdate_qtdisplayrole,
+       1 AS xtindentrole,
+       CASE WHEN ((COALESCE(aropen_duedate,current_date) < current_date) AND COALESCE(aropen_open,FALSE)) THEN 'error' 
+       END AS aropen_duedate_qtforegroundrole,
+       NULL::integer AS ccard_xtidrole,
+       firstLine(incdt_descrip) AS notes
+FROM incdt JOIN aropen ON (aropen_id=incdt_aropen_id)
+           JOIN custinfo ON (aropen_cust_id=cust_id)
+           JOIN custtype ON (cust_custtype_id=custtype_id)
+	   LEFT OUTER JOIN custgrpitem ON (custgrpitem_cust_id=cust_id)
+WHERE ((true)
+<? if not exists("showClosed") ?>
+  AND (aropen_docdate <= COALESCE(<? value("asofDate") ?>, current_date))
+  AND (COALESCE(aropen_closedate, DATE(<? value("asofDate") ?>) + 1, current_date + 1) > COALESCE(<? value("asofDate") ?>, current_date)) 
+<? endif ?>
+<? if exists("debitsOnly") ?>
+  AND   (NOT aropen_doctype IN ('C', 'R'))
+<? endif ?>
+<? if exists("creditsOnly") ?>
+  AND   (aropen_doctype IN ('C', 'R'))
+<? endif ?>
+<? if exists("cust_id") ?>
+  AND   (aropen_cust_id=<? value("cust_id") ?>)
+<? endif ?>
+<? if exists("custtype_id") ?>
+  AND   (custtype_id=<? value("custtype_id") ?>)
+<? endif ?>
+<? if exists("custtype_pattern") ?>
+  AND   (custtype_code~<? value("custtype_pattern") ?>)
+<? endif ?>
+<? if exists("custgrp_id") ?>
+  AND   (custgrpitem_custgrp_id=<? value("custgrp_id") ?>)
+<? endif ?>
+<? if exists("startDate") ?>
+  AND   (aropen_docdate BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+<? endif ?>
+<? if exists("startDueDate") ?>
+  AND   (aropen_duedate >= <? value("startDueDate") ?>)
+<? endif ?>
+<? if exists("endDueDate") ?>
+  AND   (aropen_duedate <= <? value("endDueDate") ?>)
+<? endif ?>
+      )
+
+ORDER BY
+  docdate DESC, docnumber DESC, xtindentrole
+;
+<? endif ?>

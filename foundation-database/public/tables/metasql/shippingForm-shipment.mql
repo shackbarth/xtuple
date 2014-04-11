@@ -1,0 +1,35 @@
+-- Group: shippingForm
+-- Name: shipment
+-- Notes: used by printShippingForm
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT cohead_id AS order_id, cohead_shiptoname AS shipto, 
+       cohead_shiptoaddress1 AS addr1, shiphead_order_type, 
+       shiphead_id, shiphead_shipchrg_id, shiphead_shipped, 
+	COALESCE(shiphead_shipform_id, cohead_shipform_id) AS shipform_id 
+FROM cohead, shiphead 
+WHERE ((cohead_id=shiphead_order_id)
+  AND  (shiphead_order_type='SO')
+  AND  (shiphead_id=<? value("shiphead_id") ?> )
+<? if exists("sohead_id") ?>
+  AND  (cohead_id=<? value("sohead_id") ?> )
+<? endif ?>
+) 
+<? if exists("MultiWhs") ?>
+UNION 
+SELECT tohead_id AS order_id, tohead_destname AS shipto, 
+       tohead_destaddress1 AS addr1, shiphead_order_type, 
+       shiphead_id, shiphead_shipchrg_id, shiphead_shipped, 
+	COALESCE(shiphead_shipform_id, tohead_shipform_id) AS shipform_id 
+FROM tohead, shiphead 
+WHERE ((tohead_id=shiphead_order_id)
+  AND  (shiphead_order_type='TO')
+  AND  (shiphead_id=<? value("shiphead_id") ?> )
+<? if exists("tohead_id") ?>
+  AND  (tohead_id=<? value("tohead_id") ?> )
+<? endif ?>
+) 
+ORDER BY shiphead_shipped 
+<? endif ?>
+LIMIT 1;

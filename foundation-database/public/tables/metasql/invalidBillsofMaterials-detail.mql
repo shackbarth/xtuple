@@ -1,0 +1,30 @@
+-- Group: invalidBillsofMaterials
+-- Name: detail
+-- Notes: used by dspInvalidBillsOfMaterials
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT itemsite_id, parent.item_id AS pitem_id,
+       component.item_id AS citem_id,
+       warehous_id, warehous_code,
+       parent.item_number AS parentitem,
+       component.item_number AS componentitem,
+       (component.item_descrip1 || ' ' || component.item_descrip2) AS descrip
+FROM bomitem, itemsite, item AS parent, item AS component, whsinfo
+WHERE ((bomitem_parent_item_id=parent.item_id)
+   AND (bomitem_item_id=component.item_id)
+   AND (CURRENT_DATE BETWEEN bomitem_effective AND (bomitem_expires - 1))
+   AND (itemsite_item_id=parent.item_id)
+   AND (itemsite_warehous_id=warehous_id)
+   AND (parent.item_type='M')
+   AND (itemsite_wosupply)
+   AND (itemsite_active)
+   AND (component.item_id NOT IN ( SELECT itemsite_item_id
+                                   FROM itemsite
+                                   WHERE ((itemsite_warehous_id=warehous_id)
+                                      AND (itemsite_active)) ) ) 
+<? if exists("warehous_id") ?>
+   AND (warehous_id=<? value("warehous_id") ?>)
+<? endif ?>
+      )
+ORDER BY warehous_code, parentitem, componentitem;

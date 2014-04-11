@@ -1,0 +1,40 @@
+-- Group: timePhasedAvailability
+-- Name: detail
+-- Notes: used by dspTimePhasedAvailability
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT itemsite_id, itemtype,
+       item_number, uom_name, warehous_code,
+       reorderlevel 
+       <? foreach("period_id_list") ?>
+         , bucket_<? literal("period_id_list") ?>,
+         'qty' AS bucket_<? literal("period_id_list") ?>_xtnumericrole,
+         CASE WHEN (bucket_<? literal("period_id_list") ?> < reorderlevel) THEN 'error' END AS   bucket_<? literal("period_id_list") ?>_qtforegroundrole 
+       <? endforeach ?>
+ FROM (SELECT itemsite_id,
+       CASE WHEN (item_type IN ('F', 'B', 'C', 'Y', 'R')) THEN 0
+            WHEN (item_type IN ('M')) THEN 1
+            WHEN (item_type IN ('P', 'O')) THEN 2
+            ELSE 0
+            END AS itemtype,
+            item_number, uom_name, warehous_code,
+            CASE WHEN(itemsite_useparams) THEN itemsite_reorderlevel ELSE 0.0 END AS reorderlevel 
+
+       <? foreach("period_id_list") ?>
+       , qtyAvailable(itemsite_id, findPeriodStart(<? value("period_id_list") ?>)) AS bucket_<?  literal("period_id_list") ?> 
+       <? endforeach ?>
+ FROM itemsite, item, whsinfo, uom
+  WHERE ((itemsite_item_id=item_id)
+   AND (item_inv_uom_id=uom_id) 
+   AND (itemsite_warehous_id=warehous_id) 
+  <? if exists("warehous_id") ?>
+     AND (itemsite_warehous_id=<? value("warehous_id") ?>) 
+  <? endif ?>
+  <? if exists("plancode_id") ?> 
+     AND (itemsite_plancode_id=<? value("plancode_id") ?>)
+   <? elseif exists("plancode_pattern") ?>
+     AND (itemsite_plancode_id IN (SELECT plancode_id FROM plancode WHERE (plancode_code ~         <?value("plancode_pattern") ?>)))
+ <? endif ?>  
+ )) AS data
+  ORDER BY item_number;

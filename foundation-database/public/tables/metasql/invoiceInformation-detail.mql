@@ -1,0 +1,33 @@
+-- Group: invoiceInformation
+-- Name: detail
+-- Notes: used by dspInvoiceInformation
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT arapply_id,
+       CASE WHEN (arapply_source_doctype = 'C') THEN <? value("creditMemo") ?>
+            WHEN (arapply_source_doctype = 'R') THEN <? value("cashdeposit") ?>
+            WHEN (arapply_fundstype='C') THEN <? value("check") ?>
+            WHEN (arapply_fundstype='T') THEN <? value("certifiedCheck") ?>
+            WHEN (arapply_fundstype='M') THEN <? value("masterCard") ?>
+            WHEN (arapply_fundstype='V') THEN <? value("visa") ?>
+            WHEN (arapply_fundstype='A') THEN <? value("americanExpress") ?>
+            WHEN (arapply_fundstype='D') THEN <? value("discoverCard") ?>
+            WHEN (arapply_fundstype='R') THEN <? value("otherCreditCard") ?>
+            WHEN (arapply_fundstype='K') THEN <? value("cash") ?>
+            WHEN (arapply_fundstype='W') THEN <? value("wireTransfer") ?>
+            WHEN (arapply_fundstype='O') THEN <? value("other") ?>
+       END AS doctype,
+       CASE WHEN (arapply_source_doctype IN ('C','R')) THEN arapply_source_docnumber
+            WHEN (arapply_source_doctype = 'K') THEN arapply_refnumber
+         ELSE <? value("error") ?>
+       END AS docnumber,
+       arapply_postdate, arapply_applied,
+       currConcat(arapply_curr_id) AS currabbr,
+       currToBase(arapply_curr_id, arapply_applied, arapply_postdate) AS baseapplied,
+       'curr' AS arapply_applied_xtnumericrole,
+       'curr' AS baseapplied_xtnumericrole
+FROM arapply
+WHERE ((arapply_target_doctype='I')
+   AND (arapply_target_docnumber=<? value("aropen_docnumber") ?>))
+ORDER BY arapply_postdate;

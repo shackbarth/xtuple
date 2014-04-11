@@ -1,0 +1,38 @@
+-- Group: pendingBOMChanges
+-- Name: detail
+-- Notes: used by dspPendingBOMChanges
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT bomitem_id, actiondate, action,
+       bomitem_seqnumber, item_number, description,
+       uom_name, qtyfxd, qtyper,
+       bomitem_scrap, actiondate,
+       'qty' AS qtyfxd_xtnumericrole,
+       'qtyper' AS qtyper_xtnumericrole,
+       'percent' AS bomitem_scrap_xtnumericrole 
+FROM (SELECT bomitem_id, <? value("effective") ?> AS action,
+             bomitem_seqnumber, item_number, (item_descrip1 || ' ' || item_descrip2) AS description,
+             uom_name,
+             (itemuomtouomratio(bomitem_item_id, bomitem_uom_id, NULL) * bomitem_qtyfxd) AS qtyfxd,
+             (itemuomtouomratio(bomitem_item_id, bomitem_uom_id, NULL) * bomitem_qtyper) AS qtyper,
+             bomitem_scrap, bomitem_effective AS actiondate 
+      FROM bomitem(<? value("item_id") ?>,<? value("revision_id") ?>), item, uom 
+      WHERE ((bomitem_item_id=item_id)
+         AND (item_inv_uom_id=uom_id)
+         AND (bomitem_effective BETWEEN CURRENT_DATE AND <? value("cutOffDate") ?>)) 
+      UNION 
+      SELECT bomitem_id, <? value("expires") ?> AS action, 
+             bomitem_seqnumber, item_number, (item_descrip1 || ' ' || item_descrip2) AS description,
+             uom_name,
+             (itemuomtouomratio(bomitem_item_id, bomitem_uom_id, NULL) * bomitem_qtyfxd) AS qtyfxd,
+             (itemuomtouomratio(bomitem_item_id, bomitem_uom_id, NULL) * bomitem_qtyper) AS qtyper,
+             bomitem_scrap, bomitem_expires AS actiondate 
+      FROM bomitem(<? value("item_id") ?>,<? value("revision_id") ?>), item, uom 
+      WHERE ((bomitem_item_id=item_id)
+         AND (item_inv_uom_id=uom_id)
+       <? if exists("cutOffDate") ?>
+         AND (bomitem_expires BETWEEN CURRENT_DATE AND <? value("cutOffDate") ?>) )
+       <? endif ?> 
+     ) AS data 
+ORDER BY action, actiondate, bomitem_seqnumber;

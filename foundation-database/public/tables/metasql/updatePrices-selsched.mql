@@ -1,0 +1,11 @@
+-- Group: updateprices
+-- Name: selsched
+-- Notes:
+-- Notes:
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT selsched_ipshead_id, ipshead_name, ipshead_descrip
+FROM selsched
+ JOIN ipshead ON (selsched_ipshead_id=ipshead_id)
+ORDER BY ipshead_name

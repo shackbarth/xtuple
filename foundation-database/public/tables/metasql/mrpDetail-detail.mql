@@ -1,0 +1,17 @@
+-- Group: mrpDetail
+-- Name: detail
+-- Notes: used by dspMRPDetail
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT formatQty(itemsite_qtyonhand) AS f_qoh,itemsite_qtyonhand
+       , qtyAllocated(itemsite_id, findPeriodStart(<? value("cursorId") ?>),
+                       findPeriodEnd(<? value("cursorId") ?>)) AS allocations<? value("counter") ?>,
+       qtyOrdered(itemsite_id, findPeriodStart(<? value("cursorId") ?>),
+                       findPeriodEnd(<? value("cursorId") ?>)) AS orders<? value("counter") ?>,
+       qtyFirmedAllocated(itemsite_id, findPeriodStart(<? value("cursorId") ?>),
+                       findPeriodEnd(<? value("cursorId") ?>)) AS firmedallocations<? value("counter") ?>,
+       qtyFirmed(itemsite_id, findPeriodStart(<? value("cursorId") ?>),
+                       findPeriodEnd(<? value("cursorId") ?>)) AS firmedorders<? value("counter") ?>
+FROM itemsite
+WHERE (itemsite_id=<? value("itemsite_id") ?>);
