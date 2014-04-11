@@ -43,7 +43,7 @@ BEGIN
 
   SELECT createPurchaseToSale(_s.coitem_id, _p.poitem_itemsrc_id,
                               pDropShip, _s.coitem_qtyord,
-                              _s.coitem_scheddate, _p.poitem_unitprice)
+                              _s.coitem_scheddate, NULL)
      INTO _poitemid;
   
   RETURN _poitemid;
