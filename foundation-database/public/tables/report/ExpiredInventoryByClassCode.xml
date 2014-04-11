@@ -1,0 +1,917 @@
+<!DOCTYPE openRPTDef>
+<report>
+ <title>Expired Inventory By Class Code</title>
+ <name>ExpiredInventoryByClassCode</name>
+ <description></description>
+ <grid>
+  <snap/>
+  <show/>
+  <x>0.05</x>
+  <y>0.05</y>
+ </grid>
+ <size>Letter</size>
+ <portrait/>
+ <topmargin>50</topmargin>
+ <bottommargin>50</bottommargin>
+ <rightmargin>50</rightmargin>
+ <leftmargin>50</leftmargin>
+ <querysource>
+  <name>head</name>
+  <sql>SELECT &lt;? if exists("warehous_id") ?>
+         (SELECT warehous_code
+            FROM whsinfo
+           WHERE (warehous_id=&lt;? value("warehous_id") ?>) )
+       &lt;? else ?>
+         text('All Warehouses')
+       &lt;? endif ?>
+       AS warehouse,
+       &lt;? if exists("classcode_id") ?>
+         (SELECT (classcode_code || '-' || classcode_descrip)
+            FROM classcode
+           WHERE (classcode_id=&lt;? value("classcode_id") ?>) )
+       &lt;? elseif exists("classcode_pattern") ?>
+         text(&lt;? value("classcode_pattern") ?>)
+       &lt;? else ?>
+         text('All Class Codes')
+       &lt;? endif ?>
+       AS classcode,
+       &lt;? if exists("perishability") ?> 
+       'Perishability'
+       &lt;? else ?>
+       'Warranty'
+       &lt;? endif ?> AS expiretype,
+       &lt;? if exists("showValue") ?>
+           &lt;? if exists("useActualCosts") ?>
+             text('Show Inventory Value with Actual Costs')
+           &lt;? elseif exists("useStandardCosts") ?>
+             text('Show Inventory Value with Standard Costs')
+           &lt;? else ?>
+             text('Show Inventory Value with Posted Costs')
+           &lt;? endif ?>
+           AS showvalues,
+           text('Unit Cost') AS f_unitcost,
+           text('Value') AS f_value,
+       &lt;? else ?>
+           text('') AS showvalues,
+           text('') AS f_unitcost,
+           text('') AS f_value,
+       &lt;? endif ?>
+       int4(&lt;? value("thresholdDays") ?>) AS f_thresholddays;</sql>
+ </querysource>
+ <querysource>
+  <name>detail</name>
+  <sql>SELECT warehous_code,
+       item_number,
+       item_descrip1,
+       item_descrip2,
+       uom_name,
+       ls_number AS itemloc_lotserial,
+       formatQty(itemloc_qty) AS f_qoh,
+       formatDate(itemloc_expiration) AS f_expiration,
+       &lt;? if exists("showValue") ?>
+         formatCost(cost)
+       &lt;? else ?>
+         text('')
+       &lt;? endif ?>
+       AS f_unitcost,
+       noNeg(cost * itemloc_qty) AS value,
+       &lt;? if exists("showValue") ?>
+         formatExtPrice(noNeg(cost * itemloc_qty))
+       &lt;? else ?>
+         text('')
+       &lt;? endif ?>
+       AS f_value
+  FROM ( SELECT itemsite_id,
+                warehous_code,
+                item_number,
+                item_descrip1,
+                item_descrip2,
+                uom_name,
+                ls_number,
+                itemloc_qty,
+&lt;? if exists("perishability") ?>
+                itemloc_expiration,
+&lt;? elseif exists("warranty") ?>
+                itemloc_warrpurc AS itemloc_expiration,
+&lt;? endif ?>
+                &lt;? if exists("useActualCosts") ?>
+                  actcost(itemsite_item_id)
+                &lt;? elseif exists("useStandardCosts") ?>
+                  stdcost(itemsite_item_id)
+                &lt;? else ?>
+                  (itemsite_value / CASE WHEN(itemsite_qtyonhand=0) THEN 1 ELSE itemsite_qtyonhand END)
+                &lt;? endif ?>
+                AS cost
+           FROM itemloc, itemsite, item, whsinfo, uom, ls
+          WHERE ((itemloc_itemsite_id=itemsite_id)
+            AND (itemloc_ls_id=ls_id)
+            AND (itemsite_item_id=item_id)
+            AND (item_inv_uom_id=uom_id)
+            AND (itemsite_warehous_id=warehous_id)
+&lt;? if exists("perishability") ?>
+            AND (itemsite_perishable)
+            AND (itemloc_expiration &lt; (CURRENT_DATE + &lt;? value("thresholdDays") ?>))
+&lt;? elseif exists("warranty") ?>
+            AND (itemsite_warrpurc)
+            AND (itemloc_warrpurc &lt; (CURRENT_DATE + &lt;? value("thresholdDays") ?>))
+&lt;? endif ?>
+&lt;? if exists("warehous_id") ?>
+            AND (itemsite_warehous_id=&lt;? value("warehous_id") ?>)
+&lt;? endif ?>
+&lt;? if exists("classcode_id") ?>
+            AND (item_classcode_id=&lt;? value("classcode_id") ?>)
+&lt;? elseif exists("classcode_pattern") ?>
+            AND (item_classcode_id IN (SELECT classcode_id
+                                         FROM classcode
+                                        WHERE classcode_code ~ &lt;? value("classcode_pattern") ?>) )
+&lt;? endif ?>
+                )
+       ) AS data
+ORDER BY warehous_code,
+&lt;? if exists("orderByInventoryValue") ?>
+  value DESC
+&lt;? elseif exists("orderByExpirationDate") ?>
+  itemloc_expiration
+&lt;? else ?>
+  item_number
+&lt;? endif ?></sql>
+ </querysource>
+ <rpthead>
+  <height>237</height>
+  <label>
+   <rect>
+    <x>227</x>
+    <y>10</y>
+    <width>492</width>
+    <height>37</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>18</size>
+    <weight>bold</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Expired Inventory By Class Code</string>
+  </label>
+  <label>
+   <rect>
+    <x>25</x>
+    <y>200</y>
+    <width>50</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Whs.</string>
+  </label>
+  <field>
+   <rect>
+    <x>440</x>
+    <y>140</y>
+    <width>300</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>showvalues</column>
+   </data>
+  </field>
+  <field>
+   <rect>
+    <x>575</x>
+    <y>200</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>f_unitcost</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>40</x>
+    <y>160</y>
+    <width>80</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Expire By:</string>
+  </label>
+  <label>
+   <rect>
+    <x>102</x>
+    <y>200</y>
+    <width>150</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Item Number</string>
+  </label>
+  <label>
+   <rect>
+    <x>265</x>
+    <y>200</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>UOM</string>
+  </label>
+  <label>
+   <rect>
+    <x>102</x>
+    <y>215</y>
+    <width>227</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Item Description</string>
+  </label>
+  <label>
+   <rect>
+    <x>350</x>
+    <y>215</y>
+    <width>85</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Expiration</string>
+  </label>
+  <label>
+   <rect>
+    <x>417</x>
+    <y>120</y>
+    <width>112</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Threshold Days:</string>
+  </label>
+  <label>
+   <rect>
+    <x>45</x>
+    <y>140</y>
+    <width>80</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Warehouse:</string>
+  </label>
+  <field>
+   <rect>
+    <x>130</x>
+    <y>140</y>
+    <width>200</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>warehouse</column>
+   </data>
+  </field>
+  <field>
+   <rect>
+    <x>660</x>
+    <y>200</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>f_value</column>
+   </data>
+  </field>
+  <line>
+   <xstart>5</xstart>
+   <ystart>227</ystart>
+   <xend>745</xend>
+   <yend>227</yend>
+   <weight>2</weight>
+  </line>
+  <field>
+   <rect>
+    <x>130</x>
+    <y>120</y>
+    <width>300</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>classcode</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>15</x>
+    <y>120</y>
+    <width>110</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Class Code(s):</string>
+  </label>
+  <label>
+   <rect>
+    <x>350</x>
+    <y>200</y>
+    <width>85</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Lot/Serial #</string>
+  </label>
+  <field>
+   <rect>
+    <x>130</x>
+    <y>160</y>
+    <width>200</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>expiretype</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>490</x>
+    <y>200</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>QOH</string>
+  </label>
+  <field>
+   <rect>
+    <x>540</x>
+    <y>120</y>
+    <width>195</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>f_thresholddays</column>
+   </data>
+  </field>
+ </rpthead>
+ <pghead>
+  <firstpage/>
+  <height>6</height>
+ </pghead>
+ <pghead>
+  <height>42</height>
+  <line>
+   <xstart>5</xstart>
+   <ystart>35</ystart>
+   <xend>745</xend>
+   <yend>32</yend>
+   <weight>2</weight>
+  </line>
+  <label>
+   <rect>
+    <x>350</x>
+    <y>5</y>
+    <width>85</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Lot/Serial #</string>
+  </label>
+  <label>
+   <rect>
+    <x>102</x>
+    <y>20</y>
+    <width>227</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Item Description</string>
+  </label>
+  <label>
+   <rect>
+    <x>265</x>
+    <y>5</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>UOM</string>
+  </label>
+  <field>
+   <rect>
+    <x>660</x>
+    <y>5</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>f_value</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>25</x>
+    <y>5</y>
+    <width>50</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Whs.</string>
+  </label>
+  <label>
+   <rect>
+    <x>102</x>
+    <y>5</y>
+    <width>150</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Item Number</string>
+  </label>
+  <label>
+   <rect>
+    <x>350</x>
+    <y>20</y>
+    <width>85</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Expiration</string>
+  </label>
+  <label>
+   <rect>
+    <x>490</x>
+    <y>5</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>QOH</string>
+  </label>
+  <field>
+   <rect>
+    <x>575</x>
+    <y>5</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>f_unitcost</column>
+   </data>
+  </field>
+ </pghead>
+ <section>
+  <name>detail</name>
+  <detail>
+   <key>
+    <query>detail</query>
+   </key>
+   <height>52</height>
+   <field>
+    <rect>
+     <x>350</x>
+     <y>15</y>
+     <width>135</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_expiration</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>102</x>
+     <y>0</y>
+     <width>150</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>item_number</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>660</x>
+     <y>0</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_value</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>25</x>
+     <y>0</y>
+     <width>50</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <hcenter/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>warehous_code</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>490</x>
+     <y>0</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_qoh</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>265</x>
+     <y>0</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <hcenter/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>uom_name</column>
+    </data>
+   </field>
+   <line>
+    <xstart>5</xstart>
+    <ystart>45</ystart>
+    <xend>745</xend>
+    <yend>45</yend>
+    <weight>0</weight>
+   </line>
+   <field>
+    <rect>
+     <x>575</x>
+     <y>0</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_unitcost</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>102</x>
+     <y>30</y>
+     <width>300</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>item_descrip2</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>102</x>
+     <y>15</y>
+     <width>240</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>item_descrip1</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>350</x>
+     <y>0</y>
+     <width>135</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>itemloc_lotserial</column>
+    </data>
+   </field>
+  </detail>
+ </section>
+ <pgfoot>
+  <height>17</height>
+  <field>
+   <rect>
+    <x>90</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>Context Query</query>
+    <column>report_date</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>85</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Report Date:</string>
+  </label>
+  <field>
+   <rect>
+    <x>705</x>
+    <y>0</y>
+    <width>40</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>Context Query</query>
+    <column>page_number</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>615</x>
+    <y>0</y>
+    <width>85</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Page:</string>
+  </label>
+ </pgfoot>
+</report>

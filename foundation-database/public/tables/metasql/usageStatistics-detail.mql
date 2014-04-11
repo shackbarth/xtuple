@@ -1,0 +1,71 @@
+-- Group: usageStatistics
+-- Name: detail
+-- Notes: 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT *,
+  <? if exists("MultiWhs") ?>
+       formatQty(transfer) AS f_transfer,
+  <? endif ?>
+       formatQty(received) AS f_received,
+       formatQty(issued) AS f_issued,
+       formatQty(sold) AS f_sold,
+       formatQty(scrap) AS f_scrap,
+       formatQty(adjust) AS f_adjust,
+       'qty' AS received_xtnumericrole,
+       'qty' AS issued_xtnumericrole,
+       'qty' AS sold_xtnumericrole,
+       'qty' AS scrap_xtnumericrole,
+       'qty' AS adjust_xtnumericrole,
+       'qty' AS transfer_xtnumericrole
+FROM (
+SELECT itemsite_id, item_id, warehous_code,
+       item_number, (item_descrip1 || ' ' || item_descrip2) AS itemdescrip,
+  <? if exists("MultiWhs") ?>
+       summTransT(itemsite_id, <? value("startDate") ?>, <? value("endDate") ?>) AS transfer,
+  <? endif ?>
+       summTransR(itemsite_id, <? value("startDate") ?>, <? value("endDate") ?>) AS received,
+       summTransI(itemsite_id, <? value("startDate") ?>, <? value("endDate") ?>) AS issued,
+       summTransS(itemsite_id, <? value("startDate") ?>, <? value("endDate") ?>) AS sold,
+       summTransC(itemsite_id, <? value("startDate") ?>, <? value("endDate") ?>) AS scrap,
+       summTransA(itemsite_id, <? value("startDate") ?>, <? value("endDate") ?>) AS adjust
+FROM item JOIN itemsite ON (itemsite_item_id=item_id)
+          JOIN whsinfo ON (warehous_id=itemsite_warehous_id)
+WHERE (1=1)
+
+<? if exists("item_id") ?>
+  AND  (item_id=<? value("item_id") ?>)
+<? endif ?>
+
+<? if exists("warehous_id")  ?>
+  AND (itemsite_warehous_id=<? value("warehous_id") ?>)
+<? endif ?>
+
+<? if exists("classcode_id") ?>
+  AND (item_classcode_id=<? value("classcode_id") ?>)
+<? elseif exists("itemgrp_id") ?>
+  AND (item_id IN (SELECT itemgrpitem_item_id
+                   FROM itemgrpitem
+		   WHERE (itemgrpitem_itemgrp_id=<? value("itemgrp_id") ?>)))
+<? elseif exists("plancode_id") ?>
+  AND (itemsite_plancode_id=<? value("plancode_id") ?>)
+<? elseif exists("classcode_pattern") ?>
+  AND (item_classcode_id IN (SELECT classcode_id
+			     FROM classcode
+			     WHERE (classcode_code ~ <? value ("classcode_pattern") ?>)))
+<? elseif exists("itemgrp_pattern") ?>
+  AND (item_id IN (SELECT itemgrpitem_item_id
+		   FROM itemgrpitem, itemgrp
+		   WHERE ( (itemgrpitem_itemgrp_id=itemgrp_id)
+		     AND  (itemgrp_name ~ <? value ("itemgrp_pattern") ?>))))
+<? elseif exists("plancode_pattern") ?>
+  AND (itemsite_plancode_id IN (SELECT plancode_id
+				FROM plancode
+				WHERE (plancode_code ~ <? value("plancode_pattern") ?>)))
+<? elseif exists("itemgrp")?>
+  AND (item_id IN (SELECT DISTINCT itemgrpitem_item_id FROM itemgrpitem))
+<? endif ?>
+) AS data
+
+ORDER BY warehous_code, item_number;

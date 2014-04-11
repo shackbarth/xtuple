@@ -1,0 +1,107 @@
+-- Group: itemReceipt
+-- Name: populateEdit
+-- Notes: used by enterPoitemReceipt, splitReceipt
+------PURCHASE ORDER----------
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT pohead_number AS order_number, poitem_linenumber AS orderitem_linenumber,
+       (poitem_itemsite_id > 0) AS inventoryitem,
+       COALESCE(poitem_itemsite_id, -1) AS itemsiteid,
+       COALESCE(poitem_vend_item_number, '') AS vend_item_number,
+       COALESCE(poitem_vend_uom, '') AS vend_uom,
+       COALESCE(poitem_vend_item_descrip, '') AS vend_item_descrip,
+       poitem_invvenduomratio AS orderitem_qty_invuomratio,
+       poitem_duedate AS duedate,
+       poitem_qty_ordered AS orderitem_qty_ordered,
+       recv_qty AS qtyreceived,
+       poitem_qty_returned AS qtyreturned,
+       qtyToReceive('PO', poitem_id) AS qtytoreceive,
+       (poitem_qty_ordered) AS receivable,
+       recv_notes AS notes, recv_freight, recv_order_type,
+       recv_freight_curr_id AS curr_id, recv_date AS effective,
+       recv_purchcost, recv_purchcost_curr_id,
+       CASE WHEN (itemsite_costmethod='A' AND NOT(recv_posted)) THEN TRUE
+            ELSE FALSE
+       END AS costmethod_average,
+       'uomratio' AS orderitem_qty_invuomratio_xtnumericrole,
+       'qty' AS orderitem_qty_ordered_xtnumericrole, 
+       'qty' AS qtyreceived_xtnumericrole, 
+       'qty' AS qtyreturned_xtnumericrole, 
+       'qty' AS qtytoreceive_xtnumericrole, 
+       'qty' AS receivable_xtnumericrole,
+       'purchprice' AS recv_purchcost_xtnumericrole 
+FROM recv 
+  JOIN  poitem ON ((recv_orderitem_id=poitem_id)
+               AND (recv_order_type='PO'))
+  JOIN  pohead ON (poitem_pohead_id=pohead_id)
+  LEFT OUTER JOIN itemsite ON (poitem_itemsite_id=itemsite_id)
+WHERE (recv_id=<? value("recv_id") ?>)
+<? if exists ("EnableReturnAuth") ?>
+UNION
+-------RETURN AUTHORIZATIONS-----------
+SELECT rahead_number AS order_number, raitem_linenumber AS orderitem_linenumber,
+       (raitem_itemsite_id > 0) AS inventoryitem,
+       COALESCE(raitem_itemsite_id, -1) AS itemsiteid,
+       '' AS vend_item_number,
+       '' AS vend_uom,
+       '' AS vend_item_descrip,
+       raitem_qty_invuomratio AS orderitem_qty_invuomratio,
+       raitem_scheddate AS duedate,
+       raitem_qtyauthorized AS orderitem_qty_ordered,
+       recv_qty AS qtyreceived,
+       0 AS qtyreturned,
+       qtyToReceive('RA', raitem_id) AS qtytoreceive,
+       (raitem_qtyauthorized) AS receivable,
+       recv_notes AS notes, recv_freight, recv_order_type,
+       recv_freight_curr_id AS curr_id, recv_date AS effective,
+       NULL AS recv_purchcost, NULL AS recv_purchcost_curr_id,
+       NULL AS costmethod_average,
+       'uomratio' AS orderitem_qty_invuomratio_xtnumericrole,
+       'qty' AS orderitem_qty_ordered_xtnumericrole, 
+       'qty' AS qtyreceived_xtnumericrole, 
+       'qty' AS qtyreturned_xtnumericrole, 
+       'qty' AS qtytoreceive_xtnumericrole, 
+       'qty' AS receivable_xtnumericrole,
+       'purchprice' AS recv_purchcost_xtnumericrole 
+FROM recv
+  JOIN  raitem ON ((recv_orderitem_id=raitem_id)
+               AND (recv_order_type='RA'))
+  JOIN  rahead ON (raitem_rahead_id=rahead_id)
+WHERE (recv_id=<? value("recv_id") ?>)
+<? endif ?>
+<? if exists ("MultiWhs") ?>
+UNION
+----------TRANSFER ORDERS---------
+SELECT tohead_number AS order_number, toitem_linenumber AS orderitem_linenumber,
+       (itemsite_id > 0) AS inventoryitem,
+       itemsite_id AS itemsiteid,
+       '' AS vend_item_number,
+       '' AS vend_uom,
+       '' AS vend_item_descrip,
+       1 AS orderitem_qty_invuomratio,
+       toitem_duedate AS duedate,
+       toitem_qty_ordered AS orderitem_qty_ordered,
+       recv_qty AS qtyreceived,
+       0 AS qtyreturned,
+       qtyToReceive('TO', toitem_id) AS qtytoreceive,
+       (toitem_qty_ordered) AS receivable,
+       recv_notes AS notes, recv_freight, recv_order_type,
+       recv_freight_curr_id AS curr_id, recv_date AS effective,
+       NULL AS recv_purchcost, NULL AS recv_purchcost_curr_id,
+       NULL AS costmethod_average,
+       'uomratio' AS orderitem_qty_invuomratio_xtnumericrole,
+       'qty' AS orderitem_qty_ordered_xtnumericrole, 
+       'qty' AS qtyreceived_xtnumericrole, 
+       'qty' AS qtyreturned_xtnumericrole, 
+       'qty' AS qtytoreceive_xtnumericrole, 
+       'qty' AS receivable_xtnumericrole,
+       'purchprice' AS recv_purchcost_xtnumericrole 
+FROM itemsite, recv
+  JOIN  toitem ON ((recv_orderitem_id=toitem_id)
+               AND (recv_order_type='TO'))
+  JOIN  tohead ON (toitem_tohead_id=tohead_id)
+WHERE ((recv_id=<? value("recv_id") ?>)
+  AND  (tohead_dest_warehous_id=itemsite_warehous_id)
+  AND  (toitem_item_id=itemsite_item_id))
+<? endif ?>;

@@ -1,0 +1,137 @@
+-- Group: items
+-- Name:  detail
+-- Notes: 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+ SELECT
+        <? if exists("ListNumericItemNumbersFirst") ?>
+         DISTINCT ON ( toNumeric(item_number, 999999999999999), item_number )
+        <? else ?>
+         DISTINCT ON ( item_number )
+        <? endif ?>
+               item.*, classcode.*, uom.*, prodcat.*, freightclass.*,
+               <? foreach("char_id_text_list") ?>
+                      charass_alias<? literal("char_id_text_list") ?>.charass_value AS char<? literal("char_id_text_list") ?>,
+               <? endforeach ?>
+               <? foreach("char_id_list_list") ?>
+                      charass_alias<? literal("char_id_list_list") ?>.charass_value AS char<? literal("char_id_list_list") ?>,
+               <? endforeach ?>
+               <? foreach("char_id_date_list") ?>
+                      charass_alias<? literal("char_id_date_list") ?>.charass_value::date AS char<? literal("char_id_date_list") ?>,
+               <? endforeach ?>
+                      (COALESCE(item_descrip1,'') || ' ' || COALESCE(item_descrip2,'')) as item_descrip,
+                      CASE WHEN (item_type='P') THEN text(<? value("purchased") ?>)
+                           WHEN (item_type='M') THEN text(<? value("manufactured") ?>)
+                           WHEN (item_type='F') THEN text(<? value("phantom") ?>)
+                           WHEN (item_type='B') THEN text(<? value("breeder") ?>)
+                           WHEN (item_type='C') THEN text(<? value("coProduct") ?>)
+                           WHEN (item_type='Y') THEN text(<? value("byProduct") ?>)
+                           WHEN (item_type='R') THEN text(<? value("reference") ?>)
+                           WHEN (item_type='S') THEN text(<? value("costing") ?>)
+                           WHEN (item_type='T') THEN text(<? value("tooling") ?>)
+                           WHEN (item_type='A') THEN text(<? value("assortment") ?>)
+                           WHEN (item_type='O') THEN text(<? value("outside") ?>)
+                           WHEN (item_type='L') THEN text(<? value("planning") ?>)
+                           WHEN (item_type='K') THEN text(<? value("kit") ?>)
+                           ELSE text(<? value("error") ?>)
+                      END AS f_item_type,
+                      CASE WHEN (item_type='P') THEN text(<? value("purchased") ?>)
+                           WHEN (item_type='M') THEN text(<? value("manufactured") ?>)
+                           WHEN (item_type='F') THEN text(<? value("phantom") ?>)
+                           WHEN (item_type='B') THEN text(<? value("breeder") ?>)
+                           WHEN (item_type='C') THEN text(<? value("coProduct") ?>)
+                           WHEN (item_type='Y') THEN text(<? value("byProduct") ?>)
+                           WHEN (item_type='R') THEN text(<? value("reference") ?>)
+                           WHEN (item_type='S') THEN text(<? value("costing") ?>)
+                           WHEN (item_type='T') THEN text(<? value("tooling") ?>)
+                           WHEN (item_type='A') THEN text(<? value("assortment") ?>)
+                           WHEN (item_type='O') THEN text(<? value("outside") ?>)
+                           WHEN (item_type='L') THEN text(<? value("planning") ?>)
+                           WHEN (item_type='K') THEN text(<? value("kit") ?>)
+                           ELSE text(<? value("error") ?>)
+                      END AS item_type_qtdisplayrole
+               FROM item
+                 JOIN classcode ON (item_classcode_id=classcode_id)
+                 JOIN uom ON (item_inv_uom_id=uom_id)
+                 LEFT OUTER JOIN prodcat ON (item_prodcat_id=prodcat_id)
+                 LEFT OUTER JOIN freightclass ON (item_freightclass_id=freightclass_id)
+               <? if exists("itemgrp_id") ?>
+                 JOIN itemgrpitem ON (item_id=itemgrpitem_item_id)
+                 JOIN itemgrp ON (itemgrp_id=itemgrpitem_itemgrp_id)
+               <? endif ?>
+               <? foreach("char_id_text_list") ?>
+                 LEFT OUTER JOIN charass charass_alias<? literal("char_id_text_list") ?> 
+                   ON ((charass_alias<? literal("char_id_text_list") ?>.charass_target_type='I') 
+                   AND  (charass_alias<? literal("char_id_text_list") ?>.charass_target_id=item_id)
+                   AND  (charass_alias<? literal("char_id_text_list") ?>.charass_char_id=<? value("char_id_text_list") ?>))
+                 LEFT OUTER JOIN char char_alias<? literal("char_id_text_list") ?> 
+                   ON (charass_alias<? literal("char_id_text_list") ?>.charass_char_id=char_alias<? literal("char_id_text_list") ?>.char_id)
+               <? endforeach ?>
+               <? foreach("char_id_list_list") ?>
+                 LEFT OUTER JOIN charass charass_alias<? literal("char_id_list_list") ?> 
+                   ON ((charass_alias<? literal("char_id_list_list") ?>.charass_target_type='I') 
+                   AND  (charass_alias<? literal("char_id_list_list") ?>.charass_target_id=item_id)
+                   AND  (charass_alias<? literal("char_id_list_list") ?>.charass_char_id=<? value("char_id_list_list") ?>))
+                 LEFT OUTER JOIN char char_alias<? literal("char_id_list_list") ?> 
+                   ON (charass_alias<? literal("char_id_list_list") ?>.charass_char_id=char_alias<? literal("char_id_list_list") ?>.char_id)
+               <? endforeach ?>
+               <? foreach("char_id_date_list") ?>
+                 LEFT OUTER JOIN charass charass_alias<? literal("char_id_date_list") ?> 
+                   ON ((charass_alias<? literal("char_id_date_list") ?>.charass_target_type='I') 
+                   AND  (charass_alias<? literal("char_id_date_list") ?>.charass_target_id=item_id)
+                   AND  (charass_alias<? literal("char_id_date_list") ?>.charass_char_id=<? value("char_id_date_list") ?>))
+                 LEFT OUTER JOIN char char_alias<? literal("char_id_date_list") ?> 
+                   ON (charass_alias<? literal("char_id_date_list") ?>.charass_char_id=char_alias<? literal("char_id_date_list") ?>.char_id)
+               <? endforeach ?>
+               WHERE ( true
+               <? if exists("search_pattern") ?>
+                AND ( (item_number ~* <? value("search_pattern") ?>)
+                      OR  (COALESCE(item_descrip1,'') || COALESCE(item_descrip2,'') ~* <? value("search_pattern") ?>) )
+               <? endif ?>
+               <? if exists("showPurchased") ?>
+                AND (item_type IN ('P', 'O'))
+               <? elseif exists("showManufactured") ?>
+                AND (item_type IN ('M', 'F', 'B','K'))
+               <? elseif exists("showSold") ?>
+                AND (item_sold)
+               <? endif ?>
+               <? if exists("item_type") ?>
+                AND (item_type=<? value("item_type") ?>)
+               <? endif ?>
+               <? if not exists("showInactive") ?>
+                AND (item_active)
+               <? endif ?>
+               <? if exists("classcode_id") ?>
+                AND (item_classcode_id=<? value("classcode_id") ?>)
+               <? endif ?>
+               <? if exists("prodcat_id") ?>
+                AND (item_prodcat_id=<? value("prodcat_id") ?>)
+               <? endif ?>
+               <? if exists("freightclass_id") ?>
+                AND (item_freightclass_id=<? value("freightclass_id") ?>)
+               <? endif ?>
+               <? if exists("itemgrp_id") ?>
+                AND (itemgrp_id=<? value("itemgrp_id") ?>)
+               <? endif ?>
+               <? if exists("item_number_pattern") ?>
+                AND (item_number ~* <? value("item_number_pattern") ?>)
+               <? endif ?>
+               <? if exists("item_descrip_pattern") ?>
+                AND (COALESCE(item_descrip1,'') || COALESCE(item_descrip2,'') ~* <? value("item_descrip_pattern") ?>)
+               <? endif ?>
+               <? if exists("classcode_pattern") ?>
+                AND (classcode_code ~* <? value("classcode_pattern") ?>)
+               <? endif ?>
+               <? if exists("prodcat_pattern") ?>
+                AND (prodcat_code  ~* <? value("prodcat_pattern") ?>)
+               <? endif ?>
+               <? if exists("freightclass_pattern") ?>
+                AND (freightclass_code ~* <? value("freightclass_pattern") ?>)
+               <? endif ?>
+               <? literal("charClause") ?>
+               ) ORDER BY
+               <? if exists("ListNumericItemNumbersFirst") ?>
+                toNumeric(item_number, 999999999999999),
+               <? endif ?>
+                item_number;

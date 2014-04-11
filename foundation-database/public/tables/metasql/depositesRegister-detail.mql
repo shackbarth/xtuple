@@ -1,0 +1,56 @@
+-- Group: depositesRegister
+-- Name: detail
+-- Notes: used by dspDepositsRegister
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT trans_id, trans_date, trans_source,
+       CASE WHEN (trans_doctype='IN') THEN <? value("invoice") ?>
+            WHEN (trans_doctype='CM') THEN <? value("creditmemo") ?>
+         ELSE trans_doctype
+       END AS doctype,
+       trans_docnumber, firstLine(trans_notes) AS f_notes,
+       (formatGLAccount(accnt_id) || ' - ' || accnt_descrip) AS f_accnt,
+       CASE WHEN (trans_amount < 0) THEN formatMoney(ABS(trans_amount))
+         ELSE ''
+       END AS f_debit,
+       CASE WHEN (trans_amount < 0) THEN ABS(trans_amount)
+         ELSE 0
+       END AS debit,
+       CASE WHEN (trans_amount > 0) THEN trans_amount
+         ELSE 0
+       END AS credit,
+       (aropen_amount - aropen_paid) AS balance,
+       currtobase(aropen_curr_id,(aropen_amount - aropen_paid),aropen_docdate) AS base_balance,
+       currconcat(aropen_curr_id) AS currAbbr,
+       'curr' AS debit_xtnumericrole,
+       'curr' AS credit_xtnumericrole,
+       'curr' AS balance_xtnumericrole,
+       'curr' AS base_balance_xtnumericrole,
+       0 AS debit_xttotalrole,
+       0 AS credit_xttotalrole,
+       0 AS base_balance_xttotalrole
+FROM (
+SELECT gltrans_id AS trans_id, gltrans_date AS trans_date, gltrans_created AS trans_created,
+       gltrans_source AS trans_source, gltrans_doctype AS trans_doctype, gltrans_sequence AS trans_sequence,
+       gltrans_docnumber AS trans_docnumber, gltrans_notes AS trans_notes, gltrans_amount AS trans_amount,
+       accnt_id, accnt_descrip,
+       aropen_amount, aropen_paid, aropen_curr_id, aropen_docdate
+FROM gltrans LEFT OUTER JOIN aropen ON ((text(gltrans_docnumber) = 'I-' || text(aropen_docnumber))
+                                    AND (aropen_doctype='I')), accnt
+WHERE ((gltrans_accnt_id=accnt_id)
+   AND (gltrans_doctype = 'CR')
+   AND (gltrans_date BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>) )
+UNION
+SELECT sltrans_id AS trans_id, sltrans_date AS trans_date, sltrans_created AS trans_created,
+       sltrans_source AS trans_source, sltrans_doctype AS trans_doctype, sltrans_sequence AS trans_sequence,
+       sltrans_docnumber AS trans_docnumber, sltrans_notes AS trans_notes, sltrans_amount AS trans_amount,
+       accnt_id, accnt_descrip,
+       aropen_amount, aropen_paid, aropen_curr_id, aropen_docdate
+FROM sltrans LEFT OUTER JOIN aropen ON ((text(sltrans_docnumber) = 'I-' || text(aropen_docnumber))
+                                    AND (aropen_doctype='I')), accnt
+WHERE ((sltrans_accnt_id=accnt_id)
+   AND (sltrans_doctype = 'CR')
+   AND (sltrans_date BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>) )
+     ) AS data
+ORDER BY trans_created DESC, trans_sequence, trans_amount;

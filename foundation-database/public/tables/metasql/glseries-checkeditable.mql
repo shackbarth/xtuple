@@ -1,0 +1,16 @@
+-- Group: glseries
+-- Name:  checkeditable
+-- Notes: 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT gltrans_id 
+FROM accnt, gltrans 
+  LEFT OUTER JOIN period ON (gltrans_date BETWEEN period_start AND period_end) 
+WHERE ( (gltrans_accnt_id=accnt_id) 
+  AND (gltrans_sequence=<? value("glSequence") ?>) 
+  AND ( (gltrans_deleted) 
+     OR (period_closed) 
+     OR (gltrans_rec) 
+     OR (period_freeze AND NOT checkPrivilege('PostFrozenPeriod')) ) )
+LIMIT 1;

@@ -1,0 +1,100 @@
+-- Group: vendors
+-- Name:  detail
+-- Notes: 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT 
+  vend_id, vend_vendtype_id, 
+  vend_active, vend_number, vend_name,
+  vendtype_code,
+<? foreach("char_id_text_list") ?>
+  charass_alias<? literal("char_id_text_list") ?>.charass_value AS char<? literal("char_id_text_list") ?>,
+<? endforeach ?>
+<? foreach("char_id_list_list") ?>
+  charass_alias<? literal("char_id_list_list") ?>.charass_value AS char<? literal("char_id_list_list") ?>,
+<? endforeach ?>
+<? foreach("char_id_date_list") ?>
+  charass_alias<? literal("char_id_date_list") ?>.charass_value::date AS char<? literal("char_id_date_list") ?>,
+<? endforeach ?>
+  cntct.*, addr.*
+FROM vendinfo 
+  JOIN vendtype ON (vend_vendtype_id=vendtype_id)
+  LEFT OUTER JOIN cntct ON (vend_cntct1_id=cntct_id) 
+  LEFT OUTER JOIN addr ON (cntct_addr_id=addr_id) 
+<? foreach("char_id_text_list") ?>
+  LEFT OUTER JOIN charass charass_alias<? literal("char_id_text_list") ?> 
+       ON ((charass_alias<? literal("char_id_text_list") ?>.charass_target_type='V') 
+      AND  (charass_alias<? literal("char_id_text_list") ?>.charass_target_id=vend_id)
+      AND  (charass_alias<? literal("char_id_text_list") ?>.charass_char_id=<? value("char_id_text_list") ?>))
+  LEFT OUTER JOIN char char_alias<? literal("char_id_text_list") ?> 
+       ON (charass_alias<? literal("char_id_text_list") ?>.charass_char_id=char_alias<? literal("char_id_text_list") ?>.char_id)
+<? endforeach ?>
+<? foreach("char_id_list_list") ?>
+  LEFT OUTER JOIN charass charass_alias<? literal("char_id_list_list") ?> 
+       ON ((charass_alias<? literal("char_id_list_list") ?>.charass_target_type='V') 
+      AND  (charass_alias<? literal("char_id_list_list") ?>.charass_target_id=vend_id)
+      AND  (charass_alias<? literal("char_id_list_list") ?>.charass_char_id=<? value("char_id_list_list") ?>))
+  LEFT OUTER JOIN char char_alias<? literal("char_id_list_list") ?> 
+       ON (charass_alias<? literal("char_id_list_list") ?>.charass_char_id=char_alias<? literal("char_id_list_list") ?>.char_id)
+<? endforeach ?>
+<? foreach("char_id_date_list") ?>
+  LEFT OUTER JOIN charass charass_alias<? literal("char_id_date_list") ?> 
+       ON ((charass_alias<? literal("char_id_date_list") ?>.charass_target_type='V') 
+      AND  (charass_alias<? literal("char_id_date_list") ?>.charass_target_id=vend_id)
+      AND  (charass_alias<? literal("char_id_date_list") ?>.charass_char_id=<? value("char_id_date_list") ?>))
+  LEFT OUTER JOIN char char_alias<? literal("char_id_date_list") ?> 
+       ON (charass_alias<? literal("char_id_date_list") ?>.charass_char_id=char_alias<? literal("char_id_date_list") ?>.char_id)
+<? endforeach ?>
+WHERE true
+<? if not exists("showInactive") ?> 
+  AND vend_active 
+<? endif ?>
+<? if exists("search_pattern") ?>
+  AND ((vend_number ~* <? value("search_pattern") ?>)
+       OR (vend_name ~* <? value("search_pattern") ?>)
+       OR (vendtype_code ~* <? value("search_pattern") ?>)
+       OR (COALESCE(cntct_first_name,'') || ' ' || COALESCE(cntct_last_name,'') ~* <? value("search_pattern") ?>)
+       OR (COALESCE(cntct_phone,'') || ' ' || COALESCE(cntct_phone2,'') || ' ' || COALESCE(cntct_fax,'') ~* <? value("search_pattern") ?>)
+       OR (COALESCE(cntct_email,'') ~* <? value("search_pattern") ?>)
+       OR (COALESCE(addr_line1,'') || ' ' || COALESCE(addr_line2,'') || ' ' || COALESCE(addr_line3,'') ~* <? value("search_pattern") ?>)
+       OR (COALESCE(addr_city,'') ~* <? value("search_pattern") ?>)
+       OR (COALESCE(addr_state,'') ~* <? value("search_pattern") ?>)
+       OR (COALESCE(addr_postalcode,'') ~* <? value("search_pattern") ?>)
+       OR (COALESCE(addr_country,'') ~* <? value("search_pattern") ?>))
+<? endif ?>
+<? if exists("vend_number_pattern") ?>
+  AND (vend_number ~* <? value("vend_number_pattern") ?>)
+<? endif ?>
+<? if exists("vend_name_pattern") ?>
+  AND (vend_name ~* <? value("vend_name_pattern") ?>)
+<? endif ?>
+<? if exists("vendtype_code_pattern") ?>
+  AND (vendtype_code ~* <? value("vendtype_code_pattern") ?>)
+<? endif ?>
+<? if exists("cntct_name_pattern") ?>
+  AND (COALESCE(cntct_first_name,'') || ' ' || COALESCE(cntct_last_name,'') ~* <? value("cntct_name_pattern") ?>)
+<? endif ?>
+<? if exists("cntct_phone_pattern") ?>
+  AND (COALESCE(cntct_phone,'') || ' ' || COALESCE(cntct_phone2,'') || ' ' || COALESCE(cntct_fax,'') ~* <? value("cntct_phone_pattern") ?>)
+<? endif ?>
+<? if exists("cntct_email_pattern") ?>
+  AND (COALESCE(cntct_email,'') ~* <? value("cntct_email_pattern") ?>)
+<? endif ?>
+<? if exists("addr_street_pattern") ?>
+  AND (COALESCE(addr_line1,'') || ' ' || COALESCE(addr_line2,'') || ' ' || COALESCE(addr_line3,'') ~* <? value("addr_street_pattern") ?>)
+<? endif ?>
+<? if exists("addr_city_pattern") ?>
+  AND (COALESCE(addr_city,'') ~* <? value("addr_city_pattern") ?>)
+<? endif ?>
+<? if exists("addr_state_pattern") ?>
+  AND (COALESCE(addr_state,'') ~* <? value("addr_state_pattern") ?>)
+<? endif ?>
+<? if exists("addr_postalcode_pattern") ?>
+  AND (COALESCE(addr_postalcode,'') ~* <? value("addr_postalcode_pattern") ?>)
+<? endif ?>
+<? if exists("addr_country_pattern") ?>
+  AND (COALESCE(addr_country,'') ~* <? value("addr_country_pattern") ?>)
+<? endif ?>
+<? literal("charClause") ?>
+ORDER BY vend_number; 

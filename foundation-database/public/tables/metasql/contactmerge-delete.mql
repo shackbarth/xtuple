@@ -1,0 +1,7 @@
+-- Group: contactmerge
+-- Name: delete
+-- Notes: Delete a contact
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+DELETE FROM cntct WHERE (cntct_id=<? value("cntct_id") ?>);

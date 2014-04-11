@@ -1,0 +1,112 @@
+-- Group: inventoryLocator
+-- Name: detail
+-- Notes: used by dspInventoryLocator
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- Lot/Serial Characteristics additions by Specter Vision Solutions, Inc.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT *,
+       <? value("na") ?> AS locationname_xtnullrole,
+       <? value("na") ?> AS netable_xtnullrole,
+       <? value("na") ?> AS lotserial_xtnullrole,
+       <? value("na") ?> AS expiration_xtnullrole,
+       <? value("na") ?> AS warranty_xtnullrole,
+       CASE WHEN (itemsite_perishable
+                  AND itemloc_expiration <= CURRENT_DATE) THEN 'error'
+            WHEN (itemsite_warrpurc
+                  AND itemloc_warrpurc <= CURRENT_DATE) THEN 'error'
+       END AS qtforegroundrole,
+       'qty' AS qoh_xtnumericrole
+FROM (SELECT itemloc_id, 1 AS type, warehous_code,
+             itemsite_perishable, itemloc_expiration,
+             itemsite_warrpurc, itemloc_warrpurc,
+             CASE WHEN (location_id IS NOT NULL) THEN
+                        (formatLocationName(location_id) || '-' || firstLine(location_descrip))
+             END AS locationname,
+             CASE WHEN (location_id IS NOT NULL) THEN location_netable
+             END AS netable,
+             CASE WHEN (itemsite_controlmethod IN ('L', 'S')) THEN
+                        formatlotserialnumber(itemloc_ls_id)
+             END AS lotserial,
+             CASE WHEN (itemsite_perishable) THEN itemloc_expiration
+             END AS expiration,
+             CASE WHEN (itemsite_warrpurc) THEN itemloc_warrpurc
+             END AS warranty,
+             itemloc_qty AS qoh
+<? foreach("char_id_text_list") ?>
+  , charass_alias<? literal("char_id_text_list") ?>.charass_value AS char<? literal("char_id_text_list") ?>
+<? endforeach ?>
+<? foreach("char_id_list_list") ?>
+  , charass_alias<? literal("char_id_list_list") ?>.charass_value AS char<? literal("char_id_list_list") ?>
+<? endforeach ?>
+<? foreach("char_id_date_list") ?>
+  , charass_alias<? literal("char_id_date_list") ?>.charass_value::date AS char<? literal("char_id_date_list") ?>
+<? endforeach ?>
+      FROM itemsite, whsinfo,
+           itemloc LEFT OUTER JOIN location ON (itemloc_location_id=location_id)
+<? foreach("char_id_text_list") ?>
+  LEFT OUTER JOIN charass charass_alias<? literal("char_id_text_list") ?> ON ((charass_alias<? literal("char_id_text_list") ?>.charass_target_type='LS')
+                                                                    AND  (charass_alias<? literal("char_id_text_list") ?>.charass_target_id=itemloc_ls_id)
+                                                                    AND  (charass_alias<? literal("char_id_text_list") ?>.charass_char_id=<? value("char_id_text_list") ?>))
+  LEFT OUTER JOIN char char_alias<? literal("char_id_text_list") ?> ON (charass_alias<? literal("char_id_text_list") ?>.charass_char_id=char_alias<? literal("char_id_text_list") ?>.char_id)
+<? endforeach ?>
+<? foreach("char_id_list_list") ?>
+  LEFT OUTER JOIN charass charass_alias<? literal("char_id_list_list") ?> ON ((charass_alias<? literal("char_id_list_list") ?>.charass_target_type='LS')
+                                                                    AND  (charass_alias<? literal("char_id_list_list") ?>.charass_target_id=itemloc_ls_id)
+                                                                    AND  (charass_alias<? literal("char_id_list_list") ?>.charass_char_id=<? value("char_id_list_list") ?>))
+  LEFT OUTER JOIN char char_alias<? literal("char_id_list_list") ?> ON (charass_alias<? literal("char_id_list_list") ?>.charass_char_id=char_alias<? literal("char_id_list_list") ?>.char_id)
+<? endforeach ?>
+<? foreach("char_id_date_list") ?>
+  LEFT OUTER JOIN charass charass_alias<? literal("char_id_date_list") ?> ON ((charass_alias<? literal("char_id_date_list") ?>.charass_target_type='LS')
+                                                                    AND  (charass_alias<? literal("char_id_date_list") ?>.charass_target_id=itemloc_ls_id)
+                                                                    AND  (charass_alias<? literal("char_id_date_list") ?>.charass_char_id=<? value("char_id_date_list") ?>))
+  LEFT OUTER JOIN char char_alias<? literal("char_id_date_list") ?> ON (charass_alias<? literal("char_id_date_list") ?>.charass_char_id=char_alias<? literal("char_id_date_list") ?>.char_id)
+<? endforeach ?>
+      WHERE ((itemsite_loccntrl OR (itemsite_controlmethod IN ('L', 'S')))
+         AND (itemloc_itemsite_id=itemsite_id)
+         AND (itemsite_warehous_id=warehous_id)
+         AND (itemsite_item_id=<? value("item_id") ?>)
+      <? if exists("warehous_id") ?>
+         AND (itemsite_warehous_id=<? value("warehous_id") ?>)
+      <? endif ?>
+      <? if exists("site") ?>
+         AND (itemsite_warehous_id=<? value("site")?>)
+      <? endif ?>
+      <? if exists("lot_serial") ?>
+         AND (formatlotserialnumber(itemloc_ls_id)=<? value("lot_serial")?>)
+      <? endif ?>
+      <? if exists("_location_name") ?>
+         AND (formatLocationName(location_id)=<? value("_location_name")?>)
+      <? endif ?>
+      <? literal("charClause") ?>
+            )
+      UNION
+      SELECT itemsite_id, 2 AS type, warehous_code,
+             itemsite_perishable, NULL AS itemloc_expiration,
+             itemsite_warrpurc, NULL AS itemloc_warrpurc,
+             NULL AS locationname,
+             NULL AS netable,
+             NULL AS lotserial,
+             NULL AS expiration,
+             NULL AS warranty,
+             itemsite_qtyonhand AS qoh
+<? foreach("char_id_text_list" ?>
+          , NULL AS char<? value("char_id_text_list") ?>
+<? endforeach ?>
+<? foreach("char_id_list_list" ?>
+          , NULL AS char<? value("char_id_list_list") ?>
+<? endforeach ?>
+<? foreach("char_id_date_list" ?>
+          , NULL AS char<? value("char_id_date_list") ?>
+<? endforeach ?>
+      FROM itemsite, whsinfo
+      WHERE ((NOT itemsite_loccntrl)
+         AND (itemsite_controlmethod NOT IN ('L', 'S'))
+         AND (itemsite_warehous_id=warehous_id)
+         AND (itemsite_item_id=<? value("item_id") ?>)
+      <? if exists("warehous_id") ?>
+         AND (itemsite_warehous_id=<? value("warehous_id") ?>)
+      <? endif ?>
+            )
+     ) AS dummy
+ORDER BY warehous_code, locationname, lotserial;

@@ -1,0 +1,822 @@
+<!DOCTYPE openRPTDef>
+<report>
+ <title>Sales History</title>
+ <name>SalesHistory</name>
+ <description></description>
+ <grid>
+  <snap/>
+  <show/>
+  <x>0.05</x>
+  <y>0.05</y>
+ </grid>
+ <size>Letter</size>
+ <portrait/>
+ <topmargin>50</topmargin>
+ <bottommargin>50</bottommargin>
+ <rightmargin>50</rightmargin>
+ <leftmargin>50</leftmargin>
+ <querysource>
+  <name>detail</name>
+  <sql>SELECT cohist_ordernumber AS sonumber,
+       cohist_invcnumber AS invnumber,
+       formatDate(cohist_orderdate) AS orddate,
+       formatDate(cohist_invcdate, 'Return') AS invcdate,
+       item_number, item_descrip1, item_descrip2,
+       formatQty(cohist_qtyshipped) AS shipped,
+       &lt;? if exists("showPrices") ?>
+       formatPrice(currtobase(cohist_curr_id,cohist_unitprice,cohist_invcdate)) AS unitprice,
+       formatMoney(round(cohist_qtyshipped * currtobase(cohist_curr_id,cohist_unitprice,cohist_invcdate),2)) AS f_total,
+       &lt;? else ?>
+       '' AS unitprice,
+       '' AS f_total,
+       &lt;? endif ?>
+       round(cohist_qtyshipped * currtobase(cohist_curr_id,cohist_unitprice,cohist_invcdate),2) AS total
+  FROM cohist JOIN custinfo ON (cust_id=cohist_cust_id)
+              JOIN salesrep ON (salesrep_id=cohist_salesrep_id)
+&lt;? if exists("includeMisc") ?>
+              LEFT OUTER JOIN itemsite ON (itemsite_id=cohist_itemsite_id)
+              LEFT OUTER JOIN site() ON (warehous_id=itemsite_warehous_id)
+              LEFT OUTER JOIN item ON (item_id=itemsite_item_id)
+&lt;? else ?>
+              JOIN itemsite ON (itemsite_id=cohist_itemsite_id)
+              JOIN site() ON (warehous_id=itemsite_warehous_id)
+              JOIN item ON (item_id=itemsite_item_id)
+&lt;? endif ?>
+&lt;? if exists("cohead_id") ?>
+              JOIN cohead ON (cohead_number=cohist_ordernumber)
+&lt;? endif ?>
+WHERE ( (true)
+&lt;? if exists("includeMisc") ?>
+  AND  (COALESCE(cohist_misc_type, '') &lt;> 'F')
+  AND  (COALESCE(cohist_misc_type, '') &lt;> 'T')
+&lt;? endif ?>
+&lt;? if exists("startDate") ?>
+  AND  (cohist_invcdate >= &lt;? value("startDate") ?>)
+&lt;? endif ?>
+&lt;? if exists("endDate") ?>
+  AND  (cohist_invcdate &lt;= &lt;? value("endDate") ?>)
+&lt;? endif ?>
+&lt;? if exists("shipStartDate") ?>
+  AND  (cohist_shipdate >= &lt;? value("shipStartDate") ?>)
+&lt;? endif ?>
+&lt;? if exists("shipEndDate") ?>
+  AND  (cohist_shipdate &lt;= &lt;? value("shipEndDate") ?>)
+&lt;? endif ?>
+&lt;? if exists("salesrep_id") ?>
+  AND  (cohist_salesrep_id=&lt;? value("salesrep_id") ?>)
+&lt;? endif ?>
+&lt;? if exists("shipto_id") ?>
+  AND  (cohist_shipto_id=&lt;? value("shipto_id") ?>)
+&lt;? endif ?>
+&lt;? if exists("billToName") ?>
+  AND  (UPPER(cohist_billtoname) ~ UPPER(&lt;? value("billToName") ?>))
+&lt;? endif ?>
+&lt;? if exists("cust_id") ?>
+  AND  (cohist_cust_id=&lt;? value("cust_id") ?>)
+&lt;? endif ?>
+&lt;? if exists("custtype_id") ?>
+  AND  (cust_custtype_id=&lt;? value("custtype_id") ?>)
+&lt;? elseif exists("custtype_pattern") ?>
+  AND  (cust_custtype_id IN (SELECT DISTINCT custtype_id
+                             FROM custtype
+                             WHERE (custtype_code ~ &lt;? value("custtype_pattern") ?>)))
+&lt;? endif ?>
+&lt;? if exists("by_custgrp" ?>
+  AND (cust_id IN (SELECT DISTINCT custgrpitem_cust_id
+                   FROM custgrpitem))
+&lt;? endif ?>
+&lt;? if exists("custgrp_id") ?>
+  AND (cust_id IN (SELECT DISTINCT custgrpitem_cust_id
+                   FROM custgrpitem
+                   WHERE (custgrpitem_custgrp_id=&lt;? value("custgrp_id") ?>)))
+&lt;? endif ?>
+&lt;? if exists("custgrp_pattern") ?>
+  AND (cust_id IN (SELECT DISTINCT custgrpitem_cust_id
+                   FROM custgrp, custgrpitem
+                   WHERE ( (custgrpitem_custgrp_id=custgrp_id)
+                     AND   (custgrp_name ~ &lt;? value("custgrp_pattern") ?>) )) )
+&lt;? endif ?>
+
+&lt;? if exists("item_id") ?>
+  AND  (itemsite_item_id=&lt;? value("item_id") ?>)
+&lt;? endif ?>
+&lt;? if exists("prodcat_id") ?>
+  AND (item_prodcat_id=&lt;? value("prodcat_id") ?>)
+&lt;? endif ?>
+&lt;? if exists("prodcat_pattern") ?>
+  AND (item_prodcat_id IN (SELECT DISTINCT prodcat_id
+                           FROM prodcat
+                           WHERE (prodcat_code ~ &lt;? value("prodcat_pattern") ?>)))
+&lt;? endif ?>
+
+&lt;? if exists("warehous_id") ?>
+  AND  (itemsite_warehous_id=&lt;? value("warehous_id") ?>)
+&lt;? endif ?>
+&lt;? if exists("shipzone_id") ?>
+  AND (cohist_shipzone_id=&lt;? value("shipzone_id") ?>)
+&lt;? endif ?>
+&lt;? if exists("saletype_id") ?>
+  AND (cohist_saletype_id=&lt;? value("saletype_id") ?>)
+&lt;? endif ?>
+&lt;? if exists("cohead_id") ?>
+  AND (cohead_id=&lt;? value("cohead_id") ?>)
+&lt;? endif ?>
+      )
+ORDER BY cohist_invcdate, item_number</sql>
+ </querysource>
+ <querysource>
+  <name>head</name>
+  <sql>SELECT &lt;? if exists("showPrices") ?>
+           text('Unit Price') AS lbl_unitprice,
+           text('Total') AS lbl_total
+       &lt;? else ?>
+           text('') AS lbl_unitprice,
+           text('') AS lbl_total
+       &lt;? endif ?>;</sql>
+ </querysource>
+ <rpthead>
+  <height>233</height>
+  <label>
+   <rect>
+    <x>345</x>
+    <y>3</y>
+    <width>400</width>
+    <height>40</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>18</size>
+    <weight>bold</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Sales History</string>
+  </label>
+  <field>
+   <rect>
+    <x>665</x>
+    <y>200</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>lbl_total</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>5</x>
+    <y>200</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Doc. #</string>
+  </label>
+  <label>
+   <rect>
+    <x>270</x>
+    <y>200</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Ord. Date</string>
+  </label>
+  <label>
+   <rect>
+    <x>355</x>
+    <y>215</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Description</string>
+  </label>
+  <label>
+   <rect>
+    <x>355</x>
+    <y>200</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Item Number</string>
+  </label>
+  <label>
+   <rect>
+    <x>505</x>
+    <y>200</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Shipped</string>
+  </label>
+  <label>
+   <rect>
+    <x>110</x>
+    <y>200</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Invoice #</string>
+  </label>
+  <line>
+   <xstart>5</xstart>
+   <ystart>230</ystart>
+   <xend>745</xend>
+   <yend>230</yend>
+   <weight>2</weight>
+  </line>
+  <field>
+   <rect>
+    <x>585</x>
+    <y>200</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>lbl_unitprice</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>270</x>
+    <y>215</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Invc. Date</string>
+  </label>
+  <text>
+   <rect>
+    <x>15</x>
+    <y>48</y>
+    <width>725</width>
+    <height>15</height>
+   </rect>
+   <bottompad>12</bottompad>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <top/>
+   <data>
+    <query>Parameter Query</query>
+    <column>filter</column>
+   </data>
+  </text>
+ </rpthead>
+ <pghead>
+  <firstpage/>
+  <height>6</height>
+ </pghead>
+ <pghead>
+  <height>36</height>
+  <label>
+   <rect>
+    <x>270</x>
+    <y>15</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Invc. Date</string>
+  </label>
+  <label>
+   <rect>
+    <x>110</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Invoice #</string>
+  </label>
+  <label>
+   <rect>
+    <x>5</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Doc. #</string>
+  </label>
+  <label>
+   <rect>
+    <x>505</x>
+    <y>0</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Shipped</string>
+  </label>
+  <field>
+   <rect>
+    <x>665</x>
+    <y>0</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>lbl_total</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>355</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Item Number</string>
+  </label>
+  <line>
+   <xstart>5</xstart>
+   <ystart>30</ystart>
+   <xend>745</xend>
+   <yend>30</yend>
+   <weight>2</weight>
+  </line>
+  <label>
+   <rect>
+    <x>355</x>
+    <y>15</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Description</string>
+  </label>
+  <field>
+   <rect>
+    <x>585</x>
+    <y>0</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>lbl_unitprice</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>270</x>
+    <y>0</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Ord. Date</string>
+  </label>
+ </pghead>
+ <section>
+  <name>detail</name>
+  <detail>
+   <key>
+    <query>detail</query>
+   </key>
+   <height>51</height>
+   <field>
+    <rect>
+     <x>355</x>
+     <y>15</y>
+     <width>300</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>item_descrip1</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>5</x>
+     <y>0</y>
+     <width>100</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>sonumber</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>355</x>
+     <y>30</y>
+     <width>300</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>item_descrip2</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>585</x>
+     <y>0</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>unitprice</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>270</x>
+     <y>0</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <hcenter/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>orddate</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>505</x>
+     <y>0</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>shipped</column>
+    </data>
+   </field>
+   <line>
+    <xstart>5</xstart>
+    <ystart>45</ystart>
+    <xend>745</xend>
+    <yend>45</yend>
+    <weight>0</weight>
+   </line>
+   <field>
+    <rect>
+     <x>270</x>
+     <y>15</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <hcenter/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>invcdate</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>355</x>
+     <y>0</y>
+     <width>150</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>item_number</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>665</x>
+     <y>0</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_total</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>110</x>
+     <y>0</y>
+     <width>100</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>invnumber</column>
+    </data>
+   </field>
+  </detail>
+ </section>
+ <section>
+  <name>total</name>
+  <detail>
+   <key>
+    <query>showPrices</query>
+   </key>
+   <height>16</height>
+   <field>
+    <rect>
+     <x>665</x>
+     <y>0</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>total</column>
+    </data>
+    <format builtin="true">money</format>
+    <tracktotal/>
+   </field>
+   <label>
+    <rect>
+     <x>575</x>
+     <y>0</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>normal</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <string>Total Sales:</string>
+   </label>
+  </detail>
+ </section>
+ <pgfoot>
+  <height>16</height>
+  <label>
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Report Date:</string>
+  </label>
+  <field>
+   <rect>
+    <x>705</x>
+    <y>0</y>
+    <width>40</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>Context Query</query>
+    <column>page_number</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>600</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Page:</string>
+  </label>
+  <field>
+   <rect>
+    <x>103</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>Context Query</query>
+    <column>report_date</column>
+   </data>
+  </field>
+ </pgfoot>
+</report>

@@ -1,0 +1,104 @@
+-- Group: projects
+-- Name:  detail_nohierarchy
+-- Notes: Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+--        See www.xtuple.com/CPAL for the full text of the software license.
+--        
+--        Non-hierarchical view to support CSV export from Project List screen
+
+SELECT prj_id AS id, 1 AS altId,
+  prj.*, crmacct_name, cntct_name,
+  addr_city, addr_state,
+  prjtype_descr AS project_type,
+  CASE WHEN (prj_status='P') THEN 'Planning'
+       WHEN (prj_status='O') THEN 'In-Process'
+       WHEN (prj_status='C') THEN 'Completed'
+       ELSE 'Unknown' END AS project_status
+<? foreach("char_id_text_list") ?>
+  , charass_alias<? literal("char_id_text_list") ?>.charass_value AS char<? literal("char_id_text_list") ?>
+<? endforeach ?>
+<? foreach("char_id_list_list") ?>
+  , charass_alias<? literal("char_id_list_list") ?>.charass_value AS char<? literal("char_id_list_list") ?>
+<? endforeach ?>
+<? foreach("char_id_date_list") ?>
+  , charass_alias<? literal("char_id_date_list") ?>.charass_value::date AS char<? literal("char_id_date_list") ?>
+<? endforeach ?>
+FROM prj() 
+LEFT JOIN prjtype ON (prj_prjtype_id=prjtype_id)
+LEFT JOIN crmacct ON (prj_crmacct_id=crmacct_id)
+LEFT JOIN cntct ON (crmacct_cntct_id_1=cntct_id)
+LEFT JOIN addr ON (cntct_addr_id=addr_id)
+<? foreach("char_id_text_list") ?>
+  LEFT OUTER JOIN charass charass_alias<? literal("char_id_text_list") ?> ON ((charass_alias<? literal("char_id_text_list") ?>.charass_target_type='PROJ') 
+                                                                    AND  (charass_alias<? literal("char_id_text_list") ?>.charass_target_id=prj_id)
+                                                                    AND  (charass_alias<? literal("char_id_text_list") ?>.charass_char_id=<? value("char_id_text_list") ?>))
+  LEFT OUTER JOIN char char_alias<? literal("char_id_text_list") ?> ON (charass_alias<? literal("char_id_text_list") ?>.charass_char_id=char_alias<? literal("char_id_text_list") ?>.char_id)
+<? endforeach ?>
+<? foreach("char_id_list_list") ?>
+  LEFT OUTER JOIN charass charass_alias<? literal("char_id_list_list") ?> ON ((charass_alias<? literal("char_id_list_list") ?>.charass_target_type='PROJ') 
+                                                                    AND  (charass_alias<? literal("char_id_list_list") ?>.charass_target_id=prj_id)
+                                                                    AND  (charass_alias<? literal("char_id_list_list") ?>.charass_char_id=<? value("char_id_list_list") ?>))
+  LEFT OUTER JOIN char char_alias<? literal("char_id_list_list") ?> ON (charass_alias<? literal("char_id_list_list") ?>.charass_char_id=char_alias<? literal("char_id_list_list") ?>.char_id)
+<? endforeach ?>
+<? foreach("char_id_date_list") ?>
+  LEFT OUTER JOIN charass charass_alias<? literal("char_id_date_list") ?> ON ((charass_alias<? literal("char_id_date_list") ?>.charass_target_type='PROJ') 
+                                                                    AND  (charass_alias<? literal("char_id_date_list") ?>.charass_target_id=prj_id)
+                                                                    AND  (charass_alias<? literal("char_id_date_list") ?>.charass_char_id=<? value("char_id_date_list") ?>))
+  LEFT OUTER JOIN char char_alias<? literal("char_id_date_list") ?> ON (charass_alias<? literal("char_id_date_list") ?>.charass_char_id=char_alias<? literal("char_id_date_list") ?>.char_id)
+<? endforeach ?>
+WHERE (true)
+<? if exists("search_pattern") ?>
+   AND ( (prj_number ~* <? value("search_pattern") ?>)
+     OR  (prj_name ~* <? value("search_pattern") ?>)
+     OR  (prj_descrip ~* <? value("search_pattern") ?>) )
+<? endif ?>
+<? if exists("username") ?>
+  AND (prj_username=<? value("username") ?> OR prj_owner_username=<? value("username") ?>)
+<? endif ?>
+<? if exists("assigned_username") ?> 
+  AND (prj_username=<? value("assigned_username") ?>) 
+<? elseif exists("assigned_usr_pattern") ?>
+  AND (prj_username ~ <? value("assigned_usr_pattern") ?>) 
+<? endif ?>
+<? if exists("owner_username") ?> 
+  AND (prj_owner_username=<? value("owner_username") ?>) 
+<? elseif exists("owner_usr_pattern") ?>
+  AND (prj_owner_username ~ <? value("owner_usr_pattern") ?>) 
+<? endif ?>
+<? if exists("crmacct_id") ?>
+  AND (prj_crmacct_id=<? value("crmacct_id") ?>)
+<? endif ?>
+<? if exists("cntct_id") ?>
+  AND (prj_cntct_id=<? value("cntct_id") ?>)
+<? endif ?>
+<? if exists("startStartDate") ?>
+  AND (prj_start_date >= <? value("startStartDate") ?>)
+<? endif ?>
+<? if exists("startEndDate") ?>
+  AND (prj_start_date <= <? value("startEndDate") ?>)
+<? endif ?>
+<? if exists("dueStartDate") ?>
+  AND (prj_due_date >= <? value("dueStartDate") ?>)
+<? endif ?>
+<? if exists("dueEndDate") ?>
+  AND (prj_due_date <= <? value("dueEndDate") ?>)
+<? endif ?>
+<? if exists("assignedStartDate") ?>
+  AND (prj_assigned_date >= <? value("assignedStartDate") ?>)
+<? endif ?>
+<? if exists("assignedEndDate") ?>
+  AND (prj_assigned_date <= <? value("assignedEndDate") ?>)
+<? endif ?>
+<? if exists("completedStartDate") ?>
+  AND (prj_completed_date >= <? value("completedStartDate") ?>)
+<? endif ?>
+<? if exists("completedEndDate") ?>
+  AND (prj_completed_date <= <? value("completedEndDate") ?>)
+<? endif ?>
+<? if not exists("showComplete") ?>
+  AND (prj_status <> 'C')
+<? endif ?>
+<? if exists("id") ?>
+  AND (prj_id=<? value("id") ?>)
+<? endif ?>
+<? literal("charClause") ?>
+ORDER BY prj_number;

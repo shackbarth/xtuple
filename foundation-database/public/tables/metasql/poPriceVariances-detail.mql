@@ -1,0 +1,99 @@
+-- Group: poPriceVariances
+-- Name:  detail
+-- Notes: 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT *
+<? if exists("includeFormatted") ?>,
+  formatDate(distdate)        AS f_date,
+  formatQty(recv_qty)       AS f_qty,
+  formatCost(recv_recvcost) AS f_recv_recvcost,
+  formatMoney(recv_value)   AS f_recv_value,
+  formatPrice(vouchercost)    AS f_vouchercost,
+  formatMoney(voucher_value)  AS f_voucher_value,
+  formatMoney(variance)       AS f_variance, 
+  formatPrcnt(varprcnt/100)       AS f_varprcnt
+<? endif ?>
+ FROM (
+SELECT recv_id, recv_order_number, recv_date, recv_order_type,
+  DATE(recv_date) AS receivedate,
+  vohead_distdate AS distdate,
+  vend_number, vend_name,
+  COALESCE(item_number, (<? value("nonInv") ?> || recv_vend_item_number)) AS itemnumber,
+  firstLine(COALESCE(item_descrip1, recv_vend_item_descrip)) AS itemdescrip,
+  recv_qty,
+  recv_purchcost,
+  currConcat(recv_freight_curr_id) AS poCurrAbbr,
+<? if exists("baseCurr") ?>
+  COALESCE((recv_value / CASE WHEN (recv_qty <> 0.0) THEN recv_qty ELSE 1.0 END), 0.0) AS recv_recvcost,
+  COALESCE(recv_value, 0.0) AS recv_value,
+  COALESCE(currToBase(vohead_curr_id, SUM(vodist_amount) / CASE WHEN (SUM(vodist_qty) <> 0.0) THEN SUM(vodist_qty) ELSE 1.0 END, vohead_distdate), 0.0) AS vouchercost,
+  COALESCE(currToBase(vohead_curr_id, SUM(vodist_amount) / CASE WHEN (SUM(vodist_qty) <> 0.0) THEN SUM(vodist_qty) ELSE 1.0 END, vohead_distdate) * recv_qty, 0.0) AS voucher_value,
+  COALESCE(currToBase(vohead_curr_id, SUM(vodist_amount) / CASE WHEN (SUM(vodist_qty) <> 0.0) THEN SUM(vodist_qty) ELSE 1.0 END, vohead_distdate) * recv_qty - recv_value, 0.0) AS variance,
+  CASE WHEN (COALESCE(recv_value, 0.0) <> 0.0) THEN
+    ((currToBase(vohead_curr_id, SUM(vodist_amount) / CASE WHEN (SUM(vodist_qty) <> 0.0) THEN SUM(vodist_qty) ELSE 1.0 END, vohead_distdate) *
+     recv_qty / recv_value) -1.0) * 100.0
+       ELSE 100.0 END AS varprcnt,     
+  currConcat(baseCurrId()) AS currAbbr,
+  '0' AS recv_value_xttotalrole,
+  '0' AS voucher_value_xttotalrole,
+  '0' AS variance_xttotalrole,
+<? else ?> -- local Currency
+  COALESCE(currToLocal(vohead_curr_id, (recv_value / CASE WHEN (recv_qty <> 0.0) THEN recv_qty ELSE 1.0 END), vohead_distdate), 0.0) AS recv_recvcost,
+  COALESCE(currToLocal(vohead_curr_id, recv_value, vohead_distdate), 0.0) AS recv_value,
+  COALESCE(SUM(vodist_amount) / CASE WHEN (SUM(vodist_qty) <> 0.0) THEN SUM(vodist_qty) ELSE 1.0 END, 0.0)  AS vouchercost,
+  COALESCE(SUM(vodist_amount) / CASE WHEN (SUM(vodist_qty) <> 0.0) THEN SUM(vodist_qty) ELSE 1.0 END * recv_qty, 0.0) AS voucher_value,
+  COALESCE(SUM(vodist_amount) / CASE WHEN (SUM(vodist_qty) <> 0.0) THEN SUM(vodist_qty) ELSE 1.0 END * recv_qty - currToLocal(vohead_curr_id, recv_value, vohead_distdate), 0.0) AS variance,
+  CASE WHEN (COALESCE(recv_value, 0.0) <> 0.0) THEN
+    ((SUM(vodist_amount) / CASE WHEN (SUM(vodist_qty) <> 0.0) THEN SUM(vodist_qty) ELSE 1.0 END *
+     recv_qty / currToLocal(vohead_curr_id, recv_value, vohead_distdate)) -1.0) * 100.0
+       ELSE 100.0 END AS varprcnt,       
+  currConcat(vohead_curr_id) AS currAbbr,
+<? endif ?>
+  'qty' AS recv_qty_xtnumericrole,
+  'purchprice' AS recv_purchcost_xtnumericrole,
+  'curr' AS recv_value_xtnumericrole,
+  'purchprice' AS vouchercost_xtnumericrole,
+  'curr' AS  voucher_value_xtnumericrole,
+  'cost' AS recv_recvcost_xtnumericrole,
+  'curr' AS variance_xtnumericrole,
+  'prcnt' AS varprcnt_xtnumericrole
+FROM vendinfo
+  JOIN vendtype ON (vend_vendtype_id=vendtype_id), recv
+  LEFT OUTER JOIN (
+    itemsite JOIN item ON (itemsite_item_id=item_id) )
+    ON (recv_itemsite_id=itemsite_id)
+  JOIN vodist ON ((vodist_poitem_id=recv_orderitem_id)
+              AND (vodist_vohead_id=recv_vohead_id))
+  JOIN vohead ON ((vodist_vohead_id=vohead_id) 
+              AND (vohead_posted))
+WHERE ( (recv_vend_id=vend_id)
+AND  (recv_order_type='PO')
+<? if exists("vend_id") ?>
+  AND (vend_id=<? value("vend_id") ?>)
+<? elseif exists("vendtype_id") ?>
+  AND (vendtype_id=<? value("vendtype_id") ?>)
+<? elseif exists("vendtype_pattern") ?>
+  AND (vendtype_code ~ <? value("vendtype_pattern") ?>)
+<? endif ?>
+  AND (DATE(vohead_distdate) BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>) 
+<? if exists("MultiWhs") ?>
+  AND (itemsite_warehous_id=<? value("MultiWhs") ?>)
+<? endif ?>
+<? if exists("item_id") ?>
+  AND (itemsite_item_id=<? value("item_id") ?>)
+<? endif ?>
+<? if exists("agentUsername") ?>
+  AND (recv_agent_username=<? value("agentUsername") ?>)
+<? endif ?>
+ )
+GROUP BY recv_id, recv_order_number, recv_order_type, recv_date, item_number, recv_vend_item_number,
+         item_descrip1, recv_vend_item_descrip, recv_qty, recv_purchcost, recv_recvcost,
+         vohead_curr_id, recv_freight_curr_id, vohead_docdate, vend_number, vend_name,
+         recv_value, vohead_distdate
+) data
+<? if exists("notZero") ?>
+WHERE (variance != 0)
+<? endif ?>
+ORDER BY distdate, recv_order_number DESC;

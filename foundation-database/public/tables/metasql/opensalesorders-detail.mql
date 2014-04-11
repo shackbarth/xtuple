@@ -1,0 +1,92 @@
+-- Group: opensalesorders
+-- Name:  detail
+-- Notes: 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT DISTINCT
+       cohead.*,
+       COALESCE(cust_number, :error) AS cust_number,
+       getSoSchedDate(cohead_id) AS scheddate, 
+       getSoStatus(cohead_id) AS status,
+<? foreach("char_id_text_list") ?>
+       charass_alias<? literal("char_id_text_list") ?>.charass_value AS char<? literal("char_id_text_list") ?>,
+<? endforeach ?>
+<? foreach("char_id_list_list") ?>
+       charass_alias<? literal("char_id_list_list") ?>.charass_value AS char<? literal("char_id_list_list") ?>,
+<? endforeach ?>
+<? foreach("char_id_date_list") ?>
+       charass_alias<? literal("char_id_date_list") ?>.charass_value::date AS char<? literal("char_id_date_list") ?>,
+<? endforeach ?>
+       firstline(cohead_ordercomments) AS notes,
+       calcSalesOrderAmt(cohead_id) AS ordertotal,
+       CASE WHEN (calcSalesOrderAmt(cohead_id,'S') != 0.0)
+              THEN (calcSalesOrderAmt(cohead_id,'M') / calcSalesOrderAmt(cohead_id,'S'))
+            ELSE 1.0
+       END AS ordermarginpercent,
+       'percent' AS ordermarginpercent_xtnumericrole,
+       'extprice' AS ordertotal_xtnumericrole
+FROM cohead 
+     JOIN custinfo ON (cohead_cust_id=cust_id) 
+     JOIN custtype ON (cust_custtype_id=custtype_id)
+<? if exists("selectedSites") ?> 
+     JOIN coitem ON (coitem_cohead_id=cohead_id) 
+     JOIN itemsite ON (coitem_itemsite_id=itemsite_id) 
+     JOIN site() ON (itemsite_warehous_id=warehous_id) 
+<? elseif  exists("warehous_id") ?> 
+     LEFT OUTER JOIN coitem ON (coitem_cohead_id=cohead_id) 
+     LEFT OUTER JOIN itemsite ON (coitem_itemsite_id=itemsite_id) 
+     LEFT OUTER JOIN whsinfo ON (itemsite_warehous_id=warehous_id) 
+<? endif ?> 
+<? foreach("char_id_text_list") ?>
+     LEFT OUTER JOIN charass charass_alias<? literal("char_id_text_list") ?> 
+          ON ((charass_alias<? literal("char_id_text_list") ?>.charass_target_type='SO') 
+         AND  (charass_alias<? literal("char_id_text_list") ?>.charass_target_id=cohead_id)
+         AND  (charass_alias<? literal("char_id_text_list") ?>.charass_char_id=<? value("char_id_text_list") ?>))
+     LEFT OUTER JOIN char char_alias<? literal("char_id_text_list") ?> 
+          ON (charass_alias<? literal("char_id_text_list") ?>.charass_char_id=char_alias<? literal("char_id_text_list") ?>.char_id)
+<? endforeach ?>
+<? foreach("char_id_list_list") ?>
+     LEFT OUTER JOIN charass charass_alias<? literal("char_id_list_list") ?> 
+          ON ((charass_alias<? literal("char_id_list_list") ?>.charass_target_type='SO') 
+         AND  (charass_alias<? literal("char_id_list_list") ?>.charass_target_id=cohead_id)
+         AND  (charass_alias<? literal("char_id_list_list") ?>.charass_char_id=<? value("char_id_list_list") ?>))
+     LEFT OUTER JOIN char char_alias<? literal("char_id_list_list") ?> 
+          ON (charass_alias<? literal("char_id_list_list") ?>.charass_char_id=char_alias<? literal("char_id_list_list") ?>.char_id)
+<? endforeach ?>
+<? foreach("char_id_date_list") ?>
+     LEFT OUTER JOIN charass charass_alias<? literal("char_id_date_list") ?> 
+          ON ((charass_alias<? literal("char_id_date_list") ?>.charass_target_type='SO') 
+         AND  (charass_alias<? literal("char_id_date_list") ?>.charass_target_id=cohead_id)
+         AND  (charass_alias<? literal("char_id_date_list") ?>.charass_char_id=<? value("char_id_date_list") ?>))
+     LEFT OUTER JOIN char char_alias<? literal("char_id_date_list") ?> 
+          ON (charass_alias<? literal("char_id_date_list") ?>.charass_char_id=char_alias<? literal("char_id_date_list") ?>.char_id)
+<? endforeach ?>
+WHERE((true) 
+<? if exists("cust_id") ?>
+  AND (cust_id=<? value("cust_id") ?> )
+<? endif ?>
+<? if exists("custtype_id") ?>
+  AND (cust_custtype_id=<? value("custtype_id") ?>)
+<? endif ?>
+<? if exists("custtype_pattern") ?>
+  AND (custtype_code ~* <? value("custtype_pattern") ?>)
+<? endif ?>
+<? if exists("poNumber") ?>
+  AND  (cohead_custponumber~*<? value("poNumber") ?>)
+<? endif ?>
+<? if exists("startDate") ?>
+  AND (cohead_orderdate BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+<? endif ?>
+<? if not exists("showClosed") ?> 
+  AND (cohead_status='O')
+<? endif ?>
+<? if  exists("warehous_id") ?>
+  AND (warehous_id=<? value("warehous_id") ?>)
+<? endif ?>
+<? if  exists("salesrep_id") ?>
+  AND (cohead_salesrep_id=<? value("salesrep_id") ?>)
+<? endif ?>
+<? literal("charClause") ?>
+  ) 
+ORDER BY cohead_number;

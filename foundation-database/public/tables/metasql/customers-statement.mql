@@ -1,0 +1,47 @@
+-- Group: customers
+-- Name:  statement
+-- Notes: used by printStatementsByCustomerType
+--SELECT cust_id, (cust_number || '-' || cust_name) AS customer,
+--       findCustomerForm(cust_id, 'S') AS reportname
+--FROM
+--<? if exists("asofDate") ?>
+--  (SELECT araging_cust_id FROM araging(<? value ("asofDate") ?>, true))AS data,
+--<? endif ?>
+--  custinfo, custtype, aropen
+--WHERE (cust_custtype_id=custtype_id)
+-- AND (aropen_cust_id=cust_id)
+-- AND (aropen_open)
+--<? if exists("graceDays") ?>
+-- AND (aropen_duedate < (CURRENT_DATE - <? value ("graceDays") ?>))
+--<? endif ?>
+--<? if exists("custtype_id") ?>
+-- AND (custtype_id=<? value ("custtype_id") ?>)
+--<? elseif exists("custtype_pattern") ?>
+-- AND (custtype_code ~ <? value ("custtype_pattern") ?>)
+--<? endif ?>
+--<? if exists("asofDate") ?>
+-- AND (cust_id = araging_cust_id)
+--<? endif ?>
+--GROUP BY cust_id, cust_number, cust_name
+--HAVING (SUM((aropen_amount - aropen_paid) *
+--             CASE WHEN (aropen_doctype IN ('C', 'R')) THEN -1
+--                  ELSE 1 END) > 0)
+--ORDER BY cust_number;
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT araging_cust_id AS cust_id,
+       (araging_cust_number || '-' || araging_cust_name) AS customer,
+       findCustomerForm(araging_cust_id, 'S') AS reportname
+FROM araging(<? value ("asofDate") ?>, true)
+WHERE (true)
+<? if exists("graceDays") ?>
+ AND (COALESCE(araging_duedate, startOfTime()) < (CURRENT_DATE - <? value ("graceDays") ?>))
+<? endif ?>
+<? if exists("custtype_id") ?>
+ AND (araging_cust_custtype_id=<? value ("custtype_id") ?>)
+<? elseif exists("custtype_pattern") ?>
+ AND (araging_custtype_code ~ <? value ("custtype_pattern") ?>)
+<? endif ?>
+GROUP BY araging_cust_id, araging_cust_number, araging_cust_name
+ORDER BY araging_cust_number;

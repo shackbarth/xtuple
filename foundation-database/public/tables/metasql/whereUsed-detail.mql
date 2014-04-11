@@ -1,0 +1,90 @@
+-- Group: whereUsed
+-- Name: detail
+-- Notes: used by dspSingleLevelWhereUsed, dspIndentedWhereUsed
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT <? if exists("byIndented") ?>
+         bomwork_id, item_id, bomwork_parent_id,
+         bomworkitemsequence(bomwork_id) AS seqord, 
+         bomwork_seqnumber, item_number,
+         bomwork_qtyfxd ,bomwork_qtyper,
+         'qty' AS bomwork_qtyfxd_xtnumericrole,
+         'qtyper' AS bomwork_qtyper_xtnumericrole,
+         'scrap' AS bomwork_scrap_xtnumericrole,
+         bomwork_scrap,
+         bomwork_effective,
+         bomwork_expires,
+         CASE WHEN COALESCE(bomwork_effective,startOfTime())=startOfTime() 
+              THEN 'Always' 
+         END AS bomwork_effective_qtdisplayrole,
+         CASE WHEN COALESCE(bomwork_expires,endOfTime())=endOfTime() 
+              THEN 'Never' 
+         END AS bomwork_expires_qtdisplayrole,
+         bomwork_level - 1 AS xtindentrole, 
+       <? else ?>
+         bomitem_parent_item_id, item_id, bomitem_seqnumber,
+         item_number,
+         itemuomtouomratio(bomitem_item_id, bomitem_uom_id, NULL) * bomitem_qtyfxd AS qtyfxd,
+         itemuomtouomratio(bomitem_item_id, bomitem_uom_id, NULL) * bomitem_qtyper AS qtyper,
+         'qty' AS qtyfxd_xtnumericrole,
+         'qtyper' AS qtyper_xtnumericrole,
+         'scrap' AS bomitem_scrap_xtnumericrole,
+         bomitem_scrap,
+         bomitem_effective, bomitem_expires,
+         CASE WHEN (COALESCE(bomitem_effective, startoftime()) = startoftime()) 
+              THEN 'Always' 
+         END AS bomitem_effective_qtdisplayrole,
+         CASE WHEN (COALESCE(bomitem_expires, endoftime()) = endoftime()) 
+              THEN 'Never' 
+         END AS bomitem_expires_qtdisplayrole,
+-- formatted for report
+         item_descrip1, item_descrip2,
+         formatQty(itemuomtouomratio(bomitem_item_id, bomitem_uom_id, NULL) * bomitem_qtyfxd) AS f_qtyfxd,
+         formatQtyper(itemuomtouomratio(bomitem_item_id, bomitem_uom_id, NULL) * bomitem_qtyper) AS f_qtyper,
+         formatScrap(bomitem_scrap) AS f_scrap,
+         formatDate(bomitem_effective, <? value("Always") ?>) AS f_effective,
+         formatDate(bomitem_expires, <? value("Never") ?>) AS f_expires,
+         formatBoolYN(bomitem_createwo) AS f_createwo,
+         CASE WHEN (bomitem_issuemethod='S') THEN <? value("Push") ?>
+              WHEN (bomitem_issuemethod='L') THEN <? value("Pull") ?>
+              WHEN (bomitem_issuemethod='M') THEN <? value("Mixed") ?>
+              ELSE <? value("Special") ?>
+         END AS f_issuemethod,
+         formatQtyper(itemuomtouomratio(bomitem_item_id, bomitem_uom_id, NULL) * (bomitem_qtyfxd + bomitem_qtyper) * (1 + bomitem_scrap)) as f_qtyreq,
+       <? endif ?>
+       (item_descrip1 || ' ' || item_descrip2) AS descrip,
+       uom_name
+FROM item, uom, 
+     <? if exists("byIndented") ?>
+       bomwork
+     <? else ?> 
+       bomitem
+     <? endif ?>
+WHERE ((item_inv_uom_id=uom_id)
+        <? if exists("byIndented") ?>
+          AND (bomwork_item_id=item_id)
+          AND (bomwork_set_id=<? value("bomworkset_id") ?>)
+          <? if not exists("showExpired") ?>
+            AND (bomwork_expires > CURRENT_DATE)
+          <? endif ?>
+          <? if not exists("showFuture") ?>
+            AND (bomwork_effective <= CURRENT_DATE)
+          <? endif ?>
+        <? else ?>
+          AND (bomitem_parent_item_id=item_id)
+          AND (bomitem_item_id=<? value("item_id") ?>)
+          AND (bomitem_rev_id=getActiveRevId('BOM',bomitem_parent_item_id))
+          <? if not exists("notEffective") ?>
+            AND (CURRENT_DATE BETWEEN bomitem_effective AND (bomitem_expires-1)) 
+          <? else ?>
+           AND (<? value("effective") ?> BETWEEN bomitem_effective AND (bomitem_expires-1))
+          <? endif ?>
+        <? endif ?>         
+      )
+<? if exists("byIndented") ?>
+ORDER BY seqord
+<? else ?>
+ORDER BY item_number
+<? endif ?>
+;

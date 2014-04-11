@@ -1,0 +1,43 @@
+-- Group: taxAuthorities
+-- Name:  detail
+-- Notes: 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT 
+  taxauth_id, taxauth_code, taxauth_name,
+  addr.*
+FROM taxauth
+  LEFT OUTER JOIN addr ON (taxauth_addr_id=addr_id) 
+WHERE true
+<? if exists("search_pattern") ?>
+  AND ((taxauth_code ~* <? value("search_pattern") ?>)
+       OR (taxauth_name ~* <? value("search_pattern") ?>)
+       OR (COALESCE(addr_line1,'') || ' ' || COALESCE(addr_line2,'') || ' ' || COALESCE(addr_line3,'') ~* <? value("search_pattern") ?>)
+       OR (COALESCE(addr_city,'') ~* <? value("search_pattern") ?>)
+       OR (COALESCE(addr_state,'') ~* <? value("search_pattern") ?>)
+       OR (COALESCE(addr_postalcode,'') ~* <? value("search_pattern") ?>)
+       OR (COALESCE(addr_country,'') ~* <? value("search_pattern") ?>))
+<? endif ?>
+<? if exists("taxauth_code_pattern") ?>
+  AND (taxauth_code ~* <? value("taxauth_code_pattern") ?>)
+<? endif ?>
+<? if exists("taxauth_name_pattern") ?>
+  AND (taxauth_name ~* <? value("taxauth_name_pattern") ?>)
+<? endif ?>
+<? if exists("addr_street_pattern") ?>
+  AND (COALESCE(addr_line1,'') || ' ' || COALESCE(addr_line2,'') || ' ' || COALESCE(addr_line3,'') ~* <? value("addr_street_pattern") ?>)
+<? endif ?>
+<? if exists("addr_city_pattern") ?>
+  AND (COALESCE(addr_city,'') ~* <? value("addr_city_pattern") ?>)
+<? endif ?>
+<? if exists("addr_state_pattern") ?>
+  AND (COALESCE(addr_state,'') ~* <? value("addr_state_pattern") ?>)
+<? endif ?>
+<? if exists("addr_postalcode_pattern") ?>
+  AND (COALESCE(addr_postalcode,'') ~* <? value("addr_postalcode_pattern") ?>)
+<? endif ?>
+<? if exists("addr_country_pattern") ?>
+  AND (COALESCE(addr_country,'') ~* <? value("addr_country_pattern") ?>)
+<? endif ?>
+ORDER BY taxauth_code; 

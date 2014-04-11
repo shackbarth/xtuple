@@ -1,0 +1,24 @@
+-- Group: itemReceipt
+-- Name: sourceItemSite
+-- Notes: used by enterPoitemReceipt
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+<? if exists("poitem_id") ?>			-- this should never be called
+  SELECT -1 AS itemsite_id, -1 AS warehous_id;
+<? elseif exists("toitem_id") ?>
+  SELECT itemsite_id, tohead_dest_warehous_id AS warehous_id
+  FROM tohead, toitem, itemsite 
+  WHERE ((itemsite_item_id=toitem_item_id)
+    AND  (itemsite_warehous_id=tohead_src_warehous_id)
+    AND  (toitem_tohead_id=tohead_id)
+    AND  (toitem_id=<? value("toitem_id") ?>));
+<? elseif exists("recv_id") ?>			-- this should never be called
+  SELECT itemsite_id, tohead_dest_warehous_id AS warehous_id
+  FROM tohead, toitem, itemsite, recv
+  WHERE ((itemsite_item_id=toitem_item_id)
+    AND  (itemsite_warehous_id=tohead_src_warehous_id)
+    AND  (toitem_tohead_id=tohead_id)
+    AND  (toitem_id=recv_orderitem_id)
+    AND  (recv_id=<? value("recv_id") ?>));
+<? endif ?>

@@ -1,0 +1,13 @@
+-- Group: voucherItem
+-- Name: distributions
+-- Notes: used by voucherItem
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT vodist_id, vodist_amount,
+       COALESCE(costelem_type, <? value("none") ?>) AS costelem_type,
+       'currval' AS vodist_amount_xtnumericrole
+FROM vodist
+     LEFT OUTER JOIN costelem ON (vodist_costelem_id=costelem_id)
+WHERE ( (vodist_poitem_id=<? value("poitem_id") ?>)
+  AND   (vodist_vohead_id=<? value("vohead_id") ?>) );

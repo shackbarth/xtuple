@@ -1,0 +1,88 @@
+-- Group: itemcostdetail
+-- Name:  detail
+-- Notes: dspItemCostDetail
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT id, item.item_id, seqnumber, item_number,
+       (item_descrip1 || ' ' || item_descrip2) AS itemdescrip, uom_name,
+       qtyper,       'qtyper' AS qtyper_xtnumericrole,
+       scrap,        'scrap' AS scrap_xtnumericrole,
+       cost,         'cost' AS cost_xtnumericrole,
+       extendedcost, 'cost' AS extendedcost_xtnumericrole,
+       0 AS extendedcost_xttotalrole 
+FROM uom, item, (
+<? if exists("useBOM") ?>
+     SELECT bomitem_id AS id, bomitem_seqnumber AS seqnumber,
+            (itemuomtouomratio(bomitem_item_id, bomitem_uom_id, NULL) * bomitem_qtyper) AS qtyper,
+            bomitem_scrap AS scrap,
+            bomitem_item_id AS item_id,
+  <? if exists("standardCost") ?>
+            itemcost_stdcost AS cost,
+            (itemuomtouom(bomitem_item_id, bomitem_uom_id, NULL,
+                          (bomitem_qtyfxd/bomhead_batchsize + bomitem_qtyper) * (1 + bomitem_scrap), 'qtyper') * itemcost_stdcost) AS extendedcost
+  <? elseif exists("actualCost") ?>
+            currToBase(itemcost_curr_id, itemcost_actcost, NULL) AS cost,
+            (itemuomtouom(bomitem_item_id, bomitem_uom_id, NULL,
+                          (bomitem_qtyfxd/bomhead_batchsize + bomitem_qtyper) * (1 + bomitem_scrap), 'qtyper') *
+             currToBase(itemcost_curr_id, itemcost_actcost, NULL)) AS extendedcost 
+  <? endif ?>
+    FROM bomitem
+         JOIN itemcost ON (itemcost_item_id=bomitem_item_id)
+         JOIN costelem ON (itemcost_costelem_id=costelem_id)
+         JOIN bomhead ON (bomhead_item_id=bomitem_parent_item_id AND bomhead_rev_id=bomitem_rev_id)
+  <? if exists("includeRevisionControl") ?>
+    LEFT OUTER JOIN rev ON ((bomitem_rev_id=rev_id) AND (COALESCE(rev_status, 'A')='A')) 
+  <? endif ?>
+    WHERE ((CURRENT_DATE BETWEEN bomitem_effective AND (bomitem_expires-1))
+     AND (bomitem_parent_item_id=<? value("item_id") ?>)
+     AND (costelem_id=<? value("costelem_id") ?>) ) 
+<? elseif exists("useBBOM") ?>
+     SELECT bbomitem_id AS id, bbomitem_seqnumber AS seqnumber,
+            bbomitem_qtyper AS qtyper,
+            bbomitem_costabsorb AS scrap,
+            bbomitem_parent_item_id AS item_id,
+  <? if exists("standardCost") ?>
+            itemcost_stdcost AS cost,
+            (itemcost_stdcost / bbomitem_qtyper *
+             bbomitem_costabsorb) AS extendedcost 
+  <? elseif exists("actualCost") ?>
+            currToBase(itemcost_curr_id, itemcost_actcost, NULL) AS cost,
+            (currToBase(itemcost_curr_id, itemcost_actcost, NULL) / bbomitem_qtyper *
+             bbomitem_costabsorb) AS extendedcost 
+  <? endif ?>
+    FROM xtmfg.bbomitem
+         JOIN itemcost ON (itemcost_item_id=bbomitem_parent_item_id)
+    WHERE ((CURRENT_DATE BETWEEN bbomitem_effective AND (bbomitem_expires-1))
+     AND (itemcost_costelem_id=<? value("costelem_id") ?>)
+     AND (bbomitem_item_id=<? value("item_id") ?>) )
+    UNION
+    SELECT source.bbomitem_id, source.bbomitem_seqnumber AS seqnumber,
+           source.bbomitem_qtyper, target.bbomitem_costabsorb,
+           item_id,
+  <? if exists("standardCost") ?>
+           itemcost_stdcost AS cost,
+           (itemcost_stdcost * source.bbomitem_qtyper /
+            target.bbomitem_qtyper * target.bbomitem_costabsorb) AS extendedcost 
+  <? elseif exists("actualCost") ?>
+           currToBase(itemcost_curr_id, itemcost_actcost, NULL) AS cost,
+           (currToBase(itemcost_curr_id, itemcost_actcost, NULL) * source.bbomitem_qtyper /
+            target.bbomitem_qtyper * target.bbomitem_costabsorb) AS extendedcost 
+  <? endif ?>
+    FROM xtmfg.bbomitem AS source
+         JOIN item     ON (source.bbomitem_item_id=item_id)
+         JOIN itemcost ON (source.bbomitem_item_id=itemcost_item_id)
+         JOIN xtmfg.bbomitem AS target
+              ON (source.bbomitem_parent_item_id=target.bbomitem_parent_item_id)
+    WHERE ((CURRENT_DATE BETWEEN source.bbomitem_effective
+                            AND (source.bbomitem_expires-1))
+     AND (CURRENT_DATE BETWEEN target.bbomitem_effective
+                          AND (target.bbomitem_expires-1))
+     AND (item_type='Y')
+     AND (target.bbomitem_item_id=<? value("item_id") ?>)
+     AND (itemcost_costelem_id=<? value("costelem_id") ?>) )
+<? endif ?>
+) AS data 
+WHERE ((data.item_id=item.item_id)
+   AND (item_inv_uom_id=uom_id)) 
+ORDER BY seqnumber;

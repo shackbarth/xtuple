@@ -1,0 +1,144 @@
+-- Group: incidents 
+-- Name: detail
+-- Notes: 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT DISTINCT ON (incdt_number) incdt_id AS id,
+incdt_number, DATE(incdt_timestamp) AS incdt_timestamp,
+crmacct_name,
+incdtcat_name, incdtseverity_name,  
+incdtpriority_name, crmacct_name, 
+CASE WHEN(incdt_status='N') THEN <? value("new") ?>
+WHEN(incdt_status='F') THEN <? value("feedback") ?>
+WHEN(incdt_status='C') THEN <? value("confirmed") ?>
+WHEN(incdt_status='A') THEN <? value("assigned") ?>
+WHEN(incdt_status='R') THEN <? value("resolved") ?>
+WHEN(incdt_status='L') THEN <? value("closed") ?>
+ELSE incdt_status
+END,
+incdt_assigned_username, incdt_owner_username,
+incdt_summary, cntct_name, incdt_updated::date AS incdt_updated,
+prj_number, incdt_public,
+item_number,
+<? if exists("LotSerialControl") ?>
+ls_number,
+<? endif ?>
+status_color AS qtbackgroundrole 
+<? foreach("char_id_text_list") ?>
+  , charass_alias<? literal("char_id_text_list") ?>.charass_value AS char<? literal("char_id_text_list") ?>
+<? endforeach ?>
+<? foreach("char_id_list_list") ?>
+  , charass_alias<? literal("char_id_list_list") ?>.charass_value AS char<? literal("char_id_list_list") ?>
+<? endforeach ?>
+<? foreach("char_id_date_list") ?>
+  , charass_alias<? literal("char_id_date_list") ?>.charass_value::date AS char<? literal("char_id_date_list") ?>
+<? endforeach ?>
+FROM crmacct, status, incdt()
+  JOIN cntct ON (incdt_cntct_id=cntct_id)
+  LEFT OUTER JOIN incdtcat ON (incdtcat_id=incdt_incdtcat_id) 
+  LEFT OUTER JOIN incdtseverity ON (incdtseverity_id=incdt_incdtseverity_id) 
+  LEFT OUTER JOIN incdtpriority ON (incdtpriority_id=incdt_incdtpriority_id) 
+  LEFT OUTER JOIN prj ON (incdt_prj_id=prj_id)
+  LEFT OUTER JOIN item ON (item_id=incdt_item_id)
+<? if exists("LotSerialControl") ?>
+  LEFT OUTER JOIN ls ON (ls_id=incdt_ls_id)
+<? endif ?>
+<? foreach("char_id_text_list") ?>
+  LEFT OUTER JOIN charass charass_alias<? literal("char_id_text_list") ?> ON ((charass_alias<? literal("char_id_text_list") ?>.charass_target_type='INCDT') 
+                                                                    AND  (charass_alias<? literal("char_id_text_list") ?>.charass_target_id=incdt_id)
+                                                                    AND  (charass_alias<? literal("char_id_text_list") ?>.charass_char_id=<? value("char_id_text_list") ?>))
+  LEFT OUTER JOIN char char_alias<? literal("char_id_text_list") ?> ON (charass_alias<? literal("char_id_text_list") ?>.charass_char_id=char_alias<? literal("char_id_text_list") ?>.char_id)
+<? endforeach ?>
+<? foreach("char_id_list_list") ?>
+  LEFT OUTER JOIN charass charass_alias<? literal("char_id_list_list") ?> ON ((charass_alias<? literal("char_id_list_list") ?>.charass_target_type='INCDT') 
+                                                                    AND  (charass_alias<? literal("char_id_list_list") ?>.charass_target_id=incdt_id)
+                                                                    AND  (charass_alias<? literal("char_id_list_list") ?>.charass_char_id=<? value("char_id_list_list") ?>))
+  LEFT OUTER JOIN char char_alias<? literal("char_id_list_list") ?> ON (charass_alias<? literal("char_id_list_list") ?>.charass_char_id=char_alias<? literal("char_id_list_list") ?>.char_id)
+<? endforeach ?>
+<? foreach("char_id_date_list") ?>
+  LEFT OUTER JOIN charass charass_alias<? literal("char_id_date_list") ?> ON ((charass_alias<? literal("char_id_date_list") ?>.charass_target_type='INCDT') 
+                                                                    AND  (charass_alias<? literal("char_id_date_list") ?>.charass_target_id=incdt_id)
+                                                                    AND  (charass_alias<? literal("char_id_date_list") ?>.charass_char_id=<? value("char_id_date_list") ?>))
+  LEFT OUTER JOIN char char_alias<? literal("char_id_date_list") ?> ON (charass_alias<? literal("char_id_date_list") ?>.charass_char_id=char_alias<? literal("char_id_date_list") ?>.char_id)
+<? endforeach ?>
+WHERE ((incdt_crmacct_id=crmacct_id)
+AND (status_type='INCDT')
+AND (incdt_status=status_code)
+<? if exists("statuslist") ?>
+AND (status_seq IN (-1
+  <? foreach("statuslist") ?> , <? value("statuslist") ?> <? endforeach ?>
+  ))
+<? endif ?>
+<? if exists("status_equal") ?> 
+AND (status_seq = <? value("status_equal") ?>) 
+<? endif ?>
+<? if exists("status_above") ?> 
+AND (status_seq < <? value("status_above") ?>) 
+<? endif ?>
+<? if exists("cntct_id") ?> 
+AND (incdt_cntct_id = <? value("cntct_id") ?>) 
+<? endif ?>
+<? if exists("username") ?>
+AND (<? value("username") ?> IN (incdt_assigned_username, incdt_owner_username))
+<? endif ?>
+<? if exists("owner_username") ?> 
+AND (incdt_owner_username=<? value("owner_username") ?>) 
+<? endif ?>
+<? if exists("owner_usr_pattern" ?>
+AND (incdt_owner_username ~ <? value("owner_usr_pattern") ?>) 
+<? endif ?>
+<? if exists("assigned_username") ?> 
+AND (incdt_assigned_username=<? value("assigned_username") ?>) 
+<? endif ?>
+<? if exists("assigned_usr_pattern" ?>
+AND (incdt_assigned_username ~ <? value("assigned_usr_pattern") ?>) 
+<? endif ?>
+<? if exists("incdtpriority_id_list") ?>
+AND (incdt_incdtpriority_id IN (-1
+  <? foreach("incdtpriority_id_list") ?> , <? value("incdtpriority_id_list") ?> <? endforeach ?>
+  ))
+<? endif ?>
+<? if exists("categorylist") ?>
+AND (incdt_incdtcat_id IN (-1
+  <? foreach("categorylist") ?> , <? value("categorylist") ?> <? endforeach ?>
+  ))
+<? endif ?>
+<? if exists("category_id") ?> 
+AND (incdt_incdtcat_id=<? value("category_id") ?>) 
+<? endif ?> 
+<? if exists("severity_id") ?> 
+AND (incdt_incdtseverity_id=<? value("severity_id") ?>) 
+<? endif ?>
+<? if exists("crmAccountId") ?> 
+AND (incdt_crmacct_id=<? value("crmAccountId") ?>) 
+<? endif ?> 
+<? if exists("prj_id") ?> 
+AND (incdt_prj_id=<? value("prj_id") ?>) 
+<? endif ?> 
+<? if exists("public") ?> 
+AND (incdt_public=<? value("public") ?>) 
+<? endif ?> 
+)
+ 
+<? if exists("search_pattern") ?> 
+AND ((incdt_number::text ~* <? value("search_pattern") ?>)
+OR (incdt_summary ~* <? value("search_pattern") ?>)
+OR (incdt_descrip ~* <? value("search_pattern") ?>)
+OR (incdt_id IN (SELECT comment_source_id
+FROM comment
+WHERE((comment_source='INCDT')
+AND (comment_text ~* <? value("search_pattern") ?>)))))
+<? endif ?>
+<? if exists("item_id") ?>
+AND (incdt_item_id=<? value("item_id") ?>)
+<? endif ?>
+<? if exists("lspattern") ?>
+AND (ls_number ~* <? value("lspattern") ?>)
+<? endif ?>
+<? if exists("id") ?>
+AND (incdt_id=<? value("id") ?>)
+<? endif ?>
+AND (incdt_timestamp BETWEEN COALESCE(<? value("startDate") ?>, startOfTime()) AND COALESCE(<? value("endDate") ?>, endOfTime())+1) 
+<? literal("charClause") ?>
+ORDER BY incdt_number;

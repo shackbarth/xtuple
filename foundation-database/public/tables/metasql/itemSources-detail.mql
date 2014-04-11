@@ -1,0 +1,84 @@
+-- Group: itemSources
+-- Name: detail
+-- Notes: 
+--        Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+--        See www.xtuple.com/CPAL for the full text of the software license.
+<? if not exists("defaultOnly") ?>
+  SELECT itemsrc_id, 
+       vend_name, 
+       item_number, uom_name,
+       (item_descrip1 || ' ' || item_descrip2) AS item_descrip,
+       contrct_number,
+       COALESCE( (SELECT SUM(poitem_qty_ordered)
+                  FROM poitem
+                  WHERE (poitem_itemsrc_id=itemsrc_id)), 0.0) AS purchased_qty,
+       itemsrc.*,
+       'qty' AS itemsrc_invvendoruomratio_xtnumericrole,
+       CASE WHEN COALESCE(itemsrc_effective, startOfTime()) <=
+                 startOfTime() THEN <? value("always") ?>
+       END AS itemsrc_effective_qtdisplayrole,
+       CASE WHEN COALESCE(itemsrc_expires, endOfTime()) >=
+                 endOfTime() THEN <? value("never") ?>
+       END AS itemsrc_expires_qtdisplayrole,
+       CASE WHEN (COALESCE(itemsrc_expires, endOfTime()) < CURRENT_DATE) THEN 'expired'
+            WHEN (COALESCE(itemsrc_effective, startOfTime()) > CURRENT_DATE) THEN 'future'
+       END AS qtforegroundrole
+  FROM itemsrc JOIN vendinfo ON (vend_id=itemsrc_vend_id AND vend_active)
+               JOIN item ON (item_id=itemsrc_item_id)
+               JOIN uom ON (uom_id=item_inv_uom_id)
+               LEFT OUTER JOIN contrct ON (contrct_id=itemsrc_contrct_id) 
+  WHERE ((true)
+<? if not exists("showInactive") ?>
+   AND (itemsrc_active)
+<? endif ?>
+<? if exists("item_id") ?>
+   AND (itemsrc_item_id=<? value("item_id") ?>)
+<? endif ?>
+<? if exists("vend_id") ?>
+   AND (itemsrc_vend_id=<? value("vend_id") ?>)
+<? endif ?>
+<? if exists("contrct_id") ?>
+   AND (itemsrc_contrct_id=<? value("contrct_id") ?>)
+<? endif ?>
+<? if exists("contract_number_pattern") ?>
+   AND (contrct_number ~* <? value("contract_number_pattern") ?>)
+<? endif ?>
+<? if not exists("showExpired") ?>
+   AND (itemsrc_expires > CURRENT_DATE)
+<? endif ?>
+<? if not exists("showFuture") ?>
+   AND (itemsrc_effective <= CURRENT_DATE)
+<? endif ?>
+)
+<? if exists("item_id") ?>
+ORDER BY itemsrc_contrct_id, itemsrc_ranking, vend_name,
+         itemsrc_vend_item_number, itemsrc_manuf_name,
+         itemsrc_manuf_item_number
+<? else ?>
+ORDER By item_number, vend_name
+<? endif ?>
+<? else ?>
+  SELECT itemsrc_id, 0 AS ranked FROM itemsrc, contrct 
+    WHERE ((itemsrc_item_id= <? value("item_id") ?>) AND (itemsrc_default) 
+           AND (contrct_id = itemsrc_contrct_id)) 
+  UNION 
+  SELECT itemsrc_id, 2 AS ranked 
+    FROM itemsrc JOIN (SELECT * FROM 
+                        (SELECT CASE WHEN ((itemsrc_item_id=<? value("item_id") ?>) AND (NOT itemsrc_default)
+                                            AND (contrct_id = itemsrc_contrct_id)) THEN -1
+                                     ELSE itemsrc_id
+                                END AS dummy_id FROM itemsrc, contrct 
+                           WHERE ((itemsrc_item_id=<? value("item_id") ?>) AND (NOT itemsrc_default) 
+                                  AND (contrct_id = itemsrc_contrct_id))
+                         UNION 
+                         SELECT itemsrc_id AS dummy_id 
+                           FROM itemsrc 
+                           WHERE ((itemsrc_item_id=<? value("item_id") ?>) AND (itemsrc_default))
+                         ) AS dummy
+                       LIMIT 1) AS dummy2
+                        ON (itemsrc_id=dummy_id)
+    WHERE ((itemsrc_item_id=<? value("item_id") ?>) AND (itemsrc_default) AND (COALESCE(itemsrc_contrct_id,0)=0))
+
+ORDER by ranked
+<? endif ?>
+;
