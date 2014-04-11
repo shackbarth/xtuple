@@ -16,7 +16,7 @@ white:true*/
     // ..........................................................
     // METHODS
     //
-
+    
     /**
       Returns whether the current record could be created on the editableModel
       based on privilege settings.
@@ -97,6 +97,14 @@ white:true*/
         functionName = "get" + type + "StatusString",
         fn = Klass.prototype[functionName];
       return fn ? fn.call(this) : this.get("status");
+    },
+
+    // XXX TODO - need to create a privilege first
+    canReassign: function (callback) {
+      if (callback) {
+        callback(true);
+      }
+      return true;
     }
 
   });

@@ -85,17 +85,15 @@ Globalize:true, async:true, console:true*/
       activityActions: []
     },
     actions: [
-      {
-        name: "reassignUser",
+      {name: "reassignUser",
         method: "reassignUser",
+        prerequisite: "canReassign", /// this is required for multi-select actions to work
         //privilege: need to create "ReassignWorkflow" priv
         isViewMethod: true,
-        notify: false
-      }
+        notify: false}
     ],
     events: {
-      onNotify: "",
-      onPopupWorkspace: ""
+      onNotify: ""
     },
     query: {orderBy: [
       {attribute: 'dueDate'},
@@ -167,7 +165,7 @@ Globalize:true, async:true, console:true*/
           // Loop through and assemble dispatch param object
           for (var i = 0; i < ids.length; i++) {
             params.push({
-              activityId: ids[0],
+              activityId: ids[i],
               username: assignedTo
             });
           }
