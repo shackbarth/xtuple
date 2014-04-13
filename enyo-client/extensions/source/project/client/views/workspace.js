@@ -376,17 +376,6 @@ trailing:true, white:true, strict:false*/
 
     XV.appendExtension("XV.SalesOrderWorkspace", extensions);
 
-    // ..........................................................
-    // TASK
-    //
-
-    extensions = [
-      {kind: "XV.TaskCharacteristicsWidget", container: "mainGroup",
-        attr: "characteristics"}
-    ];
-
-    XV.appendExtension("XV.TaskWorkspace", extensions);
-
   };
 
 }());
