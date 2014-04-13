@@ -792,6 +792,19 @@ regexp:true, undef:true, trailing:true, white:true, strict:false */
   });
 
   // ..........................................................
+  // USER
+  //
+
+  enyo.kind({
+    name: "XV.UserPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.users"
+    /*orderBy: [
+      {attribute: 'username'}
+    ]*/
+  });
+
+  // ..........................................................
   // VENDOR TYPE
   //
 

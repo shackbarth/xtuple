@@ -186,8 +186,8 @@ Globalize:true, async:true, console:true*/
         message: "_reassignSelectedActivities".loc(),
         yesLabel: "_reassign".loc(),
         noLabel: "_cancel".loc(),
-        component: {kind: "XV.UserAccountWidget", attr: "assignedTo.username",
-          label: "_assignTo".loc()}
+        component: {kind: "XV.UserPicker", attr: "assignedTo", label: "_assignTo".loc()}
+          //{kind: "XV.UserAccountWidget", attr: "assignedTo.username", label: "_assignTo".loc()}
       });
     },
     getWorkspace: function () {
