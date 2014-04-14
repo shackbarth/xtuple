@@ -2,7 +2,7 @@
 
 alias sudo='sudo env PATH=$PATH $@'
 
-NODE_VERSION=0.8.26
+NODE_VERSION=0.10.26
 
 RUN_DIR=$(pwd)
 LOG_FILE=$RUN_DIR/install.log
