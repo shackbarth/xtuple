@@ -48,11 +48,11 @@ BEGIN
   INSERT INTO prj(
             prj_number,     prj_name,           prj_descrip,
             prj_status,     prj_so,             prj_wo,
-            prj_po,         prj_owner_username,
+            prj_po,         prj_owner_username, prj_prjtype_id,
             prj_due_date,   prj_username,       prj_recurring_prj_id
   ) SELECT  _newnumber,     _p.prj_name,        _p.prj_descrip,
             'P',            _p.prj_so,          _p.prj_wo,
-            _p.prj_po,      _p.prj_owner_username,
+            _p.prj_po,      _p.prj_owner_username, _p.prj_prjtype_id,
             _duedate,       _p.prj_username,    _p. prj_recurring_prj_id
       FROM prj
      WHERE (prj_id=pparentid)
