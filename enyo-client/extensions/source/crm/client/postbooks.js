@@ -121,7 +121,6 @@ trailing:true, white:true*/
       "ViewClassCodes",
       "ViewItemMasters",
       "ViewProductCategories",
-      "ViewUOMs",
       "ConfigureCRM",
       "EditOthersComments",
       "EditOwnComments",
