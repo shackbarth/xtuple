@@ -529,45 +529,11 @@ white:true*/
       @extends XM.Info
     */
     XM.ProjectTaskRelation = XM.Info.extend({
-      /** @scope XM.Task.prototype */
+      /** @scope XM.ProjctTaskRelation.prototype */
 
       recordType: "XM.ProjectTaskRelation",
 
       editableModel: "XM.ProjectTask"
-
-    });
-
-
-    /**
-      @class
-
-      @extends XM.ProjectTask
-    */
-    XM.Task = XM.ProjectTask.extend({
-      /** @scope XM.Task.prototype */
-
-      recordType: "XM.Task",
-
-      statusDidChange: function () {
-        XM.ProjectTask.prototype.statusDidChange.apply(this, arguments);
-        if (this.getStatus() === XM.Model.READY_CLEAN) {
-          this.setReadOnly("project");
-        }
-      }
-
-    });
-
-    /**
-      @class
-
-      @extends XM.Comment
-    */
-    XM.TaskComment = XM.Comment.extend({
-      /** @scope XM.ProjectTaskComment.prototype */
-
-      recordType: "XM.TaskComment",
-
-      sourceName: "TA"
 
     });
 
@@ -596,23 +562,6 @@ white:true*/
       recordType: "XM.TaskProjectRelation"
 
     });
-
-    /**
-      @class
-
-      @extends XM.Info
-      @extends XM.ProjectStatus
-    */
-    XM.TaskListItem = XM.Info.extend({
-      /** @scope XM.ProjectTaskListItem.prototype */
-
-      recordType: "XM.TaskListItem",
-
-      editableModel: "XM.Task"
-
-    });
-
-    XM.TaskListItem = XM.TaskListItem.extend(XM.ProjectStatus);
 
     /**
       @class
