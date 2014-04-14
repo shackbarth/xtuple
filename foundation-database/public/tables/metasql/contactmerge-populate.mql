@@ -1,0 +1,40 @@
+-- Group: contactmerge
+-- Name: populate
+-- Notes: Queries selected contact info
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT cntct.*,
+  crmacct_number,
+  crmacct_name,
+  addr.*,
+  CASE WHEN cntctsel_mrg_first_name THEN 'emphasis' END AS cntct_first_name_qtforegroundrole,
+  CASE WHEN cntctsel_mrg_last_name THEN 'emphasis' END AS cntct_last_name_qtforegroundrole,
+  CASE WHEN cntctsel_mrg_honorific THEN 'emphasis' END AS cntct_honorific_qtforegroundrole,
+  CASE WHEN cntctsel_mrg_initials THEN 'emphasis' END AS cntct_initials_qtforegroundrole,
+  CASE WHEN cntctsel_mrg_phone THEN 'emphasis' END AS cntct_phone_qtforegroundrole,
+  CASE WHEN cntctsel_mrg_phone2 THEN 'emphasis' END AS cntct_phone2_qtforegroundrole,
+  CASE WHEN cntctsel_mrg_fax THEN 'emphasis' END AS cntct_fax_qtforegroundrole,
+  CASE WHEN cntctsel_mrg_email THEN 'emphasis' END AS cntct_email_qtforegroundrole,
+  CASE WHEN cntctsel_mrg_webaddr THEN 'emphasis' END AS cntct_webaddr_qtforegroundrole,
+  CASE WHEN cntctsel_mrg_notes THEN 'emphasis' END AS cntct_notes_qtforegroundrole,
+  CASE WHEN cntctsel_mrg_title THEN 'emphasis' END AS cntct_title_qtforegroundrole,
+  CASE WHEN cntctsel_mrg_middle THEN 'emphasis' END AS cntct_middle_qtforegroundrole,
+  CASE WHEN cntctsel_mrg_suffix THEN 'emphasis' END AS cntct_suffix_qtforegroundrole,
+  CASE WHEN cntctsel_mrg_owner_username THEN 'emphasis' END AS cntct_owner_username_qtforegroundrole,
+  CASE WHEN cntctsel_mrg_crmacct_id THEN 'emphasis' END AS crmacct_number_qtforegroundrole,
+  CASE WHEN cntctsel_mrg_crmacct_id THEN 'emphasis' END AS crmacct_name_qtforegroundrole,
+  CASE WHEN cntctsel_mrg_addr_id THEN 'emphasis' END AS addr_line1_qtforegroundrole,
+  CASE WHEN cntctsel_mrg_addr_id THEN 'emphasis' END AS addr_line2_qtforegroundrole,
+  CASE WHEN cntctsel_mrg_addr_id THEN 'emphasis' END AS addr_line3_qtforegroundrole,
+  CASE WHEN cntctsel_mrg_addr_id THEN 'emphasis' END AS addr_city_qtforegroundrole,
+  CASE WHEN cntctsel_mrg_addr_id THEN 'emphasis' END AS addr_state_qtforegroundrole,
+  CASE WHEN cntctsel_mrg_addr_id THEN 'emphasis' END AS addr_postalcode_qtforegroundrole,
+  CASE WHEN cntctsel_mrg_addr_id THEN 'emphasis' END AS addr_country_qtforegroundrole,
+  CASE WHEN cntctsel_mrg_addr_id THEN 'emphasis' END AS addr_notes_qtforegroundrole,
+  CASE WHEN cntctsel_mrg_addr_id THEN 'emphasis' END AS addr_number_qtforegroundrole
+FROM cntctsel
+  JOIN cntct ON (cntctsel_cntct_id=cntct_id)
+  LEFT OUTER JOIN addr ON (cntct_addr_id=addr_id)
+  LEFT OUTER JOIN crmacct ON (cntct_crmacct_id=crmacct_id)
+WHERE (cntctsel_target=<? value("target") ?>);

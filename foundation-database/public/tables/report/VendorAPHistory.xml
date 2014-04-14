@@ -1,0 +1,761 @@
+<!DOCTYPE openRPTDef>
+<report>
+ <title>Vendor AP History</title>
+ <name>VendorAPHistory</name>
+ <description></description>
+ <size>Letter</size>
+ <portrait/>
+ <topmargin>50</topmargin>
+ <bottommargin>50</bottommargin>
+ <rightmargin>50</rightmargin>
+ <leftmargin>50</leftmargin>
+ <querysource>
+  <name>head</name>
+  <sql>SELECT vend_number,
+       vend_name,
+       formatDate(&lt;? value("startDate") ?>, 'Earliest') AS startdate,
+       formatDate(&lt;? value("endDate") ?>, 'Latest') AS enddate
+  FROM vendinfo
+ WHERE (vend_id=&lt;? value("vend_id") ?>);</sql>
+ </querysource>
+ <querysource>
+  <name>detail</name>
+  <sql>SELECT 1 AS type, apopen_id, -1 AS applyid,
+       apopen_docdate AS sortdate, apopen_docnumber AS sortnumber,
+       apopen_docnumber AS docnumber,
+       formatBoolYN(apopen_open) AS f_open,
+       CASE WHEN (apopen_doctype='V') THEN text('Voucher')
+            WHEN (apopen_doctype='C') THEN text('C/M')
+            WHEN (apopen_doctype='D') THEN text('D/M')
+            ELSE text('Other')
+       END AS documenttype,
+       apopen_invcnumber AS invoicenumber,
+       apopen_ponumber AS ponumber,
+       formatDate(apopen_docdate) AS f_docdate,
+       formatDate(apopen_duedate) AS f_duedate,
+       formatMoney(apopen_amount) AS f_amount,
+       formatMoney((apopen_amount - apopen_paid)) AS f_balance
+FROM apopen
+WHERE ( (apopen_vend_id=&lt;? value("vend_id") ?>)
+ AND (apopen_docdate BETWEEN &lt;? value("startDate") ?> AND &lt;? value("endDate") ?>) )
+
+UNION
+SELECT 2 AS type, apopen_id, apapply_source_apopen_id AS applyid,
+       apopen_docdate AS sortdate, apopen_docnumber AS sortnumber,
+       apapply_source_docnumber AS docnumber,
+       '' AS f_open,
+       CASE WHEN (apapply_source_doctype='C') THEN text('C/M')
+            WHEN (apapply_source_doctype='K') THEN text('Check')
+            ELSE text('Other')
+       END AS documenttype,
+       '' AS invoicenumber,
+       '' AS ponumber,
+       formatDate(apapply_postdate) AS f_docdate,
+       '' AS f_duedate,
+       formatMoney(apapply_amount) AS f_amount,
+       '' AS f_balance
+FROM apapply, apopen
+WHERE ( (apapply_target_apopen_id=apopen_id)
+ AND (apapply_vend_id=&lt;? value("vend_id") ?>)
+ AND (apopen_vend_id=&lt;? value("vend_id") ?>)
+ AND (apopen_docdate BETWEEN &lt;? value("startDate") ?> AND &lt;? value("endDate") ?>) )
+
+UNION
+SELECT 3 AS type, apopen_id, apapply_target_apopen_id AS applyid,
+       apopen_docdate AS sortdate, apopen_docnumber AS sortnumber,
+       apapply_target_docnumber AS docnumber,
+       '' AS f_open,
+       CASE WHEN (apapply_target_doctype='V') THEN text('Voucher')
+            WHEN (apapply_target_doctype='D') THEN text('D/M')
+            ELSE text('Other')
+       END AS documenttype,
+       apopen_invcnumber AS invoicenumber,
+       '' AS ponumber,
+       formatDate(apapply_postdate) AS f_docdate,
+       '' AS f_duedate,
+       formatMoney(apapply_amount) AS f_amount,
+       '' AS f_balance
+FROM apapply, apopen
+WHERE ( (apapply_source_doctype IN ('C', 'K'))
+ AND (apapply_source_doctype=apopen_doctype)
+ AND (apapply_source_docnumber=apopen_docnumber)
+ AND (apapply_vend_id=&lt;? value("vend_id") ?>)
+ AND (apopen_vend_id=&lt;? value("vend_id") ?>)
+ AND (apopen_docdate BETWEEN &lt;? value("startDate") ?> AND &lt;? value("endDate") ?>) )
+
+ORDER BY sortdate, apopen_id, type;</sql>
+ </querysource>
+ <rpthead>
+  <height>162</height>
+  <label>
+   <rect>
+    <x>5</x>
+    <y>140</y>
+    <width>50</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Open</string>
+  </label>
+  <field>
+   <rect>
+    <x>550</x>
+    <y>85</y>
+    <width>100</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>enddate</column>
+   </data>
+  </field>
+  <field>
+   <rect>
+    <x>95</x>
+    <y>65</y>
+    <width>150</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>vend_number</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>400</x>
+    <y>140</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Doc. Date</string>
+  </label>
+  <label>
+   <rect>
+    <x>650</x>
+    <y>140</y>
+    <width>90</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Balance</string>
+  </label>
+  <label>
+   <rect>
+    <x>570</x>
+    <y>140</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Amount</string>
+  </label>
+  <label>
+   <rect>
+    <x>444</x>
+    <y>65</y>
+    <width>100</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Start Date:</string>
+  </label>
+  <label>
+   <rect>
+    <x>55</x>
+    <y>140</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Doc. Type</string>
+  </label>
+  <label>
+   <rect>
+    <x>230</x>
+    <y>140</y>
+    <width>70</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Invoice #</string>
+  </label>
+  <label>
+   <rect>
+    <x>444</x>
+    <y>85</y>
+    <width>100</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>End Date:</string>
+  </label>
+  <line>
+   <xstart>5</xstart>
+   <ystart>155</ystart>
+   <xend>745</xend>
+   <yend>155</yend>
+   <weight>2</weight>
+  </line>
+  <label>
+   <rect>
+    <x>270</x>
+    <y>5</y>
+    <width>475</width>
+    <height>40</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>18</size>
+    <weight>bold</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Vendor History</string>
+  </label>
+  <label>
+   <rect>
+    <x>30</x>
+    <y>65</y>
+    <width>60</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Vendor:</string>
+  </label>
+  <field>
+   <rect>
+    <x>95</x>
+    <y>85</y>
+    <width>300</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>vend_name</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>145</x>
+    <y>140</y>
+    <width>70</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Doc. #</string>
+  </label>
+  <field>
+   <rect>
+    <x>550</x>
+    <y>65</y>
+    <width>100</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>startdate</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>485</x>
+    <y>140</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Due Date</string>
+  </label>
+  <label>
+   <rect>
+    <x>315</x>
+    <y>140</y>
+    <width>70</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>P/O #</string>
+  </label>
+ </rpthead>
+ <pghead>
+  <firstpage/>
+  <height>6</height>
+ </pghead>
+ <pghead>
+  <height>21</height>
+  <line>
+   <xstart>5</xstart>
+   <ystart>15</ystart>
+   <xend>745</xend>
+   <yend>14</yend>
+   <weight>2</weight>
+  </line>
+  <label>
+   <rect>
+    <x>370</x>
+    <y>0</y>
+    <width>90</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Doc. Date</string>
+  </label>
+  <label>
+   <rect>
+    <x>560</x>
+    <y>0</y>
+    <width>90</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Amount</string>
+  </label>
+  <label>
+   <rect>
+    <x>655</x>
+    <y>0</y>
+    <width>90</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Balance</string>
+  </label>
+  <label>
+   <rect>
+    <x>5</x>
+    <y>0</y>
+    <width>50</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Open</string>
+  </label>
+  <label>
+   <rect>
+    <x>465</x>
+    <y>0</y>
+    <width>90</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Due Date</string>
+  </label>
+  <label>
+   <rect>
+    <x>215</x>
+    <y>0</y>
+    <width>112</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Doc. #</string>
+  </label>
+  <label>
+   <rect>
+    <x>60</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Doc. Type</string>
+  </label>
+ </pghead>
+ <section>
+  <name>detail</name>
+  <detail>
+   <key>
+    <query>detail</query>
+   </key>
+   <height>17</height>
+   <field>
+    <rect>
+     <x>400</x>
+     <y>0</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <hcenter/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_docdate</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>570</x>
+     <y>0</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_amount</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>655</x>
+     <y>0</y>
+     <width>90</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_balance</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>315</x>
+     <y>0</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>ponumber</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>60</x>
+     <y>0</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>documenttype</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>485</x>
+     <y>0</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <hcenter/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_duedate</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>5</x>
+     <y>0</y>
+     <width>50</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <hcenter/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_open</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>145</x>
+     <y>0</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>docnumber</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>230</x>
+     <y>0</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>invoicenumber</column>
+    </data>
+   </field>
+  </detail>
+ </section>
+ <pgfoot>
+  <height>17</height>
+  <field>
+   <rect>
+    <x>705</x>
+    <y>0</y>
+    <width>40</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>Context Query</query>
+    <column>page_number</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>600</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Page:</string>
+  </label>
+  <field>
+   <rect>
+    <x>104</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>Context Query</query>
+    <column>report_date</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Report Date:</string>
+  </label>
+ </pgfoot>
+</report>

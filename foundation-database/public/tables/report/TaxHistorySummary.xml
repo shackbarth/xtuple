@@ -1,0 +1,1237 @@
+<!DOCTYPE openRPTDef>
+<report>
+ <title>Tax History Summary</title>
+ <name>TaxHistorySummary</name>
+ <description></description>
+ <size>Letter</size>
+ <portrait/>
+ <topmargin>50</topmargin>
+ <bottommargin>50</bottommargin>
+ <rightmargin>50</rightmargin>
+ <leftmargin>50</leftmargin>
+ <querysource>
+  <name>head</name>
+  <sql>SELECT &lt;? if exists("showSales") ?>
+         'Yes'
+       &lt;? else ?>
+         'No'
+       &lt;? endif ?>
+       AS showSales,
+       &lt;? if exists("showPurchases") ?>
+         'Yes'
+       &lt;? else ?>
+         'No'
+       &lt;? endif ?>
+       AS showPurchases,
+       &lt;? value("groupProper") ?> AS group,
+       &lt;? value("groupProper") ?> || ':' AS selectionLit,
+       &lt;? value("selection") ?> AS selection,
+       &lt;? if exists("distDate") ?>
+         text('Distribution Date')
+       &lt;? else ?>
+         text('Document Date')
+       &lt;? endif ?>
+       AS basis,
+       formatDate(&lt;? value("startDate") ?>) AS startdate,
+       formatDate(&lt;? value("endDate") ?>) AS enddate;</sql>
+ </querysource>
+ <querysource>
+  <name>detail</name>
+  <sql>-----------BEGIN SUMMARY----------
+SELECT &lt;? literal("groupBy") ?> AS group, 
+  &lt;? literal("groupBy") ?>_descrip AS description, 
+  formatMoney(SUM(salesbase)) AS f_salesbase,
+  formatMoney(SUM(freightbase)) AS f_freightbase, 
+  CASE WHEN (SUM(freighttax) > 0) THEN true ELSE false END AS freighttax, 
+  SUM(salestaxbase) AS salestaxbase,
+  formatMoney(SUM(salestaxbase)) AS f_salestaxbase,
+  formatMoney(SUM(purchasebase)) AS f_purchasebase,
+  SUM(purchasetaxbase) * -1 AS purchasetaxbase, 
+  formatMoney(SUM(purchasetaxbase) * -1) AS f_purchasetaxbase, 
+  SUM(salestaxbase) + SUM(purchasetaxbase) AS nettaxbase,
+  formatMoney(SUM(salestaxbase) + SUM(purchasetaxbase)) AS f_nettaxbase
+FROM (
+------------END SUMMARY--------------
+&lt;? if exists("showSales") ?>
+------------BEGIN SALES--------------
+-- All sales tax history including memos 
+SELECT 
+  taxhist_distdate, 
+  tax_code AS tax, tax_descrip,
+  COALESCE(taxtype_name,&lt;? value("none") ?>) AS taxtype, taxtype_descrip,
+  COALESCE(taxclass_code,&lt;? value("none") ?>) AS taxclass, taxclass_descrip,
+  COALESCE(taxauth_code,&lt;? value("none") ?>) AS taxauth, taxauth_name AS taxauth_descrip,
+  COALESCE(taxzone_code,&lt;? value("none") ?>) AS taxzone, taxzone_descrip, curr_abbr, 
+  CASE
+    WHEN (cohist_doctype != 'C') THEN
+      cohist_invcnumber
+    ELSE
+      cohist_ordernumber
+  END AS docnumber, 
+  &lt;? value("sales") ?> AS source,
+  CASE
+    WHEN (cohist_doctype='I') THEN
+      &lt;? value("invoice") ?>
+    WHEN (cohist_doctype='C') THEN
+      &lt;? value("creditmemo") ?> 
+    WHEN (cohist_doctype='D') THEN
+      &lt;? value("debitmemo") ?>
+    ELSE
+      &lt;? value("other") ?>
+  END AS doctype,
+  item_number, COALESCE(item_descrip1,cohist_misc_descrip) AS description,
+  CASE
+    WHEN (cohist_doctype != 'C') THEN
+      cohist_ordernumber 
+  END AS ordernumber, cohist_invcdate AS docdate,
+  cohist_billtoname AS name, 
+  cohist_qtyshipped AS qty, 
+  cohist_unitprice AS unitprice, (cohist_qtyshipped * cohist_unitprice) AS amount,
+  CASE
+    WHEN (cohist_misc_type IS NULL OR cohist_misc_type IN ('M','F')) THEN
+      currToBase(cohist_curr_id, cohist_qtyshipped * cohist_unitprice, cohist_invcdate) 
+    ELSE 0
+  END AS salesbase,
+  CASE
+    WHEN (cohist_misc_type = 'F') THEN
+      currToBase(cohist_curr_id, cohist_qtyshipped * cohist_unitprice, cohist_invcdate) 
+    ELSE 0
+  END AS freightbase,
+  CASE
+    WHEN (cohist_misc_type = 'F') THEN
+      taxhist_tax / taxhist_curr_rate
+    ELSE 0
+  END AS freighttax,
+  0 AS purchasebase,
+  taxhist_tax AS taxlocal,
+  taxhist_tax / taxhist_curr_rate AS taxbase,
+  taxhist_tax / taxhist_curr_rate AS salestaxbase,
+  0 AS purchasetaxbase
+FROM cohisttax
+ JOIN cohist ON (cohist_id=taxhist_parent_id)
+ JOIN taxtype ON (taxtype_id=taxhist_taxtype_id)
+ JOIN tax ON (tax_id=taxhist_tax_id)
+ JOIN curr_symbol ON (curr_id=taxhist_curr_id)
+ LEFT OUTER JOIN taxclass ON (tax_taxclass_id=taxclass_id)
+ LEFT OUTER JOIN taxauth ON (tax_taxauth_id=taxauth_id)
+ LEFT OUTER JOIN taxzone ON (cohist_taxzone_id=taxzone_id)
+ LEFT OUTER JOIN itemsite ON (cohist_itemsite_id=itemsite_id)
+ LEFT OUTER JOIN item ON (itemsite_item_id=item_id)
+&lt;? if exists("distDate") ?>
+WHERE ((taxhist_distdate BETWEEN &lt;? value("startDate") ?>
+                             AND &lt;? value("endDate") ?>)
+&lt;? else ?>
+WHERE ((taxhist_docdate BETWEEN &lt;? value("startDate") ?>
+                             AND &lt;? value("endDate") ?>)
+&lt;? endif ?>
+&lt;? if exists("tax_id") ?>
+ AND (taxhist_tax_id=&lt;? value("tax_id") ?>)
+&lt;? endif ?>
+&lt;? if exists("taxtype_id") ?>
+ AND (taxhist_taxtype_id=&lt;? value("taxtype_id") ?>)
+&lt;? endif ?>
+&lt;? if exists("taxclass_id") ?>
+ AND (taxclass_id=&lt;? value("taxclass_id") ?>)
+&lt;? endif ?>
+&lt;? if exists("taxauth_id") ?>
+ AND (taxauth_id=&lt;? value("taxauth_id") ?>)
+&lt;? endif ?>
+&lt;? if exists("taxzone_id") ?>
+ AND (taxzone_id=&lt;? value("taxzone_id") ?>)
+&lt;? endif ?>
+)
+&lt;? endif ?>
+--------------END SALES--------------------
+&lt;? if exists("showPurchases") ?>
+&lt;? if exists("showSales") ?>
+-- Union because sales and purchase shown together
+UNION ALL
+&lt;? endif ?>
+&lt;? endif ?>
+------------BEGIN PURCHASE----------------
+&lt;? if exists("showPurchases") ?>
+-- A/P Memo history
+SELECT 
+  taxhist_distdate, 
+  tax_code AS tax, tax_descrip,
+  COALESCE(taxtype_name,&lt;? value("none") ?>) AS taxtype, taxtype_descrip,
+  COALESCE(taxclass_code,&lt;? value("none") ?>) AS taxclass, taxclass_descrip,
+  COALESCE(taxauth_code,&lt;? value("none") ?>) AS taxauth, taxauth_name AS taxauth_descrip,
+  &lt;? value("none") ?> AS taxzone,'' AS taxzone_descrip, curr_abbr, 
+  apopen_docnumber AS docnumber, 
+  &lt;? value("purchase") ?> AS source,
+  CASE
+    WHEN (apopen_doctype='C') THEN
+      &lt;? value("creditmemo") ?> 
+    WHEN (apopen_doctype='D') THEN
+      &lt;? value("debitmemo") ?>
+    ELSE
+      &lt;? value("other") ?>
+  END AS doctype,
+  '' AS item_number, apopen_notes AS description,
+  apopen_ponumber AS ordernumber, apopen_docdate AS docdate,
+  vend_name AS name, 
+  1 AS qty, 
+  apopen_amount AS unitprice, apopen_amount AS amount,
+  0 AS salesbase,
+  0 AS freightbase,
+  0 AS freighttax,
+  apopen_amount / apopen_curr_rate AS purchasebase,
+  taxhist_tax AS taxlocal,
+  taxhist_tax / taxhist_curr_rate AS taxbase,
+  0 AS salestaxbase,
+  taxhist_tax / taxhist_curr_rate AS purchasetaxbase
+FROM apopentax
+ JOIN apopen ON (apopen_id=taxhist_parent_id)
+ JOIN vendinfo ON (apopen_vend_id=vend_id)
+ JOIN taxtype ON (taxtype_id=taxhist_taxtype_id)
+ JOIN tax ON (tax_id=taxhist_tax_id)
+ JOIN curr_symbol ON (curr_id=taxhist_curr_id)
+ LEFT OUTER JOIN taxclass ON (tax_taxclass_id=taxclass_id)
+ LEFT OUTER JOIN taxauth ON (tax_taxauth_id=taxauth_id)
+&lt;? if exists("distDate") ?>
+WHERE ((taxhist_distdate BETWEEN &lt;? value("startDate") ?>
+                             AND &lt;? value("endDate") ?>)
+&lt;? else ?>
+WHERE ((taxhist_docdate BETWEEN &lt;? value("startDate") ?>
+                             AND &lt;? value("endDate") ?>)
+&lt;? endif ?>
+&lt;? if exists("tax_id") ?>
+ AND (taxhist_tax_id=&lt;? value("tax_id") ?>)
+&lt;? endif ?>
+&lt;? if exists("taxtype_id") ?>
+ AND (taxhist_taxtype_id=&lt;? value("taxtype_id") ?>)
+&lt;? endif ?>
+&lt;? if exists("taxclass_id") ?>
+ AND (taxclass_id=&lt;? value("taxclass_id") ?>)
+&lt;? endif ?>
+&lt;? if exists("taxauth_id") ?>
+ AND (taxauth_id=&lt;? value("taxauth_id") ?>)
+&lt;? endif ?>
+&lt;? if exists("taxzone_id") ?>
+ AND (false)
+&lt;? endif ?>
+ AND (taxhist_distdate IS NOT NULL)
+)
+UNION ALL
+--Voucher Header History
+SELECT 
+  taxhist_distdate, 
+  tax_code AS tax, tax_descrip,
+  COALESCE(taxtype_name,&lt;? value("none") ?>) AS taxtype, taxtype_descrip,
+  COALESCE(taxclass_code,&lt;? value("none") ?>) AS taxclass, taxclass_descrip,
+  COALESCE(taxauth_code,&lt;? value("none") ?>) AS taxauth, taxauth_name AS taxauth_descrip,
+  COALESCE(taxzone_code,&lt;? value("none") ?>) AS taxzone, taxzone_descrip, curr_abbr, 
+  vohead_number AS docnumber, 
+  &lt;? value("purchase") ?> AS source,
+  &lt;? value("voucher") ?>  AS doctype,
+  '', vohead_notes AS description,
+  pohead_number AS ordernumber, vohead_docdate AS docdate,
+  vend_name AS name, 
+  1 AS qty, 
+  0 AS unitprice, 0 AS amount,
+  0 AS salesbase,
+  0 AS freightbase,
+  0 AS freighttax,
+  0 AS purchasebase,
+  taxhist_tax AS taxlocal,
+  taxhist_tax / taxhist_curr_rate AS taxbase,
+  0 AS salestaxbase,
+  taxhist_tax / taxhist_curr_rate AS purchasetaxbase
+FROM voheadtax
+ JOIN vohead ON (vohead_id=taxhist_parent_id)
+ LEFT OUTER JOIN pohead ON (vohead_pohead_id=pohead_id)
+ JOIN vendinfo ON (vohead_vend_id=vend_id)
+ JOIN taxtype ON (taxtype_id=taxhist_taxtype_id)
+ JOIN tax ON (tax_id=taxhist_tax_id)
+ JOIN curr_symbol ON (curr_id=taxhist_curr_id)
+ LEFT OUTER JOIN taxclass ON (tax_taxclass_id=taxclass_id)
+ LEFT OUTER JOIN taxauth ON (tax_taxauth_id=taxauth_id)
+ LEFT OUTER JOIN taxzone ON (vohead_taxzone_id=taxzone_id)
+&lt;? if exists("distDate") ?>
+WHERE ((taxhist_distdate BETWEEN &lt;? value("startDate") ?>
+                             AND &lt;? value("endDate") ?>)
+&lt;? else ?>
+WHERE ((taxhist_docdate BETWEEN &lt;? value("startDate") ?>
+                             AND &lt;? value("endDate") ?>)
+&lt;? endif ?>
+&lt;? if exists("tax_id") ?>
+ AND (taxhist_tax_id=&lt;? value("tax_id") ?>)
+&lt;? endif ?>
+&lt;? if exists("taxtype_id") ?>
+ AND (taxhist_taxtype_id=&lt;? value("taxtype_id") ?>)
+&lt;? endif ?>
+&lt;? if exists("taxclass_id") ?>
+ AND (_taxclass_id=&lt;? value("taxclass_id") ?>)
+&lt;? endif ?>
+&lt;? if exists("taxauth_id") ?>
+ AND (taxauth_id=&lt;? value("taxauth_id") ?>)
+&lt;? endif ?>
+&lt;? if exists("taxzone_id") ?>
+ AND (taxzone_id=&lt;? value("taxzone_id") ?>)
+&lt;? endif ?>
+ AND (taxhist_distdate IS NOT NULL)
+)
+UNION ALL
+--Voucher Line Item
+SELECT 
+  taxhist_distdate, 
+  tax_code AS tax, tax_descrip,
+  COALESCE(taxtype_name,&lt;? value("none") ?>) AS taxtype, taxtype_descrip,
+  COALESCE(taxclass_code,&lt;? value("none") ?>) AS taxclass, taxclass_descrip,
+  COALESCE(taxauth_code,&lt;? value("none") ?>) AS taxauth, taxauth_name AS taxauth_descrip,
+  COALESCE(taxzone_code,&lt;? value("none") ?>) AS taxzone, taxzone_descrip, curr_abbr, 
+  vohead_number AS docnumber, 
+  &lt;? value("purchase") ?> AS source,
+  &lt;? value("voucher") ?>  AS doctype,
+  COALESCE(item_number,expcat_code), COALESCE(item_descrip1,expcat_descrip) AS description,
+  pohead_number AS ordernumber, vohead_docdate AS docdate,
+  vend_name AS name, 
+  voitem_qty AS qty, 
+  COALESCE(SUM(vodist_amount),0)/voitem_qty AS unitprice, COALESCE(SUM(vodist_amount),0) AS amount,
+  0 AS salesbase,
+  0 AS freightbase,
+  0 AS freighttax,
+  currToBase(vohead_curr_id, COALESCE(SUM(vodist_amount),0), vohead_distdate)  AS purchasebase,
+  taxhist_tax AS taxlocal,
+  taxhist_tax / taxhist_curr_rate AS taxbase,
+  0 AS salestaxbase,
+  taxhist_tax / taxhist_curr_rate AS purchasetaxbase
+FROM voitemtax
+ JOIN voitem ON (voitem_id=taxhist_parent_id)
+ JOIN vohead ON (vohead_id=voitem_vohead_id)
+ JOIN pohead ON (vohead_pohead_id=pohead_id)
+ JOIN poitem ON (voitem_poitem_id=poitem_id)
+ JOIN vodist ON ((vodist_poitem_id=poitem_id)
+            AND  (vodist_vohead_id=vohead_id))
+ JOIN vendinfo ON (vohead_vend_id=vend_id)
+ JOIN taxtype ON (taxtype_id=taxhist_taxtype_id)
+ JOIN tax ON (tax_id=taxhist_tax_id)
+ JOIN curr_symbol ON (curr_id=taxhist_curr_id)
+ LEFT OUTER JOIN taxclass ON (tax_taxclass_id=taxclass_id)
+ LEFT OUTER JOIN taxauth ON (tax_taxauth_id=taxauth_id)
+ LEFT OUTER JOIN taxzone ON (vohead_taxzone_id=taxzone_id)
+ LEFT OUTER JOIN itemsite ON (poitem_itemsite_id=itemsite_id)
+ LEFT OUTER JOIN item ON (itemsite_item_id=item_id)
+ LEFT OUTER JOIN expcat ON (expcat_id=poitem_expcat_id)
+&lt;? if exists("distDate") ?>
+WHERE ((taxhist_distdate BETWEEN &lt;? value("startDate") ?>
+                             AND &lt;? value("endDate") ?>)
+&lt;? else ?>
+WHERE ((taxhist_docdate BETWEEN &lt;? value("startDate") ?>
+                             AND &lt;? value("endDate") ?>)
+&lt;? endif ?>
+&lt;? if exists("tax_id") ?>
+ AND (taxhist_tax_id=&lt;? value("tax_id") ?>)
+&lt;? endif ?>
+&lt;? if exists("taxtype_id") ?>
+ AND (taxhist_taxtype_id=&lt;? value("taxtype_id") ?>)
+&lt;? endif ?>
+&lt;? if exists("taxclass_id") ?>
+ AND (taxclass_id=&lt;? value("taxclass_id") ?>)
+&lt;? endif ?>
+&lt;? if exists("taxauth_id") ?>
+ AND (taxauth_id=&lt;? value("taxauth_id") ?>)
+&lt;? endif ?>
+&lt;? if exists("taxzone_id") ?>
+ AND (taxzone_id=&lt;? value("taxzone_id") ?>)
+&lt;? endif ?>
+ AND (taxhist_distdate IS NOT NULL)
+)
+GROUP BY taxhist_id,taxhist_distdate,tax_code,tax_descrip,
+  taxtype_name,taxtype_descrip,taxclass_code,taxclass_descrip,
+  taxauth_code,taxauth_descrip,taxzone,taxzone_descrip,curr_abbr,
+  vohead_number,pohead_number,item_number,item_descrip1,
+  vohead_curr_id,vohead_distdate,vohead_docdate,vend_name,
+  expcat_code,expcat_descrip,taxhist_tax,taxhist_curr_rate,
+  voitem_qty
+&lt;? endif ?>
+-------------END PURCHASE--------------
+ORDER BY docdate DESC, docnumber DESC
+
+) AS data
+GROUP BY &lt;? literal("groupBy") ?>, &lt;? literal("groupBy") ?>_descrip
+ORDER BY &lt;? literal("groupBy") ?>
+
+</sql>
+ </querysource>
+ <rpthead>
+  <height>221</height>
+  <label>
+   <rect>
+    <x>275</x>
+    <y>10</y>
+    <width>450</width>
+    <height>37</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>18</size>
+    <weight>bold</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Tax History Summary</string>
+  </label>
+  <label>
+   <rect>
+    <x>200</x>
+    <y>199</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Freight</string>
+  </label>
+  <label>
+   <rect>
+    <x>450</x>
+    <y>199</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Purchases</string>
+  </label>
+  <line>
+   <xstart>5</xstart>
+   <ystart>215</ystart>
+   <xend>745</xend>
+   <yend>215</yend>
+   <weight>2</weight>
+  </line>
+  <field>
+   <rect>
+    <x>141</x>
+    <y>138</y>
+    <width>230</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>selection</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>105</x>
+    <y>199</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Sales</string>
+  </label>
+  <label>
+   <rect>
+    <x>350</x>
+    <y>199</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Sales Tax</string>
+  </label>
+  <field>
+   <rect>
+    <x>460.577</x>
+    <y>137.571</y>
+    <width>200</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>enddate</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>300</x>
+    <y>199</y>
+    <width>50</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Taxed</string>
+  </label>
+  <label>
+   <rect>
+    <x>550</x>
+    <y>199</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Purchase Tax</string>
+  </label>
+  <field>
+   <rect>
+    <x>460.577</x>
+    <y>116.571</y>
+    <width>200</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>startdate</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>350.577</x>
+    <y>137.571</y>
+    <width>103</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>End Date:</string>
+  </label>
+  <label>
+   <rect>
+    <x>350.577</x>
+    <y>116.571</y>
+    <width>103</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Start Date:</string>
+  </label>
+  <label>
+   <rect>
+    <x>350.577</x>
+    <y>95.9618</y>
+    <width>103</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Basis:</string>
+  </label>
+  <field>
+   <rect>
+    <x>461</x>
+    <y>96</y>
+    <width>200</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>basis</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>28.5</x>
+    <y>97</y>
+    <width>103</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Purchases:</string>
+  </label>
+  <field>
+   <rect>
+    <x>141</x>
+    <y>117</y>
+    <width>230</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>group</column>
+   </data>
+  </field>
+  <field>
+   <rect>
+    <x>65.6</x>
+    <y>138</y>
+    <width>65.9</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>selectionLit</column>
+   </data>
+  </field>
+  <field>
+   <rect>
+    <x>4</x>
+    <y>199</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>detail</query>
+    <column>group</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>652</x>
+    <y>199</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Net Tax</string>
+  </label>
+  <label>
+   <rect>
+    <x>277</x>
+    <y>185</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Freight</string>
+  </label>
+  <field>
+   <rect>
+    <x>141</x>
+    <y>97</y>
+    <width>230</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>showPurchases</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>28.5</x>
+    <y>76</y>
+    <width>103</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Sales:</string>
+  </label>
+  <field>
+   <rect>
+    <x>141</x>
+    <y>76</y>
+    <width>230</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>showSales</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>28.5</x>
+    <y>117</y>
+    <width>103</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Type:</string>
+  </label>
+ </rpthead>
+ <pghead>
+  <firstpage/>
+  <height>6</height>
+ </pghead>
+ <pghead>
+  <height>26</height>
+  <label>
+   <rect>
+    <x>200</x>
+    <y>5</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Freight</string>
+  </label>
+  <line>
+   <xstart>5</xstart>
+   <ystart>20</ystart>
+   <xend>745</xend>
+   <yend>20</yend>
+   <weight>2</weight>
+  </line>
+  <label>
+   <rect>
+    <x>300</x>
+    <y>5</y>
+    <width>50</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Taxed</string>
+  </label>
+  <label>
+   <rect>
+    <x>350</x>
+    <y>5</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Sales Tax</string>
+  </label>
+  <label>
+   <rect>
+    <x>550</x>
+    <y>5</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Purchase Tax</string>
+  </label>
+  <label>
+   <rect>
+    <x>450</x>
+    <y>5</y>
+    <width>90</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Purchase</string>
+  </label>
+  <label>
+   <rect>
+    <x>100</x>
+    <y>5</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Sales</string>
+  </label>
+  <field>
+   <rect>
+    <x>0</x>
+    <y>2</y>
+    <width>100</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>detail</query>
+    <column>group</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>649</x>
+    <y>5</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Net Tax</string>
+  </label>
+ </pghead>
+ <section>
+  <name>detail</name>
+  <detail>
+   <key>
+    <query>detail</query>
+   </key>
+   <height>19</height>
+   <field>
+    <rect>
+     <x>200</x>
+     <y>0</y>
+     <width>100</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_freightbase</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>100</x>
+     <y>0</y>
+     <width>100</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_salesbase</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>550</x>
+     <y>0</y>
+     <width>100</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_purchasetaxbase</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>450</x>
+     <y>0</y>
+     <width>100</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_purchasebase</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>100</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>group</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>350</x>
+     <y>0</y>
+     <width>100</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_salestaxbase</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>300</x>
+     <y>0</y>
+     <width>50</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <hcenter/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>freighttax</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>650</x>
+     <y>0</y>
+     <width>100</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_nettaxbase</column>
+    </data>
+   </field>
+  </detail>
+ </section>
+ <pgfoot>
+  <height>16</height>
+  <label>
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>85</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Report Date:</string>
+  </label>
+  <label>
+   <rect>
+    <x>615</x>
+    <y>0</y>
+    <width>85</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Page:</string>
+  </label>
+  <field>
+   <rect>
+    <x>90</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>Context Query</query>
+    <column>report_date</column>
+   </data>
+  </field>
+  <field>
+   <rect>
+    <x>705</x>
+    <y>0</y>
+    <width>40</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>Context Query</query>
+    <column>page_number</column>
+   </data>
+  </field>
+ </pgfoot>
+ <rptfoot>
+  <height>20</height>
+  <field>
+   <rect>
+    <x>650</x>
+    <y>3</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <data>
+    <query>detail</query>
+    <column>nettaxbase</column>
+   </data>
+   <tracktotal builtin="true" >money</tracktotal>
+  </field>
+  <field>
+   <rect>
+    <x>350</x>
+    <y>3</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <data>
+    <query>detail</query>
+    <column>salestaxbase</column>
+   </data>
+   <tracktotal builtin="true" >qty</tracktotal>
+  </field>
+  <field>
+   <rect>
+    <x>551</x>
+    <y>3</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <data>
+    <query>detail</query>
+    <column>purchasetaxbase</column>
+   </data>
+   <tracktotal builtin="true" >money</tracktotal>
+  </field>
+  <label>
+   <rect>
+    <x>0</x>
+    <y>3</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Total:</string>
+  </label>
+ </rptfoot>
+</report>

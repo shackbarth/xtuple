@@ -1,0 +1,1078 @@
+<!DOCTYPE openRPTDef>
+<report>
+ <title>G/L Series</title>
+ <name>GLSeries</name>
+ <description></description>
+ <grid>
+  <snap/>
+  <show/>
+  <x>0.05</x>
+  <y>0.05</y>
+ </grid>
+ <size>Letter</size>
+ <portrait/>
+ <topmargin>50</topmargin>
+ <bottommargin>50</bottommargin>
+ <rightmargin>50</rightmargin>
+ <leftmargin>50</leftmargin>
+ <querysource>
+  <name>head</name>
+  <sql>SELECT &lt;? value("title") ?> AS title,
+       formatDate(&lt;? value("startDate") ?>, 'Earliest') AS startdate,
+       formatDate(&lt;? value("endDate") ?>, 'Latest') AS enddate,
+       &lt;? if exists("sourceLit") ?>
+         text(&lt;? value("sourceLit") ?>)
+       &lt;? else ?>
+         text('All Sources')
+       &lt;? endif  ?>
+       AS sourceLit,
+       &lt;? if exists("startJrnlnum") ?>
+         text('Start Journal Number:')
+       &lt;? else ?>
+         text('')
+       &lt;? endif ?>
+       AS startJrnlnumLit,
+       &lt;? if exists("endJrnlnum") ?>
+         text('End Journal Number:')
+       &lt;? else ?>
+         text('')
+       &lt;? endif ?>
+       AS endJrnlnumLit;</sql>
+ </querysource>
+ <querysource>
+  <name>detail</name>
+  <sql>&lt;? if exists("gltrans") ?>
+SELECT gltrans_id,
+       gltrans_sequence,
+       formatDate(gltrans_date) AS transdate,
+       gltrans_journalnumber,
+       gltrans_source,
+       gltrans_doctype,
+       gltrans_docnumber,
+       (formatGLAccount(accnt_id) || ' - ' || accnt_descrip) AS account,
+       firstLine(gltrans_notes) AS f_notes,
+       CASE WHEN (gltrans_amount &lt; 0) THEN formatMoney(gltrans_amount * -1)
+            ELSE ''
+       END AS f_debit,
+       CASE WHEN (gltrans_amount > 0) THEN formatMoney(gltrans_amount)
+            ELSE ''
+       END AS f_credit,
+       CASE WHEN (gltrans_amount &lt; 0) THEN (gltrans_amount * -1)
+            ELSE 0.0
+       END AS debit,
+       CASE WHEN (gltrans_amount > 0) THEN (gltrans_amount)
+            ELSE 0.0
+       END AS credit,
+       formatBoolYN(gltrans_posted) AS f_posted
+  FROM gltrans, accnt
+ WHERE ((gltrans_accnt_id=accnt_id)
+   AND (NOT gltrans_deleted)
+&lt;? if exists("startDate") ?>
+   AND (gltrans_date BETWEEN &lt;? value("startDate") ?> AND &lt;? value("endDate") ?>)
+&lt;? endif ?>
+&lt;? if exists("source") ?>
+   AND (gltrans_source=&lt;? value("source") ?>)
+&lt;? endif ?>
+&lt;? if exists("startJrnlnum") ?>
+   AND (gltrans_journalnumber BETWEEN &lt;? value("startJrnlnum") ?> AND &lt;? value("endJrnlnum") ?>)
+&lt;? endif ?>
+       )
+ORDER BY gltrans_date, gltrans_sequence, gltrans_amount DESC;
+&lt;? else ?>
+SELECT sltrans_id AS gltrans_id,
+       sltrans_sequence AS gltrans_sequence,
+       formatDate(sltrans_date) AS transdate,
+       sltrans_journalnumber AS gltrans_journalnumber,
+       sltrans_source AS gltrans_source,
+       sltrans_doctype AS gltrans_doctype,
+       sltrans_docnumber AS gltrans_docnumber,
+       (formatGLAccount(accnt_id) || ' - ' || accnt_descrip) AS account,
+       firstLine(sltrans_notes) AS f_notes,
+       CASE WHEN (sltrans_amount &lt; 0) THEN formatMoney(sltrans_amount * -1)
+            ELSE ''
+       END AS f_debit,
+       CASE WHEN (sltrans_amount > 0) THEN formatMoney(sltrans_amount)
+            ELSE ''
+       END AS f_credit,
+       CASE WHEN (sltrans_amount &lt; 0) THEN (sltrans_amount * -1)
+            ELSE 0.0
+       END AS debit,
+       CASE WHEN (sltrans_amount > 0) THEN (sltrans_amount)
+            ELSE 0.0
+       END AS credit,
+       formatBoolYN(sltrans_posted) AS f_posted
+  FROM sltrans, accnt
+ WHERE ((sltrans_accnt_id=accnt_id)
+&lt;? if exists("startDate") ?>
+   AND (sltrans_date BETWEEN &lt;? value("startDate") ?> AND &lt;? value("endDate") ?>)
+&lt;? endif ?>
+&lt;? if exists("source") ?>
+   AND (sltrans_source=&lt;? value("source") ?>)
+&lt;? endif ?>
+&lt;? if exists("startJrnlnum") ?>
+   AND (sltrans_journalnumber BETWEEN &lt;? value("startJrnlnum") ?> AND &lt;? value("endJrnlnum") ?>)
+&lt;? endif ?>
+       )
+ORDER BY sltrans_date, sltrans_sequence, sltrans_amount DESC;
+&lt;? endif ?></sql>
+ </querysource>
+ <querysource>
+  <name>summarized</name>
+  <sql>&lt;? if exists("gltrans") ?>
+SELECT (formatGLAccount(accnt_id) || ' - ' || accnt_descrip) AS account,
+       formatMoney(SUM(CASE WHEN (gltrans_amount &lt; 0) THEN (gltrans_amount * -1)
+                            ELSE 0.0
+                       END)) AS f_debit,
+       formatMoney(SUM(CASE WHEN (gltrans_amount > 0) THEN (gltrans_amount)
+                            ELSE 0.0
+                       END)) AS f_credit
+  FROM gltrans, accnt
+ WHERE ((gltrans_accnt_id=accnt_id)
+   AND (NOT gltrans_deleted)
+&lt;? if exists("startDate") ?>
+   AND (gltrans_date BETWEEN &lt;? value("startDate") ?> AND &lt;? value("endDate") ?>)
+&lt;? endif ?>
+&lt;? if exists("source") ?>
+   AND (gltrans_source=&lt;? value("source") ?>)
+&lt;? endif ?>
+&lt;? if exists("startJrnlnum") ?>
+   AND (gltrans_journalnumber BETWEEN &lt;? value("startJrnlnum") ?> AND &lt;? value("endJrnlnum") ?>)
+&lt;? endif ?>
+       )
+GROUP BY accnt_id, accnt_descrip
+ORDER BY formatGLAccount(accnt_id);
+&lt;? else ?>
+SELECT (formatGLAccount(accnt_id) || ' - ' || accnt_descrip) AS account,
+       formatMoney(SUM(CASE WHEN (sltrans_amount &lt; 0) THEN (sltrans_amount * -1)
+                            ELSE 0.0
+                       END)) AS f_debit,
+       formatMoney(SUM(CASE WHEN (sltrans_amount > 0) THEN (sltrans_amount)
+                            ELSE 0.0
+                       END)) AS f_credit
+  FROM sltrans, accnt
+ WHERE ((sltrans_accnt_id=accnt_id)
+&lt;? if exists("startDate") ?>
+   AND (sltrans_date BETWEEN &lt;? value("startDate") ?> AND &lt;? value("endDate") ?>)
+&lt;? endif ?>
+&lt;? if exists("source") ?>
+   AND (sltrans_source=&lt;? value("source") ?>)
+&lt;? endif ?>
+&lt;? if exists("startJrnlnum") ?>
+   AND (sltrans_journalnumber BETWEEN &lt;? value("startJrnlnum") ?> AND &lt;? value("endJrnlnum") ?>)
+&lt;? endif ?>
+       )
+GROUP BY accnt_id, accnt_descrip
+ORDER BY formatGLAccount(accnt_id);
+&lt;? endif ?></sql>
+ </querysource>
+ <rpthead>
+  <height>206</height>
+  <label>
+   <rect>
+    <x>245</x>
+    <y>185</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Doc. #</string>
+  </label>
+  <label>
+   <rect>
+    <x>409</x>
+    <y>70</y>
+    <width>130</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Start Date:</string>
+  </label>
+  <label>
+   <rect>
+    <x>680</x>
+    <y>185</y>
+    <width>60</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Posted</string>
+  </label>
+  <field>
+   <rect>
+    <x>545</x>
+    <y>120</y>
+    <width>200</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>Parameter Query</query>
+    <column>startJrnlnum</column>
+   </data>
+  </field>
+  <field>
+   <rect>
+    <x>140</x>
+    <y>70</y>
+    <width>290</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>sourceLit</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>595</x>
+    <y>185</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Credit</string>
+  </label>
+  <label>
+   <rect>
+    <x>10</x>
+    <y>185</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Date</string>
+  </label>
+  <label>
+   <rect>
+    <x>5</x>
+    <y>70</y>
+    <width>130</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Source:</string>
+  </label>
+  <label>
+   <rect>
+    <x>409</x>
+    <y>90</y>
+    <width>130</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>End Date:</string>
+  </label>
+  <field>
+   <rect>
+    <x>545</x>
+    <y>90</y>
+    <width>200</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>enddate</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>85</x>
+    <y>185</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Jrnl. #/Source</string>
+  </label>
+  <field>
+   <rect>
+    <x>340</x>
+    <y>140</y>
+    <width>200</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>endJrnlnumLit</column>
+   </data>
+  </field>
+  <line>
+   <xstart>5</xstart>
+   <ystart>200</ystart>
+   <xend>745</xend>
+   <yend>200</yend>
+   <weight>2</weight>
+  </line>
+  <label>
+   <rect>
+    <x>509</x>
+    <y>185</y>
+    <width>85</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Debit</string>
+  </label>
+  <field>
+   <rect>
+    <x>545</x>
+    <y>70</y>
+    <width>200</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>startdate</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>160</x>
+    <y>185</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Doc. Type</string>
+  </label>
+  <field>
+   <rect>
+    <x>340</x>
+    <y>120</y>
+    <width>200</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>startJrnlnumLit</column>
+   </data>
+  </field>
+  <field>
+   <rect>
+    <x>545</x>
+    <y>140</y>
+    <width>200</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>Parameter Query</query>
+    <column>endJrnlnum</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>330</x>
+    <y>185</y>
+    <width>106</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Notes/Account</string>
+  </label>
+  <field>
+   <rect>
+    <x>440</x>
+    <y>7</y>
+    <width>300</width>
+    <height>35</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>18</size>
+    <weight>bold</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>title</column>
+   </data>
+  </field>
+ </rpthead>
+ <pghead>
+  <firstpage/>
+  <height>6</height>
+ </pghead>
+ <pghead>
+  <height>21</height>
+  <label>
+   <rect>
+    <x>330</x>
+    <y>0</y>
+    <width>106</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Notes/Account</string>
+  </label>
+  <label>
+   <rect>
+    <x>245</x>
+    <y>0</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Doc. #</string>
+  </label>
+  <label>
+   <rect>
+    <x>160</x>
+    <y>0</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Doc. Type</string>
+  </label>
+  <label>
+   <rect>
+    <x>85</x>
+    <y>0</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Jrnl./Source</string>
+  </label>
+  <label>
+   <rect>
+    <x>509</x>
+    <y>0</y>
+    <width>85</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Debit</string>
+  </label>
+  <label>
+   <rect>
+    <x>10</x>
+    <y>0</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Date</string>
+  </label>
+  <label>
+   <rect>
+    <x>595</x>
+    <y>0</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Credit</string>
+  </label>
+  <line>
+   <xstart>5</xstart>
+   <ystart>15</ystart>
+   <xend>745</xend>
+   <yend>15</yend>
+   <weight>2</weight>
+  </line>
+  <label>
+   <rect>
+    <x>680</x>
+    <y>0</y>
+    <width>60</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Posted</string>
+  </label>
+ </pghead>
+ <section>
+  <name>detail</name>
+  <group>
+   <name>detail</name>
+   <column>gltrans_sequence</column>
+   <head>
+    <height>16</height>
+    <field>
+     <rect>
+      <x>95</x>
+      <y>0</y>
+      <width>60</width>
+      <height>15</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>bold</weight>
+     </font>
+     <hcenter/>
+     <vcenter/>
+     <data>
+      <query>detail</query>
+      <column>gltrans_journalnumber</column>
+     </data>
+    </field>
+    <field>
+     <rect>
+      <x>680</x>
+      <y>0</y>
+      <width>60</width>
+      <height>15</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>bold</weight>
+     </font>
+     <hcenter/>
+     <vcenter/>
+     <data>
+      <query>detail</query>
+      <column>f_posted</column>
+     </data>
+    </field>
+    <field>
+     <rect>
+      <x>160</x>
+      <y>0</y>
+      <width>80</width>
+      <height>15</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>bold</weight>
+     </font>
+     <right/>
+     <vcenter/>
+     <data>
+      <query>detail</query>
+      <column>gltrans_doctype</column>
+     </data>
+    </field>
+    <field>
+     <rect>
+      <x>330</x>
+      <y>0</y>
+      <width>175</width>
+      <height>15</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>bold</weight>
+     </font>
+     <left/>
+     <vcenter/>
+     <data>
+      <query>detail</query>
+      <column>f_notes</column>
+     </data>
+    </field>
+    <field>
+     <rect>
+      <x>10</x>
+      <y>0</y>
+      <width>80</width>
+      <height>15</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>bold</weight>
+     </font>
+     <hcenter/>
+     <vcenter/>
+     <data>
+      <query>detail</query>
+      <column>transdate</column>
+     </data>
+    </field>
+    <field>
+     <rect>
+      <x>245</x>
+      <y>0</y>
+      <width>80</width>
+      <height>15</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>bold</weight>
+     </font>
+     <right/>
+     <vcenter/>
+     <data>
+      <query>detail</query>
+      <column>gltrans_docnumber</column>
+     </data>
+    </field>
+    <field>
+     <rect>
+      <x>95</x>
+      <y>15</y>
+      <width>60</width>
+      <height>15</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>bold</weight>
+     </font>
+     <hcenter/>
+     <vcenter/>
+     <data>
+      <query>detail</query>
+      <column>gltrans_source</column>
+     </data>
+    </field>
+   </head>
+  </group>
+  <detail>
+   <key>
+    <query>detail</query>
+   </key>
+   <height>56</height>
+   <field>
+    <rect>
+     <x>595</x>
+     <y>0</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_credit</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>330</x>
+     <y>0</y>
+     <width>175</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>account</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>509</x>
+     <y>0</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_debit</column>
+    </data>
+   </field>
+  </detail>
+ </section>
+ <section>
+  <name>summarized</name>
+  <group>
+   <name>summarized header</name>
+   <column></column>
+   <head>
+    <height>35</height>
+    <label>
+     <rect>
+      <x>30</x>
+      <y>5</y>
+      <width>205</width>
+      <height>20</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>10</size>
+      <weight>normal</weight>
+     </font>
+     <right/>
+     <vcenter/>
+     <string>Summarized Distributions:</string>
+    </label>
+   </head>
+  </group>
+  <detail>
+   <key>
+    <query>summarized</query>
+   </key>
+   <height>35</height>
+   <field>
+    <rect>
+     <x>330</x>
+     <y>5</y>
+     <width>175</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>summarized</query>
+     <column>account</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>510</x>
+     <y>5</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>summarized</query>
+     <column>f_debit</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>595</x>
+     <y>5</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>summarized</query>
+     <column>f_credit</column>
+    </data>
+   </field>
+  </detail>
+ </section>
+ <pgfoot>
+  <height>21</height>
+  <label>
+   <rect>
+    <x>615</x>
+    <y>0</y>
+    <width>85</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Page:</string>
+  </label>
+  <label>
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>85</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Report Date:</string>
+  </label>
+  <field>
+   <rect>
+    <x>90</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>Context Query</query>
+    <column>report_date</column>
+   </data>
+  </field>
+  <field>
+   <rect>
+    <x>705</x>
+    <y>0</y>
+    <width>40</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>Context Query</query>
+    <column>page_number</column>
+   </data>
+  </field>
+ </pgfoot>
+ <rptfoot>
+  <height>35</height>
+  <field>
+   <rect>
+    <x>510</x>
+    <y>5</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <data>
+    <query>detail</query>
+    <column>debit</column>
+   </data>
+   <format>%0.2f</format>
+   <tracktotal/>
+  </field>
+  <field>
+   <rect>
+    <x>595</x>
+    <y>5</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <data>
+    <query>detail</query>
+    <column>credit</column>
+   </data>
+   <format>%0.2f</format>
+   <tracktotal/>
+  </field>
+  <label>
+   <rect>
+    <x>415</x>
+    <y>5</y>
+    <width>85</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+    <italic/>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Totals:</string>
+  </label>
+ </rptfoot>
+</report>

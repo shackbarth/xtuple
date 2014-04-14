@@ -1,0 +1,139 @@
+-- Group: customers
+-- Name:  detail
+-- Notes: 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT DISTINCT ON ( cust_number ) 
+  cust_id, cust_custtype_id, 
+  cust_active, cust_number, cust_name,
+  custtype_code,
+  bill_cntct.cntct_first_name AS bill_first_name,
+  bill_cntct.cntct_last_name AS bill_last_name,
+  bill_cntct.cntct_title AS bill_title,
+  bill_cntct.cntct_phone AS bill_phone,
+  bill_cntct.cntct_fax AS bill_fax,
+  bill_cntct.cntct_email AS bill_email,
+  bill_addr.addr_line1 AS bill_line1,
+  bill_addr.addr_line2 AS bill_line2,
+  bill_addr.addr_line3 AS bill_line3,
+  bill_addr.addr_city AS bill_city,
+  bill_addr.addr_state AS bill_state,
+  bill_addr.addr_postalcode AS bill_postalcode,
+  bill_addr.addr_country AS bill_country,
+  corr_cntct.cntct_first_name AS corr_first_name,
+  corr_cntct.cntct_last_name AS corr_last_name,
+  corr_cntct.cntct_phone AS corr_phone,
+  corr_cntct.cntct_fax AS corr_fax,
+  corr_cntct.cntct_email AS corr_email,
+  corr_addr.addr_line1 AS corr_line1,
+  corr_addr.addr_line2 AS corr_line2,
+  corr_addr.addr_line3 AS corr_line3,
+  corr_addr.addr_city AS corr_city,
+  corr_addr.addr_state AS corr_state,
+  corr_addr.addr_postalcode AS corr_postalcode,
+  corr_addr.addr_country AS corr_country
+<? foreach("char_id_text_list") ?>
+  , charass_alias<? literal("char_id_text_list") ?>.charass_value AS char<? literal("char_id_text_list") ?>
+<? endforeach ?>
+<? foreach("char_id_list_list") ?>
+  , charass_alias<? literal("char_id_list_list") ?>.charass_value AS char<? literal("char_id_list_list") ?>
+<? endforeach ?>
+<? foreach("char_id_date_list") ?>
+  , charass_alias<? literal("char_id_date_list") ?>.charass_value::date AS char<? literal("char_id_date_list") ?>
+<? endforeach ?>
+FROM custinfo
+  JOIN custtype ON (cust_custtype_id=custtype_id)
+  LEFT OUTER JOIN cntct bill_cntct ON (cust_cntct_id=bill_cntct.cntct_id) 
+  LEFT OUTER JOIN addr bill_addr ON (bill_cntct.cntct_addr_id=bill_addr.addr_id)
+  LEFT OUTER JOIN cntct corr_cntct ON (cust_corrcntct_id=corr_cntct.cntct_id) 
+  LEFT OUTER JOIN addr corr_addr ON (corr_cntct.cntct_addr_id=corr_addr.addr_id)
+<? foreach("char_id_text_list") ?>
+  LEFT OUTER JOIN charass charass_alias<? literal("char_id_text_list") ?> ON ((charass_alias<? literal("char_id_text_list") ?>.charass_target_type='C') 
+                                                                    AND  (charass_alias<? literal("char_id_text_list") ?>.charass_target_id=cust_id)
+                                                                    AND  (charass_alias<? literal("char_id_text_list") ?>.charass_char_id=<? value("char_id_text_list") ?>))
+  LEFT OUTER JOIN char char_alias<? literal("char_id_text_list") ?> ON (charass_alias<? literal("char_id_text_list") ?>.charass_char_id=char_alias<? literal("char_id_text_list") ?>.char_id)
+<? endforeach ?>
+<? foreach("char_id_list_list") ?>
+  LEFT OUTER JOIN charass charass_alias<? literal("char_id_list_list") ?> ON ((charass_alias<? literal("char_id_list_list") ?>.charass_target_type='C') 
+                                                                    AND  (charass_alias<? literal("char_id_list_list") ?>.charass_target_id=cust_id)
+                                                                    AND  (charass_alias<? literal("char_id_list_list") ?>.charass_char_id=<? value("char_id_list_list") ?>))
+  LEFT OUTER JOIN char char_alias<? literal("char_id_list_list") ?> ON (charass_alias<? literal("char_id_list_list") ?>.charass_char_id=char_alias<? literal("char_id_list_list") ?>.char_id)
+<? endforeach ?>
+<? foreach("char_id_date_list") ?>
+  LEFT OUTER JOIN charass charass_alias<? literal("char_id_date_list") ?> ON ((charass_alias<? literal("char_id_date_list") ?>.charass_target_type='C') 
+                                                                    AND  (charass_alias<? literal("char_id_date_list") ?>.charass_target_id=cust_id)
+                                                                    AND  (charass_alias<? literal("char_id_date_list") ?>.charass_char_id=<? value("char_id_date_list") ?>))
+  LEFT OUTER JOIN char char_alias<? literal("char_id_date_list") ?> ON (charass_alias<? literal("char_id_date_list") ?>.charass_char_id=char_alias<? literal("char_id_date_list") ?>.char_id)
+<? endforeach ?>
+WHERE true
+<? if not exists("showInactive") ?> 
+  AND cust_active 
+<? endif ?>
+<? if exists("search_pattern") ?>
+  AND ((cust_number ~* <? value("search_pattern") ?>)
+       OR (cust_name ~* <? value("search_pattern") ?>)
+       OR (custtype_code ~* <? value("search_pattern") ?>)
+       OR (COALESCE(bill_cntct.cntct_first_name,'') || ' ' || COALESCE(bill_cntct.cntct_last_name,'') ~* <? value("search_pattern") ?>)
+       OR (COALESCE(bill_cntct.cntct_phone,'') || ' ' || COALESCE(bill_cntct.cntct_phone2,'') || ' ' || COALESCE(bill_cntct.cntct_fax, '') ~* <? value("search_pattern") ?>)
+       OR (COALESCE(bill_cntct.cntct_email, '') ~* <? value("search_pattern") ?>)
+       OR (COALESCE(bill_addr.addr_line1,'') || ' ' || COALESCE(bill_addr.addr_line2,'') || ' ' || COALESCE(bill_addr.addr_line3,'') ~* <? value("search_pattern") ?>)
+       OR (COALESCE(bill_addr.addr_city,'') ~* <? value("search_pattern") ?>)
+       OR (COALESCE(bill_addr.addr_state,'') ~* <? value("search_pattern") ?>)
+       OR (COALESCE(bill_addr.addr_postalcode,'') ~* <? value("search_pattern") ?>)
+       OR (COALESCE(bill_addr.addr_country,'') ~* <? value("search_pattern") ?>)
+       OR (COALESCE(corr_cntct.cntct_first_name,'') || ' ' || COALESCE(corr_cntct.cntct_last_name,'') ~* <? value("search_pattern") ?>)
+       OR (COALESCE(corr_cntct.cntct_phone,'') || ' ' || COALESCE(corr_cntct.cntct_phone2,'') || ' ' || COALESCE(corr_cntct.cntct_fax, '') ~* <? value("search_pattern") ?>)
+       OR (COALESCE(corr_cntct.cntct_email, '') ~* <? value("search_pattern") ?>)
+       OR (COALESCE(corr_addr.addr_line1,'') || ' ' || COALESCE(corr_addr.addr_line2,'') || ' ' || COALESCE(corr_addr.addr_line3,'') ~* <? value("search_pattern") ?>)
+       OR (COALESCE(corr_addr.addr_city,'') ~* <? value("search_pattern") ?>)
+       OR (COALESCE(corr_addr.addr_state,'') ~* <? value("search_pattern") ?>)
+       OR (COALESCE(corr_addr.addr_postalcode,'') ~* <? value("search_pattern") ?>)
+       OR (COALESCE(corr_addr.addr_country,'') ~* <? value("search_pattern") ?>))
+<? endif ?>
+<? if exists("cust_number_pattern") ?>
+  AND (cust_number ~* <? value("cust_number_pattern") ?>)
+<? endif ?>
+<? if exists("cust_name_pattern") ?>
+  AND (cust_name ~* <? value("cust_name_pattern") ?>)
+<? endif ?>
+<? if exists("custtype_code_pattern") ?>
+  AND (custtype_code ~* <? value("custtype_code_pattern") ?>)
+<? endif ?>
+<? if exists("cntct_name_pattern") ?>
+  AND (COALESCE(bill_cntct.cntct_first_name,'') || ' ' || COALESCE(bill_cntct.cntct_last_name, '') ~* <? value("cntct_name_pattern") ?> 
+   OR  COALESCE(corr_cntct.cntct_first_name,'') || ' ' || COALESCE(corr_cntct.cntct_last_name, '') ~* <? value("cntct_name_pattern") ?>)
+<? endif ?>
+<? if exists("cntct_phone_pattern") ?>
+  AND (COALESCE(bill_cntct.cntct_phone,'') || ' ' || COALESCE(bill_cntct.cntct_phone2,'') || ' ' || COALESCE(bill_cntct.cntct_fax,'') ~* <? value("cntct_phone_pattern") ?>
+   OR  COALESCE(corr_cntct.cntct_phone,'') || ' ' || COALESCE(corr_cntct.cntct_phone2,'') || ' ' || COALESCE(corr_cntct.cntct_fax,'') ~* <? value("cntct_phone_pattern") ?>)
+<? endif ?>
+<? if exists("cntct_email_pattern") ?>
+  AND (COALESCE(bill_cntct.cntct_email,'') ~* <? value("cntct_email_pattern") ?>
+   OR  COALESCE(corr_cntct.cntct_email,'') ~* <? value("cntct_email_pattern") ?>)
+<? endif ?>
+<? if exists("addr_street_pattern") ?>
+  AND (COALESCE(bill_addr.addr_line1,'') || ' ' || COALESCE(bill_addr.addr_line2,'') || ' ' || COALESCE(bill_addr.addr_line3,'') ~* <? value("addr_street_pattern") ?>
+   OR  COALESCE(corr_addr.addr_line1,'') || ' ' || COALESCE(corr_addr.addr_line2,'') || ' ' || COALESCE(corr_addr.addr_line3,'') ~* <? value("addr_street_pattern") ?>)
+<? endif ?>
+<? if exists("addr_city_pattern") ?>
+  AND (COALESCE(bill_addr.addr_city,'') ~* <? value("addr_city_pattern") ?>
+   OR  COALESCE(corr_addr.addr_city,'') ~* <? value("addr_city_pattern") ?>)
+<? endif ?>
+<? if exists("addr_state_pattern") ?>
+  AND (COALESCE(bill_addr.addr_state,'') ~* <? value("addr_state_pattern") ?>
+   OR  COALESCE(corr_addr.addr_state,'') ~* <? value("addr_state_pattern") ?>)
+<? endif ?>
+<? if exists("addr_postalcode_pattern") ?>
+  AND (COALESCE(bill_addr.addr_postalcode,'') ~* <? value("addr_postalcode_pattern") ?>
+   OR  COALESCE(corr_addr.addr_postalcode,'') ~* <? value("addr_postalcode_pattern") ?>)
+<? endif ?>
+<? if exists("addr_country_pattern") ?>
+  AND (COALESCE(bill_addr.addr_country,'') ~* <? value("addr_country_pattern") ?>
+   OR  COALESCE(corr_addr.addr_country,'') ~* <? value("addr_country_pattern") ?>)
+<? endif ?>
+<? if exists("salesrep_id") ?>
+  AND (cust_salesrep_id = <? value("salesrep_id") ?>)
+<? endif ?>
+<? literal("charClause") ?>
+ORDER BY cust_number; 

@@ -1,0 +1,97 @@
+-- Group: bankrecHistory
+-- Name: unreconciled
+-- Notes: 
+--        Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+--        See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT gltrans_id, gltrans_date, formatDate(gltrans_date) AS f_date,
+      gltrans_docnumber,
+       CASE WHEN gltrans_doctype = 'CK' THEN <? value("Checks") ?>
+            WHEN gltrans_doctype = 'CR' THEN <? value("Deposits") ?>
+            ELSE <? value("Adjustments") ?> END AS type,
+       CASE WHEN gltrans_doctype = 'CK' THEN 1
+            WHEN gltrans_doctype = 'CR' THEN 2
+            ELSE '3' END AS sort,
+      gltrans_notes AS notes,
+      currtolocal(bankaccnt_curr_id,gltrans_amount,gltrans_date) * -1 AS amount,
+      formatMoney(currtolocal(bankaccnt_curr_id,gltrans_amount,gltrans_date) * -1) AS f_amount,
+      CASE WHEN gltrans_doctype = 'CK' THEN 
+        currtolocal(bankaccnt_curr_id,gltrans_amount,gltrans_date) * -1
+      ELSE 0 END AS rtcheck,
+      CASE WHEN gltrans_doctype = 'CR' THEN 
+        currtolocal(bankaccnt_curr_id,gltrans_amount,gltrans_date) * -1
+      ELSE 0 END AS rtdep,
+      CASE WHEN gltrans_doctype NOT IN ('CK','CR') THEN 
+        currtolocal(bankaccnt_curr_id,gltrans_amount,gltrans_date) * -1
+      ELSE 0 END AS rtadj,
+      'curr' AS amount_xtnumericrole,
+      1 AS xtindentrole
+ FROM gltrans
+   JOIN bankaccnt ON (bankaccnt_accnt_id = gltrans_accnt_id)
+   JOIN bankrec selrec ON ((selrec.bankrec_bankaccnt_id = bankaccnt_id)
+                       AND (selrec.bankrec_id=<? value("bankrec_id") ?>))
+   LEFT OUTER JOIN bankrecitem ON ((bankrecitem_source='GL')
+
+                              AND (bankrecitem_source_id=gltrans_id))
+   LEFT OUTER JOIN bankrec actrec ON (actrec.bankrec_id = bankrecitem_bankrec_id)
+   LEFT OUTER JOIN checkhead ON ((gltrans_doctype='CK')
+                             AND (gltrans_misc_id=checkhead_id))
+<? if exists("showUnreconciled") ?>
+ WHERE ((COALESCE(actrec.bankrec_postdate,endoftime()) > COALESCE(selrec.bankrec_postdate,now()))
+  AND (NOT gltrans_deleted)
+  AND (NOT COALESCE(checkhead_void, false)))
+  AND (gltrans_doctype != 'JP')
+<? else ?>
+ WHERE (false)
+<? endif ?>
+
+UNION
+
+SELECT sltrans_id, sltrans_date, formatDate(sltrans_date) AS f_date,
+      sltrans_docnumber,
+       CASE WHEN sltrans_doctype = 'CK' THEN <? value("Checks") ?>
+            WHEN sltrans_doctype = 'CR' THEN <? value("Deposits") ?>
+            ELSE <? value("Adjustments") ?> END AS type,
+       CASE WHEN sltrans_doctype = 'CK' THEN 1
+            WHEN sltrans_doctype = 'CR' THEN 2
+            ELSE '3' END AS sort,
+      sltrans_notes AS notes,
+      currtolocal(bankaccnt_curr_id,sltrans_amount,sltrans_date) * -1 AS amount,
+      formatMoney(currtolocal(bankaccnt_curr_id,sltrans_amount,sltrans_date) * -1) AS f_amount,
+      CASE WHEN sltrans_doctype = 'CK' THEN 
+        currtolocal(bankaccnt_curr_id,sltrans_amount,sltrans_date) * -1
+      ELSE 0 END AS rtcheck,
+      CASE WHEN sltrans_doctype = 'CR' THEN 
+        currtolocal(bankaccnt_curr_id,sltrans_amount,sltrans_date) * -1
+      ELSE 0 END AS rtdep,
+      CASE WHEN sltrans_doctype NOT IN ('CK','CR') THEN 
+        currtolocal(bankaccnt_curr_id,sltrans_amount,sltrans_date) * -1
+      ELSE 0 END AS rtadj,
+      'curr' AS amount_xtnumericrole,
+      1 AS xtindentrole
+ FROM sltrans
+   JOIN bankaccnt ON (bankaccnt_accnt_id = sltrans_accnt_id)
+   JOIN bankrec selrec ON ((selrec.bankrec_bankaccnt_id = bankaccnt_id)
+                       AND (selrec.bankrec_id=<? value("bankrec_id") ?>))
+   LEFT OUTER JOIN bankrecitem ON ((bankrecitem_source='SL')
+
+                              AND (bankrecitem_source_id=sltrans_id))
+   LEFT OUTER JOIN bankrec actrec ON (actrec.bankrec_id = bankrecitem_bankrec_id)
+   LEFT OUTER JOIN checkhead ON ((sltrans_doctype='CK')
+                             AND (sltrans_misc_id=checkhead_id))
+<? if exists("showUnreconciled") ?>
+ WHERE ((COALESCE(actrec.bankrec_postdate,endoftime()) > COALESCE(selrec.bankrec_postdate,now()))
+  AND (NOT COALESCE(checkhead_void, false)))
+<? if exists("treeView") ?>
+UNION
+SELECT -1, NULL, NULL, <? value("Checks") ?>, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL,'curr', 0 
+UNION
+SELECT -1, NULL, NULL, <? value("Deposits") ?>, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, 'curr', 0 
+UNION
+SELECT -1, NULL, NULL, <? value("Adjustments") ?>, NULL, 3, NULL, NULL, NULL, NULL, NULL, NULL, 'curr', 0
+<? endif ?>
+
+ORDER BY  sort, xtindentrole, type, f_date, gltrans_id
+<? else ?>
+ WHERE (false)
+<? endif ?>

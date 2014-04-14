@@ -1,0 +1,408 @@
+-- Group: prices
+-- Name: detail
+-- Notes: used by dspPricesByCustomerType, dspPricesByCustomer, dspPricesByItem
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT itemid, sourcetype, schedulename, type,
+<? if not exists("byItem") ?>
+       itemnumber, itemdescrip, priceuom,
+<? else ?>
+       typename,
+<? endif ?>
+       CASE WHEN (qtybreak <> -1) THEN qtybreak END AS f_qtybreak,
+       price,
+       currConcat(curr_id) AS currConcat,
+       'qty' AS f_qtybreak_xtnumericrole,
+       <? value("na") ?> AS f_qtybreak_xtnullrole,
+       'salesprice' AS price_xtnumericrole
+<? if exists("showCosts") ?>
+  <? if exists("byItem") ?>
+       , CASE WHEN (<? value("cost") ?> <> 0) THEN <? value("cost") ?> END AS f_cost,
+       CASE WHEN ((price <> 0) AND (<? value("cost") ?> <> 0)) THEN ((price - <? value("cost") ?>) /  price) END AS f_margin,
+  <? else ?>
+       , CASE WHEN (cost IS NOT NULL) THEN cost END AS f_cost,
+      CASE WHEN ((price <> 0) AND (cost <>0)) THEN ((price - cost) / price) END AS f_margin,
+  <? endif ?>
+       'cost' AS f_cost_xtnumericrole,
+       <? value("costna") ?> AS f_cost_xtnullrole,
+       'percent' AS f_margin_xtnumericrole,
+       <? value("na") ?> AS f_margin_xtnullrole,
+  <? if exists("byItem") ?>
+       CASE WHEN (<? value("cost") ?> > price) THEN 'error' END AS f_margin_qtforegroundrole
+  <? else ?>
+       CASE WHEN (cost > price) THEN 'error' END AS f_margin_qtforegroundrole
+  <? endif ?>
+<? endif ?>
+FROM (
+<? if not exists("byCustomerType") ?>
+      SELECT
+  <? if exists("byCustomer") ?>
+             ipsprice_id AS itemid, 1 AS sourcetype,
+             ipshead_name AS schedulename, <? value("customer") ?> AS type,
+             item_number AS itemnumber, uom_name AS priceuom, iteminvpricerat(item_id) AS invpricerat,
+             (item_descrip1 || ' ' || item_descrip2) AS itemdescrip,
+             ipsprice_qtybreak AS qtybreak,
+             ipsprice_price AS price, ipshead_curr_id AS curr_id,
+             ipshead_updated AS effective
+    <? if exists("useStandardCosts") ?>
+             , (stdcost(item_id) * iteminvpricerat(item_id)) AS cost
+    <? elseif exists("useActualCosts") ?>
+             , (actcost(item_id) * iteminvpricerat(item_id)) AS cost
+    <? endif ?>
+  <? else ?>
+             ipsprice_id AS itemid, 1 AS sourcetype,
+             ipshead_name AS schedulename, <? value("customer") ?> AS type,
+             cust_name AS typename,
+             ipsprice_qtybreak AS qtybreak, ipsprice_price AS price, ipshead_curr_id AS curr_id
+  <? endif ?>
+      FROM ipsass, ipshead, ipsprice, item,
+  <? if exists("byCustomer") ?>
+           uom
+  <? else ?>
+          custinfo
+  <? endif ?>
+      WHERE ((ipsass_ipshead_id=ipshead_id)
+         AND (ipsprice_ipshead_id=ipshead_id)
+         AND (ipsprice_item_id=item_id)
+  <? if exists("byCustomer") ?>
+         AND (item_price_uom_id=uom_id)
+         AND (ipsass_cust_id=<? value("cust_id") ?>)
+         <? if exists("item_id") ?>
+         AND (item_id=<? value("item_id") ?>)
+         <? endif ?>
+  <? else ?>
+         AND (ipsass_cust_id=cust_id)
+         AND (item_id=<? value("item_id") ?>)
+  <? endif ?>
+         AND (COALESCE(LENGTH(ipsass_shipto_pattern), 0) = 0)
+  <? if not exists("showExpired") ?>
+         AND (ipshead_expires > CURRENT_DATE)
+  <? endif ?>
+  <? if not exists("showFuture") ?>
+         AND (ipshead_effective <= CURRENT_DATE)
+  <? endif ?>
+            )
+
+      UNION
+<? endif ?>
+
+      SELECT
+<? if exists("byItem") ?>
+             ipsprice_id AS itemid, 2 AS sourcetype,
+             ipshead_name AS schedulename, <? value("custType") ?> AS type,
+             (custtype_code || '-' || custtype_descrip) AS typename,
+             ipsprice_qtybreak AS qtybreak, ipsprice_price AS price, ipshead_curr_id AS curr_id
+<? else ?>
+             ipsprice_id AS itemid,
+  <? if exists("byCustomerType") ?>
+             1 AS sourcetype,
+  <? elseif exists("byCustomer") ?>
+             2 AS sourcetype,
+  <? endif ?>
+             ipshead_name AS schedulename, <? value("custType") ?> AS type,
+             item_number AS itemnumber, uom_name AS priceuom, iteminvpricerat(item_id) AS invpricerat,
+             (item_descrip1 || ' ' || item_descrip2) AS itemdescrip,
+             ipsprice_qtybreak AS qtybreak,
+             ipsprice_price AS price, ipshead_curr_id AS curr_id,
+             ipshead_updated AS effective
+  <? if exists("showCosts") ?>
+    <? if exists("useStandardCosts") ?>
+             , (stdcost(
+      <? if exists("byCustomerType") ?>
+                ipsprice_item_id
+      <? elseif exists("byCustomer") ?>
+                item_id
+      <? endif ?>
+                     ) * iteminvpricerat(item_id)) AS cost
+    <? elseif exists("useActualCosts") ?>
+             , (actcost(
+      <? if exists("byCustomerType") ?>
+                ipsprice_item_id
+      <? elseif exists("byCustomer") ?>
+                item_id
+      <? endif ?>
+                     ) * iteminvpricerat(item_id)) AS cost
+    <? endif ?>
+  <? endif ?>
+<? endif ?>
+      FROM ipsass, ipshead, ipsprice, item,
+<? if exists("byItem") ?>
+           custtype
+<? else ?>
+           uom
+<? endif ?>
+<? if exists("byCustomer") ?>
+           , custinfo
+<? endif ?>
+      WHERE ((ipsass_ipshead_id=ipshead_id)
+         AND (ipsprice_ipshead_id=ipshead_id)
+         AND (ipsprice_item_id=item_id)
+<? if not exists("byItem") ?>
+         AND (item_price_uom_id=uom_id)
+<? endif ?>
+<? if exists("byCustomerType") ?>
+         AND (ipsass_custtype_id=<? value("custtype_id") ?>)
+<? elseif exists("byCustomer") ?>
+         AND (ipsass_custtype_id=cust_custtype_id)
+         AND (cust_id=<? value("cust_id") ?>)
+         <? if exists("item_id") ?>
+         AND (item_id=<? value("item_id") ?>)
+         <? endif ?>
+<? else ?>
+         AND (ipsass_custtype_id=custtype_id)
+         AND (item_id=<? value("item_id") ?>)
+<? endif ?>
+<? if not exists("showExpired") ?>
+         AND (ipshead_expires > CURRENT_DATE)
+<? endif ?>
+<? if not exists("showFuture") ?>
+         AND (ipshead_effective <= CURRENT_DATE)
+<? endif ?>
+            )
+
+      UNION
+
+      SELECT
+<? if exists("byItem") ?>
+             ipsprice_id AS itemid, 3 AS sourcetype,
+             ipshead_name AS schedulename, <? value("custTypePattern") ?> AS type,
+             (custtype_code || '-' || custtype_descrip) AS typename,
+             ipsprice_qtybreak AS qtybreak, ipsprice_price AS price, ipshead_curr_id AS curr_id
+<? else ?>
+             ipsprice_id AS itemid,
+  <? if exists("byCustomerType") ?>
+             2 AS sourcetype,
+  <? elseif exists("byCustomer") ?>
+             3 AS sourcetype,
+  <? endif ?>
+             ipshead_name AS schedulename, <? value("custTypePattern") ?> AS type,
+             item_number AS itemnumber, uom_name AS priceuom, iteminvpricerat(item_id) AS invpricerat,
+             (item_descrip1 || ' ' || item_descrip2) AS itemdescrip,
+             ipsprice_qtybreak AS qtybreak,
+             ipsprice_price AS price, ipshead_curr_id AS curr_id,
+             ipshead_updated AS effective
+  <? if exists("showCosts") ?>
+    <? if exists("useStandardCosts") ?>
+             , (stdcost(
+      <? if exists("byCustomerType") ?>
+                ipsprice_item_id
+      <? elseif exists("byCustomer") ?>
+                item_id
+      <? endif ?>
+                     ) * iteminvpricerat(item_id)) AS cost
+    <? elseif exists("useActualCosts") ?>
+             , (actcost(
+      <? if exists("byCustomerType") ?>
+                ipsprice_item_id
+      <? elseif exists("byCustomer") ?>
+                item_id
+      <? endif ?>
+                     ) * iteminvpricerat(item_id)) AS cost
+    <? endif ?>
+  <? endif ?>
+<? endif ?>
+      FROM ipsass, ipshead, ipsprice, item, custtype
+<? if not exists("byItem") ?>
+           , uom
+<? endif ?>
+<? if exists("byCustomer") ?>
+           , custinfo
+<? endif ?>
+      WHERE ((ipsass_ipshead_id=ipshead_id)
+         AND (ipsprice_ipshead_id=ipshead_id)
+         AND (ipsprice_item_id=item_id)
+<? if not exists("byItem") ?>
+         AND (item_price_uom_id=uom_id)
+<? endif ?>
+         AND (coalesce(length(ipsass_custtype_pattern), 0) > 0)
+         AND (custtype_code ~ ipsass_custtype_pattern)
+<? if exists("byCustomerType") ?>
+         AND (custtype_id=<? value("custtype_id") ?>)
+<? elseif exists("byCustomer") ?>
+         AND (cust_id=<? value("cust_id") ?>)
+         <? if exists("item_id") ?>
+         AND (item_id=<? value("item_id") ?>)
+         <? endif ?>
+<? else ?>
+         AND (item_id=<? value("item_id") ?>)
+<? endif ?>
+<? if not exists("showExpired") ?>
+         AND (ipshead_expires > CURRENT_DATE)
+<? endif ?>
+<? if not exists("showFuture") ?>
+         AND (ipshead_effective <= CURRENT_DATE)
+<? endif ?>
+            )
+
+      UNION
+
+      SELECT
+<? if exists("byItem") ?>
+             ipsprice_id AS itemid, 4 AS sourcetype,
+             ipshead_name AS schedulename, <? value("sale") ?> AS type,
+             sale_name AS typename,
+             ipsprice_qtybreak AS qtybreak, ipsprice_price AS price, ipshead_curr_id AS curr_id
+<? else ?>
+             ipsprice_id AS itemid,
+<? if exists("byCustomerType") ?>
+             3
+<? elseif exists("byCustomer") ?>
+             4
+<? endif ?> AS sourcetype,
+             ipshead_name AS schedulename, (<? value("sale") ?> || '-' || sale_name) AS type,
+             item_number AS itemnumber, uom_name AS priceuom, iteminvpricerat(item_id) AS invpricerat,
+             (item_descrip1 || ' ' || item_descrip2) AS itemdescrip,
+             ipsprice_qtybreak AS qtybreak,
+             ipsprice_price AS price, ipshead_curr_id AS curr_id,
+             ipshead_updated AS effective
+<? if exists("showCosts") ?>
+  <? if exists("useStandardCosts") ?>
+             , (stdcost(
+    <? if exists("byCustomerType") ?>
+                ipsprice_item_id
+    <? elseif exists("byCustomer") ?>
+                item_id
+    <? endif ?>
+                     ) * iteminvpricerat(item_id)) AS cost
+    <? elseif exists("useActualCosts") ?>
+             , (actcost(
+    <? if exists("byCustomerType") ?>
+                ipsprice_item_id
+    <? elseif exists("byCustomer") ?>
+                item_id
+    <? endif ?>
+                     ) * iteminvpricerat(item_id)) AS cost
+    <? endif ?>
+  <? endif ?>
+<? endif ?>
+      FROM sale, ipshead, ipsprice, item
+<? if not exists("byItem") ?>
+           , uom
+<? endif ?>
+      WHERE ((sale_ipshead_id=ipshead_id)
+         AND (ipsprice_ipshead_id=ipshead_id)
+<? if not exists("byItem") ?>
+         AND (item_price_uom_id=uom_id)
+<? endif ?>
+<? if exists("byItem") ?>
+         AND (ipsprice_item_id=<? value("item_id") ?>)
+  <? if not exists("showExpired") ?>
+         AND (sale_enddate > CURRENT_DATE)
+  <? endif ?>
+  <? if not exists("showFuture") ?>
+         AND (sale_startdate <= CURRENT_DATE)
+  <? endif ?>
+<? else ?>
+         AND (ipsprice_item_id=item_id)
+  <? if not exists("showExpired") ?>
+         AND (ipshead_expires > CURRENT_DATE)
+  <? endif ?>
+  <? if not exists("showFuture") ?>
+         AND (ipshead_effective <= CURRENT_DATE)
+  <? endif ?>
+<? endif ?>
+            )
+
+<? if exists("byItem") ?>
+
+      UNION
+
+      SELECT ipsprice_id AS itemid, 5 AS sourcetype,
+             ipshead_name AS schedulename, <? value("shipTo") ?> AS type,
+             (cust_name || '-' || shipto_num) AS typename,
+             ipsprice_qtybreak AS qtybreak, ipsprice_price AS price, ipshead_curr_id AS curr_id
+      FROM ipsass, ipshead, ipsprice, custinfo, shiptoinfo, item
+      WHERE ((ipsass_ipshead_id=ipshead_id)
+         AND (ipsprice_ipshead_id=ipshead_id)
+         AND (ipsass_shipto_id=shipto_id)
+         AND (shipto_cust_id=cust_id)
+         AND (ipsprice_item_id=item_id)
+         AND (item_id=<? value("item_id") ?>)
+  <? if not exists("showExpired") ?>
+         AND (ipshead_expires > CURRENT_DATE)
+  <? endif ?>
+  <? if not exists("showFuture") ?>
+         AND (ipshead_effective <= CURRENT_DATE)
+  <? endif ?>
+            )
+
+      UNION
+
+      SELECT ipsprice_id AS itemid, 6 AS sourcetype,
+             ipshead_name AS schedulename, <? value("shipToPattern") ?> AS type,
+             (cust_name || '-' || shipto_num) AS typename,
+             ipsprice_qtybreak AS qtybreak, ipsprice_price AS price, ipshead_curr_id AS curr_id
+      FROM ipsass, ipshead, ipsprice, custinfo, shiptoinfo, item
+      WHERE ((ipsass_ipshead_id=ipshead_id)
+         AND (ipsprice_ipshead_id=ipshead_id)
+         AND (COALESCE(LENGTH(ipsass_shipto_pattern),0) > 0)
+         AND (shipto_num ~ ipsass_shipto_pattern)
+         AND (ipsass_cust_id=cust_id)
+         AND (shipto_cust_id=cust_id)
+         AND (ipsprice_item_id=item_id)
+         AND (item_id=:item_id)
+  <? if not exists("showExpired") ?>
+         AND (ipshead_expires > CURRENT_DATE)
+  <? endif ?>
+  <? if not exists("showFuture") ?>
+         AND (ipshead_effective <= CURRENT_DATE)
+  <? endif ?>
+            )
+<? endif ?>
+
+      UNION
+
+      SELECT
+<? if exists("byItem") ?>
+             item_id AS itemid, 0 AS sourcetype,
+             <? value("listPrice") ?> AS schedulename, <? value("na") ?> AS type,
+             '' AS typename,
+             -1 AS qtybreak, item_listprice AS price, baseCurrId() AS curr_id
+<? else ?>
+             item_id AS itemid, 0 AS sourcetype,
+             '' AS schedulename, <? value("listPrice") ?> AS type,
+             item_number AS itemnumber, uom_name AS priceuom, iteminvpricerat(item_id) AS invpricerat,
+             (item_descrip1 || ' ' || item_descrip2) AS itemdescrip,
+             -1 AS qtybreak,
+  <? if exists("byCustomerType") ?>
+             item_listprice AS price,
+  <? elseif exists("byCustomer") ?>
+             (item_listprice - (item_listprice * cust_discntprcnt)) AS price,
+  <? endif ?>
+             baseCurrId() AS curr_id,
+             CURRENT_DATE AS effective
+  <? if exists("useStandardCosts") ?>
+             , (stdcost(item_id) * iteminvpricerat(item_id)) AS cost
+  <? elseif exists("useActualCosts") ?>
+             , (actcost(item_id) * iteminvpricerat(item_id)) AS cost
+  <? endif ?>
+<? endif ?>
+<? if exists("byCustomerType") ?>
+      FROM item JOIN uom ON (item_price_uom_id=uom_id)
+<? elseif exists("byCustomer") ?>
+      FROM custinfo, item JOIN uom ON (item_price_uom_id=uom_id)
+<? else ?>
+      FROM item
+<? endif ?>
+      WHERE (
+<? if not exists("byItem") ?>
+             (item_sold)
+         AND (item_active)
+<? else ?>
+             (item_id=<? value("item_id") ?>)
+<? endif ?>
+         AND (NOT item_exclusive)
+<? if exists("byCustomer") ?>
+         AND (cust_id=<? value("cust_id") ?>)
+         <? if exists("item_id") ?>
+         AND (item_id=<? value("item_id") ?>)
+         <? endif ?>
+<? endif ?>
+            )
+     ) AS data
+ORDER BY
+<? if not exists("byItem") ?>
+         itemnumber,
+<? endif ?>
+         price;

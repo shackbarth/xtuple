@@ -1,0 +1,18 @@
+-- Group: updateListPrices
+-- Name:  update
+-- Notes: Calculates and immediately updates list prices to the database
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+UPDATE item SET item_listprice=
+<? if exists("byValue") ?>
+       item_listprice + <? value("updateBy") ?>
+<? else ?>
+       item_listprice * (1.0 + (<? value("updateBy") ?> / 100.0))
+<? endif ?>
+WHERE (item_sold)
+<? if exists("prodcat_id") ?>
+  AND (item_prodcat_id=<? value("prodcat_id") ?>)
+<? elseif exists("prodcat_pattern") ?>
+  AND (item_prodcat_id IN (SELECT prodcat_id FROM prodcat WHERE (prodcat_code ~ <? value("prodcat_pattern" ?>)))
+<? endif ?>

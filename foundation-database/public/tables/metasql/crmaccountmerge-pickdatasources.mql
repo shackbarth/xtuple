@@ -1,0 +1,81 @@
+-- Group: crmaccountmerge
+-- Name:  pickdatasources
+-- Notes: Show the records the user has selected to merge crm accounts. Emphasize
+--        the particular fields in each record that s/he has selected.
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT c.crmacct_id,
+       crmacctsel_dest_crmacct_id,
+       c.crmacct_active,
+       formatCntctName(c.crmacct_cntct_id_1) AS primary,
+       formatCntctName(c.crmacct_cntct_id_2) AS secondary,
+       c.crmacct_competitor_id IS NOT NULL   AS competitor,
+       c.crmacct_cust_id       IS NOT NULL   AS cust,
+       c.crmacct_emp_id        IS NOT NULL   AS emp,
+       c.crmacct_name,
+       c.crmacct_number,
+       c.crmacct_owner_username              AS owner,
+       p.crmacct_number                      AS parent,
+       c.crmacct_partner_id    IS NOT NULL   AS partner,
+       c.crmacct_prospect_id   IS NOT NULL   AS prospect,
+       c.crmacct_salesrep_id   IS NOT NULL   AS salesrep,
+       c.crmacct_taxauth_id    IS NOT NULL   AS taxauth,
+       c.crmacct_type,
+       c.crmacct_usr_username  IS NOT NULL   AS usr,
+       c.crmacct_vend_id       IS NOT NULL   AS vend,
+       trim(firstline(c.crmacct_notes))      AS notes,
+
+       CASE crmacctsel_src_crmacct_id=crmacctsel_dest_crmacct_id
+            WHEN true THEN '#ccc'
+       END AS qtbackgroundrole,
+
+       CASE WHEN c.crmacct_active IS NULL THEN <? value('na') ?> END AS crmacct_active_qtdisplayrole,
+       CASE WHEN COALESCE(formatCntctName(c.crmacct_cntct_id_1), '') = '' THEN <? value('na') ?> END AS primary_qtdisplayrole,
+       CASE WHEN COALESCE(formatCntctName(c.crmacct_cntct_id_2), '') = '' THEN <? value('na') ?> END AS secondary_qtdisplayrole,
+       CASE WHEN COALESCE(c.crmacct_name,           '') = '' THEN <? value('na') ?>  END AS crmacct_name_qtdisplayrole,
+       CASE WHEN COALESCE(c.crmacct_number,         '') = '' THEN <? value('na') ?>  END AS crmacct_number_qtdisplayrole,
+       CASE WHEN COALESCE(c.crmacct_owner_username, '') = '' THEN <? value('na') ?>  END AS owner_qtdisplayrole,
+       CASE WHEN COALESCE(p.crmacct_number,         '') = '' THEN <? value('na') ?>  END AS parent_qtdisplayrole,
+       CASE c.crmacct_type WHEN 'I' THEN <? value('individual') ?>
+                           WHEN 'O' THEN <? value('organization') ?>
+                           ELSE <? value('na') ?> END AS crmacct_type_qtdisplayrole,
+       CASE WHEN COALESCE(TRIM(firstline(c.crmacct_notes)), '') = '' THEN <? value('na') ?> END AS notes_qtdisplayrole,
+
+       CASE WHEN crmacctsel_mrg_crmacct_number         THEN 'emphasis' END AS crmacct_number_qtforegroundrole,
+       CASE WHEN crmacctsel_mrg_crmacct_active         THEN 'emphasis' END AS crmacct_active_qtforegroundrole,
+       CASE WHEN crmacctsel_mrg_crmacct_cntct_id_1     THEN 'emphasis' END AS primary_qtforegroundrole,
+       CASE WHEN crmacctsel_mrg_crmacct_cntct_id_2     THEN 'emphasis' END AS secondary_qtforegroundrole,
+       CASE WHEN crmacctsel_mrg_crmacct_competitor_id  THEN 'emphasis' END AS competitor_qtforegroundrole,
+       CASE WHEN crmacctsel_mrg_crmacct_cust_id        THEN 'emphasis' END AS cust_qtforegroundrole,
+       CASE WHEN crmacctsel_mrg_crmacct_emp_id         THEN 'emphasis' END AS emp_qtforegroundrole,
+       CASE WHEN crmacctsel_mrg_crmacct_name           THEN 'emphasis' END AS crmacct_name_qtforegroundrole,
+       CASE WHEN crmacctsel_mrg_crmacct_owner_username THEN 'emphasis' END AS owner_qtforegroundrole,
+       CASE WHEN crmacctsel_mrg_crmacct_parent_id      THEN 'emphasis' END AS parent_qtforegroundrole,
+       CASE WHEN crmacctsel_mrg_crmacct_partner_id     THEN 'emphasis' END AS partner_qtforegroundrole,
+       CASE WHEN crmacctsel_mrg_crmacct_prospect_id    THEN 'emphasis' END AS prospect_qtforegroundrole,
+       CASE WHEN crmacctsel_mrg_crmacct_salesrep_id    THEN 'emphasis' END AS salesrep_qtforegroundrole,
+       CASE WHEN crmacctsel_mrg_crmacct_taxauth_id     THEN 'emphasis' END AS taxauth_qtforegroundrole,
+       CASE WHEN crmacctsel_mrg_crmacct_type           THEN 'emphasis' END AS crmacct_type_qtforegroundrole,
+       CASE WHEN crmacctsel_mrg_crmacct_usr_username   THEN 'emphasis' END AS usr_qtforegroundrole,
+       CASE WHEN crmacctsel_mrg_crmacct_vend_id        THEN 'emphasis' END AS vend_qtforegroundrole,
+       CASE WHEN crmacctsel_mrg_crmacct_notes          THEN 'emphasis' END AS notes_qtforegroundrole,
+
+       c.crmacct_cntct_id_1   AS primary_xtidrole,
+       c.crmacct_cntct_id_2   AS secondary_xtidrole,
+       c.crmacct_cust_id      AS cust_xtidrole,
+       c.crmacct_emp_id       AS emp_xtidrole,
+       c.crmacct_parent_id    AS parent_xtidrole,
+       c.crmacct_prospect_id  AS prospect_xtidrole,
+       c.crmacct_salesrep_id  AS salesrep_xtidrole,
+       c.crmacct_taxauth_id   AS taxauth_xtidrole,
+       c.crmacct_usr_username AS usr_xtidrole,
+       c.crmacct_vend_id      AS vend_xtidrole,
+
+       c.crmacct_notes AS notes_qttooltiprole
+
+  FROM crmacct c
+  JOIN crmacctsel ON (c.crmacct_id=crmacctsel_src_crmacct_id)
+  LEFT OUTER JOIN crmacct p ON (c.crmacct_parent_id=p.crmacct_id)
+ WHERE crmacctsel_dest_crmacct_id=<? value('destid') ?>
+ ORDER BY qtbackgroundrole DESC, c.crmacct_number;

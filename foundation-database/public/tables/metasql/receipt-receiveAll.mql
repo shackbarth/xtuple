@@ -1,0 +1,59 @@
+-- Group: receipt
+-- Name: receiveAll
+-- Notes: used by enterPoReceipt, returnAuthorization, shipOrder
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+<? if exists ("shiphead_id") ?>
+  SELECT enterReceipt(<? value("ordertype") ?>,
+                      shipitem_orderitem_id,
+                      shipitem_qty,
+                      (orderitem_freight - orderitem_freight_received),
+                      '',
+                      orderitem_freight_curr_id,
+                      CURRENT_DATE) AS result
+  FROM shipitem, orderitemData(<? value("ordertype") ?>,
+                               <? value("orderid") ?>,
+                               NULL) AS orderitem
+       LEFT OUTER JOIN recv ON ((recv_orderitem_id=orderitem_id)
+                            AND (recv_order_type=orderitem_orderhead_type))
+  <? if exists("EnableReturnAuth") ?>
+       LEFT OUTER JOIN raitem ON ((raitem_id=orderitem_id)
+                              AND ('RA' = orderitem_orderhead_type))
+  <? endif ?>
+  WHERE ( (shipitem_shiphead_id=<? value("shiphead_id") ?>)
+    AND   (shipitem_orderitem_id=orderitem_id)
+  <? if exists("EnableReturnAuth") ?>
+    AND   ((orderitem_orderhead_type != 'RA') OR (raitem_disposition IN (NULL,'R','V','P')))
+  <? endif?>
+        )
+
+<? else ?>
+  SELECT enterReceipt(orderitem_orderhead_type,
+                      orderitem_id,
+<? if exists("tohead_id") ?>
+                      (orderitem_qty_shipped - orderitem_qty_received),
+<? else ?>
+                      (orderitem_qty_ordered - orderitem_qty_received),
+<? endif ?>
+                      (orderitem_freight - orderitem_freight_received),
+                      '',
+                      orderitem_freight_curr_id,
+                      CURRENT_DATE) AS result
+  FROM orderitemData(<? value("ordertype") ?>,
+                     <? value("orderid") ?>,
+                     NULL) AS orderitem
+       LEFT OUTER JOIN recv ON ((recv_orderitem_id=orderitem_id)
+                            AND (recv_order_type=orderitem_orderhead_type))
+<? if exists("EnableReturnAuth") ?>
+       LEFT OUTER JOIN raitem ON ((raitem_id=orderitem_id)
+                              AND ('RA' = orderitem_orderhead_type))
+<? endif ?>
+  WHERE (orderitem_status NOT IN ('C', 'X'))
+<? if exists("tohead_id") ?>
+    AND (orderitem_qty_shipped > orderitem_qty_received)
+<? endif ?>
+<? if exists("EnableReturnAuth") ?>
+    AND (((orderitem_orderhead_type != 'RA') OR (raitem_disposition IN (NULL,'R','V','P'))))
+<? endif ?>
+<? endif ?>

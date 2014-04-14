@@ -1,0 +1,71 @@
+-- Group: workOrderMaterial
+-- Name: detail
+-- Notes: used by dspWoMaterialsByItem, dspWoMaterialsByWorkOrder
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT womatl.*, formatWONumber(wo_id) AS wonumber, item_number,
+       item_descrip1, item_descrip2,
+<? if exists("Manufacturing") ?>
+       formatwooperseq(womatl_wooper_id) AS wooperseq,
+<? endif ?>
+       CASE WHEN (womatl_issuemethod = 'S') THEN <? value("push") ?>
+            WHEN (womatl_issuemethod = 'L') THEN <? value("pull") ?>
+            WHEN (womatl_issuemethod = 'M') THEN <? value("mixed") ?>
+            ELSE <? value("error") ?>
+       END AS issuemethod,
+       uom_name,
+       noNeg(womatl_qtyreq - womatl_qtyiss) AS balance,
+<? if exists("isReport") ?>
+       formatDate(womatl_duedate) AS f_duedate,
+       formatQty(womatl_qtyfxd) AS f_qtyfxd,
+       formatQtyPer(womatl_qtyper) AS f_qtyper,
+       formatPrcnt(womatl_scrap) AS f_scrap,
+       formatQty(womatl_qtyreq) AS f_qtyreq,
+       formatQty(womatl_qtyiss) AS f_qtyiss,
+       formatQty(womatl_qtywipscrap) AS f_qtywipscrap,
+       formatQty(noNeg(womatl_qtyreq - womatl_qtyiss)) AS f_balance,
+<? endif ?>
+       CASE WHEN (womatl_duedate <= CURRENT_DATE) THEN 'error' END AS womatl_duedate_qtforegroundrole,
+       'qty' AS womatl_qtyfxd_xtnumericrole,
+       'qtyper' AS womatl_qtyper_xtnumericrole,
+       'percent' AS womatl_scrap_xtnumericrole,
+       'qty' AS womatl_qtyreq_xtnumericrole,
+       'qty' AS womatl_qtyiss_xtnumericrole,
+       'qty' AS womatl_qtywipscrap_xtnumericrole,
+       'qty' AS balance_xtnumericrole,
+       0 AS womatl_qtyreq_xttotalrole,
+       0 AS womatl_qtyiss_xttotalrole,
+       0 AS womatl_qtywipscrap_xttotalrole,
+       0 AS balance_xttotalrole
+FROM wo JOIN womatl ON (womatl_wo_id=wo_id)
+        JOIN uom ON (uom_id=womatl_uom_id)
+        JOIN itemsite parentsite ON (parentsite.itemsite_id=wo_itemsite_id)
+        JOIN itemsite componentsite ON (componentsite.itemsite_id=womatl_itemsite_id)
+<? if exists("item_id") ?>
+        JOIN item ON (item_id=parentsite.itemsite_item_id)
+<? elseif exists("wo_id") ?>
+        JOIN item ON (item_id=componentsite.itemsite_item_id)
+<? endif ?>
+WHERE (1=1)
+<? if exists("item_id") ?>
+  AND (componentsite.itemsite_item_id=<? value("item_id") ?>)
+  AND (wo_status <> 'C')
+<? endif ?>
+<? if exists("warehous_id") ?>
+  AND (componentsite.itemsite_warehous_id=<? value("warehous_id") ?>)
+<? endif ?>
+<? if exists("wo_id") ?>
+  AND (wo_id=<? value("wo_id") ?>)
+<? endif ?>
+<? if exists("item_id") ?>
+ORDER BY wo_startdate, item_number
+<? endif ?>
+<? if exists("wo_id") ?>
+  <? if exists("Manufacturing") ?>
+  ORDER BY wooperseq, item_number
+  <? else ?>
+  ORDER BY item_number
+  <? endif ?>
+<? endif ?>
+;

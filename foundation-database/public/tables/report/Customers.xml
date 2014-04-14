@@ -1,0 +1,656 @@
+<!DOCTYPE openRPTDef>
+<report>
+ <title>Customers</title>
+ <name>Customers</name>
+ <description></description>
+ <grid>
+  <snap/>
+  <show/>
+  <x>0.05</x>
+  <y>0.05</y>
+ </grid>
+ <size>Letter</size>
+ <portrait/>
+ <topmargin>50</topmargin>
+ <bottommargin>50</bottommargin>
+ <rightmargin>50</rightmargin>
+ <leftmargin>50</leftmargin>
+ <querysource>
+  <name>detail</name>
+  <sql>-- Group: customers
+-- Name:  detail
+-- Notes: 
+
+SELECT DISTINCT ON ( cust_number )
+  cust_id, cust_custtype_id, 
+  formatBoolYN(cust_active) as f_active,
+  formatAddr(bill_addr.addr_id) AS f_bill_addr,
+  formatAddr(corr_addr.addr_id) AS f_corr_addr,
+  bill_cntct.cntct_name AS bill_cntct_name,
+  corr_cntct.cntct_name AS corr_cntct_name,
+  cust_active, cust_number, cust_name,
+  custtype_code,
+  bill_cntct.cntct_first_name AS bill_first_name,
+  bill_cntct.cntct_last_name AS bill_last_name,
+  bill_cntct.cntct_phone AS bill_phone,
+  bill_cntct.cntct_fax AS bill_fax,
+  bill_cntct.cntct_email AS bill_email,
+  bill_addr.addr_line1 AS bill_line1,
+  bill_addr.addr_line2 AS bill_line2,
+  bill_addr.addr_line3 AS bill_line3,
+  bill_addr.addr_city AS bill_city,
+  bill_addr.addr_state AS bill_state,
+  bill_addr.addr_postalcode AS bill_postalcode,
+  bill_addr.addr_country AS bill_country,
+  corr_cntct.cntct_first_name AS corr_first_name,
+  corr_cntct.cntct_last_name AS corr_last_name,
+  corr_cntct.cntct_phone AS corr_phone,
+  corr_cntct.cntct_fax AS corr_fax,
+  corr_cntct.cntct_email AS corr_email,
+  corr_addr.addr_line1 AS corr_line1,
+  corr_addr.addr_line2 AS corr_line2,
+  corr_addr.addr_line3 AS corr_line3,
+  corr_addr.addr_city AS corr_city,
+  corr_addr.addr_state AS corr_state,
+  corr_addr.addr_postalcode AS corr_postalcode,
+  corr_addr.addr_country AS corr_country
+&lt;? foreach("char_id_list") ?>
+  , charass_alias&lt;? literal("char_id_list") ?>.charass_value AS char&lt;? literal("char_id_list") ?>
+&lt;? endforeach ?>
+FROM custinfo
+  JOIN custtype ON (cust_custtype_id=custtype_id)
+  LEFT OUTER JOIN cntct bill_cntct ON (cust_cntct_id=bill_cntct.cntct_id) 
+  LEFT OUTER JOIN addr bill_addr ON (bill_cntct.cntct_addr_id=bill_addr.addr_id)
+  LEFT OUTER JOIN cntct corr_cntct ON (cust_corrcntct_id=corr_cntct.cntct_id) 
+  LEFT OUTER JOIN addr corr_addr ON (corr_cntct.cntct_addr_id=corr_addr.addr_id)  
+&lt;? foreach("char_id_text_list") ?>
+  LEFT OUTER JOIN charass charass_alias&lt;? literal("char_id_text_list") ?> ON ((charass_alias&lt;? literal("char_id_text_list") ?>.charass_target_type='C') 
+                                                                    AND  (charass_alias&lt;? literal("char_id_text_list") ?>.charass_target_id=cust_id)
+                                                                    AND  (charass_alias&lt;? literal("char_id_text_list") ?>.charass_char_id=&lt;? value("char_id_text_list") ?>))
+  LEFT OUTER JOIN char char_alias&lt;? literal("char_id_text_list") ?> ON (charass_alias&lt;? literal("char_id_text_list") ?>.charass_char_id=char_alias&lt;? literal("char_id_text_list") ?>.char_id)
+&lt;? endforeach ?>
+&lt;? foreach("char_id_list_list") ?>
+  LEFT OUTER JOIN charass charass_alias&lt;? literal("char_id_list_list") ?> ON ((charass_alias&lt;? literal("char_id_list_list") ?>.charass_target_type='C') 
+                                                                    AND  (charass_alias&lt;? literal("char_id_list_list") ?>.charass_target_id=cust_id)
+                                                                    AND  (charass_alias&lt;? literal("char_id_list_list") ?>.charass_char_id=&lt;? value("char_id_list_list") ?>))
+  LEFT OUTER JOIN char char_alias&lt;? literal("char_id_list_list") ?> ON (charass_alias&lt;? literal("char_id_list_list") ?>.charass_char_id=char_alias&lt;? literal("char_id_list_list") ?>.char_id)
+&lt;? endforeach ?>
+&lt;? foreach("char_id_date_list") ?>
+  LEFT OUTER JOIN charass charass_alias&lt;? literal("char_id_date_list") ?> ON ((charass_alias&lt;? literal("char_id_date_list") ?>.charass_target_type='C') 
+                                                                    AND  (charass_alias&lt;? literal("char_id_date_list") ?>.charass_target_id=cust_id)
+                                                                    AND  (charass_alias&lt;? literal("char_id_date_list") ?>.charass_char_id=&lt;? value("char_id_date_list") ?>))
+  LEFT OUTER JOIN char char_alias&lt;? literal("char_id_date_list") ?> ON (charass_alias&lt;? literal("char_id_date_list") ?>.charass_char_id=char_alias&lt;? literal("char_id_date_list") ?>.char_id)
+&lt;? endforeach ?>
+WHERE true
+&lt;? if not exists("showInactive") ?> 
+  AND cust_active 
+&lt;? endif ?>
+&lt;? if exists("search_pattern") ?>
+  AND ((cust_number ~* &lt;? value("search_pattern") ?>)
+       OR (cust_name ~* &lt;? value("search_pattern") ?>)
+       OR (custtype_code ~* &lt;? value("search_pattern") ?>)
+       OR (COALESCE(bill_cntct.cntct_first_name || ' ' || bill_cntct.cntct_last_name,'') ~* &lt;? value("search_pattern") ?>)
+       OR (COALESCE(bill_cntct.cntct_phone || ' ' || bill_cntct.cntct_phone2 || ' ' || bill_cntct.cntct_fax, '') ~* &lt;? value("search_pattern") ?>)
+       OR (COALESCE(bill_cntct.cntct_email, '') ~* &lt;? value("search_pattern") ?>)
+       OR (COALESCE(bill_addr.addr_line1 || ' ' || bill_addr.addr_line2 || ' ' || bill_addr.addr_line3,'') ~* &lt;? value("search_pattern") ?>)
+       OR (COALESCE(bill_addr.addr_city,'') ~* &lt;? value("search_pattern") ?>)
+       OR (COALESCE(bill_addr.addr_state,'') ~* &lt;? value("search_pattern") ?>)
+       OR (COALESCE(bill_addr.addr_postalcode,'') ~* &lt;? value("search_pattern") ?>)
+       OR (COALESCE(bill_addr.addr_country,'') ~* &lt;? value("search_pattern") ?>)
+       OR (COALESCE(corr_cntct.cntct_first_name || ' ' || corr_cntct.cntct_last_name,'') ~* &lt;? value("search_pattern") ?>)
+       OR (COALESCE(corr_cntct.cntct_phone || ' ' || corr_cntct.cntct_phone2 || ' ' || corr_cntct.cntct_fax, '') ~* &lt;? value("search_pattern") ?>)
+       OR (COALESCE(corr_cntct.cntct_email, '') ~* &lt;? value("search_pattern") ?>)
+       OR (COALESCE(corr_addr.addr_line1 || ' ' || corr_addr.addr_line2 || ' ' || corr_addr.addr_line3,'') ~* &lt;? value("search_pattern") ?>)
+       OR (COALESCE(corr_addr.addr_city,'') ~* &lt;? value("search_pattern") ?>)
+       OR (COALESCE(corr_addr.addr_state,'') ~* &lt;? value("search_pattern") ?>)
+       OR (COALESCE(corr_addr.addr_postalcode,'') ~* &lt;? value("search_pattern") ?>)
+       OR (COALESCE(corr_addr.addr_country,'') ~* &lt;? value("search_pattern") ?>))
+&lt;? endif ?>
+&lt;? if exists("cust_number_pattern") ?>
+  AND (cust_number ~* &lt;? value("cust_number_pattern") ?>)
+&lt;? endif ?>
+&lt;? if exists("cust_name_pattern") ?>
+  AND (cust_name ~* &lt;? value("cust_name_pattern") ?>)
+&lt;? endif ?>
+&lt;? if exists("custtype_code_pattern") ?>
+  AND (custtype_code ~* &lt;? value("custtype_code_pattern") ?>)
+&lt;? endif ?>
+&lt;? if exists("cntct_name_pattern") ?>
+  AND (COALESCE(bill_cntct.cntct_first_name || ' ' || bill_cntct.cntct_last_name, '') ~* &lt;? value("cntct_name_pattern") ?> 
+   OR  COALESCE(corr_cntct.cntct_first_name || ' ' || corr_cntct.cntct_last_name, '') ~* &lt;? value("cntct_name_pattern") ?>)
+&lt;? endif ?>
+&lt;? if exists("cntct_phone_pattern") ?>
+  AND (COALESCE(bill_cntct.cntct_phone || ' ' || bill_cntct.cntct_phone2 || ' ' || bill_cntct.cntct_fax,'') ~* &lt;? value("cntct_phone_pattern") ?>
+   OR  COALESCE(corr_cntct.cntct_phone || ' ' || corr_cntct.cntct_phone2 || ' ' || corr_cntct.cntct_fax,'') ~* &lt;? value("cntct_phone_pattern") ?>)
+&lt;? endif ?>
+&lt;? if exists("cntct_email_pattern") ?>
+  AND (COALESCE(bill_cntct.cntct_email,'') ~* &lt;? value("cntct_email_pattern") ?>
+   OR  COALESCE(corr_cntct.cntct_email,'') ~* &lt;? value("cntct_email_pattern") ?>)
+&lt;? endif ?>
+&lt;? if exists("addr_street_pattern") ?>
+  AND (COALESCE(bill_addr.addr_line1 || ' ' || bill_addr.addr_line2 || ' ' || bill_addr.addr_line3,'') ~* &lt;? value("addr_street_pattern") ?>
+   OR  COALESCE(corr_addr.addr_line1 || ' ' || corr_addr.addr_line2 || ' ' || corr_addr.addr_line3,'') ~* &lt;? value("addr_street_pattern") ?>)
+&lt;? endif ?>
+&lt;? if exists("addr_city_pattern") ?>
+  AND (COALESCE(bill_addr.addr_city,'') ~* &lt;? value("addr_city_pattern") ?>
+   OR  COALESCE(corr_addr.addr_city,'') ~* &lt;? value("addr_city_pattern") ?>)
+&lt;? endif ?>
+&lt;? if exists("addr_state_pattern") ?>
+  AND (COALESCE(bill_addr.addr_state,'') ~* &lt;? value("addr_state_pattern") ?>
+   OR  COALESCE(corr_addr.addr_state,'') ~* &lt;? value("addr_state_pattern") ?>)
+&lt;? endif ?>
+&lt;? if exists("addr_postalcode_pattern") ?>
+  AND (COALESCE(bill_addr.addr_postalcode,'') ~* &lt;? value("addr_postalcode_pattern") ?>
+   OR  COALESCE(corr_addr.addr_postalcode,'') ~* &lt;? value("addr_postalcode_pattern") ?>)
+&lt;? endif ?>
+&lt;? if exists("addr_country_pattern") ?>
+  AND (COALESCE(bill_addr.addr_country,'') ~* &lt;? value("addr_country_pattern") ?>
+   OR  COALESCE(corr_addr.addr_country,'') ~* &lt;? value("addr_country_pattern") ?>)
+&lt;? endif ?>
+&lt;? literal("charClause") ?>
+ORDER BY cust_number; </sql>
+ </querysource>
+ <rpthead>
+  <height>146</height>
+  <label>
+   <rect>
+    <x>5</x>
+    <y>123</y>
+    <width>40</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Active</string>
+  </label>
+  <line>
+   <xstart>5</xstart>
+   <ystart>140</ystart>
+   <xend>745</xend>
+   <yend>140</yend>
+   <weight>2</weight>
+  </line>
+  <label>
+   <rect>
+    <x>155</x>
+    <y>123</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Name</string>
+  </label>
+  <label>
+   <rect>
+    <x>480</x>
+    <y>123</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Bill Address</string>
+  </label>
+  <label>
+   <rect>
+    <x>50</x>
+    <y>123</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Number</string>
+  </label>
+  <label>
+   <rect>
+    <x>270</x>
+    <y>5</y>
+    <width>475</width>
+    <height>40</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>18</size>
+    <weight>bold</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Customers</string>
+  </label>
+  <text>
+   <rect>
+    <x>5</x>
+    <y>33</y>
+    <width>725</width>
+    <height>15</height>
+   </rect>
+   <bottompad>12</bottompad>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <top/>
+   <data>
+    <query>Parameter Query</query>
+    <column>filter</column>
+   </data>
+  </text>
+  <label>
+   <rect>
+    <x>365</x>
+    <y>123</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Type</string>
+  </label>
+ </rpthead>
+ <pghead>
+  <firstpage/>
+  <height>6</height>
+ </pghead>
+ <pghead>
+  <height>21</height>
+  <label>
+   <rect>
+    <x>480</x>
+    <y>-1</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Bill Address</string>
+  </label>
+  <label>
+   <rect>
+    <x>5</x>
+    <y>-1</y>
+    <width>40</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Active</string>
+  </label>
+  <label>
+   <rect>
+    <x>155</x>
+    <y>-1</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Name</string>
+  </label>
+  <label>
+   <rect>
+    <x>50</x>
+    <y>-1</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Number</string>
+  </label>
+  <line>
+   <xstart>5</xstart>
+   <ystart>15</ystart>
+   <xend>745</xend>
+   <yend>15</yend>
+   <weight>2</weight>
+  </line>
+  <label>
+   <rect>
+    <x>365</x>
+    <y>-1</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Type</string>
+  </label>
+ </pghead>
+ <section>
+  <name>detail</name>
+  <detail>
+   <key>
+    <query>detail</query>
+   </key>
+   <height>67</height>
+   <field>
+    <rect>
+     <x>50</x>
+     <y>2</y>
+     <width>100</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>cust_number</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>5</x>
+     <y>2</y>
+     <width>40</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <hcenter/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_active</column>
+    </data>
+   </field>
+   <text>
+    <rect>
+     <x>480</x>
+     <y>2</y>
+     <width>250</width>
+     <height>15</height>
+    </rect>
+    <bottompad>0</bottompad>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_bill_addr</column>
+    </data>
+   </text>
+   <field>
+    <rect>
+     <x>155</x>
+     <y>17</y>
+     <width>200</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>bill_cntct_name</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>155</x>
+     <y>32</y>
+     <width>200</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>bill_phone</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>155</x>
+     <y>47</y>
+     <width>200</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>bill_email</column>
+    </data>
+   </field>
+   <label>
+    <rect>
+     <x>75</x>
+     <y>17</y>
+     <width>75</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>normal</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <string>Contact:</string>
+   </label>
+   <label>
+    <rect>
+     <x>75</x>
+     <y>32</y>
+     <width>75</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>normal</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <string>Phone:</string>
+   </label>
+   <label>
+    <rect>
+     <x>75</x>
+     <y>47</y>
+     <width>75</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>normal</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <string>Email:</string>
+   </label>
+   <field>
+    <rect>
+     <x>365</x>
+     <y>2</y>
+     <width>100</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>custtype_code</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>155</x>
+     <y>2</y>
+     <width>200</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>cust_name</column>
+    </data>
+   </field>
+  </detail>
+ </section>
+ <pgfoot>
+  <height>16</height>
+  <field>
+   <rect>
+    <x>105</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>Context Query</query>
+    <column>report_date</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Report Date:</string>
+  </label>
+  <field>
+   <rect>
+    <x>705</x>
+    <y>0</y>
+    <width>40</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>Context Query</query>
+    <column>page_number</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>600</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Page:</string>
+  </label>
+ </pgfoot>
+</report>

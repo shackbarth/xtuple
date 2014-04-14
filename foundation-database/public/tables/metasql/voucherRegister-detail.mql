@@ -1,0 +1,30 @@
+-- Group: voucherRegister
+-- Name: detail
+-- Notes: used by dspVoucherRegister
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT gltrans_id, gltrans_date,
+       vend_number, vend_name,
+       gltrans_doctype, gltrans_docnumber, firstLine(gltrans_notes) AS reference,
+       (formatGLAccount(accnt_id) || ' - ' || accnt_descrip) AS account,
+       CASE WHEN (gltrans_amount < 0) THEN ABS(gltrans_amount)
+         ELSE 0
+       END AS debit,
+       CASE WHEN (gltrans_amount > 0) THEN gltrans_amount
+         ELSE 0
+       END AS credit,
+       gltrans_username,
+       'curr' AS debit_xtnumericrole,
+       'curr' AS credit_xtnumericrole
+FROM accnt, gltrans LEFT OUTER JOIN vohead JOIN vendinfo
+                               ON (vohead_vend_id=vend_id)
+                    ON (gltrans_doctype='VO' and gltrans_docnumber=vohead_number)
+WHERE ((gltrans_accnt_id=accnt_id)
+   AND (gltrans_date BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+   AND (gltrans_source='A/P')
+<? if exists("accnt_id") ?>
+   AND (gltrans_accnt_id=<? value("accnt_id") ?>)
+<? endif ?>
+      )
+ORDER BY gltrans_created DESC, gltrans_sequence, gltrans_amount;

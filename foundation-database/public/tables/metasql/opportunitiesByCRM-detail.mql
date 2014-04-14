@@ -1,0 +1,22 @@
+-- Group: opportunitiesByCRM
+-- Name: detail
+-- Notes: used by crmaccount
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT ophead_id, *,
+       currConcat(ophead_curr_id) AS ophead_currabbr,
+       'currval' AS ophead_amount_xtnumericrole
+  FROM ophead
+       LEFT OUTER JOIN crmacct ON (ophead_crmacct_id=crmacct_id)
+       LEFT OUTER JOIN opstage ON (ophead_opstage_id=opstage_id)
+       LEFT OUTER JOIN opsource ON (ophead_opsource_id=opsource_id)
+       LEFT OUTER JOIN optype ON (ophead_optype_id=optype_id)
+ WHERE((crmacct_id=<? value("crmacct_id") ?>)
+<? if exists("username") ?>
+   AND (ophead_owner_username=<? value("username") ?>)
+<? elseif exists("usr_pattern") ?>
+   AND (ophead_owner_username ~ <? value("username_pattern") ?>)
+<? endif ?>
+ )
+ ORDER BY ophead_target_date;

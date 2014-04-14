@@ -1,0 +1,226 @@
+-- Group: contact
+-- Name:  uses
+-- Notes: Find and report uses of the contact
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+<? if not exists('core') ?>
+SELECT <? value("id") ?>::text || '.' || type_id::text || '.' || type_code::text,
+       <? value("id") ?> AS contact,
+       *
+FROM (
+<? endif ?>
+  SELECT crmacct_id AS type_id, 1 AS type_code, <? value("crmacct") ?> AS type,
+         crmacct_number AS number,
+         crmacct_name AS name, <? value("primary") ?> AS role,
+         (crmacct_active) AS active,
+         crmacct_owner_username AS owner
+    FROM crmacct WHERE (crmacct_cntct_id_1=<? value("id") ?>)
+  
+  UNION ALL
+  SELECT crmacct_id AS type_id, 2 AS type_code, <? value("crmacct") ?> AS type,
+         crmacct_number AS number,
+         crmacct_name AS name, <? value("secondary") ?> AS role,
+         (crmacct_active) AS active,
+         crmacct_owner_username AS owner
+    FROM crmacct WHERE (crmacct_cntct_id_2=<? value("id") ?>)
+  
+  UNION ALL
+  SELECT cust_id AS type_id, 3 AS type_code, <? value("cust") ?> AS type,
+         cust_number AS number,
+         cust_name AS name, <? value("billing") ?> AS role,
+         (cust_active) AS active,
+         '' AS owner
+    FROM custinfo WHERE (cust_cntct_id=<? value("id") ?>)
+  
+  UNION ALL
+  SELECT cust_id AS type_id, 4 AS type_code, <? value("cust") ?> AS type,
+         cust_number AS number,
+         cust_name AS name, <? value("correspond") ?> AS role,
+         (cust_active) AS active,
+         '' AS owner
+    FROM custinfo WHERE (cust_corrcntct_id=<? value("id") ?>)
+  
+  UNION ALL
+  SELECT vend_id AS type_id, 5 AS type_code, <? value("vend") ?> AS type,
+         vend_number AS number,
+         vend_name AS name, <? value("primary") ?> AS role,
+         (vend_active) AS active,
+         '' AS owner
+    FROM vendinfo WHERE (vend_cntct1_id=<? value("id") ?>)
+  
+  UNION ALL
+  SELECT vend_id AS type_id, 6 AS type_code, <? value("vend") ?> AS type,
+         vend_number AS number,
+         vend_name AS name, <? value("secondary") ?> AS role,
+         (vend_active) AS active,
+         '' AS owner
+    FROM vendinfo WHERE (vend_cntct2_id=<? value("id") ?>)
+  
+  UNION ALL
+  SELECT prospect_id AS type_id, 7 AS type_code, <? value("prospect") ?> AS type,
+         prospect_number AS number,
+         prospect_name AS name, '' AS role,
+         (prospect_active) AS active,
+         '' AS owner
+    FROM prospect WHERE (prospect_cntct_id=<? value("id") ?>)
+  
+  UNION ALL
+  SELECT shipto_id AS type_id, 8 AS type_code, <? value("shipto") ?> AS type,
+         shipto_num AS number,
+         shipto_name AS name, <? value("shipto") ?> AS role,
+         (shipto_active) AS active,
+         '' AS owner
+    FROM shiptoinfo WHERE (shipto_cntct_id=<? value("id") ?>)
+  
+  UNION ALL
+  SELECT vendaddr_id AS type_id, 9 AS type_code, <? value("vendaddr") ?> AS type,
+         vendaddr_code AS number,
+         vendaddr_name AS name, '' AS role,
+         (true) AS active,
+         '' AS owner
+    FROM vendaddrinfo WHERE (vendaddr_cntct_id=<? value("id") ?>)
+   
+  UNION ALL
+  SELECT warehous_id AS type_id, 10 AS type_code, <? value("whs") ?> AS type,
+         warehous_code AS number,
+         warehous_descrip AS name, '' AS role,
+         (warehous_active) AS active,
+         '' AS owner
+    FROM whsinfo WHERE (warehous_cntct_id=<? value("id") ?>)
+  
+  UNION ALL
+  SELECT emp_id AS type_id, 11 AS type_code, <? value("emp") ?> AS type,
+         emp_code AS number,
+         emp_number AS name, '' AS role,
+         (emp_active) AS active,
+         '' AS owner
+    FROM emp WHERE (emp_cntct_id=<? value("id") ?>)
+
+<? if exists("showOrders") ?>
+  UNION ALL
+  SELECT cohead_id AS id, 12 AS altId, <? value("cohead") ?> AS type,
+         cohead_number AS number,
+         cust_number AS name, <? value("billing") ?> AS role,
+         (cohead_status = 'O') AS active,
+         '' AS owner
+    FROM cohead JOIN custinfo ON (cohead_cust_id=cust_id)
+   WHERE (<? value("id") ?>=cohead_billto_cntct_id)
+
+  UNION ALL
+  SELECT cohead_id AS id, 13 AS altId, <? value("cohead") ?> AS type,
+         cohead_number AS number,
+         cust_number AS name,  <? value("shipto") ?> AS role,
+         (cohead_status = 'O') AS active,
+         '' AS owner
+    FROM cohead JOIN custinfo ON (cohead_cust_id=cust_id)
+   WHERE (<? value("id") ?>=cohead_shipto_cntct_id)
+<? endif ?>
+
+  UNION ALL
+  SELECT incdt_id AS id, 14 AS altId, <? value("incdt") ?> AS type,
+         incdt_number::TEXT AS number,
+         incdt_summary AS name, '' AS role,
+         (incdt_status NOT IN ('R', 'L')) AS active,
+         incdt_owner_username AS owner
+    FROM incdt
+   WHERE (incdt_cntct_id=<? value("id") ?>)
+
+<? if exists("lsreg") ?>
+  UNION ALL
+  SELECT lsreg_id AS id, 15 AS altId, <? value("lsreg") ?> AS type,
+         ls_number AS number,
+         item_number AS name, '' AS role,
+         (lsreg_expiredate > current_date) AS active,
+         '' AS owner
+    FROM lsreg JOIN ls ON (lsreg_ls_id=ls_id) JOIN item ON (ls_item_id=item_id)
+   WHERE (lsreg_cntct_id=<? value("id") ?>)
+<? endif ?>
+
+  UNION ALL
+  SELECT ophead_id AS id, 16 AS altId, <? value("ophead") ?> AS type,
+         ophead_number AS number,
+         ophead_name AS name, '' AS role,
+         ophead_active AS active,
+         ophead_owner_username AS owner
+    FROM ophead
+   WHERE (ophead_cntct_id=<? value("id") ?>)
+
+<? if exists("showOrders") ?>
+  UNION ALL
+  SELECT pohead_id AS id, 17 AS altId, <? value("pohead") ?> AS type,
+         pohead_number AS number,
+         vend_number AS name, <? value("vendcntct") ?> AS role,
+         (pohead_status != 'C') AS active,
+         '' AS owner
+    FROM pohead JOIN vendinfo ON (pohead_vend_id=vend_id)
+   WHERE (<? value("id") ?>=pohead_vend_cntct_id)
+
+  UNION ALL
+  SELECT pohead_id AS id, 18 AS altId, <? value("pohead") ?> AS type,
+         pohead_number AS number,
+         vend_number AS name, <? value("shipto") ?> AS role,
+         (pohead_status != 'C') AS active,
+         '' AS owner
+    FROM pohead JOIN vendinfo ON (pohead_vend_id=vend_id)
+   WHERE (<? value("id") ?>=pohead_shipto_cntct_id)
+
+  UNION ALL
+  SELECT quhead_id AS id, 19 AS altId, <? value("quhead") ?> AS type,
+         quhead_number AS number,
+         COALESCE(cust_number, prospect_number) AS name,
+         <? value("billing") ?> AS role,
+         (quhead_status = 'O') AS active,
+         '' AS owner
+    FROM quhead LEFT OUTER JOIN custinfo ON (quhead_cust_id=cust_id)
+                LEFT OUTER JOIN prospect ON (quhead_cust_id=prospect_id)
+   WHERE (<? value("id") ?>=quhead_billto_cntct_id)
+
+  UNION ALL
+  SELECT quhead_id AS id, 20 AS altId, <? value("quhead") ?> AS type,
+         quhead_number AS number,
+         COALESCE(cust_number, prospect_number) AS name,
+         <? value("shipto") ?> AS role,
+         (quhead_status = 'O') AS active,
+         '' AS owner
+    FROM quhead LEFT OUTER JOIN custinfo ON (quhead_cust_id=cust_id)
+                LEFT OUTER JOIN prospect ON (quhead_cust_id=prospect_id)
+   WHERE (<? value("id") ?>=quhead_shipto_cntct_id)
+<? endif ?>
+
+  UNION ALL
+  SELECT todoitem_id, 21 AS altId, <? value("todo") ?> AS type,
+         todoitem_seq::TEXT AS number,
+         todoitem_name AS name, '' AS role,
+         (todoitem_completed_date IS NULL) AS active,
+         todoitem_owner_username AS owner
+    FROM todoitem
+   WHERE todoitem_cntct_id=<? value("id") ?>
+
+<? if exists("showOrders") ?>
+  <? if exists("tohead") ?>
+  UNION ALL
+  SELECT tohead_id, 22 AS altId, <? value("tohead") ?> AS type,
+         tohead_number AS number,
+         tohead_srcname || ' -> ' || tohead_destname AS name,
+         <? value("from") ?>  AS role,
+         (tohead_status = 'O') AS active,
+         '' AS owner
+    FROM tohead
+   WHERE (<? value("id") ?>=tohead_srccntct_id)
+  UNION ALL
+  SELECT tohead_id, 23 AS altId, <? value("tohead") ?> AS type,
+         tohead_number AS number,
+         tohead_srcname || ' -> ' || tohead_destname AS name,
+         <? value("dest") ?> AS role,
+         (tohead_status = 'O') AS active,
+         '' AS owner
+    FROM tohead
+   WHERE (<? value("id") ?>=tohead_destcntct_id)
+  <? endif ?>
+<? endif ?>
+
+<? if not exists('core') ?>
+) AS innerq
+<? endif ?>
+  ORDER BY type, number;

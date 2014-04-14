@@ -1,0 +1,251 @@
+-- Group: taxBreakdown
+-- Name: detail
+-- Notes: 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+<? if exists("invchead_id") ?>
+  SELECT head.*, linetax.*, freighttax.*, adjtax.* 
+  FROM
+  (SELECT 
+      invchead_invcnumber AS number, invchead_taxzone_id AS taxzone_id, 
+      invchead_curr_id AS curr_id, invchead_curr_id AS tax_curr_id, invchead_invcdate AS date, 
+      SUM(ROUND(((invcitem_billed * invcitem_qty_invuomratio) * (invcitem_price) / 
+      (CASE WHEN(item_id IS NULL) THEN 1 ELSE invcitem_price_invuomratio END)), 2)) AS line, 
+      invchead_freight AS freight, 
+      getFreightTaxTypeId() AS freightTax, getAdjustmentTaxTypeId() AS adjTax 
+  FROM invchead
+      LEFT OUTER JOIN invcitem ON (invcitem_invchead_id=invchead_id)  
+      LEFT OUTER JOIN item ON (invcitem_item_id=item_id) 
+  WHERE (invchead_id=<? value("invchead_id") ?>) 
+  GROUP BY number, taxzone_id, curr_id, tax_curr_id, date, freight, freightTax, adjTax) head, 
+  (SELECT ROUND(SUM(group_tax), 2) AS total_tax FROM
+    (SELECT ROUND(SUM(invcitemtax.taxhist_tax),2) AS group_tax 
+     FROM invcitemtax 
+     LEFT OUTER JOIN invcitem ON (taxhist_parent_id = invcitem_id) 
+     WHERE (invcitem_invchead_id=<? value("invchead_id") ?>)
+     GROUP BY taxhist_tax_id) AS data
+  ) linetax,
+  (SELECT ROUND(SUM(group_tax), 2) AS freighttaxamt FROM
+    (SELECT ROUND(SUM(taxhist_tax),2) AS group_tax 
+     FROM invchead 
+     LEFT OUTER JOIN invcheadtax ON (taxhist_parent_id = invchead_id 
+     AND taxhist_taxtype_id = getfreighttaxtypeid()) 
+     WHERE (invchead_id=<? value("invchead_id") ?>)
+     GROUP BY taxhist_tax_id) AS data
+  ) freighttax,  
+  (SELECT ROUND(SUM(group_tax), 2) AS adjtaxamt FROM
+    (SELECT  ROUND(SUM(taxhist_tax),2) AS group_tax 
+     FROM invchead 
+     LEFT OUTER JOIN invcheadtax ON (taxhist_parent_id = invchead_id 
+                                 AND taxhist_taxtype_id = getadjustmenttaxtypeid()) 
+     WHERE (invchead_id=<? value("invchead_id") ?>)
+     GROUP BY taxhist_tax_id) AS data
+  ) adjtax;
+<? elseif exists("cmhead_id") ?>
+  SELECT head.*, linetax.*, freighttax.*, adjtax.* 
+  FROM
+  (SELECT 
+      cmhead_number AS number, cmhead_taxzone_id AS taxzone_id, 
+      cmhead_curr_id AS curr_id, cmhead_curr_id AS tax_curr_id, cmhead_docdate AS date, 
+      SUM(ROUND(((cmitem_qtycredit * cmitem_qty_invuomratio) * (cmitem_unitprice) / 
+      cmitem_price_invuomratio), 2)) AS line, 
+      cmhead_freight AS freight, 
+      getFreightTaxTypeId() AS freightTax, getAdjustmentTaxTypeId() AS adjTax 
+  FROM cmhead 
+      LEFT OUTER JOIN cmitem ON (cmitem_cmhead_id=cmhead_id) 
+  WHERE (cmhead_id=<? value("cmhead_id") ?>) 
+  GROUP BY number, taxzone_id, curr_id, tax_curr_id, date, freight, freightTax, adjTax) head, 
+  (SELECT ROUND(SUM(group_tax), 2) AS total_tax FROM
+    (SELECT ROUND(SUM(cmitemtax.taxhist_tax * -1),2) AS group_tax 
+     FROM cmitemtax 
+     LEFT OUTER JOIN cmitem ON (taxhist_parent_id = cmitem_id) 
+     WHERE (cmitem_cmhead_id=<? value("cmhead_id") ?>)
+     GROUP BY taxhist_tax_id) AS data
+  ) linetax,
+  (SELECT ROUND(SUM(group_tax), 2) AS freighttaxamt FROM
+    (SELECT ROUND(SUM(taxhist_tax * -1),2) AS group_tax 
+     FROM cmhead 
+     LEFT OUTER JOIN cmheadtax ON (taxhist_parent_id = cmhead_id 
+                               AND taxhist_taxtype_id = getfreighttaxtypeid()) 
+     WHERE (cmhead_id=<? value("cmhead_id") ?>)
+     GROUP BY taxhist_tax_id) AS data
+  ) freighttax, 
+  (SELECT ROUND(SUM(group_tax), 2) AS adjtaxamt FROM
+    (SELECT  ROUND(SUM(taxhist_tax * -1),2) AS group_tax 
+     FROM cmhead 
+     LEFT OUTER JOIN cmheadtax ON (taxhist_parent_id = cmhead_id 
+                               AND taxhist_taxtype_id = getadjustmenttaxtypeid()) 
+     WHERE (cmhead_id=<? value("cmhead_id") ?>)
+     GROUP BY taxhist_tax_id) AS data
+  ) adjtax;
+<? elseif exists("cobmisc_id") ?>
+ SELECT head.*, linetax.*, frighttax.*, adjtax.*   
+ FROM 
+   (SELECT cohead_number AS number, cobmisc_taxzone_id AS taxzone_id, 
+      cobmisc_curr_id AS curr_id, cobmisc_curr_id AS tax_curr_id, 
+     cobmisc_invcdate AS date, SUM(ROUND((cobill_qty * coitem_price) / 
+     (CASE WHEN(item_id IS NULL) THEN 1 ELSE coitem_price_invuomratio END), 2)) AS line, 
+     cobmisc_freight AS freight, 
+     getFreightTaxTypeId() AS freightTax, getAdjustmentTaxTypeId() AS adjTax 	         
+    FROM cobmisc
+     JOIN cohead  ON (cobmisc_cohead_id=cohead_id) 
+     LEFT OUTER JOIN cobill ON (cobill_cobmisc_id=cobmisc_id) 
+     LEFT OUTER JOIN coitem ON (cobill_coitem_id=coitem_id) 
+     LEFT OUTER JOIN itemsite ON (coitem_itemsite_id=itemsite_id) 
+     LEFT OUTER JOIN item ON (itemsite_item_id=item_id) 
+    WHERE (cobmisc_id=<? value("cobmisc_id") ?>) 
+    GROUP BY number, cobmisc_taxzone_id, curr_id, tax_curr_id, 
+      date, freight, freightTax,adjTax) head, 
+   (SELECT ROUND(SUM(group_tax), 2) AS total_tax FROM
+     (SELECT ROUND(SUM(cobilltax.taxhist_tax),2) AS group_tax
+      FROM cobilltax
+      LEFT OUTER JOIN cobill ON (cobill_id=taxhist_parent_id) 
+      WHERE (cobill_cobmisc_id=<? value("cobmisc_id") ?>)
+      GROUP BY taxhist_tax_id) AS data
+   ) linetax, 
+   (SELECT ROUND(SUM(group_tax), 2) AS freighttaxamt FROM
+     (SELECT ROUND(SUM(taxhist_tax),2) AS group_tax
+      FROM cobmisctax
+      LEFT OUTER JOIN cobmisc ON (taxhist_parent_id = cobmisc_id AND taxhist_taxtype_id = getfreighttaxtypeid()) 
+      WHERE (cobmisc_id=<? value("cobmisc_id") ?>)
+      GROUP BY taxhist_tax_id) AS data
+   ) frighttax, 
+   (SELECT ROUND(SUM(group_tax), 2) AS adjtaxamt FROM
+     (SELECT  ROUND(SUM(taxhist_tax),2) AS group_tax
+      FROM cobmisctax
+      LEFT OUTER JOIN cobmisc ON (taxhist_parent_id = cobmisc_id AND taxhist_taxtype_id = getadjustmenttaxtypeid()) 
+      WHERE (cobmisc_id=<? value("cobmisc_id") ?>)
+      GROUP BY taxhist_tax_id) AS data
+   ) adjtax;
+<? elseif exists("cohead_id") ?>
+  SELECT cohead_number AS number,
+         cohead_taxzone_id AS taxzone_id,
+         cohead_curr_id AS curr_id,
+         cohead_curr_id AS tax_curr_id,
+         cohead_orderdate AS date,
+         SUM(ROUND((coitem_qtyord * coitem_qty_invuomratio) * (coitem_price / coitem_price_invuomratio),
+                    2)) AS line,
+         ROUND(SUM(calculateTax(cohead_taxzone_id, coitem_taxtype_id, cohead_orderdate, cohead_curr_id, ROUND((coitem_qtyord * coitem_qty_invuomratio) * (coitem_price /
+                        coitem_price_invuomratio), 2))),2) as total_tax,   
+         cohead_freight AS freight,
+         getFreightTaxTypeId() AS freightTax, 
+         ROUND(calculateTax(cohead_taxzone_id, getfreighttaxtypeid(), cohead_orderdate, cohead_curr_id, cohead_freight), 2) AS freighttaxamt
+  FROM coitem, item, itemsite, cohead 
+  LEFT OUTER JOIN taxzone ON (cohead_taxzone_id=taxzone_id) 
+  LEFT OUTER JOIN taxtype ON (taxtype_id=getFreightTaxTypeId())
+  WHERE ((coitem_cohead_id=<? value("cohead_id") ?>)
+    AND  (coitem_cohead_id=cohead_id)
+    AND  (coitem_status != 'X')
+    AND  (coitem_itemsite_id=itemsite_id)
+    AND  (itemsite_item_id=item_id))
+  GROUP BY number, cohead_taxzone_id, curr_id, tax_curr_id,
+         date, freight, freightTax,freighttaxamt;
+<? elseif exists("quhead_id") ?>
+  SELECT quhead_number AS number,
+         quhead_taxzone_id AS taxzone_id,
+         quhead_curr_id AS curr_id,
+         quhead_curr_id AS tax_curr_id,
+         quhead_quotedate AS date,
+         SUM(ROUND((quitem_qtyord * quitem_qty_invuomratio) * (quitem_price / quitem_price_invuomratio),
+                    2)) AS line,
+         ROUND(SUM(calculateTax(quhead_taxzone_id, quitem_taxtype_id, quhead_quotedate, quhead_curr_id, ROUND((quitem_qtyord * quitem_qty_invuomratio) * (quitem_price /
+                        quitem_price_invuomratio), 2))),2) as total_tax,  
+         quhead_freight AS freight,
+         taxtype_id AS freightTax,
+         ROUND(calculateTax(quhead_taxzone_id, getfreighttaxtypeid(), quhead_quotedate, quhead_curr_id, quhead_freight), 2) AS freighttaxamt
+  FROM quitem, item, quhead 
+    LEFT OUTER JOIN taxzone ON (quhead_taxzone_id=taxzone_id) 
+    LEFT OUTER JOIN taxtype ON (taxtype_id=getFreightTaxTypeId())
+  WHERE ((quitem_quhead_id=<? value("quhead_id") ?>)
+    AND  (quitem_quhead_id=quhead_id)
+    AND  (quitem_item_id=item_id))
+  GROUP BY number, quhead_taxzone_id, curr_id, tax_curr_id,
+         date, freight, freightTax,freighttaxamt;
+<? elseif exists("rahead_id") ?>
+  SELECT rahead_number AS number,
+         rahead_taxzone_id AS taxzone_id,
+         rahead_curr_id AS curr_id,
+         rahead_curr_id AS tax_curr_id,
+         rahead_authdate AS date,
+         COALESCE(SUM(ROUND((raitem_qtyauthorized * raitem_qty_invuomratio) * (raitem_unitprice / raitem_price_invuomratio),
+                    2)),0) AS line,
+         COALESCE(ROUND(SUM(calculateTax(rahead_taxzone_id, raitem_taxtype_id, rahead_authdate, rahead_curr_id, ROUND((raitem_qtyauthorized * raitem_qty_invuomratio) * (raitem_unitprice /
+                        raitem_price_invuomratio), 2))),2),0) as total_tax,   
+         rahead_freight AS freight,
+         taxtype_id AS freightTax,
+         ROUND(calculateTax(rahead_taxzone_id, getfreighttaxtypeid(), rahead_authdate, rahead_curr_id, rahead_freight), 2) AS freighttaxamt
+  FROM rahead 
+    LEFT OUTER JOIN raitem ON (raitem_rahead_id=rahead_id)
+    LEFT OUTER JOIN taxzone ON (rahead_taxzone_id=taxzone_id) 
+    LEFT OUTER JOIN taxtype ON (taxtype_id=getFreightTaxTypeId())
+  WHERE (raitem_rahead_id=<? value("rahead_id") ?>)
+  GROUP BY number, rahead_taxzone_id, curr_id, tax_curr_id,
+         date, freight, freightTax;
+<? elseif exists("tohead_id") ?>
+  SELECT tohead_number AS number,
+         tohead_taxzone_id AS taxzone_id,
+         tohead_freight_curr_id AS curr_id,
+         tohead_freight_curr_id AS tax_curr_id,
+         tohead_orderdate AS date,
+-------- SUM(ROUND(toitem_freight, 2)) AS line,
+-------- COALESCE(ROUND(SUM(calculateTax(tohead_taxzone_id, getfreighttaxtypeid(), tohead_orderdate, baseCurrId(), toitem_freight)),2),0) as total_tax,
+         0.0 AS line, 0.0 AS total_tax,  
+         tohead_freight +  SUM(ROUND(toitem_freight, 2)) AS freight,
+         getFreightTaxTypeId() AS freightTax,
+         COALESCE(ROUND(SUM(calculateTax(tohead_taxzone_id, getfreighttaxtypeid(), tohead_orderdate, baseCurrId(), toitem_freight)),2),0) +
+         COALESCE(ROUND(calculateTax(tohead_taxzone_id, getfreighttaxtypeid(), tohead_orderdate, baseCurrId(), tohead_freight),2),0) AS freighttaxamt 
+  FROM toitem, tohead 
+  WHERE ((toitem_tohead_id=<? value("tohead_id") ?>)
+    AND  (toitem_tohead_id=tohead_id)
+    AND  (toitem_status!='X')) 
+  GROUP BY number, taxzone_id, curr_id, tax_curr_id,
+         date,		tohead_freight,	freightTax
+<? elseif exists("pohead_id") ?>
+  SELECT pohead_number AS number,
+         pohead_taxzone_id AS taxzone_id,
+         pohead_curr_id AS curr_id,
+         pohead_curr_id AS tax_curr_id,
+         pohead_orderdate AS date,
+         COALESCE(SUM(ROUND(poitem_unitprice * poitem_qty_ordered, 2)),0) AS line,
+         (SELECT SUM(tax) AS tax 
+          FROM (
+            SELECT ROUND(SUM(taxdetail_tax),2) AS tax 
+            FROM tax 
+              JOIN calculateTaxDetailSummary('PO', <? value("pohead_id") ?>, 'T') ON (taxdetail_tax_id=tax_id)
+            GROUP BY tax_id) data
+         ) as total_tax,
+         (COALESCE(SUM(poitem_freight),0)+COALESCE(pohead_freight,0)) AS freight,
+         taxtype_id AS freightTax,
+         0 AS freighttaxamt
+  FROM pohead 
+    LEFT OUTER JOIN poitem ON (poitem_pohead_id=pohead_id)
+    LEFT OUTER JOIN taxzone ON (pohead_taxzone_id=taxzone_id) 
+    LEFT OUTER JOIN taxtype ON (taxtype_id=getFreightTaxTypeId())
+  WHERE (poitem_pohead_id=<? value("pohead_id") ?>)
+  GROUP BY number, pohead_taxzone_id, curr_id, tax_curr_id,
+         date, pohead_freight, freightTax;
+<? elseif exists("vohead_id") ?>
+  SELECT head.*, linetax.*, adjtax.* 
+  FROM
+  (SELECT 
+      vohead_number AS number, vohead_taxzone_id AS taxzone_id, 
+      vohead_curr_id AS curr_id, vohead_curr_id AS tax_curr_id, vohead_docdate AS date, 
+      COALESCE(SUM(ROUND(voitem_qty * poitem_unitprice, 2)), 0) AS line, 
+      COALESCE(SUM(voitem_freight), 0) AS freight,  
+      getAdjustmentTaxTypeId() AS adjTax 
+  FROM voitem 
+      LEFT OUTER JOIN poitem ON (voitem_poitem_id=poitem_id) 
+      LEFT OUTER JOIN vohead ON (voitem_vohead_id=vohead_id) 
+  WHERE (voitem_vohead_id=<? value("vohead_id") ?>) 
+  GROUP BY number, taxzone_id, curr_id, tax_curr_id, date, adjTax) head, 
+  (SELECT SUM(voitemtax.taxhist_tax * -1) AS total_tax 
+   FROM voitemtax 
+    LEFT OUTER JOIN voitem ON (taxhist_parent_id = voitem_id) 
+   WHERE (voitem_vohead_id=<? value("vohead_id") ?>)) linetax,
+  (SELECT  SUM(taxhist_tax * -1) AS adjtaxamt 
+   FROM vohead 
+    LEFT OUTER JOIN voheadtax ON (taxhist_parent_id = vohead_id 
+                                AND taxhist_taxtype_id = getadjustmenttaxtypeid()) 
+   WHERE vohead_id=<? value("vohead_id") ?>) adjtax;
+<? endif ?>;

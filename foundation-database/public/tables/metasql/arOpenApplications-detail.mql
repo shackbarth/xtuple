@@ -1,0 +1,88 @@
+-- Group: arOpenApplications
+-- Name: detail
+-- Notes: used by applyARCreditMemo, cashReceipt
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT *,
+       'curr' AS balance_xtnumericrole,
+       'curr' AS applied_xtnumericrole,
+       'curr' AS pending_xtnumericrole,
+       currConcat(balance_curr) AS balance_curr_qtdisplayrole,
+       CASE WHEN (doctype='D') THEN <? value("debitMemo") ?>
+            WHEN (doctype='I') THEN <? value("invoice") ?>
+            WHEN (doctype='C') THEN <? value("creditMemo") ?>
+            WHEN (doctype='R') THEN <? value("cashdeposit") ?>
+       END AS doctype_qtdisplayrole,
+       CASE WHEN (doctype='C') THEN 'emphasis'
+            WHEN (doctype='R') THEN 'altemphasis'
+       END AS doctype_qtforegroundrole,
+<? if exists("cashrcpt_id") ?>
+    CASE WHEN (pending - currtobase(cashrcpt_curr_id, applied, cashrcpt_distdate) - discount > balance) 
+    AND doctype IN ('I','D')
+    AND NOT cashrcpt_posted
+<? else ?>
+    CASE WHEN (pending - applied - discount > balance)
+<? endif ?>  
+       THEN 'error' END AS qtforegroundrole
+FROM (SELECT
+      aropen_id,
+<? if exists("cashrcpt_id") ?>
+       COALESCE(s.cashrcptitem_id, -1) AS alt_id,
+       COALESCE(cashrcpt_posted,FALSE) AS cashrcpt_posted,
+       cashrcpt_curr_id,
+       cashrcpt_distdate,
+<? endif ?>
+       aropen_doctype AS doctype,
+       aropen_docnumber, aropen_ordernumber,
+       aropen_docdate, aropen_duedate,
+       (aropen_amount - aropen_paid - calcpendingarapplications(aropen_id)) *
+       (CASE WHEN aropen_doctype IN ('C','R') THEN -1 ELSE 1 END ) AS balance,
+       aropen_curr_id AS balance_curr,
+<? if exists("cashrcpt_id") ?>
+       COALESCE(s.cashrcptitem_amount, 0.0) AS applied,
+       COALESCE(s.cashrcptitem_discount, 0.0) AS discount,
+--       (SELECT COALESCE(SUM(p.cashrcptitem_amount), 0)
+--                      FROM cashrcptitem p
+--                     WHERE (p.cashrcptitem_aropen_id=aropen_id)
+--                     AND (p.cashrcptitem_cashrcpt_id=<? value("cashrcpt_id") ?>))
+--                   AS applied,
+--       (SELECT COALESCE(SUM(p.cashrcptitem_discount), 0)
+--                      FROM cashrcptitem p
+--                     WHERE (p.cashrcptitem_aropen_id=aropen_id)
+--                     AND (p.cashrcptitem_cashrcpt_id=<? value("cashrcpt_id") ?>))
+--                   AS discount,
+       currConcat(cashrcpt_curr_id) AS applied_curr,
+<? elseif exists("source_aropen_id") ?>
+       COALESCE(arcreditapply_amount, 0) AS applied,
+       0 AS discount,
+       currConcat(arcreditapply_curr_id) AS applied_curr,
+<? endif ?>
+       calcpendingarapplications(aropen_id) AS pending,
+       currConcat(aropen_curr_id) AS pending_curr
+ FROM aropen LEFT OUTER JOIN
+ <? if exists("cashrcpt_id") ?>
+      cashrcptitem s ON (s.cashrcptitem_aropen_id=aropen_id
+                     AND cashrcptitem_cashrcpt_id=<? value("cashrcpt_id") ?>)
+        LEFT OUTER JOIN
+      cashrcpt ON (cashrcptitem_cashrcpt_id = cashrcpt_id
+               AND cashrcpt_id=<? value("cashrcpt_id") ?>)
+<? elseif exists("source_aropen_id") ?>
+      arcreditapply ON ((arcreditapply_source_aropen_id=<? value("source_aropen_id") ?>)
+                    AND (arcreditapply_target_aropen_id=aropen_id) )
+<? endif ?>
+ WHERE (
+<? if exists("posted") ?> 
+   (s.cashrcptitem_aropen_id=aropen_id)
+<? else ?>
+   (aropen_open)
+<? endif ?>
+<? if exists("noCredits") ?>
+   AND (aropen_doctype IN ('D', 'I'))
+<? elseif exists("cashrcpt_id") ?>
+<? else ?>
+   AND (aropen_doctype IN ('D', 'I'))
+<? endif ?>
+   AND (aropen_cust_id=<? value("cust_id") ?>) )
+ ) AS dummy
+ ORDER BY aropen_duedate, balance;

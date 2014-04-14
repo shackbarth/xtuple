@@ -1,0 +1,124 @@
+-- Group: itemSources
+-- Name: prices
+-- Notes: 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT itemsrcp_id, itemsrc_id,
+       vend_number, vend_name,
+       currConcat(vend_curr_id) AS vend_curr,
+       item_number,
+       (item_descrip1 || ' ' || item_descrip2) AS item_descrip,
+       warehous_code, uom_name,
+       contrct_number,
+       itemsrc.*,
+       (itemsrc_vend_item_number || '/' || itemsrc_manuf_item_number) AS itemsrc_descrip,
+       itemsrcp.*,
+       currConcat(itemsrcp_curr_id) AS item_curr,
+       noNeg(CASE WHEN (itemsrcp_type='N') THEN currToBase(itemsrcp_curr_id, itemsrcp_price, itemsrcp_updated)
+                  WHEN (itemsrcp_type='D') THEN (item_listcost - (item_listcost * COALESCE(itemsrcp_discntprcnt, 0.0)) - COALESCE(itemsrcp_fixedamtdiscount, 0.0))
+                  ELSE 0.0
+             END) AS price_base,
+       noNeg(CASE WHEN (itemsrcp_type='N') THEN itemsrcp_price
+                  WHEN (itemsrcp_type='D') THEN (item_listcost - (item_listcost * COALESCE(itemsrcp_discntprcnt, 0.0)) - COALESCE(itemsrcp_fixedamtdiscount, 0.0))
+                  ELSE 0.0
+             END) AS price_local,
+       CASE WHEN (itemsrcp_type='N') THEN <? value("nominal") ?>
+            WHEN (itemsrcp_type='D') THEN <? value("discount") ?>
+            ELSE 'error'
+       END AS type,
+       CASE WHEN (itemsrcp_type='N') THEN <? value("price") ?>
+            WHEN ((itemsrcp_type='D') AND (COALESCE(itemsrcp_discntprcnt, 0.0)=0.0) AND (COALESCE(itemsrcp_fixedamtdiscount, 0.0)<>0.0)) THEN <? value("fixed") ?>
+            WHEN ((itemsrcp_type='D') AND (COALESCE(itemsrcp_discntprcnt, 0.0)<>0.0) AND (COALESCE(itemsrcp_fixedamtdiscount, 0.0)=0.0)) THEN <? value("percent") ?>
+            WHEN (itemsrcp_type='D') THEN <? value("mixed") ?>
+            ELSE 'error'
+       END AS method,
+       'qty' AS itemsrc_invvendoruomratio_xtnumericrole,
+       'qty' AS itemsrc_minordqty_xtnumericrole,
+       'qty' AS itemsrc_ordqtymult_xtnumericrole,
+       'qty' AS itemsrcp_qtybreak_xtnumericrole,
+       'purchprice' AS price_local_xtnumericrole,
+       'purchprice' AS price_base_xtnumericrole,
+       'percent' AS itemsrcp_discntprcnt_xtnumericrole,
+       CASE WHEN (warehous_code IS NULL) THEN <? value("all") ?>
+       END AS warehous_code_qtdisplayrole,
+       CASE WHEN (itemsrcp_dropship) THEN <? value("dropship") ?>
+            ELSE <? value("stock") ?>
+       END AS itemsrcp_dropship_qtdisplayrole,
+       CASE WHEN COALESCE(itemsrc_effective, startOfTime()) <=
+                 startOfTime() THEN <? value("always") ?>
+       END AS itemsrc_effective_qtdisplayrole,
+       CASE WHEN COALESCE(itemsrc_expires, endOfTime()) >=
+                 endOfTime() THEN <? value("never") ?>
+       END AS itemsrc_expires_qtdisplayrole,
+       CASE WHEN (COALESCE(itemsrc_expires, endOfTime()) < CURRENT_DATE) THEN 'expired'
+            WHEN (COALESCE(itemsrc_effective, startOfTime()) > CURRENT_DATE) THEN 'future'
+       END AS qtforegroundrole
+FROM itemsrc JOIN vendinfo ON (vend_id=itemsrc_vend_id AND vend_active)
+             JOIN item ON (item_id=itemsrc_item_id)
+             JOIN uom ON (uom_id=item_inv_uom_id)
+             JOIN itemsrcp ON (itemsrcp_itemsrc_id=itemsrc_id)
+             LEFT OUTER JOIN contrct ON (contrct_id=itemsrc_contrct_id)
+             LEFT OUTER JOIN whsinfo ON (warehous_id=itemsrcp_warehous_id)
+WHERE ((true)
+<? if not exists("showInactive") ?>
+   AND (itemsrc_active)
+<? endif ?>
+<? if exists("item_id") ?>
+  AND (itemsrc_item_id=<? value("item_id") ?>)
+<? endif ?>
+<? if exists("vend_id") ?>
+  AND (itemsrc_vend_id=<? value("vend_id") ?>)
+<? endif ?>
+<? if exists("itemsrc_id") ?>
+  AND (itemsrc_id=<? value("itemsrc_id") ?>)
+<? endif ?>
+<? if exists("warehous_id") ?>
+  AND (itemsrcp_warehous_id=<? value("warehous_id") ?>)
+<? endif ?>
+<? if exists("showDropShip") ?>
+   AND (itemsrcp_dropship)
+<? endif ?>
+<? if exists("search_pattern") ?>
+  AND ( (item_number ~* <? value("search_pattern") ?>)
+    OR  (COALESCE(item_descrip1,'') || COALESCE(item_descrip2,'') ~* <? value("search_pattern") ?>) )
+<? endif ?>
+<? if exists("item_number_pattern") ?>
+  AND (item_number ~* <? value("item_number_pattern") ?>)
+<? endif ?>
+<? if exists("item_descrip_pattern") ?>
+  AND (COALESCE(item_descrip1,'') || COALESCE(item_descrip2,'') ~* <? value("item_descrip_pattern") ?>)
+<? endif ?>
+<? if exists("contrct_id") ?>
+  AND (itemsrc_contrct_id=<? value("contrct_id") ?>)
+<? endif ?>
+<? if exists("contract_number_pattern") ?>
+  AND (contrct_number ~* <? value("contract_number_pattern") ?>)
+<? endif ?>
+<? if exists("vend_name_pattern") ?>
+  AND (vend_name ~* <? value("vend_name_pattern") ?>)
+<? endif ?>
+<? if exists("vend_item_number_pattern") ?>
+  AND (itemsrc_vend_item_number ~* <? value("vend_item_number_pattern") ?>)
+<? endif ?>
+<? if exists("manuf_pattern") ?>
+  AND (itemsrc_manuf_name ~* <? value("manuf_pattern") ?>)
+<? endif ?>
+<? if exists("manuf_item_number_pattern") ?>
+  AND (itemsrc_manuf_item_number ~* <? value("manuf_item_number_pattern") ?>)
+<? endif ?>
+<? if exists("effectiveStartDate") ?>
+  AND (COALESCE(contrct_effective, itemsrc_effective) >= <? value("effectiveStartDate") ?>)
+<? endif ?>
+<? if exists("effectiveEndDate") ?>
+  AND (COALESCE(contrct_effective, itemsrc_effective) <= <? value("effectiveEndDate") ?>)
+<? endif ?>
+<? if exists("expireStartDate") ?>
+  AND (COALESCE(contrct_expires, itemsrc_expires) >= <? value("expireStartDate") ?>)
+<? endif ?>
+<? if exists("expireEndDate") ?>
+  AND (COALESCE(contrct_expires, itemsrc_expires) <= <? value("expireEndDate") ?>)
+<? endif ?>
+)
+ORDER By item_number, vend_name, itemsrcp_qtybreak
+;

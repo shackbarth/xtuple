@@ -1,0 +1,131 @@
+-- Group: timePhasedSales
+-- Name: detail
+-- Notes: 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT
+<? if exists("byCust") ?>
+  cust_id, cust_number, cust_name, 
+<? elseif exists("byProdcat") ?>
+  prodcat_id, prodcat_code, prodcat_descrip,
+<? elseif exists("byItem") ?>
+  item_id, item_number, item_descrip1,
+<? endif ?>
+  uom, warehous_code
+-- Loop through each period bucket to find bookings for period
+<? foreach("period_id_list") ?>
+             , SUM(CASE WHEN (cohist_invcdate BETWEEN findPeriodStart(<? value("period_id_list") ?>) AND findPeriodEnd(<? value("period_id_list") ?>)) THEN
+                 amount ELSE 0 END) AS bucket_<? literal("period_id_list") ?>,
+  <? if exists("salesDollars") ?>
+             'curr' AS bucket_<? literal("period_id_list") ?>_xtnumericrole, 
+             0 AS bucket_<? literal("period_id_list") ?>_xttotalrole
+  <? else ?>
+             'qty' AS bucket_<? literal("period_id_list") ?>_xtnumericrole, 
+             0 AS bucket_<? literal("period_id_list") ?>_xttotalrole 
+  <? endif ?>
+<? endforeach ?>
+FROM ( 
+  SELECT cohist_invcdate,
+<? if exists("byCust") ?>
+         cust_id, cust_number, cust_name
+<? elseif exists("byProdcat") ?>
+         prodcat_id, prodcat_code, prodcat_descrip
+<? elseif exists("byItem") ?>
+         item_id, item_number, item_descrip1
+<? endif ?>
+       , warehous_code
+<? if exists("salesDollars") ?>
+       , round((cohist_qtyshipped * currtobase(cohist_curr_id, cohist_unitprice, cohist_invcdate)), 2) AS amount
+       , <? value("baseCurrAbbr") ?>::text AS uom
+<? else ?>
+       , cohist_qtyshipped
+  <? if exists("capacityUnits") ?>
+       * itemcapinvrat(itemsite_item_id)
+  <? elseif exists("altCapacityUnits") ?>
+       * itemaltcapinvrat(itemsite_item_id)
+  <? endif ?>
+         AS amount
+  <? if exists("inventoryUnits") ?>
+       , uom_name AS uom
+  <? elseif exists("capacityUnits") ?>
+       , itemcapuom(item_id) AS uom
+  <? elseif exists("altCapacityUnits") ?>
+       , itemaltcapuom(item_id) AS uom
+  <? endif ?>
+<? endif ?>
+  FROM cohist JOIN itemsite ON (itemsite_id=cohist_itemsite_id)
+              JOIN item ON (item_id=itemsite_item_id)
+<? if exists("inventoryUnits") ?>
+   JOIN uom ON (item_inv_uom_id=uom_id)
+<? endif ?>
+   JOIN site() ON (itemsite_warehous_id=warehous_id)
+<? if reExists("[cC]ust") ?>
+   JOIN custinfo ON (cohist_cust_id=cust_id)
+<? endif ?> 
+<? if reExists("custgrp") ?>
+   JOIN custgrpitem ON (cohist_cust_id=custgrpitem_cust_id)
+   JOIN custgrp ON (custgrp_id=custgrpitem_custgrp_id)
+<? endif ?> 
+<? if reExists("[pP]rodcat") ?>
+   JOIN prodcat ON (item_prodcat_id=prodcat_id)
+<? endif ?>
+  WHERE ((cohist_invcdate BETWEEN 
+<? foreach("period_id_list") ?>
+  <? if isFirst("period_id_list") ?>
+    findPeriodStart(<? value("period_id_list") ?>)
+  <? endif ?>
+  <? if isLast("period_id_list") ?>
+    AND findPeriodEnd(<? value("period_id_list") ?>)
+  <? endif ?>
+<? endforeach ?>)
+<? if exists("item_id") ?> 
+    AND (item_id=<? value("item_id") ?>)
+<? endif ?>
+<? if exists("cust_id") ?> 
+    AND (cust_id=<? value("cust_id") ?>)
+<? endif ?>
+<? if exists("custtype_id") ?> 
+    AND (cust_custtype_id=<? value("custtype_id") ?>)
+<? endif ?>
+<? if exists("custtype_pattern") ?>
+    AND (cust_custtype_id IN (SELECT custtype_id 
+                              FROM custtype 
+                              WHERE (custtype_code ~ <? value("custtype_pattern") ?>)))
+<? endif ?>
+<? if exists("prodcat_id") ?> 
+    AND (item_prodcat_id=<? value("prodcat_id") ?>) 
+<? endif ?>
+<? if exists("prodcat_pattern") ?>
+    AND (item_prodcat_id IN (SELECT prodcat_id  
+                             FROM prodcat 
+                             WHERE (prodcat_code ~ <? value("prodcat_pattern") ?>)))
+<? endif ?>
+<? if exists("custgrp_id") ?> 
+    AND (custgrp_id=<? value("custgrp_id") ?>) 
+<? endif ?>
+<? if exists("custgrp_pattern") ?>
+    AND (custgrp_name  ~ <? value("custgrp_pattern") ?>)
+<? endif ?>
+<? if exists("warehous_id") ?> 
+    AND(itemsite_warehous_id=<? value("warehous_id") ?>) 
+<? endif ?>
+      )) data
+GROUP BY
+<? if exists("byCust") ?>
+  cust_id, cust_number, cust_name, 
+<? elseif exists("byProdcat") ?>
+  prodcat_id, prodcat_code, prodcat_descrip,
+<? elseif exists("byItem") ?>
+  item_id, item_number, item_descrip1,
+<? endif ?>
+  uom, warehous_code
+ORDER BY 
+<? if exists("byCust") ?>
+  cust_number,
+<? elseif exists("byProdcat") ?>
+  prodcat_code,
+<? elseif exists("byItem") ?>
+  item_number,
+<? endif ?>
+  uom, warehous_code;

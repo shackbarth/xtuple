@@ -1,0 +1,28 @@
+-- Group: manufacture
+-- Name: jobcosting
+-- Notes: used by dspJobCosting
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT *, 0 AS cost_xttotalrole,
+       'qty' AS qty_xtnumericrole,
+       'cost' AS cost_xtnumericrole
+FROM (
+  SELECT womatl_id AS id, 3 AS sort,
+         <? value("material") ?> AS type, item_number AS code,
+         item_descrip1 AS descrip,
+         (SUM(COALESCE(invhist_invqty,0))) AS qty,
+         uom_name AS uom,
+         SUM(COALESCE(invhist_invqty * invhist_unitcost,0)) AS cost,
+         NULL as wooper_seqnumber
+  FROM womatl
+    LEFT OUTER JOIN womatlpost ON (womatl_id=womatlpost_womatl_id)
+    LEFT OUTER JOIN invhist ON (womatlpost_invhist_id=invhist_id),
+    itemsite, item, uom
+  WHERE ((womatl_wo_id=<? value("wo_id") ?>)
+     AND (womatl_itemsite_id=itemsite_id)
+     AND (itemsite_item_id=item_id)
+     AND (item_inv_uom_id=uom_id))
+  GROUP BY womatl_id, item_number, item_descrip1, uom_name
+  ) AS data
+ORDER BY sort, code;

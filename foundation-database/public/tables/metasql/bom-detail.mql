@@ -1,0 +1,86 @@
+-- Group: bom
+-- Name: detail
+-- Notes: used by dspIndentedBOM, dspSingleLevelBOM, dspSummarizedBOM
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT <? if exists("bySingleLvl") ?>
+         bomitem_item_id AS itemid, bomitem.*, item_number,
+         invuom.uom_name AS invuomname, issueuom.uom_name AS issueuomname,
+         (item_descrip1 || ' ' || item_descrip2) AS itemdescription,
+         (itemuomtouomratio(bomitem_item_id, bomitem_uom_id, NULL) * bomitem_qtyfxd) AS invqtyfxd,
+         (itemuomtouomratio(bomitem_item_id, bomitem_uom_id, NULL) * bomitem_qtyper) AS invqtyper,
+         'qty' AS bomitem_qtyfxd_xtnumericrole,
+         'qty' AS invqtyfxd_xtnumericrole,
+         'qtyper' AS bomitem_qtyper_xtnumericrole,
+         'qtyper' AS invqtyper_xtnumericrole,
+         'percent' AS bomitem_scrap_xtnumericrole,
+         CASE WHEN COALESCE(bomitem_effective, startOfTime()) = startOfTime() 
+           THEN <? value("always") ?>
+         END AS bomitem_effective_qtdisplayrole,
+         CASE WHEN COALESCE(bomitem_expires, endOfTime()) = endOfTime() 
+           THEN <? value("never") ?>
+         END AS bomitem_expires_qtdisplayrole,
+         CASE WHEN (bomitem_expires < CURRENT_DATE) THEN 'expired'
+              WHEN (bomitem_effective >= CURRENT_DATE) THEN 'future'
+              WHEN (item_type='M') THEN 'altemphasis'
+         END AS qtforegroundrole
+       <? else ?>
+         <? if exists("bySummarized") ?>
+           item_id AS itemid,
+         <? else ?>
+           bomdata_item_id AS itemid,
+         <? endif ?>
+         *,'percent' AS bomdata_scrap_xtnumericrole,
+         'qtyper' AS bomdata_qtyreq_xtnumericrole,
+         CASE WHEN COALESCE(bomdata_effective, startOfTime()) <=
+                   startOfTime() THEN <? value("always") ?>
+         END AS bomdata_effective_qtdisplayrole,
+         CASE WHEN COALESCE(bomdata_expires, endOfTime()) >=
+                   endOfTime() THEN <? value("never") ?>
+         END AS bomdata_expires_qtdisplayrole,
+         CASE WHEN (bomdata_expired) THEN 'expired'
+              WHEN (bomdata_future) THEN 'future'
+         END AS qtforegroundrole
+         <? if not exists("bySummarized") ?>
+           , bomdata_bomwork_level - 1 AS xtindentrole
+         <? endif ?>
+       <? endif ?>
+FROM <? if exists("bySingleLvl") ?>
+       bomitem(<? value("item_id") ?>,<? value("revision_id") ?>),
+       item, uom AS issueuom, uom AS invuom
+     <? elseif exists("byIndented") ?>
+       indentedBOM(<? value("item_id") ?>,
+                   <? value("revision_id") ?>,
+                   <? value("expiredDays") ?>,
+                   <? value("futureDays") ?>)
+     <? elseif exists("bySummarized") ?>
+       summarizedBOM(<? value("item_id") ?>,
+                     <? value("revision_id") ?>,
+                     <? value("expiredDays") ?>,
+                     <? value("futureDays") ?>)
+       JOIN item ON (bomdata_item_number=item_number)
+     <? endif ?>
+WHERE ((TRUE)
+<? if exists("byIndented") ?>
+   AND (bomdata_item_id > 0)
+<? elseif exists("bySingleLvl") ?>
+   AND (bomitem_item_id=item_id)
+   AND (item_inv_uom_id=invuom.uom_id)
+   AND (bomitem_uom_id=issueuom.uom_id)
+  <? if exists("expiredDays") ?>
+   AND (bomitem_expires > (CURRENT_DATE - <? value("expiredDays") ?>))
+  <? else ?>
+   AND (bomitem_expires > CURRENT_DATE)
+  <? endif ?>
+  <? if exists("effectiveDays") ?>
+   AND (bomitem_effective <= (CURRENT_DATE + <? value("effectiveDays") ?>))
+  <? else ?>
+   AND (bomitem_effective <= CURRENT_DATE)
+  <? endif ?>
+<? endif ?>
+      )
+<? if exists("bySingleLvl") ?>
+ ORDER BY bomitem_seqnumber, bomitem_effective
+<? endif ?>
+;

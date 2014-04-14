@@ -1,0 +1,38 @@
+-- Group: metasqls
+-- Name:  detail
+-- Notes: 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+<? if exists('byPackage') ?>
+SELECT metasql_id, metasql_group, metasql_name,
+       firstline(metasql_notes) AS metasql_notes, metasql_grade,
+       CASE nspname WHEN 'public' THEN '' ELSE nspname END AS pkgname,
+       CASE nspname WHEN 'public' THEN 0
+                                  ELSE 1 END AS xtindentrole,
+       metasql_notes AS metasql_notes_qttooltiprole 
+  FROM metasql
+  JOIN pg_class     ON (metasql.tableoid=pg_class.oid)
+  JOIN pg_namespace ON (relnamespace=pg_namespace.oid)
+ UNION 
+SELECT -1, pkghead_name, NULL,
+       firstline(pkghead_descrip), NULL,
+       pkghead_name, 0, pkghead_descrip
+  FROM metasql, pg_class, pg_namespace
+       RIGHT OUTER JOIN pkghead ON (nspname=pkghead_name)
+ WHERE ((metasql.tableoid=pg_class.oid)
+    AND (relnamespace=pg_namespace.oid))
+ORDER BY pkgname, xtindentrole, metasql_group, metasql_name,
+         metasql_grade DESC, metasql_id;
+<? else ?>
+SELECT metasql_id, metasql_group, metasql_name,
+       firstline(metasql_notes) AS metasql_notes,
+       metasql_grade,
+       CASE nspname WHEN 'public' THEN '' ELSE nspname END AS pkgname,
+       metasql_notes AS metasql_notes_qttooltiprole 
+  FROM metasql
+  JOIN pg_class     ON (metasql.tableoid=pg_class.oid)
+  JOIN pg_namespace ON (relnamespace=pg_namespace.oid)
+ORDER BY metasql_group, metasql_name,
+         metasql_grade DESC, metasql_id;
+ <? endif ?>

@@ -1,0 +1,28 @@
+-- Group: charass
+-- Name:  populate
+-- Notes: Populate characteristic assignments combobox
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+<? if exists("name") ?>
+SELECT -1 AS charass_char_id, '' AS char_name
+UNION
+SELECT DISTINCT charass_char_id, char_name
+<? else ?>
+SELECT -1 AS charass_id, '' AS charass_value
+UNION
+SELECT DISTINCT charass_id, charass_value
+<? endif ?>
+FROM charass, char
+WHERE ((charass_char_id=char_id)
+  AND (charass_target_type=<? value("type") ?>)
+  AND (charass_target_id= <? value("id") ?>))
+<? if exists("char") ?>
+  AND (charass_char_id= <? value("char") ?>)
+  AND (COALESCE(charass_value,'')!='')
+<? endif ?>
+<? if exists("name") ?>
+ORDER BY char_name;
+<? else ?>
+ORDER BY charass_value;
+<? endif ?>

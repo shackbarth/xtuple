@@ -1,0 +1,854 @@
+<!DOCTYPE openRPTDef>
+<report>
+ <title>Freight Prices By Customer Type</title>
+ <name>FreightPricesByCustomerType</name>
+ <description></description>
+ <size>Letter</size>
+ <portrait/>
+ <topmargin>50</topmargin>
+ <bottommargin>50</bottommargin>
+ <rightmargin>50</rightmargin>
+ <leftmargin>50</leftmargin>
+ <querysource>
+  <name>head</name>
+  <sql>SELECT (custtype_code || '-' || custtype_descrip) as custtype,
+       &lt;? if exists("showExpired") ?>
+         text('Yes')
+       &lt;? else ?>
+         text('No')
+       &lt;? endif ?>
+       AS f_showexpired,
+       &lt;? if exists("showFuture") ?>
+         text('Yes')
+       &lt;? else ?>
+         text('No')
+       &lt;? endif ?>
+       AS f_showfuture
+  FROM custtype
+ WHERE (custtype_id=&lt;? value("custtype_id") ?>);
+</sql>
+ </querysource>
+ <querysource>
+  <name>detail</name>
+  <sql>SELECT itemid, sourcetype, ipshead_name, source,
+       formatQty(ipsfreight_qtybreak) AS f_qtybreak,
+       formatSalesPrice(ipsfreight_price) AS f_price,
+       CASE WHEN (ipsfreight_type = 'F') THEN 'Flat Rate'
+            ELSE 'Per UOM'
+       END AS method,
+       currConcat(ipshead_curr_id) AS currConcat,
+       CASE WHEN (warehous_code IS NULL) THEN 'Any' ELSE warehous_code END AS f_warehous,
+       CASE WHEN (shipzone_name IS NULL) THEN 'Any' ELSE shipzone_name END AS f_shipzone,
+       CASE WHEN (freightclass_code IS NULL) THEN 'Any' ELSE freightclass_code END AS f_freightclass,
+       CASE WHEN (ipsfreight_shipvia IS NULL) THEN 'Any' ELSE ipsfreight_shipvia END AS f_shipvia
+
+FROM ( SELECT ipsfreight_id AS itemid, 1 AS sourcetype,
+              ipshead_name, 'CustType' AS source,
+              ipsfreight_qtybreak, ipsfreight_price,
+              ipsfreight_type, ipshead_curr_id,
+              warehous_code, shipzone_name, freightclass_code, ipsfreight_shipvia
+FROM ipsass JOIN ipshead ON (ipshead_id=ipsass_ipshead_id)
+            JOIN ipsfreight ON (ipsfreight_ipshead_id=ipshead_id)
+            LEFT OUTER JOIN whsinfo ON (warehous_id=ipsfreight_warehous_id)
+            LEFT OUTER JOIN shipzone ON (shipzone_id=ipsfreight_shipzone_id)
+            LEFT OUTER JOIN freightclass ON (freightclass_id=ipsfreight_freightclass_id)
+WHERE ( (ipsass_custtype_id=&lt;? value("custtype_id") ?>)
+                  
+&lt;? if not exists("showExpired") ?>
+     AND (ipshead_expires > CURRENT_DATE)
+&lt;? endif ?>
+&lt;? if not exists("showFuture") ?>
+     AND (ipshead_effective &lt;= CURRENT_DATE)
+&lt;? endif ?>
+
+)
+UNION SELECT ipsfreight_id AS itemid, 2 AS sourcetype,
+             ipshead_name, 'CustTypePattern' AS source,
+             ipsfreight_qtybreak, ipsfreight_price,
+             ipsfreight_type, ipshead_curr_id,
+             warehous_code, shipzone_name, freightclass_code, ipsfreight_shipvia
+FROM custtype JOIN ipsass ON ((coalesce(length(ipsass_custtype_pattern), 0) > 0) AND
+                              (custtype_code ~ ipsass_custtype_pattern))
+              JOIN ipshead ON (ipshead_id=ipsass_ipshead_id)
+              JOIN ipsfreight ON (ipsfreight_ipshead_id=ipshead_id)
+              LEFT OUTER JOIN whsinfo ON (warehous_id=ipsfreight_warehous_id)
+              LEFT OUTER JOIN shipzone ON (shipzone_id=ipsfreight_shipzone_id)
+              LEFT OUTER JOIN freightclass ON (freightclass_id=ipsfreight_freightclass_id)
+WHERE ( (custtype_id=&lt;? value("custtype_id") ?>)
+                  
+&lt;? if not exists("showExpired") ?>
+     AND (ipshead_expires > CURRENT_DATE)
+&lt;? endif ?>
+&lt;? if not exists("showFuture") ?>
+     AND (ipshead_effective &lt;= CURRENT_DATE)
+&lt;? endif ?>
+
+)
+UNION SELECT ipsfreight_id AS itemid, 3 AS sourcetype,
+             ipshead_name, ('Sale' || '-' || sale_name) AS source,
+             ipsfreight_qtybreak, ipsfreight_price,
+             ipsfreight_type, ipshead_curr_id,
+             warehous_code, shipzone_name, freightclass_code, ipsfreight_shipvia
+FROM sale JOIN ipshead ON (ipshead_id=sale_ipshead_id)
+          JOIN ipsfreight ON (ipsfreight_ipshead_id=ipshead_id)
+          LEFT OUTER JOIN whsinfo ON (warehous_id=ipsfreight_warehous_id)
+          LEFT OUTER JOIN shipzone ON (shipzone_id=ipsfreight_shipzone_id)
+          LEFT OUTER JOIN freightclass ON (freightclass_id=ipsfreight_freightclass_id)
+WHERE ((TRUE)
+
+&lt;? if not exists("showExpired") ?>
+     AND (ipshead_expires > CURRENT_DATE)
+&lt;? endif ?>
+&lt;? if not exists("showFuture") ?>
+     AND (ipshead_effective &lt;= CURRENT_DATE)
+&lt;? endif ?>
+
+) ) AS data
+ORDER BY ipsfreight_qtybreak, ipsfreight_price;
+</sql>
+ </querysource>
+ <rpthead>
+  <height>233</height>
+  <label>
+   <rect>
+    <x>15</x>
+    <y>195</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Schedule</string>
+  </label>
+  <label>
+   <rect>
+    <x>150</x>
+    <y>195</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Qty. Break</string>
+  </label>
+  <label>
+   <rect>
+    <x>465</x>
+    <y>195</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Freight Class</string>
+  </label>
+  <label>
+   <rect>
+    <x>405</x>
+    <y>100</y>
+    <width>155</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Show Expired Prices:</string>
+  </label>
+  <label>
+   <rect>
+    <x>245</x>
+    <y>195</y>
+    <width>85</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Method</string>
+  </label>
+  <label>
+   <rect>
+    <x>350</x>
+    <y>208</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>To</string>
+  </label>
+  <label>
+   <rect>
+    <x>350</x>
+    <y>195</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>From</string>
+  </label>
+  <field>
+   <rect>
+    <x>565</x>
+    <y>100</y>
+    <width>112</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>f_showexpired</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>465</x>
+    <y>208</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Ship Via</string>
+  </label>
+  <field>
+   <rect>
+    <x>565</x>
+    <y>120</y>
+    <width>112</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>f_showfuture</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>320</x>
+    <y>10</y>
+    <width>405</width>
+    <height>37</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>18</size>
+    <weight>bold</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Freight Prices by Customer Type</string>
+  </label>
+  <line>
+   <xstart>5</xstart>
+   <ystart>227</ystart>
+   <xend>745</xend>
+   <yend>227</yend>
+   <weight>2</weight>
+  </line>
+  <label>
+   <rect>
+    <x>405</x>
+    <y>120</y>
+    <width>155</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Show Future Prices:</string>
+  </label>
+  <label>
+   <rect>
+    <x>145</x>
+    <y>208</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Price</string>
+  </label>
+  <field>
+   <rect>
+    <x>125</x>
+    <y>80</y>
+    <width>535</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>custtype</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>15</x>
+    <y>80</y>
+    <width>104</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Customer Type:</string>
+  </label>
+  <label>
+   <rect>
+    <x>245</x>
+    <y>208</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Currency</string>
+  </label>
+  <label>
+   <rect>
+    <x>15</x>
+    <y>208</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Source</string>
+  </label>
+ </rpthead>
+ <pghead>
+  <firstpage/>
+  <height>6</height>
+ </pghead>
+ <pghead>
+  <height>41</height>
+  <label>
+   <rect>
+    <x>350</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>From</string>
+  </label>
+  <label>
+   <rect>
+    <x>465</x>
+    <y>15</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Ship Via</string>
+  </label>
+  <label>
+   <rect>
+    <x>160</x>
+    <y>0</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Qty. Break</string>
+  </label>
+  <line>
+   <xstart>5</xstart>
+   <ystart>35</ystart>
+   <xend>745</xend>
+   <yend>35</yend>
+   <weight>2</weight>
+  </line>
+  <label>
+   <rect>
+    <x>350</x>
+    <y>15</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>To</string>
+  </label>
+  <label>
+   <rect>
+    <x>250</x>
+    <y>0</y>
+    <width>85</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Method</string>
+  </label>
+  <label>
+   <rect>
+    <x>15</x>
+    <y>15</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Source</string>
+  </label>
+  <label>
+   <rect>
+    <x>250</x>
+    <y>15</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Currency</string>
+  </label>
+  <label>
+   <rect>
+    <x>155</x>
+    <y>15</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Price</string>
+  </label>
+  <label>
+   <rect>
+    <x>465</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Freight Class</string>
+  </label>
+  <label>
+   <rect>
+    <x>15</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Schedule</string>
+  </label>
+ </pghead>
+ <section>
+  <name>detail</name>
+  <detail>
+   <key>
+    <query>detail</query>
+   </key>
+   <height>56</height>
+   <field>
+    <rect>
+     <x>360</x>
+     <y>15</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <hcenter/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_shipzone</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>245</x>
+     <y>15</y>
+     <width>85</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <hcenter/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>currConcat</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>480</x>
+     <y>15</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <hcenter/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_shipvia</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>150</x>
+     <y>15</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_price</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>10</x>
+     <y>15</y>
+     <width>100</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>source</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>245</x>
+     <y>0</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <hcenter/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>method</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>360</x>
+     <y>0</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <hcenter/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_warehous</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>10</x>
+     <y>0</y>
+     <width>120</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>ipshead_name</column>
+    </data>
+   </field>
+   <line>
+    <xstart>5</xstart>
+    <ystart>50</ystart>
+    <xend>745</xend>
+    <yend>50</yend>
+    <weight>0</weight>
+   </line>
+   <field>
+    <rect>
+     <x>150</x>
+     <y>0</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_qtybreak</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>480</x>
+     <y>0</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <hcenter/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_freightclass</column>
+    </data>
+   </field>
+  </detail>
+ </section>
+ <pgfoot>
+  <height>16</height>
+  <label>
+   <rect>
+    <x>615</x>
+    <y>0</y>
+    <width>85</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Page:</string>
+  </label>
+  <field>
+   <rect>
+    <x>705</x>
+    <y>0</y>
+    <width>40</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>Context Query</query>
+    <column>page_number</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>85</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Report Date:</string>
+  </label>
+  <field>
+   <rect>
+    <x>90</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>Context Query</query>
+    <column>report_date</column>
+   </data>
+  </field>
+ </pgfoot>
+</report>

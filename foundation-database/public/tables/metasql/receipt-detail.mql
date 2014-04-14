@@ -1,0 +1,136 @@
+-- Group: receipt
+-- Name: detail
+-- Notes: used by enterPoReceipt
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+<? if exists("pohead_id") ?>
+SELECT poitem_id AS orderitem_id, COALESCE(poitem_itemsite_id,-1) AS itemsite_id, poitem_linenumber AS linenumber,
+       poitem_duedate AS duedate,
+       COALESCE(item_number, <? value("nonInventory") ?>) AS item_number,
+       CASE WHEN (LENGTH(TRIM(BOTH '    ' FROM poitem_vend_item_descrip)) <= 0) THEN
+                 (item_descrip1 || ' ' || item_descrip2)
+            ELSE poitem_vend_item_descrip
+       END AS itemdescription,
+       COALESCE(uom_name, <? value("na") ?>) AS inv_uom,
+       warehous_code,
+       poitem_vend_item_number AS vend_item_number,
+       poitem_vend_uom AS vend_uom,
+       poitem_manuf_name AS manuf_name,
+       poitem_manuf_item_number AS manuf_item_number,
+       poitem_qty_ordered AS qty_ordered,
+       poitem_qty_received AS qty_received,
+       poitem_qty_returned AS qty_returned,
+       qtyToReceive(<? value("ordertype") ?>, poitem_id) AS qty_toreceive,
+       'qty' AS qty_ordered_xtnumericrole,
+       'qty' AS qty_received_xtnumericrole,
+       'qty' AS qty_returned_xtnumericrole,
+       'qty' AS qty_toreceive_xtnumericrole
+FROM poitem 
+  LEFT OUTER JOIN itemsite ON (poitem_itemsite_id=itemsite_id) 
+<? if exists("selectedOnly") ?>
+  LEFT OUTER JOIN usrsite ON (itemsite_warehous_id=usrsite_warehous_id) 
+<? endif ?>
+  LEFT OUTER JOIN item ON (itemsite_item_id=item_id) 
+  LEFT OUTER JOIN uom ON (item_inv_uom_id=uom_id)
+  LEFT OUTER JOIN whsinfo ON (itemsite_warehous_id=warehous_id)
+  LEFT OUTER JOIN itemsrc ON (itemsrc_id=poitem_itemsrc_id)
+WHERE ( (poitem_status <> 'C')
+<? if exists("selectedOnly") ?>
+ AND (usrsite_username=getEffectiveXtUser()) 
+<? endif ?>
+<? if exists("bc") ?>
+ AND ( (item_number=<? value("bc") ?>) OR
+       (item_upccode=<? value("bc") ?>) OR 
+       (poitem_vend_item_number=<? value("bc") ?>) OR 
+       (poitem_manuf_item_number=<? value("bc") ?>) OR 
+       (COALESCE(itemsrc_upccode, '')=<? value("bc") ?>) ) 
+<? endif ?>
+ AND (poitem_pohead_id=<? value("pohead_id") ?>) )
+ORDER BY poitem_linenumber;
+<? elseif exists("rahead_id") ?>
+SELECT raitem_id AS orderitem_id, itemsite_id, raitem_linenumber AS linenumber,
+       rahead_expiredate AS duedate,
+       COALESCE(item_number, <? value("nonInventory") ?>) AS item_number,
+       (item_descrip1 || ' ' || item_descrip2) AS itemdescription,
+       COALESCE(iu.uom_name, <? value("na") ?>) AS inv_uom,
+       warehous_code,
+       '' AS vend_item_number,
+       ru.uom_name AS vend_uom,
+       '' AS manuf_name,
+       '' AS manuf_item_number,
+       raitem_qtyauthorized AS qty_ordered,
+       raitem_qtyreceived AS qty_received,
+       0 AS qty_returned,
+       qtyToReceive(<? value("ordertype") ?>, raitem_id) AS qty_toreceive,
+       'qty' AS qty_ordered_xtnumericrole,
+       'qty' AS qty_received_xtnumericrole,
+       'qty' AS qty_returned_xtnumericrole,
+       'qty' AS qty_toreceive_xtnumericrole
+
+FROM rahead, raitem 
+  LEFT OUTER JOIN 
+     ( itemsite 
+<? if exists("selectedOnly") ?>
+       JOIN usrsite ON (itemsite_warehous_id=usrsite_warehous_id) 
+<? endif ?>
+       JOIN item ON (itemsite_item_id=item_id) 
+       JOIN uom iu ON (item_inv_uom_id=uom_id)
+       JOIN whsinfo ON (itemsite_warehous_id=warehous_id)
+     ) ON (raitem_itemsite_id=itemsite_id), uom ru
+WHERE ( (raitem_status <> 'C')
+ AND (item_type <> 'K')
+ AND (raitem_qtyauthorized > 0)
+ AND (raitem_disposition IN ('R','P','V'))
+ AND (raitem_rahead_id=rahead_id)
+ AND (raitem_qty_uom_id=ru.uom_id)
+<? if exists("selectedOnly") ?>
+ AND (usrsite_username=getEffectiveXtUser()) 
+<? endif ?>
+<? if exists("bc") ?>
+ AND ( (item_number=<? value("bc") ?>) OR
+       (item_upccode=<? value("bc") ?>) )
+<? endif ?>
+ AND (rahead_id=<? value("rahead_id") ?>) )
+ORDER BY raitem_linenumber;
+<? elseif exists("tohead_id") ?>
+SELECT toitem_id AS orderitem_id, itemsite_id, toitem_linenumber AS linenumber,
+       toitem_duedate AS duedate,
+       COALESCE(item_number, <? value("nonInventory") ?>) AS item_number,
+       (item_descrip1 || ' ' || item_descrip2) AS itemdescription,
+       COALESCE(uom_name, <? value("na") ?>) AS inv_uom,
+       warehous_code,
+       ''  AS vend_item_number,
+       toitem_uom AS vend_uom,
+       '' AS manuf_name,
+       '' AS manuf_item_number,
+       toitem_qty_ordered AS qty_ordered,
+       toitem_qty_received AS qty_received,
+       0 AS qty_returned,
+       qtyToReceive(<? value("ordertype") ?>, toitem_id) AS qty_toreceive,
+       'qty' AS qty_ordered_xtnumericrole,
+       'qty' AS qty_received_xtnumericrole,
+       'qty' AS qty_returned_xtnumericrole,
+       'qty' AS qty_toreceive_xtnumericrole
+FROM tohead, itemsite
+<? if exists("selectedOnly") ?>
+       JOIN usrsite ON (itemsite_warehous_id=usrsite_warehous_id) 
+<? endif ?>
+, whsinfo, toitem, item JOIN uom ON (item_inv_uom_id=uom_id)
+WHERE ((toitem_item_id=item_id)
+  AND  (tohead_id=toitem_tohead_id)
+  AND  (tohead_dest_warehous_id=itemsite_warehous_id)
+  AND  (tohead_dest_warehous_id=warehous_id)
+  AND  (toitem_item_id=itemsite_item_id)
+  AND  (toitem_status NOT IN ('C','X'))
+  AND  (toitem_qty_shipped > toitem_qty_received)
+<? if exists("selectedOnly") ?>
+ AND (usrsite_username=getEffectiveXtUser()) 
+<? endif ?>
+<? if exists("bc") ?>
+ AND ( (item_number=<? value("bc") ?>) OR
+       (item_upccode=<? value("bc") ?>) )
+<? endif ?>
+  AND  (toitem_tohead_id=<? value("tohead_id") ?>) )
+ORDER BY toitem_linenumber;
+<? endif ?>

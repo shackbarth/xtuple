@@ -1,0 +1,36 @@
+-- Group: apAging
+-- Name: detail
+-- Notes: used by dspTimePhasedOpenAPItems
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT apaging_vend_id, apaging_vend_number, apaging_vend_name,
+       SUM(apaging_total_val) AS apaging_total_val_sum,
+       SUM(apaging_cur_val) AS apaging_cur_val_sum,
+       SUM(apaging_thirty_val) AS apaging_thirty_val_sum,
+       SUM(apaging_sixty_val) AS apaging_sixty_val_sum,
+       SUM(apaging_ninety_val) AS apaging_ninety_val_sum,
+       SUM(apaging_plus_val) AS apaging_plus_val_sum,
+       'curr' AS apaging_total_val_sum_xtnumericrole,
+       'curr' AS apaging_cur_val_sum_xtnumericrole,
+       'curr' AS apaging_thirty_val_sum_xtnumericrole,
+       'curr' AS apaging_sixty_val_sum_xtnumericrole,
+       'curr' AS apaging_ninety_val_sum_xtnumericrole,
+       'curr' AS apaging_plus_val_sum_xtnumericrole,
+       0 AS apaging_total_val_sum_xttotalrole,
+       0 AS apaging_cur_val_sum_xttotalrole,
+       0 AS apaging_thirty_val_sum_xttotalrole,
+       0 AS apaging_sixty_val_sum_xttotalrole,
+       0 AS apaging_ninety_val_sum_xttotalrole,
+       0 AS apaging_plus_val_sum_xttotalrole
+
+FROM apaging(<? value("relDate") ?>, <? value("useDocDate") ?>)
+<? if exists("vend_id") ?>
+WHERE (apaging_vend_id=<? value("vend_id") ?>)
+<? elseif exists("vendtype_id") ?>
+WHERE (apaging_vend_vendtype_id=<? value("vendtype_id") ?>)
+<? elseif exists("vendtype_pattern") ?>
+WHERE (apaging_vendtype_code ~ <? value("vendtype_pattern") ?>)
+<? endif ?>
+GROUP BY apaging_vend_number,apaging_vend_id,apaging_vend_name
+ORDER BY apaging_vend_number;

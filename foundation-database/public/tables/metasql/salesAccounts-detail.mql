@@ -1,0 +1,49 @@
+-- Group: salesAccounts
+-- Name: detail
+-- Notes: 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT salesaccnt_id,
+       CASE WHEN (salesaccnt_warehous_id=-1) THEN <? value("any") ?>
+            ELSE (SELECT warehous_code FROM whsinfo WHERE (warehous_id=salesaccnt_warehous_id))
+       END AS warehouscode,
+       CASE WHEN ((salesaccnt_custtype_id=-1) AND (salesaccnt_custtype='.*')) THEN <? value("any") ?>
+            WHEN (salesaccnt_custtype_id=-1) THEN salesaccnt_custtype
+            ELSE (SELECT custtype_code FROM custtype WHERE (custtype_id=salesaccnt_custtype_id))
+       END AS custtypecode,
+       CASE WHEN (salesaccnt_shipzone_id=-1) THEN <? value("any") ?>
+            ELSE (SELECT shipzone_name FROM shipzone WHERE (shipzone_id=salesaccnt_shipzone_id))
+       END AS shipzonecode,
+       CASE WHEN (salesaccnt_saletype_id=-1) THEN <? value("any") ?>
+            ELSE (SELECT saletype_code FROM saletype WHERE (saletype_id=salesaccnt_saletype_id))
+       END AS saletypecode,
+       CASE WHEN ((salesaccnt_custtype_id=-1) AND (salesaccnt_custtype='.*')) THEN <? value("any") ?>
+            WHEN (salesaccnt_custtype_id=-1) THEN salesaccnt_custtype
+            ELSE (SELECT custtype_code FROM custtype WHERE (custtype_id=salesaccnt_custtype_id))
+       END AS custtypecode,
+       CASE WHEN ((salesaccnt_prodcat_id=-1) AND (salesaccnt_prodcat='.*')) THEN <? value("any") ?>
+            WHEN (salesaccnt_prodcat_id=-1) THEN salesaccnt_prodcat
+            ELSE (SELECT prodcat_code FROM prodcat WHERE (prodcat_id=salesaccnt_prodcat_id))
+       END AS prodcatcode,
+       CASE WHEN (salesaccnt_sales_accnt_id IS NULL) THEN <? value("notapplicable") ?>
+            WHEN (salesaccnt_sales_accnt_id = -1) THEN <? value("notapplicable") ?>
+            ELSE formatGLAccount(salesaccnt_sales_accnt_id) END AS salesaccount,
+       CASE WHEN (salesaccnt_credit_accnt_id IS NULL) THEN <? value("notapplicable") ?>
+            WHEN (salesaccnt_credit_accnt_id = -1) THEN <? value("notapplicable") ?>
+            ELSE formatGLAccount(salesaccnt_credit_accnt_id) END AS creditaccount,
+       CASE WHEN (salesaccnt_cos_accnt_id IS NULL) THEN <? value("notapplicable") ?>
+            WHEN (salesaccnt_cos_accnt_id = -1) THEN <? value("notapplicable") ?>
+            ELSE formatGLAccount(salesaccnt_cos_accnt_id) END AS cosaccount,
+       CASE WHEN (salesaccnt_returns_accnt_id IS NULL) THEN <? value("notapplicable") ?>
+            WHEN (salesaccnt_returns_accnt_id = -1) THEN <? value("notapplicable") ?>
+            ELSE formatGLAccount(salesaccnt_returns_accnt_id) END AS returnsaccount,
+       CASE WHEN (salesaccnt_cor_accnt_id IS NULL) THEN <? value("notapplicable") ?>
+            WHEN (salesaccnt_cor_accnt_id = -1) THEN <? value("notapplicable") ?>
+            ELSE formatGLAccount(salesaccnt_cor_accnt_id) END AS coraccount,
+       CASE WHEN (salesaccnt_cow_accnt_id IS NULL) THEN <? value("notapplicable") ?>
+            WHEN (salesaccnt_cow_accnt_id = -1) THEN <? value("notapplicable") ?>
+            ELSE formatGLAccount(salesaccnt_cow_accnt_id) END AS cowaccount
+FROM salesaccnt
+ORDER BY warehouscode, custtypecode, prodcatcode
+;

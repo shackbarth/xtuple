@@ -1,0 +1,160 @@
+-- Group: orders
+-- Name: detail
+-- Notes: used by dspOrders
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT source_id, type, order_type, order_status, order_number, duedate,
+       totalqty, relievedqty, balanceqty, balanceqty AS runningbalanceqty,
+       'qty' AS totalqty_xtnumericrole,
+       'qty' AS relievedqty_xtnumericrole,
+       'qty' AS balanceqty_xtnumericrole,
+       0 AS runningbalanceqty_xtrunningrole,
+       CASE WHEN (late) THEN 'error' END AS duedate_qtforegroundrole
+FROM
+(
+SELECT poitem_id AS source_id, 1 AS type, TEXT('P/O') AS order_type,
+       pohead_status AS order_status,
+       TEXT(pohead_number) AS order_number,
+       poitem_qty_ordered AS totalqty,
+       poitem_qty_received AS relievedqty,
+       noNeg(poitem_qty_ordered - poitem_qty_received) AS balanceqty,
+       poitem_duedate AS duedate,
+       (poitem_duedate < CURRENT_DATE) AS late
+FROM pohead, poitem, itemsite
+WHERE ((poitem_pohead_id=pohead_id)
+  AND  (poitem_status IN ('O','U'))
+  AND  (poitem_itemsite_id=itemsite_id)
+  AND  (itemsite_item_id=<? value("item_id") ?>)
+  AND  (itemsite_warehous_id=<? value("warehous_id") ?>)
+<? if exists("useLeadTime") ?>
+  AND  (poitem_duedate <= (CURRENT_DATE + itemsite_leadtime))
+<? elseif exists("days") ?>
+  AND  (poitem_duedate <= (CURRENT_DATE + <? value("days") ?>))
+<? elseif exists("date") ?>
+  AND  (poitem_duedate<=<? value("date") ?>)
+<? elseif exists("startDate") ?>
+  AND  (poitem_duedate BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+<? endif ?>
+      )
+
+UNION
+SELECT wo_id AS source_id, 2 AS type, TEXT('W/O') AS order_type,
+       wo_status AS order_status,
+       formatWONumber(wo_id) AS order_number,
+       wo_qtyord AS totalqty,
+       wo_qtyrcv AS relievedqty,
+       noNeg(wo_qtyord - wo_qtyrcv) AS balanceqty,
+       wo_duedate AS duedate,
+       (wo_duedate < CURRENT_DATE) AS late 
+FROM wo, itemsite
+WHERE ((wo_status<>'C')
+  AND  (wo_itemsite_id=itemsite_id)
+  AND  (itemsite_item_id=<? value("item_id") ?>)
+  AND  (itemsite_warehous_id=<? value("warehous_id") ?>)
+  AND  (<? value("itemType") ?> NOT IN ('C', 'Y'))
+<? if exists("useLeadTime") ?>
+  AND  (wo_duedate <= (CURRENT_DATE + itemsite_leadtime))
+<? elseif exists("days") ?>
+  AND  (wo_duedate <= (CURRENT_DATE + <? value("days") ?>))
+<? elseif exists("date") ?>
+  AND  (wo_duedate<=<? value("date") ?>)
+<? elseif exists("startDate") ?>
+  AND  (wo_duedate BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+<? endif ?>
+      )
+
+-- Tooling is also supply on Work Orders
+UNION
+SELECT wo_id AS source_id, 2 AS type, TEXT('W/O') AS order_type,
+       wo_status AS order_status,
+       formatWONumber(wo_id) AS order_number,
+       womatl_qtyreq AS totalqty,
+       COALESCE(sum(abs(invhist_invqty)),0) AS relievedqty,
+       noNeg(womatl_qtyreq - COALESCE(sum(abs(invhist_invqty)),0)) AS balanceqty,
+       wo_duedate AS duedate,
+       (wo_duedate < CURRENT_DATE) AS late 
+FROM womatl
+  JOIN wo ON (wo_id=womatl_wo_id)
+  JOIN itemsite ON (itemsite_id=womatl_itemsite_id)
+  JOIN item ON (item_id=itemsite_item_id)
+  LEFT OUTER JOIN womatlpost ON (womatl_id=womatlpost_womatl_id)
+  LEFT OUTER JOIN invhist ON ((womatlpost_invhist_id=invhist_id)
+                          AND (invhist_invqty < 0))
+WHERE ((wo_status<>'C')
+  AND  (itemsite_item_id=<? value("item_id") ?>)
+  AND  (itemsite_warehous_id=<? value("warehous_id") ?>)
+  AND  (item_type = 'T')
+<? if exists("useLeadTime") ?>
+  AND  (wo_duedate <= (CURRENT_DATE + itemsite_leadtime))
+<? elseif exists("days") ?>
+  AND  (wo_duedate <= (CURRENT_DATE + <? value("days") ?>))
+<? elseif exists("date") ?>
+  AND  (wo_duedate<=<? value("date") ?>)
+<? elseif exists("startDate") ?>
+  AND  (wo_duedate BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+<? endif ?>
+      )
+GROUP BY wo_id, wo_status, womatl_qtyreq, wo_duedate
+
+<? if exists("Manufacturing") ?>
+UNION
+SELECT wo_id AS source_id, 2 AS type, TEXT('W/O') AS order_type,
+       wo_status AS order_status,
+       formatWONumber(wo_id) AS order_number,
+       wo_qtyord AS totalqty,
+       wo_qtyrcv AS relievedqty,
+       noNeg(wo_qtyord - wo_qtyrcv) AS balanceqty,
+       wo_duedate AS duedate,
+       (wo_duedate < CURRENT_DATE) AS late
+FROM wo, xtmfg.brddist, itemsite
+WHERE ((brddist_wo_id=wo_id)
+  AND  (wo_status<>'C')
+  AND  (brddist_itemsite_id=itemsite_id)
+  AND  (itemsite_item_id=<? value("item_id") ?>)
+  AND  (itemsite_warehous_id=<? value("warehous_id") ?>)
+  AND  (<? value("itemType") ?> IN ('C', 'Y'))
+<? if exists("useLeadTime") ?>
+  AND (wo_duedate <= (CURRENT_DATE + itemsite_leadtime))
+<? elseif exists("days") ?>
+  AND (wo_duedate <= (CURRENT_DATE + <? value("days") ?>))
+<? elseif exists("date") ?>
+  AND (wo_duedate<=<? value("date") ?>)
+<? elseif exists("startDate") ?>
+  AND (wo_duedate BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+<? endif ?>
+     )
+<? endif ?>
+
+<? if exists("Standard") ?>
+UNION
+SELECT toitem_id AS source_id, 3 AS type, TEXT('T/O') AS order_type,
+       tohead_status AS order_status,
+       TEXT(tohead_number) AS order_number,
+       toitem_qty_ordered AS totalqty,
+       toitem_qty_received AS relievedqty,
+       noNeg(toitem_qty_ordered - toitem_qty_received) AS balanceqty,
+       toitem_duedate AS duedate,
+       (toitem_duedate < CURRENT_DATE) AS late
+FROM tohead, toitem, itemsite
+WHERE ((toitem_tohead_id=tohead_id)
+  AND  (toitem_status='O')
+  AND  (toitem_item_id=itemsite_item_id)
+  AND  (tohead_dest_warehous_id=itemsite_warehous_id)
+  AND  (itemsite_item_id=<? value("item_id") ?>)
+  AND  (itemsite_warehous_id=<? value("warehous_id") ?>)
+<? if exists("useLeadTime") ?>
+  AND  (toitem_duedate <= (CURRENT_DATE + itemsite_leadtime))
+<? elseif exists("days") ?>
+  AND  (toitem_duedate <= (CURRENT_DATE + <? value("days") ?>))
+<? elseif exists("date") ?>
+  AND  (toitem_duedate<=<? value("date") ?>)
+<? elseif exists("startDate") ?>
+  AND  (toitem_duedate BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+<? endif ?>
+      )
+<? endif ?>
+
+) AS data
+
+ORDER BY duedate;

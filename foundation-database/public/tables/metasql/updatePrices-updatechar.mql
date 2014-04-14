@@ -1,0 +1,35 @@
+-- Group: updateprices
+-- Name: updatechar
+-- Notes: used by updatePrices
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+UPDATE ipsitemchar SET
+  ipsitemchar_price=
+<? if exists("updateByValue") ?>
+  ipsitemchar_price + <? value("updateBy") ?>
+<? else ?>
+  roundSale(ipsitemchar_price * (1.0 + (<? value("updateBy") ?> / 100.0)))
+<? endif ?>
+FROM selsched, ipsiteminfo, item
+<? if reExists("itemgrp") ?>
+  JOIN itemgrpitem ON (itemgrpitem_item_id=item_id)
+  JOIN itemgrp ON (itemgrpitem_itemgrp_id=itemgrp_id)
+<? elseif reExists("prodcat") ?>
+  JOIN prodcat ON (prodcat_id=item_prodcat_id)
+<? endif ?>
+WHERE ( ipsitemchar_ipsitem_id=ipsitem_id
+  AND ipsitem_item_id=item_id
+  AND selsched_ipshead_id=ipsitem_ipshead_id
+<? if exists("item_id") ?>
+  AND item_id=<? value("item_id") ?>
+<? elseif exists("itemgrp_id") ?>
+  AND itemgrp_id=<? value("itemgrp_id") ?>
+<? elseif exists("itemgrp_pattern") ?>
+  AND itemgrp_name ~ <? value("itemgrp_pattern") ?>
+<? elseif exists("prodcat_id") ?>
+  AND prodcat_id=<? value("prodcat_id") ?>
+<? elseif exists("prodcat_pattern") ?>
+  AND prodcat_code ~ <? value("prodcat_pattern") ?>
+<? endif ?>
+);

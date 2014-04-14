@@ -1,0 +1,12 @@
+-- Group: summarizedBankrecHistory
+-- Name: detail
+-- Notes: used by dspSummarizedBankrecHistory
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT *,
+       'curr' AS bankrec_openbal_xtnumericrole,
+       'curr' AS bankrec_endbal_xtnumericrole
+FROM bankrec
+WHERE (bankrec_bankaccnt_id=<? value("bankaccntid") ?>)
+ORDER BY bankrec_created;
