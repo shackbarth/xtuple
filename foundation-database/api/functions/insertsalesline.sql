@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION api.insertSalesLine(api.salesline) RETURNS boolean AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pNEW ALIAS FOR $1;
@@ -86,14 +86,14 @@ BEGIN
     0,
     pNEW.customer_pn,
     CASE
-      WHEN ((pNEW.create_order  AND (_r.item_type = 'M')) OR 
-           ((pNEW.create_order IS NULL) AND _r.itemsite_createwo)) THEN
+      WHEN ((pNEW.create_order  AND (_r.item_type = 'M')) OR
+           ((pNEW.create_order IS NULL) AND _r.itemsite_createwo) AND (NOT _r.itemsite_stocked)) THEN
         'W'
-      WHEN ((pNEW.create_order AND (_r.item_type = 'P')) OR 
-           ((pNEW.create_order IS NULL) AND _r.itemsite_createsopr)) THEN
+      WHEN ((pNEW.create_order AND (_r.item_type = 'P')) OR
+           ((pNEW.create_order IS NULL) AND _r.itemsite_createsopr) AND (NOT _r.itemsite_stocked)) THEN
         'R'
-      WHEN ((pNEW.create_order AND (_r.item_type = 'P') AND (_r.itemsite_createsopo)) OR 
-           ((pNEW.create_order IS NULL) AND _r.itemsite_createsopo)) THEN
+      WHEN ((pNEW.create_order AND (_r.item_type = 'P') AND (_r.itemsite_createsopo)) OR
+           ((pNEW.create_order IS NULL) AND _r.itemsite_createsopo) AND (NOT _r.itemsite_stocked)) THEN
         'P'
     END,
     getitemid(pNEW.substitute_for),

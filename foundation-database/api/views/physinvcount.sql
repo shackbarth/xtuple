@@ -1,5 +1,5 @@
 CREATE OR REPLACE VIEW api.physinvcount
-AS 
+AS
   SELECT
     warehous_code AS site,
     item_number AS item_number,
@@ -17,7 +17,7 @@ GRANT ALL ON TABLE api.physinvcount TO xtrole;
 COMMENT ON VIEW api.physinvcount IS 'Physical Inventory Count Tag and Slip';
 
 CREATE OR REPLACE FUNCTION api.insertPhysInvCount(api.physinvcount) RETURNS boolean AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pNEW ALIAS FOR $1;
@@ -39,11 +39,11 @@ BEGIN
   SELECT item_id, item_type INTO _itemid, _type
   FROM item
   WHERE (item_number=UPPER(pNEW.item_number));
-  IF (NOT FOUND OR _type IN ('F', 'R', 'L','J')) THEN
+  IF (NOT FOUND OR _type IN ('F', 'R', 'L','J', 'K')) THEN
     SELECT item_id, item_type INTO _itemid, _type
     FROM item
     WHERE (item_upccode=pNEW.item_number);
-    IF (NOT FOUND OR _type IN ('F', 'R', 'L','J')) THEN
+    IF (NOT FOUND OR _type IN ('F', 'R', 'L','J', 'K')) THEN
       RAISE EXCEPTION 'Function insertPhysInvCount failed because Item % not found or invalid type', pNEW.item_number;
     END IF;
   END IF;
@@ -138,12 +138,12 @@ $$ LANGUAGE 'plpgsql';
 CREATE OR REPLACE RULE "_INSERT" AS
     ON INSERT TO api.physinvcount DO INSTEAD  SELECT api.insertphysinvcount(new.*) AS insertphysinvcount;
 
-CREATE OR REPLACE RULE "_UPDATE" AS 
+CREATE OR REPLACE RULE "_UPDATE" AS
     ON UPDATE TO api.physinvcount DO INSTEAD
 
   NOTHING;
-           
-CREATE OR REPLACE RULE "_DELETE" AS 
+
+CREATE OR REPLACE RULE "_DELETE" AS
     ON DELETE TO api.physinvcount DO INSTEAD
 
   NOTHING;
