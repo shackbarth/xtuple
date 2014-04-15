@@ -1,5 +1,5 @@
 
-SELECT dropIfExists('VIEW', 'usr');
+--SELECT dropIfExists('VIEW', 'usr');
 CREATE OR REPLACE VIEW usr AS
   SELECT usesysid::integer AS usr_id,
          usename::text AS usr_username,
