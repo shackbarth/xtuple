@@ -30,8 +30,8 @@ SELECT quitem_id,
        CASE WHEN (quitem_custpn != '') THEN quitem_custpn
             ELSE item_number
        END AS item_number_cust,
-       (quitem_qtyord / quitem_qty_invuomratio * item_prodweight) AS prodweight,
-       (quitem_qtyord / quitem_qty_invuomratio * item_packweight) AS packweight,
+       (quitem_qtyord * quitem_qty_invuomratio * item_prodweight) AS prodweight,
+       (quitem_qtyord * quitem_qty_invuomratio * item_packweight) AS packweight,
        itemsite_qtyonhand,
        'qty' AS coitem_qtyord_xtnumericrole,
        'qty' AS qtyshipped_xtnumericrole,
