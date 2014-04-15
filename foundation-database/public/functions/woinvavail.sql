@@ -208,7 +208,7 @@ BEGIN
                 qtyOrdered(itemsite_id, wo_duedate) AS ordered,                        
                 CASE WHEN(itemsite_useparams) THEN itemsite_reorderlevel ELSE 0.0 END AS reorderlevel 
           FROM wo, itemsite, item, uom     
-         WHERE ((wo_ordid = pwoid)
+         WHERE ((wo_ordid = pwoid AND wo_ordtype = 'W')
            AND NOT (wo_status = 'C')          
            AND (itemsite_id = wo_itemsite_id)
            AND (itemsite_item_id=item_id)
@@ -246,4 +246,5 @@ BEGIN
   RETURN;
 END;
 $$ LANGUAGE 'plpgsql';
+
 
