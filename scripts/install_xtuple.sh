@@ -73,8 +73,7 @@ while getopts ":d:ipnhmx-:" opt; do
       echo "Usage: install_xtuple [OPTION]"
 	 echo "Build the full xTuple Mobile Development Environment."
 	 echo ""
-	 echo "To install everything, run sudo ./scripts/install_xtuple.sh"
-	 echo "Everything will go in /usr/local/src/xtuple"
+	 echo "To install everything, run bash /scripts/install_xtuple.sh"
 	 echo ""
 	 echo -e "  -h\t\t"
 	 echo -e "  -i\t\t"
@@ -125,7 +124,7 @@ install_packages() {
   sudo nvm alias default $NODE_VERSION
   sudo nvm alias xtuple $NODE_VERSION
 
-	// npm no longer supports its self-signed certificates
+	# npm no longer supports its self-signed certificates
 	log "telling npm to use known registrars..."
 	npm config set ca ""
 
