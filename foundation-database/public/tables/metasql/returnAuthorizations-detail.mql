@@ -1,0 +1,57 @@
+-- Group: returnAuthorizations
+-- Name: detail
+-- Notes:
+-- Notes:
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT DISTINCT rahead_id, rahead_number, rahead_billtoname,
+       rahead_authdate,rahead_expiredate,
+       COALESCE(cust_number, 'Undefined') AS custnumber,
+       CASE
+       WHEN rahead_disposition = 'C' THEN
+         <? value("credit") ?>
+       WHEN rahead_disposition = 'R' THEN
+         <? value("return") ?>
+       WHEN rahead_disposition = 'P' THEN
+         <? value("replace") ?>
+       WHEN rahead_disposition = 'V' THEN
+         <? value("service") ?>
+       WHEN rahead_disposition = 'M' THEN
+         <? value("substitute") ?>
+       END AS disposition,
+       formatDate(rahead_authdate) AS f_authorized,
+       formatDate(rahead_expiredate) AS f_expires,
+       CASE WHEN (rahead_expiredate < current_date) THEN
+         'error'
+       END AS rahead_expiredate_qtforegroundrole
+  FROM rahead LEFT OUTER JOIN custinfo ON (rahead_cust_id=cust_id)
+               <? if exists("selectedSites") ?> 
+                   JOIN raitem ON (raitem_rahead_id=rahead_id) 
+                   JOIN itemsite ON (raitem_itemsite_id=itemsite_id) 
+                   JOIN site() ON (itemsite_warehous_id=warehous_id) 
+               <? else ?> 
+                   LEFT OUTER JOIN raitem ON (raitem_rahead_id=rahead_id) 
+                   LEFT OUTER JOIN itemsite ON (raitem_itemsite_id=itemsite_id) 
+                   LEFT OUTER JOIN whsinfo ON (itemsite_warehous_id=warehous_id) 
+               <? endif ?> 
+ WHERE ((true)
+<? if not exists("showClosed") ?> 
+   AND ((raitem_status = 'O') OR (raitem_status IS NULL)) 
+<? endif ?>
+<? if not exists("showUnauthorized") ?> 
+   AND (raitem_qtyauthorized > 0) 
+<? endif ?>
+<? if not exists("showExpired") ?>
+   AND (COALESCE(rahead_expiredate,CURRENT_DATE) >= CURRENT_DATE)
+<? endif ?>
+<? if exists("warehous_id") ?>
+   AND (itemsite_warehous_id=<? value("warehous_id") ?>)
+<? endif ?>
+<? if exists("cust_id") ?>
+   AND (rahead_cust_id=<? value("cust_id") ?>)
+<? endif ?>
+      )
+ GROUP BY cust_number,rahead_id,rahead_number,rahead_authdate,rahead_expiredate,
+   rahead_billtoname,rahead_disposition
+ ORDER BY rahead_number

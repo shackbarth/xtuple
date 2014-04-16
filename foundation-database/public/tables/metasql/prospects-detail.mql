@@ -1,0 +1,67 @@
+-- Group: prospects
+-- Name:  detail
+-- Notes: 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT 
+  prospect.*,
+  cntct.*, addr.*
+FROM prospect 
+  LEFT OUTER JOIN cntct ON (prospect_cntct_id=cntct_id) 
+  LEFT OUTER JOIN addr ON (cntct_addr_id=addr_id) 
+WHERE true
+<? if not exists("showInactive") ?> 
+  AND prospect_active 
+<? endif ?>
+<? if exists("owner_username") ?> 
+  AND (prospect_owner_username=<? value("owner_username") ?>) 
+<? elseif exists("owner_usr_pattern") ?>
+  AND (prospect_owner_username ~ <? value("owner_usr_pattern") ?>) 
+<? endif ?>
+<? if exists("search_pattern") ?>
+  AND ((prospect_number ~* <? value("search_pattern") ?>)
+       OR (prospect_name ~* <? value("search_pattern") ?>)
+       OR (COALESCE(cntct_first_name,'') || ' ' || COALESCE(cntct_last_name,'') ~* <? value("search_pattern") ?>)
+       OR (COALESCE(cntct_phone,'') || ' ' || COALESCE(cntct_phone2,'') || ' ' || COALESCE(cntct_fax,'') ~* <? value("search_pattern") ?>)
+       OR (COALESCE(cntct_email,'') ~* <? value("search_pattern") ?>)
+       OR (COALESCE(addr_line1,'') || ' ' || COALESCE(addr_line2,'') || ' ' || COALESCE(addr_line3,'') ~* <? value("search_pattern") ?>)
+       OR (COALESCE(addr_city,'') ~* <? value("search_pattern") ?>)
+       OR (COALESCE(addr_state,'') ~* <? value("search_pattern") ?>)
+       OR (COALESCE(addr_postalcode,'') ~* <? value("search_pattern") ?>)
+       OR (COALESCE(addr_country,'') ~* <? value("search_pattern") ?>))
+<? endif ?>
+<? if exists("prospect_number_pattern") ?>
+  AND (prospect_number ~* <? value("prospect_number_pattern") ?>)
+<? endif ?>
+<? if exists("prospect_name_pattern") ?>
+  AND (prospect_name ~* <? value("prospect_name_pattern") ?>)
+<? endif ?>
+<? if exists("cntct_name_pattern") ?>
+  AND (COALESCE(cntct_first_name,'') || ' ' || COALESCE(cntct_last_name,'') ~* <? value("cntct_name_pattern") ?>)
+<? endif ?>
+<? if exists("cntct_phone_pattern") ?>
+  AND (COALESCE(cntct_phone,'') || ' ' || COALESCE(cntct_phone2,'') || ' ' || COALESCE(cntct_fax,'') ~* <? value("cntct_phone_pattern") ?>)
+<? endif ?>
+<? if exists("cntct_email_pattern") ?>
+  AND (COALESCE(cntct_email,'') ~* <? value("cntct_email_pattern") ?>)
+<? endif ?>
+<? if exists("addr_street_pattern") ?>
+  AND (COALESCE(addr_line1,'') || ' ' || COALESCE(addr_line2,'') || ' ' || COALESCE(addr_line3,'') ~* <? value("addr_street_pattern") ?>)
+<? endif ?>
+<? if exists("addr_city_pattern") ?>
+  AND (COALESCE(addr_city,'') ~* <? value("addr_city_pattern") ?>)
+<? endif ?>
+<? if exists("addr_state_pattern") ?>
+  AND (COALESCE(addr_state,'') ~* <? value("addr_state_pattern") ?>)
+<? endif ?>
+<? if exists("addr_postalcode_pattern") ?>
+  AND (COALESCE(addr_postalcode,'') ~* <? value("addr_postalcode_pattern") ?>)
+<? endif ?>
+<? if exists("addr_country_pattern") ?>
+  AND (COALESCE(addr_country,'') ~* <? value("addr_country_pattern") ?>)
+<? endif ?>
+<? if exists("id") ?>
+  AND (prospect_id=<? value("id") ?>
+<? endif ?>
+ORDER BY prospect_number; 

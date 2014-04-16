@@ -1,0 +1,20 @@
+-- Group: validLocationsByItem
+-- Name: detail
+-- Notes: used by dspValidLocationsByItem.cpp
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT location_id, warehous_code,
+       formatLocationName(location_id) AS locationname,
+       firstLine(location_descrip) AS locationdescrip,
+       location_restrict, location_netable
+FROM itemsite, location, whsinfo
+WHERE ((validLocation(location_id, itemsite_id))
+   AND ((itemsite_loccntrl) OR (itemsite_location_id=location_id))
+   AND (itemsite_item_id=<? value("item_id") ?>)
+   AND (itemsite_warehous_id=warehous_id)
+<? if exists("warehous_id") ?>
+   AND (warehous_id=<? value("warehous_id") ?>)
+<? endif ?>
+      )
+ORDER BY warehous_code, locationname;

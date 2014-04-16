@@ -1,0 +1,1273 @@
+<!DOCTYPE openRPTDef>
+<report>
+ <title>Financial Report</title>
+ <name>FinancialReport</name>
+ <description>Ad Hoc Report</description>
+ <grid>
+  <snap/>
+  <show/>
+  <x>0.05</x>
+  <y>0.05</y>
+ </grid>
+ <size>Letter</size>
+ <landscape/>
+ <topmargin>50</topmargin>
+ <bottommargin>50</bottommargin>
+ <rightmargin>50</rightmargin>
+ <leftmargin>50</leftmargin>
+ <querysource>
+  <name>head</name>
+  <sql>SELECT flhead_name,
+       CASE WHEN(trim(BOTH FROM COALESCE(flhead_custom_label,''))='') THEN 'Custom'
+            ELSE flhead_custom_label
+       END AS custom_label,
+       CASE WHEN(flhead_usealtbegin) THEN flhead_altbegin
+            ELSE text('Begining')
+       END AS begining_label,
+       CASE WHEN(flhead_usealtend) THEN flhead_altend
+            ELSE text('Ending')
+       END AS ending_label,
+       CASE WHEN(flhead_usealtdebits) THEN flhead_altdebits
+            ELSE text('Debits')
+       END AS debits_label,
+       CASE WHEN(flhead_usealtcredits) THEN flhead_altcredits
+            ELSE text('Credits')
+       END AS credits_label,
+       CASE WHEN(flhead_usealtbudget) THEN flhead_altbudget
+            ELSE text('Budget')
+       END AS budget_label,
+       CASE WHEN(flhead_usealtdiff) THEN flhead_altdiff
+            ELSE text('Difference')
+       END AS diff_label
+  FROM flhead
+ WHERE (flhead_id=&lt;? value("flhead_id") ?>)</sql>
+ </querysource>
+ <querysource>
+  <name>detail</name>
+  <sql>SELECT financialReport(&lt;? value("flhead_id") ?>, period_id,&lt;? value("interval") ?>,&lt;? value("prj_id") ?>)
+  FROM period
+ WHERE (period_id IN (
+&lt;? foreach("period_id_list") ?>
+  &lt;? if not isfirst("period_id_list") ?>
+    ,
+  &lt;? endif ?>
+  &lt;? value("period_id_list") ?>
+&lt;? endforeach ?>
+                     ));
+SELECT period_id, period_start, formatperiodname(period_id,&lt;? value("interval") ?>) AS f_period, flrpt_order,
+       ( repeat('   ', flrpt_level) || flgrp_name ) AS name,
+       CASE WHEN(flgrp_summarize AND flgrp_showstart) THEN formatMoney(flrpt_beginning)
+            ELSE NULL
+       END AS beginning,
+       CASE WHEN(flgrp_summarize AND flgrp_showdelta) THEN formatMoney(flrpt_debits)
+            ELSE NULL
+       END AS debits,
+       CASE WHEN(flgrp_summarize AND flgrp_showdelta) THEN formatMoney(flrpt_credits)
+            ELSE NULL
+       END AS credits,
+       CASE WHEN(flgrp_summarize AND flgrp_showend) THEN formatMoney(flrpt_ending)
+            ELSE NULL
+       END AS ending,
+       CASE WHEN(flgrp_summarize AND flgrp_showbudget) THEN formatMoney(flrpt_budget)
+            ELSE NULL
+       END AS budget,
+       CASE WHEN(flgrp_summarize AND flgrp_showdiff) THEN formatMoney(flrpt_diff)
+            ELSE NULL
+       END AS diff,
+       CASE WHEN(flgrp_summarize AND flgrp_showcustom) THEN formatMoney(flrpt_custom)
+            ELSE NULL
+       END AS custom,
+       CASE WHEN(flgrp_summarize AND flgrp_showstartprcnt) THEN formatPrcnt(flrpt_beginningprcnt)
+            ELSE NULL
+       END AS beginningprcnt,
+       CASE WHEN(flgrp_summarize AND flgrp_showdeltaprcnt) THEN formatPrcnt(flrpt_debitsprcnt)
+            ELSE NULL
+       END AS debitsprcnt,
+       CASE WHEN(flgrp_summarize AND flgrp_showdeltaprcnt) THEN formatPrcnt(flrpt_creditsprcnt)
+            ELSE NULL
+       END AS creditsprcnt,
+       CASE WHEN(flgrp_summarize AND flgrp_showendprcnt) THEN formatPrcnt(flrpt_endingprcnt)
+            ELSE NULL
+       END AS endingprcnt,
+       CASE WHEN(flgrp_summarize AND flgrp_showbudgetprcnt) THEN formatPrcnt(flrpt_budgetprcnt)
+            ELSE NULL
+       END AS budgetprcnt,
+       CASE WHEN(flgrp_summarize AND flgrp_showdiffprcnt) THEN formatPrcnt(flrpt_diffprcnt)
+            ELSE NULL
+       END AS diffprcnt,
+       CASE WHEN(flgrp_summarize AND flgrp_showcustomprcnt) THEN formatPrcnt(flrpt_customprcnt)
+            ELSE NULL
+       END AS customprcnt
+  FROM flrpt, flgrp, period
+ WHERE ((flrpt_type='G')
+   AND  (flrpt_type_id=flgrp_id)
+   AND  (flrpt_flhead_id=&lt;? value("flhead_id") ?>)
+   AND  (flrpt_period_id=period_id)
+   AND  (flrpt_username=getEffectiveXtUser())
+   AND  (flrpt_interval=&lt;? value("interval") ?>)
+   AND  (period_id IN (
+&lt;? foreach("period_id_list") ?>
+  &lt;? if not isfirst("period_id_list") ?>
+    ,
+  &lt;? endif ?>
+  &lt;? value("period_id_list") ?>
+&lt;? endforeach ?>
+                     )))
+UNION
+SELECT period_id, period_start, formatperiodname(period_id,&lt;? value("interval") ?>) AS f_period, flrpt_order,
+       ( repeat('   ', flrpt_level) ||
+         CASE WHEN(accnt_id IS NULL) THEN ('Unknown Account ID ' || flitem_accnt_id)
+              ELSE (formatGLAccount(accnt_id) || '-' || accnt_descrip)
+         END
+       ) AS name,
+       formatMoney(flrpt_beginning) AS beginning,
+       formatMoney(flrpt_debits) AS debits,
+       formatMoney(flrpt_credits) AS credits,
+       formatMoney(flrpt_ending) AS ending,
+       formatMoney(flrpt_budget) AS budget,
+       formatMoney(flrpt_diff) AS diff,
+       formatMoney(flrpt_custom) AS custom,
+       formatPrcnt(flrpt_beginningprcnt) AS beginningprcnt,
+       formatPrcnt(flrpt_debitsprcnt) AS debitsprcnt,
+       formatPrcnt(flrpt_creditsprcnt) AS creditsprcnt,
+       formatPrcnt(flrpt_endingprcnt) AS endingprcnt,
+       formatPrcnt(flrpt_budgetprcnt) AS budgetprcnt,
+       formatPrcnt(flrpt_diffprcnt) AS diffprcnt,
+       formatPrcnt(flrpt_customprcnt) AS customprcnt
+  FROM flrpt LEFT OUTER JOIN accnt ON (flrpt_accnt_id=accnt_id), flitem, period
+ WHERE ((flrpt_type='I')
+   AND  (flrpt_type_id=flitem_id)
+   AND  (flrpt_flhead_id=&lt;? value("flhead_id") ?>)
+   AND  (flrpt_period_id=period_id)
+   AND  (flrpt_username=getEffectiveXtUser())
+   AND  (flrpt_interval=&lt;? value("interval") ?>)
+&lt;? if not exists("showzeros") ?>
+   AND ((flrpt_beginning &lt;> 0) 
+    OR (flrpt_debits &lt;> 0)
+    OR (flrpt_credits &lt;> 0)
+    OR (flrpt_ending &lt;> 0)
+    OR (flrpt_budget &lt;> 0)
+    OR (flrpt_diff &lt;> 0)
+    OR (flrpt_custom &lt;> 0))
+&lt;? endif ?>
+   AND  (period_id IN (
+&lt;? foreach("period_id_list") ?>
+  &lt;? if not isfirst("period_id_list") ?>
+    ,
+  &lt;? endif ?>
+  &lt;? value("period_id_list") ?>
+&lt;? endforeach ?>
+                     )))
+UNION
+SELECT period_id, period_start, formatperiodname(period_id,&lt;? value("interval") ?>) AS f_period, flrpt_order,
+       ( repeat('   ', flrpt_level) || flspec_name ) AS name,
+       formatMoney(flrpt_beginning) AS beginning,
+       formatMoney(flrpt_debits) AS debits,
+       formatMoney(flrpt_credits) AS credits,
+       formatMoney(flrpt_ending) AS ending,
+       formatMoney(flrpt_budget) AS budget,
+       formatMoney(flrpt_diff) AS diff,
+       formatMoney(flrpt_custom) AS custom,
+       formatPrcnt(flrpt_beginningprcnt) AS beginningprcnt,
+       formatPrcnt(flrpt_debitsprcnt) AS debitsprcnt,
+       formatPrcnt(flrpt_creditsprcnt) AS creditsprcnt,
+       formatPrcnt(flrpt_endingprcnt) AS endingprcnt,
+       formatPrcnt(flrpt_budgetprcnt) AS budgetprcnt,
+       formatPrcnt(flrpt_diffprcnt) AS diffprcnt,
+       formatPrcnt(flrpt_customprcnt) AS customprcnt
+  FROM flrpt, flspec, period
+ WHERE ((flrpt_type='S')
+   AND  (flrpt_type_id=flspec_id)
+   AND  (flrpt_flhead_id=&lt;? value("flhead_id") ?>)
+   AND  (flrpt_period_id=period_id)
+   AND  (flrpt_username=getEffectiveXtUser())
+   AND  (flrpt_interval=&lt;? value("interval") ?>)
+   AND  (period_id IN (
+&lt;? foreach("period_id_list") ?>
+  &lt;? if not isfirst("period_id_list") ?>
+    ,
+  &lt;? endif ?>
+  &lt;? value("period_id_list") ?>
+&lt;? endforeach ?>
+                     )))
+UNION
+SELECT period_id, period_start, formatperiodname(period_id,&lt;? value("interval") ?>) AS f_period, flrpt_order,
+       ( repeat('   ', flrpt_level) ||
+         CASE WHEN(flrpt_type='T' AND flrpt_level=0) THEN COALESCE(flrpt_altname,'Total')
+              WHEN(flrpt_type='T') THEN COALESCE(flrpt_altname,'Subtotal')
+              ELSE ('Type ' || flrpt_type || ' ' || text(flrpt_type_id))
+         END
+       ) AS name,
+       formatMoney(flrpt_beginning) AS beginning,
+       formatMoney(flrpt_debits) AS debits,
+       formatMoney(flrpt_credits) AS credits,
+       formatMoney(flrpt_ending) AS ending,
+       formatMoney(flrpt_budget) AS budget,
+       formatMoney(flrpt_diff) AS diff,
+       formatMoney(flrpt_custom) AS custom,
+       formatPrcnt(flrpt_beginningprcnt) AS beginningprcnt,
+       formatPrcnt(flrpt_debitsprcnt) AS debitsprcnt,
+       formatPrcnt(flrpt_creditsprcnt) AS creditsprcnt,
+       formatPrcnt(flrpt_endingprcnt) AS endingprcnt,
+       formatPrcnt(flrpt_budgetprcnt) AS budgetprcnt,
+       formatPrcnt(flrpt_diffprcnt) AS diffprcnt,
+       formatPrcnt(flrpt_customprcnt) AS customprcnt
+  FROM flrpt, period
+ WHERE ((NOT (flrpt_type IN ('G','I','S')))
+   AND  (flrpt_flhead_id=&lt;? value("flhead_id") ?>)
+   AND  (flrpt_period_id=period_id)
+   AND  (flrpt_username=getEffectiveXtUser())
+   AND  (flrpt_interval=&lt;? value("interval") ?>)
+   AND  (period_id IN (
+&lt;? foreach("period_id_list") ?>
+  &lt;? if not isfirst("period_id_list") ?>
+    ,
+  &lt;? endif ?>
+  &lt;? value("period_id_list") ?>
+&lt;? endforeach ?>
+                     )))
+ ORDER BY period_start, flrpt_order;</sql>
+ </querysource>
+ <querysource>
+  <name>notes</name>
+  <sql>SELECT flhead_notes AS notes
+FROM flhead
+WHERE ((flhead_id=&lt;? value("flhead_id") ?>)
+  AND (length(flhead_notes) > 0))</sql>
+ </querysource>
+ <rpthead>
+  <height>136</height>
+  <label>
+   <rect>
+    <x>15</x>
+    <y>104</y>
+    <width>80</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Name:</string>
+  </label>
+  <field>
+   <rect>
+    <x>100</x>
+    <y>104</y>
+    <width>459</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>flhead_name</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>640</x>
+    <y>10</y>
+    <width>350</width>
+    <height>37</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>18</size>
+    <weight>bold</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Financial Report</string>
+  </label>
+ </rpthead>
+ <pghead>
+  <firstpage/>
+  <height>5</height>
+ </pghead>
+ <pghead>
+  <height>38</height>
+  <field>
+   <rect>
+    <x>775</x>
+    <y>0</y>
+    <width>75</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>diff_label</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>775</x>
+    <y>15</y>
+    <width>75</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>%</string>
+  </label>
+  <label>
+   <rect>
+    <x>695</x>
+    <y>15</y>
+    <width>75</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>%</string>
+  </label>
+  <label>
+   <rect>
+    <x>615</x>
+    <y>15</y>
+    <width>75</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>%</string>
+  </label>
+  <label>
+   <rect>
+    <x>455</x>
+    <y>15</y>
+    <width>75</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>%</string>
+  </label>
+  <field>
+   <rect>
+    <x>615</x>
+    <y>0</y>
+    <width>75</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>ending_label</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>535</x>
+    <y>15</y>
+    <width>75</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>%</string>
+  </label>
+  <label>
+   <rect>
+    <x>855</x>
+    <y>15</y>
+    <width>75</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>%</string>
+  </label>
+  <field>
+   <rect>
+    <x>375</x>
+    <y>0</y>
+    <width>75</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>begining_label</column>
+   </data>
+  </field>
+  <field>
+   <rect>
+    <x>455</x>
+    <y>0</y>
+    <width>75</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>debits_label</column>
+   </data>
+  </field>
+  <line>
+   <xstart>5</xstart>
+   <ystart>30</ystart>
+   <xend>994</xend>
+   <yend>30</yend>
+   <weight>2</weight>
+  </line>
+  <label>
+   <rect>
+    <x>10</x>
+    <y>0</y>
+    <width>55</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Name</string>
+  </label>
+  <field>
+   <rect>
+    <x>855</x>
+    <y>0</y>
+    <width>75</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>custom_label</column>
+   </data>
+  </field>
+  <field>
+   <rect>
+    <x>695</x>
+    <y>0</y>
+    <width>75</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>budget_label</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>375</x>
+    <y>15</y>
+    <width>75</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>%</string>
+  </label>
+  <field>
+   <rect>
+    <x>535</x>
+    <y>0</y>
+    <width>75</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>credits_label</column>
+   </data>
+  </field>
+ </pghead>
+ <section>
+  <name>detail</name>
+  <group>
+   <name>byPeriod</name>
+   <column>period_id</column>
+   <head>
+    <height>112</height>
+    <label>
+     <rect>
+      <x>455</x>
+      <y>95</y>
+      <width>75</width>
+      <height>15</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>normal</weight>
+     </font>
+     <hcenter/>
+     <vcenter/>
+     <string>%</string>
+    </label>
+    <label>
+     <rect>
+      <x>695</x>
+      <y>95</y>
+      <width>75</width>
+      <height>15</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>normal</weight>
+     </font>
+     <hcenter/>
+     <vcenter/>
+     <string>%</string>
+    </label>
+    <label>
+     <rect>
+      <x>855</x>
+      <y>95</y>
+      <width>75</width>
+      <height>15</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>normal</weight>
+     </font>
+     <hcenter/>
+     <vcenter/>
+     <string>%</string>
+    </label>
+    <label>
+     <rect>
+      <x>615</x>
+      <y>95</y>
+      <width>75</width>
+      <height>15</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>normal</weight>
+     </font>
+     <hcenter/>
+     <vcenter/>
+     <string>%</string>
+    </label>
+    <field>
+     <rect>
+      <x>855</x>
+      <y>80</y>
+      <width>75</width>
+      <height>15</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>normal</weight>
+     </font>
+     <hcenter/>
+     <vcenter/>
+     <data>
+      <query>head</query>
+      <column>custom_label</column>
+     </data>
+    </field>
+    <field>
+     <rect>
+      <x>535</x>
+      <y>80</y>
+      <width>75</width>
+      <height>15</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>normal</weight>
+     </font>
+     <hcenter/>
+     <vcenter/>
+     <data>
+      <query>head</query>
+      <column>credits_label</column>
+     </data>
+    </field>
+    <field>
+     <rect>
+      <x>455</x>
+      <y>80</y>
+      <width>75</width>
+      <height>15</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>normal</weight>
+     </font>
+     <hcenter/>
+     <vcenter/>
+     <data>
+      <query>head</query>
+      <column>debits_label</column>
+     </data>
+    </field>
+    <label>
+     <rect>
+      <x>10</x>
+      <y>80</y>
+      <width>55</width>
+      <height>15</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>normal</weight>
+     </font>
+     <hcenter/>
+     <vcenter/>
+     <string>Name</string>
+    </label>
+    <label>
+     <rect>
+      <x>375</x>
+      <y>95</y>
+      <width>75</width>
+      <height>15</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>normal</weight>
+     </font>
+     <hcenter/>
+     <vcenter/>
+     <string>%</string>
+    </label>
+    <label>
+     <rect>
+      <x>15</x>
+      <y>40</y>
+      <width>80</width>
+      <height>20</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>10</size>
+      <weight>normal</weight>
+     </font>
+     <right/>
+     <vcenter/>
+     <string>Period:</string>
+    </label>
+    <field>
+     <rect>
+      <x>100</x>
+      <y>40</y>
+      <width>459</width>
+      <height>20</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>10</size>
+      <weight>bold</weight>
+     </font>
+     <left/>
+     <vcenter/>
+     <data>
+      <query>detail</query>
+      <column>f_period</column>
+     </data>
+    </field>
+    <field>
+     <rect>
+      <x>695</x>
+      <y>80</y>
+      <width>75</width>
+      <height>15</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>normal</weight>
+     </font>
+     <hcenter/>
+     <vcenter/>
+     <data>
+      <query>head</query>
+      <column>budget_label</column>
+     </data>
+    </field>
+    <label>
+     <rect>
+      <x>775</x>
+      <y>95</y>
+      <width>75</width>
+      <height>15</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>normal</weight>
+     </font>
+     <hcenter/>
+     <vcenter/>
+     <string>%</string>
+    </label>
+    <field>
+     <rect>
+      <x>615</x>
+      <y>80</y>
+      <width>75</width>
+      <height>15</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>normal</weight>
+     </font>
+     <hcenter/>
+     <vcenter/>
+     <data>
+      <query>head</query>
+      <column>ending_label</column>
+     </data>
+    </field>
+    <field>
+     <rect>
+      <x>775</x>
+      <y>80</y>
+      <width>75</width>
+      <height>15</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>normal</weight>
+     </font>
+     <hcenter/>
+     <vcenter/>
+     <data>
+      <query>head</query>
+      <column>diff_label</column>
+     </data>
+    </field>
+    <label>
+     <rect>
+      <x>535</x>
+      <y>95</y>
+      <width>75</width>
+      <height>15</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>normal</weight>
+     </font>
+     <hcenter/>
+     <vcenter/>
+     <string>%</string>
+    </label>
+    <line>
+     <xstart>10</xstart>
+     <ystart>110</ystart>
+     <xend>1000</xend>
+     <yend>110</yend>
+     <weight>2</weight>
+    </line>
+    <field>
+     <rect>
+      <x>375</x>
+      <y>80</y>
+      <width>75</width>
+      <height>15</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>normal</weight>
+     </font>
+     <hcenter/>
+     <vcenter/>
+     <data>
+      <query>head</query>
+      <column>begining_label</column>
+     </data>
+    </field>
+   </head>
+  </group>
+  <detail>
+   <key>
+    <query>detail</query>
+   </key>
+   <height>33</height>
+   <field>
+    <rect>
+     <x>455</x>
+     <y>0</y>
+     <width>75</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>debits</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>375</x>
+     <y>15</y>
+     <width>75</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>beginningprcnt</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>5</x>
+     <y>0</y>
+     <width>350</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>name</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>855</x>
+     <y>15</y>
+     <width>75</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>customprcnt</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>615</x>
+     <y>0</y>
+     <width>75</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>ending</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>775</x>
+     <y>15</y>
+     <width>75</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>diffprcnt</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>695</x>
+     <y>0</y>
+     <width>75</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>budget</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>615</x>
+     <y>15</y>
+     <width>75</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>endingprcnt</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>375</x>
+     <y>0</y>
+     <width>75</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>beginning</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>695</x>
+     <y>15</y>
+     <width>75</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>budgetprcnt</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>855</x>
+     <y>0</y>
+     <width>75</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>custom</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>455</x>
+     <y>15</y>
+     <width>75</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>debitsprcnt</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>535</x>
+     <y>0</y>
+     <width>75</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>credits</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>775</x>
+     <y>0</y>
+     <width>75</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>diff</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>535</x>
+     <y>15</y>
+     <width>75</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>creditsprcnt</column>
+    </data>
+   </field>
+  </detail>
+ </section>
+ <section>
+  <name>notes</name>
+  <detail>
+   <key>
+    <query>head</query>
+   </key>
+   <height>26</height>
+   <text>
+    <rect>
+     <x>10</x>
+     <y>6</y>
+     <width>980</width>
+     <height>15</height>
+    </rect>
+    <bottompad>0</bottompad>
+    <font>
+     <face>Arial</face>
+     <size>9</size>
+     <weight>normal</weight>
+    </font>
+    <left/>
+    <top/>
+    <data>
+     <query>notes</query>
+     <column>notes</column>
+    </data>
+   </text>
+  </detail>
+ </section>
+ <pgfoot>
+  <height>23</height>
+  <label>
+   <rect>
+    <x>5</x>
+    <y>0</y>
+    <width>85</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Report Date:</string>
+  </label>
+  <field>
+   <rect>
+    <x>930</x>
+    <y>0</y>
+    <width>40</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>Context Query</query>
+    <column>page_number</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>839</x>
+    <y>0</y>
+    <width>85</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Page:</string>
+  </label>
+  <field>
+   <rect>
+    <x>95</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>Context Query</query>
+    <column>report_date</column>
+   </data>
+  </field>
+ </pgfoot>
+</report>

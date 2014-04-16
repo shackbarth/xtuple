@@ -1,0 +1,43 @@
+-- Group: contracts
+-- Name: detail
+-- Notes: 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT contrct_id, 
+       vend_number, vend_name, 
+       contrct.*,
+       CASE WHEN COALESCE(contrct_effective, startOfTime()) <=
+                 startOfTime() THEN <? value("always") ?>
+       END AS contrct_effective_qtdisplayrole,
+       CASE WHEN COALESCE(contrct_expires, endOfTime()) >=
+                 endOfTime() THEN <? value("never") ?>
+       END AS contrct_expires_qtdisplayrole,
+       CASE WHEN (COALESCE(contrct_expires, endOfTime()) < CURRENT_DATE) THEN 'expired'
+            WHEN (COALESCE(contrct_effective, startOfTime()) > CURRENT_DATE) THEN 'future'
+       END AS qtforegroundrole,
+       (SELECT count(*) FROM itemsrc WHERE (itemsrc_contrct_id=contrct_id)) AS item_count 
+FROM contrct JOIN vendinfo ON (vend_id=contrct_vend_id)
+WHERE ((true)
+<? if exists("vend_id") ?>
+  AND (contrct_vend_id=<? value("vend_id") ?>)
+<? endif ?>
+<? if exists("effectiveStartDate") ?>
+  AND (contrct_effective >= <? value("effectiveStartDate") ?>)
+<? endif ?>
+<? if exists("effectiveEndDate") ?>
+  AND (contrct_effective <= <? value("effectiveEndDate") ?>)
+<? endif ?>
+<? if exists("expireStartDate") ?>
+  AND (contrct_expires >= <? value("expireStartDate") ?>)
+<? endif ?>
+<? if exists("expireEndDate") ?>
+  AND (contrct_expires <= <? value("expireEndDate") ?>)
+<? endif ?>
+<? if exists("search_pattern") ?>
+  AND ( (contrct_number ~* <? value("search_pattern") ?>)
+    OR  (COALESCE(contrct_descrip,'') ~* <? value("search_pattern") ?>) )
+<? endif ?>
+)
+ORDER By vend_number, contrct_number
+;

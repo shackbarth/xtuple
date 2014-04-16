@@ -1,0 +1,35 @@
+-- Group: scripts
+-- Name:  detail
+-- Notes: 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+<? if exists('byPackage') ?>
+SELECT script_id, script_name, script_enabled,
+       firstline(script_notes) AS script_notes, script_order,
+       CASE nspname WHEN 'public' THEN '' ELSE nspname END AS pkgname,
+       CASE nspname WHEN 'public' THEN 0
+                                  ELSE 1 END AS xtindentrole,
+       script_notes AS script_notes_qttooltiprole
+  FROM script
+  JOIN pg_class     ON (script.tableoid=pg_class.oid)
+  JOIN pg_namespace ON (relnamespace=pg_namespace.oid)
+ UNION 
+SELECT -1, pkghead_name, NULL,
+       firstline(pkghead_descrip), NULL,
+       pkghead_name, 0, pkghead_descrip 
+  FROM script, pg_class, pg_namespace
+     RIGHT OUTER JOIN pkghead ON (nspname=pkghead_name)
+   WHERE ((script.tableoid=pg_class.oid)
+     AND  (relnamespace=pg_namespace.oid))
+   ORDER BY pkgname, xtindentrole, script_name, script_order, script_id;
+<? else ?>
+SELECT script_id, script_name, script_enabled,
+       firstline(script_notes) AS script_notes, script_order,
+       CASE nspname WHEN 'public' THEN '' ELSE nspname END AS pkgname,
+       script_notes AS script_notes_qttooltiprole
+  FROM script
+  JOIN pg_class     ON (script.tableoid=pg_class.oid)
+  JOIN pg_namespace ON (relnamespace=pg_namespace.oid)
+ORDER BY script_name, script_order, script_id;
+<? endif ?>

@@ -1,0 +1,111 @@
+-- Group: crm
+-- Name:  strictcountrycheck
+-- Notes: select details about countries used throughout the database
+--        that do not match country.country_name
+--
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+<? if exists("count") ?>
+SELECT SUM(counter) AS counter FROM (
+<? endif ?>
+  SELECT <? if exists("count") ?> COUNT(*) AS counter
+         <? else ?> addr_id, 'Address' AS type, addr_number AS number, addr_country AS country, '' AS detail
+         <? endif ?>
+    FROM addr
+   WHERE addr_country != ''
+     AND addr_country NOT IN (SELECT country_name
+                                FROM country
+                               WHERE country_name IS NOT NULL)
+  UNION ALL
+  SELECT <? if exists("count") ?> COUNT(*)
+         <? else ?> cmhead_id, 'Credit Memo', cmhead_number, cmhead_billtocountry, 'Bill-To'
+         <? endif ?>
+    FROM cmhead
+   WHERE cmhead_billtocountry != ''
+     AND cmhead_billtocountry NOT IN (SELECT country_name
+                                        FROM country
+                                       WHERE country_name IS NOT NULL)
+     <? if not exists("showAll") ?> AND (NOT cmhead_posted) <? endif ?>
+  UNION ALL
+  SELECT <? if exists("count") ?> COUNT(*)
+         <? else ?> cmhead_id, 'Credit Memo', cmhead_number, cmhead_billtocountry, 'Ship-To'
+         <? endif ?>
+    FROM cmhead
+    WHERE cmhead_shipto_country != ''
+      AND cmhead_shipto_country NOT IN (SELECT country_name
+                                          FROM country
+                                         WHERE country_name IS NOT NULL)
+      <? if not exists("showAll") ?> AND (NOT cmhead_posted) <? endif ?>
+  UNION ALL
+  SELECT <? if exists("count") ?> COUNT(*)
+         <? else ?> invchead_id, 'Invoice', invchead_invcnumber, invchead_billto_country, 'Bill-To'
+         <? endif ?>
+    FROM invchead
+   WHERE invchead_billto_country != ''
+     AND invchead_billto_country NOT IN (SELECT country_name
+                                           FROM country
+                                          WHERE country_name IS NOT NULL)
+     <? if not exists("showAll") ?> AND (NOT invchead_posted) <? endif ?>
+  UNION ALL
+  SELECT <? if exists("count") ?> COUNT(*)
+         <? else ?> invchead_id, 'Invoice', invchead_invcnumber, invchead_shipto_country, 'Ship-To'
+         <? endif ?>
+    FROM invchead
+   WHERE invchead_shipto_country != ''
+     AND invchead_shipto_country NOT IN (SELECT country_name
+                                           FROM country
+                                          WHERE country_name IS NOT NULL)
+     <? if not exists("showAll") ?> AND (NOT invchead_posted) <? endif ?>
+  UNION ALL
+  SELECT <? if exists("count") ?> COUNT(*)
+         <? else ?> quhead_id, 'Quote', quhead_number, quhead_billtocountry, 'Bill-To'
+         <? endif ?>
+    FROM quhead
+   WHERE quhead_billtocountry != ''
+     AND quhead_billtocountry NOT IN (SELECT country_name
+                                        FROM country
+                                       WHERE country_name IS NOT NULL)
+     <? if not exists("showAll") ?> AND (quhead_expire>=CURRENT_DATE) <? endif ?>
+  UNION ALL
+  SELECT <? if exists("count") ?> COUNT(*)
+         <? else ?> quhead_id, 'Quote', quhead_number, quhead_shiptocountry, 'Ship-To'
+         <? endif ?>
+    FROM quhead
+   WHERE quhead_shiptocountry != ''
+     AND quhead_shiptocountry NOT IN (SELECT country_name
+                                        FROM country
+                                       WHERE country_name IS NOT NULL)
+     <? if not exists("showAll") ?> AND (quhead_expire>=CURRENT_DATE) <? endif ?>
+  UNION ALL
+  SELECT <? if exists("count") ?> COUNT(*)
+         <? else ?> cohead_id, 'Sales Order', cohead_number, cohead_billtocountry, 'Bill-To'
+         <? endif ?>
+    FROM cohead
+   WHERE cohead_billtocountry != ''
+     AND cohead_billtocountry NOT IN (SELECT country_name
+                                        FROM country
+                                       WHERE country_name IS NOT NULL)
+    <? if not exists("showAll") ?>
+     AND cohead_id IN (SELECT coitem_cohead_id
+                         FROM coitem
+                        WHERE COALESCE(coitem_status, 'O')='O')
+    <? endif ?>
+  UNION ALL
+  SELECT <? if exists("count") ?> COUNT(*)
+         <? else ?> cohead_id, 'Sales Order', cohead_number, cohead_shiptocountry, 'Ship-To'
+         <? endif ?>
+    FROM cohead
+   WHERE cohead_shiptocountry != ''
+     AND cohead_shiptocountry NOT IN (SELECT country_name
+                                       FROM country
+                                      WHERE country_name IS NOT NULL)
+    <? if not exists("showAll") ?>
+     AND cohead_id IN (SELECT coitem_cohead_id
+                         FROM coitem
+                        WHERE COALESCE(coitem_status, 'O')='O')
+    <? endif ?>
+
+<? if exists("count") ?>
+) AS dummy;
+<? endif ?>

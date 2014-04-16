@@ -1,0 +1,27 @@
+-- Group: openVouchers
+-- Name: populate
+-- Notes: used by openVouchers
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT vohead_id, COALESCE(pohead_id, -1), vohead_number,
+       COALESCE(TEXT(pohead_number), TEXT(<? value("misc") ?>)) AS ponumber,
+       (vend_number || '-' || vend_name) AS vendor, vendtype_code, vohead_invcnumber,
+       vohead_distdate, COALESCE(vohead_gldistdate, vohead_distdate) AS postdate,
+       vohead_amount, 'curr' AS vohead_amount_xtnumericrole,
+       formatDate(vohead_distdate) AS f_distdate,
+       formatDate(COALESCE(vohead_gldistdate, vohead_distdate)) AS f_postdate,
+       formatMoney(vohead_amount) AS f_amount
+  FROM vendinfo JOIN vendtype ON (vendtype_id=vend_vendtype_id)
+                JOIN vohead ON (vohead_vend_id=vend_id)
+                LEFT OUTER JOIN pohead ON (vohead_pohead_id=pohead_id) 
+ WHERE (NOT vohead_posted)
+<? if exists("vend_id") ?>
+ AND (vend_id=<? value("vend_id") ?>)
+<? elseif exists("vendtype_id") ?>
+ AND (vend_vendtype_id=<? value("vendtype_id") ?>)
+<? elseif exists("vendtype_pattern") ?>
+ AND (vendtype_code ~ <? value("vendtype_pattern") ?>)
+<? endif ?>
+ ORDER BY vohead_number;
+ 

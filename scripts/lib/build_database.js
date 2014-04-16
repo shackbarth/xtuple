@@ -87,7 +87,8 @@ var  async = require('async'),
         var baseName = path.basename(extension),
           isFoundation = extension.indexOf("foundation-database") >= 0,
           isFoundationExtension = extension.indexOf("inventory/foundation-database") >= 0 ||
-            extension.indexOf("manufacturing/foundation-database") >= 0,
+            extension.indexOf("manufacturing/foundation-database") >= 0 ||
+            extension.indexOf("distribution/foundation-database") >= 0,
           isLibOrm = extension.indexOf("lib/orm") >= 0,
           isApplicationCore = extension.indexOf("enyo-client") >= 0 &&
             extension.indexOf("extension") < 0,
@@ -101,8 +102,9 @@ var  async = require('async'),
           manifestOptions = {
             useSafeFoundationToolkit: isFoundation && !isFoundationExtension && extensions.length === 1,
             useFrozenScripts: spec.frozen,
-            useFoundationScripts: (baseName.indexOf('inventory') >= 0 || baseName.indexOf('manufacturing') >= 0) &&
-              extensions.length === 1,
+            useFoundationScripts: baseName.indexOf('inventory') >= 0 ||
+              baseName.indexOf('manufacturing') >= 0 ||
+              baseName.indexOf('distribution') >= 0,
             registerExtension: !isFoundation && !isLibOrm && !isApplicationCore,
             runJsInit: !isFoundation && !isLibOrm,
             wipeViews: isApplicationCore && spec.wipeViews,

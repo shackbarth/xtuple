@@ -1,0 +1,135 @@
+-- Group: contract
+-- Name:  itemsources
+-- Notes: Selection of Contract Related Item Sources
+SELECT itemsrc_id,
+	-1 AS pohead_id, 
+	' ' AS seq,
+	' ' AS poitem_ordnumber, 
+        item_number,
+	item_descrip1,
+	itemsrc_vend_uom,
+	itemsrc_vend_item_number,
+	itemsrc_contrct_min,
+	sum(poitem_qty_unreleased) AS poitem_qty_unreleased,
+	sum(poitem_qty_ordered)    AS poitem_qty_ordered,
+	sum(poitem_qty_received)   AS poitem_qty_received,
+	sum(poitem_qty_returned)   AS poitem_qty_returned,
+	null AS poitem_duedate,
+	null AS poitem_status,
+	0 AS xtindentrole 
+	FROM (SELECT contrct_id, 
+		itemsrc_id,
+		pohead_number || '-' || ltrim(to_char(poitem_linenumber, '999')) AS poitem_ordnumber, 
+		item_number,
+		item_descrip1,
+		itemsrc_vend_uom,
+		itemsrc_vend_item_number,
+		itemsrc_contrct_min,
+		CASE WHEN poitem_status = 'U' THEN poitem_qty_ordered
+		  ELSE 0
+		END AS poitem_qty_unreleased,
+		CASE WHEN poitem_status = 'O' THEN poitem_qty_ordered
+		     WHEN poitem_status = 'C' THEN poitem_qty_ordered
+                  ELSE 0
+		END AS poitem_qty_ordered,
+		poitem_qty_received,
+		poitem_qty_returned,
+		poitem_duedate, 
+		poitem_status
+		FROM contrct JOIN itemsrc  ON (itemsrc_contrct_id  = contrct_id)
+		  LEFT OUTER JOIN poitem   ON (poitem_itemsrc_id   = itemsrc_id)
+		  LEFT OUTER JOIN pohead   ON (pohead_id           = poitem_pohead_id)
+			     JOIN item     ON (itemsrc_item_id     = item_id)
+		WHERE (contrct_id = <? value("contrct_id") ?>)) AS dummy1
+	WHERE (contrct_id = <? value("contrct_id") ?>)
+	GROUP BY itemsrc_id, itemsrc_vend_item_number, itemsrc_vend_uom, itemsrc_contrct_min,
+                item_number, item_descrip1
+
+UNION  -- PO Line Items
+
+SELECT itemsrc_id,
+	pohead_id, 
+	pohead_number || '-' || ltrim(to_char(poitem_linenumber, '999')) AS seq,
+        pohead_number || '-' || ltrim(to_char(poitem_linenumber, '999')) AS poitem_ordnumber,  
+        null AS item_number,
+	null AS item_descrip1,
+	null AS itemsrc_vend_uom,
+	null AS itemsrc_vend_item_number,
+	null AS itemsrc_contrct_min,
+	CASE WHEN poitem_status = 'U' THEN poitem_qty_ordered
+	  ELSE 0
+	END AS poitem_qty_unreleased,
+	CASE WHEN poitem_status = 'O' THEN poitem_qty_ordered
+	     WHEN poitem_status = 'C' THEN poitem_qty_ordered
+          ELSE 0
+	END AS poitem_qty_ordered,
+	poitem_qty_received,
+	poitem_qty_returned,
+	poitem_duedate, 
+	CASE WHEN poitem_status = 'O' THEN 'Open'
+	     WHEN poitem_status = 'C' THEN 'Closed'
+	     ELSE 'Unreleased'
+	END AS poitem_status,
+	1 AS xtindentrole 
+	FROM contrct JOIN itemsrc  ON (itemsrc_contrct_id  = contrct_id)
+		     JOIN poitem   ON (poitem_itemsrc_id   = itemsrc_id)
+		     JOIN pohead   ON (pohead_id           = poitem_pohead_id)
+		     JOIN itemsite ON (poitem_itemsite_id  = itemsite_id)
+		     JOIN item     ON (itemsite_item_id    = item_id)
+	WHERE (contrct_id = <? value("contrct_id") ?>)
+
+UNION -- Receipts
+
+SELECT itemsrc_id,
+	pohead_id,  
+	poitem_ordnumber || 'R' || to_char(recv_date, 'YYYYMMDDHH24:MI:SS') AS seq,
+	'Receipt' AS poitem_ordnumber,
+	null AS item_number,
+	null AS item_descrip1,
+	recv_vend_uom AS vend_uom,
+	null AS itemsrc_vend_item_number,
+	null AS itemsrc_contrct_min,
+	null AS poitem_qty_unreleased,
+	null AS poitem_qty_ordered,
+	recv_qty AS poitem_qty_received,
+	null AS poitem_qty_returned,
+	recv_date AS poitem_duedate,
+	recv_trans_usr_name AS username,
+	2 AS xtindentrole
+  FROM recv JOIN (SELECT pohead_number || '-' || ltrim(to_char(poitem_linenumber, '999')) AS poitem_ordnumber, 
+			    poitem_pohead_id, poitem_linenumber, poitem_id, pohead_id, 
+			    poitem_itemsrc_id
+			FROM poitem JOIN pohead ON (pohead_id = poitem_pohead_id)) AS dummy ON (poitem_id   = recv_orderitem_id)
+               JOIN itemsite ON (itemsite_id = recv_itemsite_id)
+               JOIN item     ON (item_id     = itemsite_item_id)
+               JOIN itemsrc  ON (poitem_itemsrc_id = itemsrc_id)
+  WHERE (itemsrc_contrct_id = <? value("contrct_id") ?>) 
+
+UNION -- Returns
+
+SELECT itemsrc_id, 
+	pohead_id,  
+	poitem_ordnumber || 'R' || to_char(poreject_date, 'YYYYMMDDHH24:MI:SS') AS seq,
+	'Return' AS poitem_ordnumber,
+	null AS item_number,
+	null AS item_descrip1,
+	poreject_vend_uom AS vend_uom,
+	null AS itemsrc_vend_item_number,
+	null AS itemsrc_contrct_min,
+	null AS poitem_qty_unreleased,
+	null AS poitem_qty_ordered,
+	null AS poitem_qty_received,
+	poreject_qty AS poitem_qty_returned,
+	poreject_date AS poitem_duedate,
+	poreject_trans_username AS username,
+	2 AS xtindentrole 
+  FROM poreject JOIN (SELECT pohead_number || '-' || ltrim(to_char(poitem_linenumber, '999')) AS poitem_ordnumber, 
+			    poitem_pohead_id, poitem_linenumber, poitem_id, pohead_id, 
+			    poitem_itemsrc_id
+			FROM poitem JOIN pohead ON (pohead_id = poitem_pohead_id)) AS dummy ON (poitem_id   = poreject_poitem_id)
+               JOIN itemsite ON (itemsite_id = poreject_itemsite_id)
+               JOIN item     ON (item_id     = itemsite_item_id)
+               JOIN itemsrc  ON (poitem_itemsrc_id = itemsrc_id)
+  WHERE (itemsrc_contrct_id = <? value("contrct_id") ?>) 
+
+ORDER BY itemsrc_id, seq, poitem_ordnumber, poitem_duedate, xtindentrole;

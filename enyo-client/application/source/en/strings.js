@@ -946,7 +946,6 @@
     "_viewTaxTypes": "View Tax Types",
     "_viewTaxZones": "View Tax Zones",
     "_viewTerms": "View Terms",
-    "_viewUOMs": "View Units of Measure",
     "_viewTitles": "View Honorifics",
     "_viewWarehouses": "View Sites",
 

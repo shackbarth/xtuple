@@ -1,0 +1,153 @@
+-- Group: creditMemo
+-- Name: editlist
+-- Notes: used by creditMemoEditList
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT *,
+       ('C/M-' || formatCreditMemoNumber(cmhead_id)) AS docnumber,
+       currConcat(curr_id) AS currabbr,
+       CASE WHEN seq != 0 THEN ''
+       END AS docnumber_qtdisplayrole,
+       'qty' AS qtytobill_xtnumericrole,
+       'price' AS price_xtnumericrole,
+       'curr' AS extprice_xtnumericrole,
+       CASE WHEN namedescrip = <? value("notassigned") ?> THEN 'error' END AS qtforegroundrole
+FROM (
+
+SELECT cmhead_id, -1 AS altid,
+       cmhead_number AS ordernumber,
+       cust_number AS custitemnumber,
+       cmhead_billtoname AS namedescrip,
+       CAST(NULL AS TEXT) AS uom_name,
+       CAST(NULL AS NUMERIC) AS qtytobill,
+       CAST(NULL AS NUMERIC) AS price,
+       CAST(NULL AS NUMERIC) AS extprice,
+       cmhead_curr_id AS curr_id,
+       0 AS cmitem_linenumber, 0 AS xtindentrole, 0 AS seq
+FROM cmhead JOIN custinfo ON (cmhead_cust_id=cust_id)
+WHERE ((NOT cmhead_posted)
+  AND  (NOT cmhead_hold))
+
+UNION
+SELECT cmhead_id, cmitem_id,
+       NULL, item_number,
+       item_descrip1,
+       uom_name, cmitem_qtycredit * cmitem_qty_invuomratio,
+       cmitem_unitprice / cmitem_price_invuomratio,
+       cmitem_qtycredit * cmitem_qty_invuomratio * cmitem_unitprice / cmitem_price_invuomratio,
+       cmhead_curr_id AS curr_id,
+       cmitem_linenumber, 1 AS xtindentrole, 1 AS seq
+FROM cmhead, cmitem, itemsite, item, uom
+WHERE ((NOT cmhead_posted)
+  AND  (NOT cmhead_hold)
+  AND  (cmhead_id=cmitem_cmhead_id)
+  AND  (cmitem_itemsite_id=itemsite_id)
+  AND  (itemsite_item_id=item_id)
+  AND  (item_inv_uom_id=uom_id))
+
+UNION
+SELECT cmhead_id, -1,
+       NULL, <? value("debit") ?>,
+       COALESCE((SELECT formatGLAccountLong(accnt_id)
+                 FROM accnt, salesaccnt
+                 WHERE ((salesaccnt_sales_accnt_id=accnt_id)
+                    AND (salesaccnt_id=findSalesAccnt(itemsite_id, 'IS', cmhead_cust_id,
+                                                      cmhead_saletype_id, cmhead_shipzone_id)))), <? value("notassigned") ?>),
+       NULL, NULL, NULL,
+       cmitem_qtycredit * cmitem_qty_invuomratio * cmitem_unitprice / cmitem_price_invuomratio,
+       cmhead_curr_id AS curr_id,
+       cmitem_linenumber, 2 AS xtindentrole, 2 AS seq
+FROM cmhead, cmitem, itemsite, item, uom
+WHERE ((NOT cmhead_posted)
+  AND  (NOT cmhead_hold)
+  AND  (cmhead_id=cmitem_cmhead_id)
+  AND  (cmitem_itemsite_id=itemsite_id)
+  AND  (itemsite_item_id=item_id)
+  AND  (item_inv_uom_id=uom_id))
+
+UNION
+SELECT cmhead_id, -1,
+       NULL, <? value("debit") ?>,
+       CASE WHEN (accnt_id IS NULL) THEN <? value("notassigned") ?>
+            ELSE formatGLAccountLong(accnt_id)
+       END,
+       NULL, NULL, cmhead_freight,
+       cmhead_freight,
+       cmhead_curr_id AS curr_id,
+       99999, 1 AS xtindentrole, 3 AS seq
+FROM cmhead LEFT OUTER JOIN accnt ON (accnt_id=findFreightAccount(cmhead_cust_id))
+WHERE ((NOT cmhead_posted)
+  AND  (NOT cmhead_hold)
+  AND  (cmhead_freight <> 0))
+
+UNION
+SELECT cmhead_id, -1,
+       NULL, <? value("debit") ?>,
+       formatGLAccountLong(cmhead_misc_accnt_id),
+       NULL, NULL, cmhead_misc,
+       cmhead_misc,
+       cmhead_curr_id AS curr_id,
+       99999, 1 AS xtindentrole, 4 AS seq
+FROM cmhead LEFT OUTER JOIN accnt ON (accnt_id=findFreightAccount(cmhead_cust_id))
+WHERE ((NOT cmhead_posted)
+  AND  (NOT cmhead_hold)
+  AND  (cmhead_misc <> 0))
+
+UNION
+SELECT cmhead_id, -1,
+       NULL, <? value("debit") ?>,
+       CASE WHEN (tax_sales_accnt_id IS NULL) THEN <? value("taxes") ?>
+            ELSE formatGLAccountLong(tax_sales_accnt_id)
+       END,
+       NULL, NULL, SUM(taxhist_tax * -1.0),
+       SUM(taxhist_tax * -1.0),
+       cmhead_curr_id AS curr_id,
+       99999, 1 AS xtindentrole, 5 AS seq
+FROM cmhead JOIN cmheadtax ON ((taxhist_parent_id=cmhead_id) AND (taxhist_tax <> 0.0))
+            JOIN tax ON (tax_id=taxhist_tax_id)
+WHERE ((NOT cmhead_posted)
+  AND  (NOT cmhead_hold))
+GROUP BY cmhead_id, tax_sales_accnt_id, cmhead_curr_id
+
+UNION
+SELECT cmhead_id, -1,
+       NULL, <? value("debit") ?>,
+       CASE WHEN (tax_sales_accnt_id IS NULL) THEN <? value("taxes") ?>
+            ELSE formatGLAccountLong(tax_sales_accnt_id)
+       END,
+       NULL, NULL, SUM(taxhist_tax * -1.0),
+       SUM(taxhist_tax * -1.0),
+       cmhead_curr_id AS curr_id,
+       99999, 1 AS xtindentrole, 5 AS seq
+FROM cmhead JOIN cmitem ON (cmitem_cmhead_id=cmhead_id)
+            JOIN cmitemtax ON ((taxhist_parent_id=cmitem_id) AND (taxhist_tax <> 0.0))
+            JOIN tax ON (tax_id=taxhist_tax_id)
+WHERE ((NOT cmhead_posted)
+  AND  (NOT cmhead_hold))
+GROUP BY cmhead_id, tax_sales_accnt_id, cmhead_curr_id
+
+UNION
+SELECT cmhead_id, -1,
+       NULL, <? value("credit") ?>,
+       CASE WHEN (accnt_id IS NULL) THEN <? value("notassigned") ?>
+            ELSE formatGLAccountLong(accnt_id)
+       END,
+       NULL, NULL, NULL,
+       SUM((cmitem_qtycredit * cmitem_qty_invuomratio) *
+           (cmitem_unitprice / cmitem_price_invuomratio)) +
+           cmhead_freight + cmhead_misc +
+           (SELECT COALESCE(SUM(taxhist_tax * -1.0), 0.0) FROM cmheadtax WHERE (taxhist_parent_id=cmhead_id)) +
+           (SELECT COALESCE(SUM(taxhist_tax * -1.0), 0.0) FROM cmitem JOIN cmitemtax ON (taxhist_parent_id=cmitem_id)
+                                    WHERE (cmitem_cmhead_id=cmhead_id))
+            AS extprice,
+       cmhead_curr_id AS curr_id,
+       99999, 1 AS xtindentrole, 6 AS seq
+FROM cmhead LEFT OUTER JOIN cmitem ON (cmhead_id=cmitem_cmhead_id)
+            LEFT OUTER JOIN accnt ON (accnt_id=findARAccount(cmhead_cust_id))
+WHERE ((NOT cmhead_posted)
+  AND  (NOT cmhead_hold))
+GROUP BY cmhead_id, cmhead_cust_id, cmhead_freight, cmhead_misc, accnt_id, cmhead_curr_id
+
+) AS dummy
+ORDER BY docnumber, cmitem_linenumber, seq;

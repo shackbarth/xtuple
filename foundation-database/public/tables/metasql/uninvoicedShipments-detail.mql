@@ -1,0 +1,89 @@
+-- Group: uninvoicedShipments
+-- Name: detail
+-- Notes: used by uninvoicedShipments
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT cohead_id, shipitem_id, cohead_number, coitem_linenumber,
+       cust_number, cust_name,
+       item_number, description,
+       uom_name, shipped, selected,
+       CASE WHEN (level=0) THEN cohead_number
+            ELSE CAST(coitem_linenumber AS TEXT)
+       END AS orderline,
+       CASE WHEN (level=0) THEN cust_number
+            ELSE item_number
+       END AS custitem,
+       CASE WHEN (level=0) THEN cust_name
+            ELSE description
+       END AS custdescrip,
+       'qty' AS shipped_xtnumericrole,
+       'qty' AS selected_xtnumericrole,
+       level AS xtindentrole
+FROM (
+SELECT cohead_id, -1 AS shipitem_id, cohead_number, -1 AS coitem_linenumber, 0 AS level,
+       cust_number, cust_name,
+       '' AS item_number, '' AS description,
+       '' AS uom_name,
+       COALESCE(SUM(shipitem_qty), 0) AS shipped,
+       COALESCE(SUM(cobill_qty), 0) AS selected
+FROM cohead, custinfo, itemsite, item, whsinfo, shipitem, shiphead, uom,
+     coitem LEFT OUTER JOIN
+      ( cobill JOIN cobmisc
+        ON ( (cobill_cobmisc_id=cobmisc_id) AND (NOT cobmisc_posted) ) )
+     ON (cobill_coitem_id=coitem_id)
+WHERE ( (cohead_cust_id=cust_id)
+ AND (shipitem_orderitem_id=coitem_id)
+ AND (shipitem_shiphead_id=shiphead_id)
+ AND (shiphead_order_type='SO')
+ AND (coitem_cohead_id=cohead_id)
+ AND (coitem_itemsite_id=itemsite_id)
+ AND (coitem_qty_uom_id=uom_id)
+ AND (itemsite_item_id=item_id)
+ AND (itemsite_warehous_id=warehous_id)
+ AND (shiphead_shipped)
+ AND (NOT shipitem_invoiced)
+<? if exists("warehous_id") ?>
+ AND (itemsite_warehous_id=<? value("warehous_id") ?>)
+<? endif ?>
+  )
+GROUP BY cohead_id, cohead_number, cust_number, cust_name
+
+UNION
+SELECT cohead_id, shipitem_id, cohead_number, coitem_linenumber, 1 AS level,
+       cust_number, cust_name,
+       item_number, (item_descrip1 || ' ' || item_descrip2) AS description,
+       uom_name,
+       COALESCE(SUM(shipitem_qty), 0) AS shipped,
+       COALESCE(SUM(cobill_qty), 0) AS selected
+FROM cohead, custinfo, itemsite, item, whsinfo, shipitem, shiphead, uom,
+     coitem LEFT OUTER JOIN
+      ( cobill JOIN cobmisc
+        ON ( (cobill_cobmisc_id=cobmisc_id) AND (NOT cobmisc_posted) ) )
+     ON (cobill_coitem_id=coitem_id)
+WHERE ( (cohead_cust_id=cust_id)
+ AND (shipitem_orderitem_id=coitem_id)
+ AND (shipitem_shiphead_id=shiphead_id)
+ AND (shiphead_order_type='SO')
+ AND (coitem_cohead_id=cohead_id)
+ AND (coitem_itemsite_id=itemsite_id)
+ AND (coitem_qty_uom_id=uom_id)
+ AND (itemsite_item_id=item_id)
+ AND (itemsite_warehous_id=warehous_id)
+ AND (shiphead_shipped)
+ AND (NOT shipitem_invoiced)
+<? if exists("warehous_id") ?>
+ AND (itemsite_warehous_id=<? value("warehous_id") ?>)
+<? endif ?>
+  )
+GROUP BY cohead_number, cust_number, cust_name,
+         coitem_id, coitem_linenumber, item_number,
+         item_descrip1, item_descrip2, cohead_id, shipitem_id, uom_name
+         
+   ) AS data
+
+<? if exists("showUnselected") ?>
+ WHERE (selected = 0)
+<? endif ?>
+
+ORDER BY cohead_number DESC, level, coitem_linenumber DESC;

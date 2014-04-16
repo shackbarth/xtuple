@@ -1,0 +1,63 @@
+-- Group: arApplications
+-- Name: detail
+-- Notes: used by dspARApplications
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT arapply.*,
+       cust_number, cust_name,
+       CASE WHEN (arapply_source_doctype='C') THEN <? value("creditMemo") ?>
+            WHEN (arapply_source_doctype='R') THEN <? value("cashdeposit") ?>
+            WHEN (arapply_fundstype='C') THEN <? value("check") ?>
+            WHEN (arapply_fundstype='T') THEN <? value("certifiedCheck") ?>
+            WHEN (arapply_fundstype='M') THEN <? value("masterCard") ?>
+            WHEN (arapply_fundstype='V') THEN <? value("visa") ?>
+            WHEN (arapply_fundstype='A') THEN <? value("americanExpress") ?>
+            WHEN (arapply_fundstype='D') THEN <? value("discoverCard") ?>
+            WHEN (arapply_fundstype='R') THEN <? value("otherCreditCard") ?>
+            WHEN (arapply_fundstype='K') THEN <? value("cash") ?>
+            WHEN (arapply_fundstype='W') THEN <? value("wireTransfer") ?>
+            WHEN (arapply_fundstype='O') THEN <? value("other") ?>
+       END AS doctype,
+       CASE WHEN (arapply_source_doctype='C') THEN <? value("creditMemo") ?>
+            WHEN (arapply_source_doctype='R') THEN <? value("cashdeposit") ?>
+            WHEN (arapply_source_doctype='K') THEN <? value("apcheck") ?>
+            ELSE <? value("other") ?>
+       END AS sourcedoctype,
+       CASE WHEN (arapply_target_doctype='D') THEN <? value("debitMemo") ?>
+            WHEN (arapply_target_doctype='I') THEN <? value("invoice") ?>
+            WHEN (arapply_target_doctype='K') THEN <? value("apcheck") ?>
+            ELSE <? value("other") ?>
+       END AS targetdoctype,
+       CASE WHEN (arapply_source_doctype IN ('C','R')) THEN TEXT(arapply_source_docnumber)
+            ELSE arapply_refnumber
+       END AS source,
+       TEXT(arapply_target_docnumber) AS target,
+       currConcat(arapply_curr_id) AS currAbbr,
+       currtobase(arapply_curr_id,arapply_applied,arapply_postdate) AS base_applied,
+       'curr' AS arapply_applied_xtnumericrole,
+       'curr' AS base_applied_xtnumericrole,
+       0 AS base_applied_xttotalrole
+FROM arapply, custinfo
+WHERE ( (arapply_cust_id=cust_id)
+  AND   (arapply_postdate BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+  AND   (arapply_source_doctype IN (
+<? if exists("includeCreditMemos") ?>
+  <? if exists("includeCashReceipts") ?>
+            'K', 'C', 'R'
+  <? else ?>
+            'C', 'R'
+  <? endif ?>
+<? else ?>
+            'K'
+<? endif ?> ))
+<? if exists("cust_id") ?>
+  AND   (cust_id=<? value("cust_id") ?>)
+<? elseif exists("custtype_id") ?>
+  AND   (cust_custtype_id=<? value("custtype_id") ?>)
+<? elseif exists("custtype_pattern") ?>
+  AND   (cust_custtype_id IN (SELECT custtype_id FROM custtype
+                              WHERE (custtype_code ~ <? value("custtype_pattern") ?>)))
+<? endif ?>
+      )
+ORDER BY arapply_postdate, source;

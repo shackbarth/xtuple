@@ -1,0 +1,194 @@
+-- Group: inventoryAvailability
+-- Name:  byCustOrSO
+-- Notes: query to get item availability by either customer id/type/pattern
+--        or by cohead_id
+--        Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+--        See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT id, altid, cohead_id,
+       item_number, descrip, uom_name,
+       qoh, sobalance, allocated, ordered,
+       atshipping,
+       CASE WHEN (xtindentrole=1) THEN
+<? if exists("useReservationNetting") ?>
+                  coitem_qtyreserved
+<? else ?>
+                  (qoh + ordered - sobalance)
+<? endif ?>
+            WHEN (xtindentrole=2) THEN (qoh + ordered - sobalance)
+       END AS orderavail,
+       (qoh + ordered - allocated) AS totalavail,
+       orderdate, duedate,
+       reorderlevel,
+<? if exists("sohead_id") ?> (xtindentrole - 1) AS <? endif ?> xtindentrole, 
+       'qty' AS qoh_xtnumericrole,
+       'qty' AS sobalance_xtnumericrole,
+       'qty' AS allocated_xtnumericrole,
+       'qty' AS ordered_xtnumericrole,
+       'qty' AS orderavail_xtnumericrole,
+       'qty' AS totalavail_xtnumericrole,
+       'qty' AS atshipping_xtnumericrole,
+       CASE WHEN (pack_id IS NOT NULL) THEN 'altemphasis'
+       END AS qtforegroundrole,
+       CASE WHEN (qoh < 0) THEN 'error'
+            WHEN (qoh < reorderlevel) THEN 'warning'
+       END AS qoh_qtforegroundrole,
+       CASE WHEN (
+<? if exists("useReservationNetting") ?>
+                  coitem_qtyreserved < 0
+<? else ?>
+                  (qoh + ordered - sobalance) < 0
+<? endif ?>
+                 ) THEN 'error'
+            WHEN ((qoh + ordered - sobalance) <= reorderlevel) THEN 'warning'
+       END AS orderavail_qtforegroundrole,
+       CASE WHEN ((qoh + ordered - allocated) < 0) THEN 'error'
+            WHEN ((qoh + ordered - allocated) <= reorderlevel) THEN 'warning'
+       END AS totalavail_qtforegroundrole,
+       CASE WHEN (xtindentrole = 2 AND (orderdate <= CURRENT_DATE)
+              AND (descrip IN ('O','E','S','R'))) THEN 'error'
+       END AS atshipping_qtforegroundrole,
+       CASE WHEN (xtindentrole = 2 AND duedate<=CURRENT_DATE) THEN 'error'
+       END AS orderdate_qtforegroundrole,
+       CASE WHEN (xtindentrole = 2 AND duedate<=CURRENT_DATE) THEN 'error'
+       END AS duedate_qtforegroundrole,
+<? if exists("useReservationNetting") ?>
+       CASE WHEN (coitem_qtyreserved > 0
+              AND sobalance > coitem_qtyreserved) THEN 'emphasis'
+            WHEN ((sobalance <> 0)
+              AND ((sobalance - coitem_qtyreserved) = 0)) THEN 'altemphasis'
+       END AS qtforegroundrole,
+<? endif ?>
+       CASE WHEN (xtindentrole = 2) THEN ''
+       END AS sobalance_qtdisplayrole
+FROM (
+<? if not exists("sohead_id") ?>
+    SELECT cohead_id AS id, -2 AS altid, cohead_id, cohead_number,
+           cohead_number AS item_number,
+           '' AS trueitem_number,
+           (cust_number||'-'||cust_name) AS descrip,
+           '' AS uom_name, CAST(NULL AS NUMERIC) AS qoh,
+           CAST(NULL AS NUMERIC) AS sobalance,
+           CAST(NULL AS NUMERIC) AS allocated,
+           CAST(NULL AS NUMERIC) AS ordered,
+           CAST(NULL AS NUMERIC) AS atshipping,
+           CAST(NULL AS NUMERIC) AS coitem_qtyreserved,
+           cohead_orderdate AS orderdate, MIN(coitem_scheddate) AS duedate,
+           pack_id,
+           CAST(NULL AS NUMERIC) AS reorderlevel,
+           0 AS xtindentrole
+     FROM cohead
+     LEFT OUTER JOIN pack ON (pack_head_type='SO' AND pack_head_id=cohead_id)
+     JOIN custinfo ON (cohead_cust_id=cust_id)
+     JOIN coitem   ON (coitem_cohead_id=cohead_id)
+     JOIN itemsite ON (coitem_itemsite_id=itemsite_id)
+     WHERE ((coitem_status NOT IN ('C', 'X'))
+  <? if exists("custtype_id") ?>
+        AND (cust_custtype_id=<? value("custtype_id") ?>)
+  <? elseif exists("custtype_pattern") ?>
+        AND (cust_custtype_id IN (SELECT custtype_id
+                                  FROM custtype
+                                  WHERE(custtype_code ~ <? value("custtype_pattern") ?>)))
+  <? endif ?>
+      )
+      GROUP BY cohead_id, item_number, cust_number,
+               cust_name, cohead_orderdate, pack_id, coitem_scheddate
+  <? if exists("onlyShowShortages") ?>
+      HAVING (MIN(noNeg(itemsite_qtyonhand) +
+                  qtyOrdered(itemsite_id, coitem_scheddate) -
+                  qtyAllocated(itemsite_id, coitem_scheddate)) < 0
+              OR MIN(noNeg(itemsite_qtyonhand) +
+                  qtyOrdered(itemsite_id, coitem_scheddate) -
+                  noNeg(coitem_qtyord - coitem_qtyshipped + coitem_qtyreturned)) < 0
+           )
+  <? endif ?>
+    UNION
+<? endif ?>
+    SELECT itemsite_id AS id, coitem_id AS altid, cohead_id, cohead_number,
+            item_number,
+            item_number AS trueitem_number,
+            (item_descrip1 || ' ' || item_descrip2) AS descrip,
+            uom_name, noNeg(itemsite_qtyonhand) AS qoh,
+            noNeg(coitem_qtyord - coitem_qtyshipped + coitem_qtyreturned) AS sobalance,
+            qtyAllocated(itemsite_id, coitem_scheddate) AS allocated,
+            qtyOrdered(itemsite_id, coitem_scheddate) AS ordered,
+            qtyatshipping(coitem_id) AS atshipping,
+            itemuomtouom(item_id, coitem_qty_uom_id, null, coitem_qtyreserved) AS coitem_qtyreserved,
+            CAST(NULL AS DATE) AS orderdate, coitem_scheddate AS duedate,
+            CAST(NULL AS INTEGER) AS pack_id,
+            CASE WHEN(itemsite_useparams) THEN itemsite_reorderlevel
+                 ELSE 0.0 END AS reorderlevel,
+            1 AS xtindentrole
+     FROM cohead
+<? if not exists("sohead_id") ?> JOIN custinfo ON (cohead_cust_id=cust_id)<? endif ?>
+          , itemsite, item, uom, site(), coitem
+     WHERE ((coitem_cohead_id=cohead_id)
+        AND (coitem_itemsite_id=itemsite_id)
+        AND (itemsite_warehous_id=warehous_id)
+        AND (itemsite_item_id=item_id)
+        AND (item_inv_uom_id=uom_id)
+        AND (coitem_status NOT IN ('C', 'X'))
+<? if exists("sohead_id") ?>
+        AND (cohead_id=<? value("sohead_id") ?>)
+<? elseif exists("custtype_id") ?>
+        AND (cust_custtype_id=<? value("custtype_id") ?>)
+<? elseif exists("custtype_pattern") ?>
+        AND (cust_custtype_id IN (SELECT custtype_id
+                                  FROM custtype
+                                  WHERE(custtype_code ~ <? value("custtype_pattern") ?>)))
+<? endif ?>
+<? if exists("onlyShowShortages") ?>
+        AND ((noNeg(itemsite_qtyonhand) + qtyOrdered(itemsite_id, coitem_scheddate) - qtyAllocated(itemsite_id, coitem_scheddate) < 0)
+          OR (noNeg(itemsite_qtyonhand) + qtyOrdered(itemsite_id, coitem_scheddate) - noNeg(coitem_qtyord - coitem_qtyshipped + coitem_qtyreturned) < 0))
+<? endif ?>
+    )
+<? if exists("showWoSupply") ?>
+    UNION
+    SELECT  itemsite_id, -1, cohead_id, cohead_number,
+            formatwonumber(wo_id),
+            item_number AS trueitem_number,
+            wo_status,
+            NULL, NULL,
+            noNeg(coitem_qtyord - coitem_qtyshipped + coitem_qtyreturned) AS sobalance,
+            NULL,
+            noNeg((wo_qtyord-wo_qtyrcv)) AS ordered,
+            NULL,
+            NULL,
+            wo_startdate, wo_duedate,
+            NULL AS pack_id,
+            CASE WHEN(itemsite_useparams) THEN itemsite_reorderlevel
+                 ELSE 0.0 END AS reorderlevel,
+            2 AS xtindentrole
+     FROM cohead
+<? if not exists("sohead_id") ?> JOIN custinfo ON (cohead_cust_id=cust_id)<? endif ?>
+          , itemsite, item, uom, site(), coitem
+          LEFT OUTER JOIN wo
+           ON ((coitem_itemsite_id=wo_itemsite_id)
+           AND (wo_status IN ('E','R','I'))
+           AND (wo_qtyord-wo_qtyrcv > 0)
+           AND (noNeg(coitem_qtyord - coitem_qtyshipped + coitem_qtyreturned-qtyatshipping(coitem_id)) >
+            (SELECT itemsite_qtyonhand FROM itemsite WHERE (itemsite_id=coitem_itemsite_id))))
+     WHERE ((coitem_cohead_id=cohead_id)
+        AND (coitem_itemsite_id=itemsite_id)
+        AND (itemsite_warehous_id=warehous_id)
+        AND (itemsite_item_id=item_id)
+        AND (item_inv_uom_id=uom_id)
+        AND (coitem_status NOT IN ('C', 'X'))
+  <? if exists("sohead_id") ?>
+        AND (cohead_id=<? value("sohead_id") ?>)
+  <? elseif exists("custtype_id") ?>
+        AND (cust_custtype_id=<? value("custtype_id") ?>)
+  <? elseif exists("custtype_pattern") ?>
+        AND (cust_custtype_id IN (SELECT custtype_id
+                                  FROM custtype
+                                  WHERE(custtype_code ~ <? value("custtype_pattern") ?>)))
+  <? endif ?>
+  <? if exists("onlyShowShortages") ?>
+        AND ((noNeg(itemsite_qtyonhand) + qtyOrdered(itemsite_id, coitem_scheddate) - qtyAllocated(itemsite_id, coitem_scheddate) < 0)
+          OR (noNeg(itemsite_qtyonhand) + qtyOrdered(itemsite_id, coitem_scheddate) - noNeg(coitem_qtyord - coitem_qtyshipped + coitem_qtyreturned) < 0))
+  <? endif ?>
+  )
+<? endif ?>
+) AS data
+ORDER BY duedate, cohead_number, trueitem_number,
+         xtindentrole;

@@ -1,0 +1,148 @@
+-- Group: invoiceRegister
+-- Name: detail
+-- Notes: used by dspInvoiceRegister
+--        Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+--        See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT DISTINCT *
+FROM (
+-- G/L Transactions
+SELECT DISTINCT
+       -1 AS gltrans_id, -1 AS altId,
+       gltrans_date,  '' AS gltrans_source,
+       '' AS doctype, '' AS gltrans_docnumber,
+       '' AS notes,   '' AS account,
+       CAST(NULL AS NUMERIC) AS debit,
+       CAST(NULL AS NUMERIC) AS credit,
+       'curr' AS debit_xtnumericrole,
+       'curr' AS credit_xtnumericrole,
+       0 AS xtindentrole,
+       gltrans_date AS transdate
+FROM gltrans
+WHERE ((gltrans_doctype IN ('IN', 'CM', 'DM', 'CD'))
+   AND (gltrans_source = 'A/R')
+   AND (gltrans_date BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+<? if exists("accnt_id") ?>
+   AND (gltrans_accnt_id=<? value("accnt_id") ?>)
+<? endif ?>
+      )
+
+UNION
+-- Journals
+SELECT DISTINCT
+       -1 AS gltrans_id, -1 AS altId,
+       sltrans_date AS gltrans_date,  '' AS gltrans_source,
+       '' AS doctype, '' AS gltrans_docnumber,
+       '' AS notes,   '' AS account,
+       CAST(NULL AS NUMERIC) AS debit,
+       CAST(NULL AS NUMERIC) AS credit,
+       'curr' AS debit_xtnumericrole,
+       'curr' AS credit_xtnumericrole,
+       0 AS xtindentrole,
+       sltrans_date AS transdate
+FROM sltrans
+WHERE ((sltrans_doctype IN ('IN', 'CM', 'DM', 'CD'))
+   AND (sltrans_source = 'A/R')
+   AND (sltrans_date BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+<? if exists("accnt_id") ?>
+   AND (sltrans_accnt_id=<? value("accnt_id") ?>)
+<? endif ?>
+      )
+) AS data
+
+UNION
+-- G/L Transactions
+SELECT gltrans_id,
+       CASE WHEN(gltrans_doctype='IN') THEN 1
+            WHEN(gltrans_doctype='CM') THEN 2
+            WHEN(gltrans_doctype='DM') THEN 3
+            WHEN(gltrans_doctype='CD') THEN 4
+         ELSE -1
+       END AS altId,
+       gltrans_date, gltrans_source,
+       CASE WHEN(gltrans_doctype='IN') THEN <? value("invoice") ?>
+            WHEN(gltrans_doctype='CM') THEN <? value("creditmemo") ?>
+            WHEN(gltrans_doctype='DM') THEN <? value("debitmemo") ?>
+            WHEN(gltrans_doctype='CD') THEN <? value("cashdeposit") ?>
+         ELSE gltrans_doctype
+       END AS doctype,
+       gltrans_docnumber,
+       CASE WHEN(gltrans_doctype='IN') THEN
+                 (SELECT invchead_shipto_name
+                  FROM aropen LEFT OUTER JOIN
+                       invchead
+                       ON (invchead_id=aropen_cobmisc_id
+                       AND invchead_cust_id=aropen_cust_id)
+                  WHERE ((aropen_docnumber=gltrans_docnumber)
+                     AND (aropen_doctype='I')))
+         ELSE firstLine(gltrans_notes)
+       END AS f_notes,
+       (formatGLAccount(accnt_id) || ' - ' || accnt_descrip) AS f_accnt,
+       CASE WHEN (gltrans_amount < 0) THEN ABS(gltrans_amount)
+         ELSE 0
+       END AS debit,
+       CASE WHEN (gltrans_amount > 0) THEN gltrans_amount
+         ELSE 0
+       END AS credit,
+       'curr' AS debit_xtnumericrole,
+       'curr' AS credit_xtnumericrole,
+       1 AS xtindentrole,
+       NULL AS transdate
+FROM gltrans, accnt
+WHERE ((gltrans_accnt_id=accnt_id)
+   AND (gltrans_doctype IN ('IN', 'CM', 'DM', 'CD'))
+   AND (gltrans_source = 'A/R')
+   AND (gltrans_date BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+<? if exists("accnt_id") ?>
+   AND (gltrans_accnt_id=<? value("accnt_id") ?>)
+<? endif ?>
+   )
+
+UNION
+-- Journals
+SELECT sltrans_id,
+       CASE WHEN(sltrans_doctype='IN') THEN 1
+            WHEN(sltrans_doctype='CM') THEN 2
+            WHEN(sltrans_doctype='DM') THEN 3
+            WHEN(sltrans_doctype='CD') THEN 4
+         ELSE -1
+       END AS altId,
+       sltrans_date AS gltrans_date, sltrans_source AS gltrans_date,
+       CASE WHEN(sltrans_doctype='IN') THEN <? value("invoice") ?>
+            WHEN(sltrans_doctype='CM') THEN <? value("creditmemo") ?>
+            WHEN(sltrans_doctype='DM') THEN <? value("debitmemo") ?>
+            WHEN(sltrans_doctype='CD') THEN <? value("cashdeposit") ?>
+         ELSE sltrans_doctype
+       END AS doctype,
+       sltrans_docnumber AS gltrans_docnumber,
+       CASE WHEN(sltrans_doctype='IN') THEN
+                 (SELECT invchead_shipto_name
+                  FROM aropen LEFT OUTER JOIN
+                       invchead
+                       ON (invchead_id=aropen_cobmisc_id
+                       AND invchead_cust_id=aropen_cust_id)
+                  WHERE ((aropen_docnumber=sltrans_docnumber)
+                     AND (aropen_doctype='I')))
+         ELSE firstLine(sltrans_notes)
+       END AS f_notes,
+       (formatGLAccount(accnt_id) || ' - ' || accnt_descrip) AS f_accnt,
+       CASE WHEN (sltrans_amount < 0) THEN ABS(sltrans_amount)
+         ELSE 0
+       END AS debit,
+       CASE WHEN (sltrans_amount > 0) THEN sltrans_amount
+         ELSE 0
+       END AS credit,
+       'curr' AS debit_xtnumericrole,
+       'curr' AS credit_xtnumericrole,
+       1 AS xtindentrole,
+       NULL AS transdate
+FROM sltrans, accnt
+WHERE ((sltrans_accnt_id=accnt_id)
+   AND (sltrans_doctype IN ('IN', 'CM', 'DM', 'CD'))
+   AND (sltrans_source = 'A/R')
+   AND (sltrans_date BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+<? if exists("accnt_id") ?>
+   AND (sltrans_accnt_id=<? value("accnt_id") ?>)
+<? endif ?>
+      )
+ORDER BY gltrans_date, gltrans_docnumber, xtindentrole;

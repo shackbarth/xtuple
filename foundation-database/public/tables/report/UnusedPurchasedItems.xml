@@ -1,0 +1,569 @@
+<!DOCTYPE openRPTDef>
+<report>
+ <title>Unused Purchased Items</title>
+ <name>UnusedPurchasedItems</name>
+ <description></description>
+ <size>Letter</size>
+ <portrait/>
+ <topmargin>50</topmargin>
+ <bottommargin>50</bottommargin>
+ <rightmargin>50</rightmargin>
+ <leftmargin>50</leftmargin>
+ <querysource>
+  <name>head</name>
+  <sql>SELECT &lt;? if exists(&quot;classcode_id&quot;) ?>
+         ( SELECT (classcode_code||'-'||classcode_descrip)
+             FROM classcode
+            WHERE (classcode_id=&lt;? value(&quot;classcode_id&quot;) ?>) )
+       &lt;? elseif exists(&quot;classcode_pattern&quot;) ?>
+         text(&lt;? value(&quot;classcode_pattern&quot;) ?>)
+       &lt;? else ?>
+         text('All Class Codes')
+       &lt;? endif ?>
+       AS classcode,
+       &lt;? if exists(&quot;includeUncontrolledItems&quot;) ?>
+         text('Showing Uncontrolled Items')
+       &lt;? else ?>
+         text('')
+       &lt;? endif ?>
+       AS lbl_showuncontrolled</sql>
+ </querysource>
+ <querysource>
+  <name>detail</name>
+  <sql>SELECT DISTINCT item_id,
+       item_number,
+       item_descrip1,
+       item_descrip2,
+       uom_name,
+       formatQty(SUM(itemsite_qtyonhand)) AS f_qoh,
+       formatDate(MAX(itemsite_datelastcount), 'Never') AS f_lastcntd,
+       formatDate(MAX(itemsite_datelastused), 'Never') AS f_lastused
+  FROM item, itemsite, uom
+ WHERE ((itemsite_item_id=item_id)
+   AND (item_inv_uom_id=uom_id)
+   AND (item_id NOT IN (SELECT DISTINCT bomitem_item_id FROM bomitem))
+   AND (NOT item_sold)
+   AND (item_type IN ('P', 'O'))
+&lt;? if exists(&quot;classcode_id&quot;) ?>
+   AND (item_classcode_id=&lt;? value(&quot;classcode_id&quot;) ?>)
+&lt;? elseif exists(&quot;classcode_pattern&quot;) ?>
+   AND (item_classcode_id IN (SELECT classcode_id
+                                FROM classcode
+                               WHERE (classcode_code ~ &lt;? value(&quot;classcode_pattern&quot;) ?>)))
+&lt;? endif ?>
+&lt;? if not exists(&quot;includeUncontrolledItems&quot;) ?>
+   AND (itemsite_controlmethod &lt;> 'N')
+&lt;? endif ?>
+)
+GROUP BY item_id, item_number, uom_name, item_descrip1, item_descrip2
+ORDER BY item_number;</sql>
+ </querysource>
+ <rpthead>
+  <height>236</height>
+  <field>
+   <rect>
+    <x>130</x>
+    <y>120</y>
+    <width>300</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>classcode</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>425</x>
+    <y>200</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Last Cnt'd</string>
+  </label>
+  <label>
+   <rect>
+    <x>225</x>
+    <y>200</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>UOM</string>
+  </label>
+  <field>
+   <rect>
+    <x>440</x>
+    <y>120</y>
+    <width>300</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>lbl_showuncontrolled</column>
+   </data>
+  </field>
+  <line>
+   <xstart>5</xstart>
+   <ystart>229</ystart>
+   <xend>745</xend>
+   <yend>229</yend>
+   <weight>2</weight>
+  </line>
+  <label>
+   <rect>
+    <x>315</x>
+    <y>10</y>
+    <width>409</width>
+    <height>38</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>18</size>
+    <weight>bold</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Unused Purchased Items</string>
+  </label>
+  <label>
+   <rect>
+    <x>509</x>
+    <y>200</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Last Used</string>
+  </label>
+  <label>
+   <rect>
+    <x>15</x>
+    <y>120</y>
+    <width>110</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Class Code(s):</string>
+  </label>
+  <label>
+   <rect>
+    <x>15</x>
+    <y>200</y>
+    <width>150</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Item Number</string>
+  </label>
+  <label>
+   <rect>
+    <x>320</x>
+    <y>200</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Total QOH</string>
+  </label>
+  <label>
+   <rect>
+    <x>15</x>
+    <y>215</y>
+    <width>229</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Item Description</string>
+  </label>
+ </rpthead>
+ <pghead>
+  <firstpage/>
+  <height>6</height>
+ </pghead>
+ <pghead>
+  <height>37</height>
+  <label>
+   <rect>
+    <x>15</x>
+    <y>0</y>
+    <width>150</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Item Number</string>
+  </label>
+  <line>
+   <xstart>5</xstart>
+   <ystart>30</ystart>
+   <xend>745</xend>
+   <yend>31</yend>
+   <weight>2</weight>
+  </line>
+  <label>
+   <rect>
+    <x>15</x>
+    <y>15</y>
+    <width>229</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Item Description</string>
+  </label>
+  <label>
+   <rect>
+    <x>509</x>
+    <y>0</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Last Used</string>
+  </label>
+  <label>
+   <rect>
+    <x>225</x>
+    <y>0</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>UOM</string>
+  </label>
+  <label>
+   <rect>
+    <x>425</x>
+    <y>0</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Last Cnt'd</string>
+  </label>
+  <label>
+   <rect>
+    <x>320</x>
+    <y>0</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Total QOH</string>
+  </label>
+ </pghead>
+ <section>
+  <name>detail</name>
+  <detail>
+   <key>
+    <query>detail</query>
+   </key>
+   <height>51</height>
+   <field>
+    <rect>
+     <x>509</x>
+     <y>0</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_lastused</column>
+    </data>
+   </field>
+   <line>
+    <xstart>5</xstart>
+    <ystart>45</ystart>
+    <xend>745</xend>
+    <yend>45</yend>
+    <weight>0</weight>
+   </line>
+   <field>
+    <rect>
+     <x>425</x>
+     <y>0</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_lastcntd</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>15</x>
+     <y>0</y>
+     <width>200</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>item_number</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>15</x>
+     <y>15</y>
+     <width>300</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>item_descrip1</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>320</x>
+     <y>0</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_qoh</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>225</x>
+     <y>0</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <hcenter/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>uom_name</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>15</x>
+     <y>30</y>
+     <width>300</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>item_descrip2</column>
+    </data>
+   </field>
+  </detail>
+ </section>
+ <pgfoot>
+  <height>16</height>
+  <label>
+   <rect>
+    <x>615</x>
+    <y>0</y>
+    <width>85</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Page:</string>
+  </label>
+  <label>
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>85</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Report Date:</string>
+  </label>
+  <field>
+   <rect>
+    <x>90</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>Context Query</query>
+    <column>report_date</column>
+   </data>
+  </field>
+  <field>
+   <rect>
+    <x>705</x>
+    <y>0</y>
+    <width>40</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>Context Query</query>
+    <column>page_number</column>
+   </data>
+  </field>
+ </pgfoot>
+</report>

@@ -1,0 +1,115 @@
+-- Group: summarizedBacklogByWarehouse
+-- Name: detail
+-- Notes: 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT * FROM (
+(SELECT cohead_id, 0 AS xtindentrole, salesrep_name, cohead_holdtype, cohead_number, 
+   coheadstatecolor(cohead_id) AS qtforegroundrole, 
+   cust_name,       
+   cohead_created, cohead_orderdate, cohead_packdate, pack_head_id,       
+          CASE WHEN (cohead_holdtype='N') THEN <? value("none") ?>
+               WHEN (cohead_holdtype='C') THEN <? value("credit") ?>
+               WHEN (cohead_holdtype='S') THEN <? value("ship") ?>
+               WHEN (cohead_holdtype='P') THEN <? value("pack") ?>
+               WHEN (cohead_holdtype='R') THEN <? value("return") ?>
+               ELSE <? value("other") ?>
+   END AS f_holdtype,       
+   MIN(coitem_scheddate) AS scheddate,       
+   SUM((noNeg(coitem_qtyord - coitem_qtyshipped + coitem_qtyreturned) * coitem_qty_invuomratio) *            
+               (currToBase(cohead_curr_id, coitem_price, cohead_orderdate) / coitem_price_invuomratio) ) AS sales, 
+   SUM((noNeg(coitem_qtyord - coitem_qtyshipped + coitem_qtyreturned) * coitem_qty_invuomratio) * stdcost(item_id) ) AS cost,
+   SUM((noNeg(coitem_qtyord - coitem_qtyshipped + coitem_qtyreturned) * coitem_qty_invuomratio) *
+               ((currToBase(cohead_curr_id, coitem_price, cohead_orderdate) / coitem_price_invuomratio) - stdcost(item_id)) ) AS margin,
+   'curr' AS sales_xtnumericrole,
+   'curr' AS cost_xtnumericrole,
+   'curr' AS margin_xtnumericrole,
+    NULL AS shiphead_id, 
+    NULL AS shiphead_number, 
+    NULL AS shipstatus,
+    NULL AS shipvia,
+    CASE WHEN (pack_head_id IS NOT NULL) THEN TRUE
+    ELSE FALSE
+    END AS packed 
+   <? if exists("showPrices") ?> 
+    , 0 AS sales_xttotalrole, 0 AS cost_xttotalrole, 0 AS margin_xttotalrole 
+   <? endif ?>,
+   cohead_number AS seq
+   FROM coitem, itemsite, item, custinfo, cohead
+     LEFT OUTER JOIN pack ON (cohead_id = pack_head_id), salesrep 
+   WHERE ( (coitem_cohead_id=cohead_id)
+    AND (salesrep_id = cohead_salesrep_id) 
+    AND (cohead_cust_id=cust_id)
+    AND (coitem_itemsite_id=itemsite_id)
+    AND (itemsite_item_id=item_id)
+    AND (coitem_status NOT IN ('C','X'))
+    AND (coitem_scheddate BETWEEN <? value("startDate") ?>
+                              AND <? value("endDate") ?>)
+   <? if exists("warehous_id") ?>
+    AND (itemsite_warehous_id=<? value("warehous_id") ?>)
+   <? endif ?>
+   <? if exists("custtype_id") ?>
+    AND (cust_custtype_id=<? value("custtype_id") ?>)
+   <? elseif exists("custtype_pattern") ?>
+    AND (cust_custtype_id IN (SELECT custtype_id FROM custtype
+     WHERE (custtype_code ~ <? value("custtype_pattern") ?>)))
+   <? endif ?>
+   ) 
+   GROUP BY cohead_id, salesrep_number, salesrep_name, cohead_number, cust_name,
+            cohead_holdtype, cohead_orderdate, cohead_packdate,
+            cohead_created, pack_head_id )
+   UNION 
+   (SELECT cohead_id, 1 AS xtindentrole, NULL, NULL, 
+   shiphead_number AS cohead_number, 
+   CASE WHEN (shiphead_shipped IS NULL) THEN ''           
+   WHEN (shiphead_shipped) THEN 'altemphasis'            
+   WHEN (NOT shiphead_shipped) THEN 'emphasis' 
+   WHEN ( (COALESCE(cobmisc_cohead_id,0) > 0)       
+   AND (SUM(noNeg(coitem_qtyord - coitem_qtyshipped + coitem_qtyreturned)) > 0)       
+   ) THEN 'error'       
+   END AS qtforegroundrole, 
+   COALESCE(shiphead_shipvia, ''), NULL, shiphead_shipdate AS cohead_orderdate, 
+   NULL, NULL,
+   CASE WHEN (shiphead_shipped) THEN <? value("yes") ?>         
+   ELSE <? value("no") ?>       
+   END AS f_holdtype,  MIN(coitem_scheddate), NULL, NULL, NULL, NULL, NULL, NULL, NULL,        
+   formatShipmentNumber(shiphead_id) AS shiphead_number,        
+   NULL,       
+   COALESCE(shiphead_shipvia, '') AS shipvia           
+   <? if exists("showPrices") ?> 
+    , NULL, NULL, NULL 
+   <? endif ?>
+   , NULL,
+   cohead_number AS seq 
+   FROM coitem, itemsite, item, custinfo, cohead
+   LEFT OUTER JOIN shiphead ON ((shiphead_order_id=cohead_id)   
+                            AND (shiphead_order_type='SO'))
+   LEFT OUTER JOIN (SELECT DISTINCT cobmisc_cohead_id FROM cobmisc) AS cobmisc ON (cobmisc_cohead_id=cohead_id)   
+   LEFT OUTER JOIN pack ON (cohead_id = pack_head_id), salesrep 
+   WHERE ( (coitem_cohead_id=cohead_id)
+    AND (salesrep_id = cohead_salesrep_id) 
+    AND (cohead_cust_id=cust_id)
+    AND (coitem_itemsite_id=itemsite_id)
+    AND (itemsite_item_id=item_id)
+    AND (coitem_status NOT IN ('C','X'))
+    AND (coitem_scheddate BETWEEN <? value("startDate") ?>
+                              AND <? value("endDate") ?>)
+   <? if exists("warehous_id") ?>
+    AND (itemsite_warehous_id=<? value("warehous_id") ?>)
+   <? endif ?>
+   <? if exists("custtype_id") ?>
+    AND (cust_custtype_id=<? value("custtype_id") ?>)
+   <? elseif exists("custtype_pattern") ?>
+    AND (cust_custtype_id IN (SELECT custtype_id FROM custtype
+     WHERE (custtype_code ~ <? value("custtype_pattern") ?>)))
+   <? endif ?>
+   AND ((SELECT (count(*)>0) FROM shipitem WHERE ((shipitem_shiphead_id=shiphead_id) AND (NOT shipitem_invoiced))))) 
+   GROUP BY cohead_id, salesrep_number, salesrep_name, cohead_number, cust_name,         
+   cohead_holdtype, cohead_orderdate, cohead_packdate,         
+   shiphead_shipped, shiphead_shipvia, shiphead_shipdate,         
+   shiphead_id, cobmisc_cohead_id, cohead_created, pack_head_id,
+   shiphead_number )) AS data
+  ORDER BY seq, cohead_number;
+
+

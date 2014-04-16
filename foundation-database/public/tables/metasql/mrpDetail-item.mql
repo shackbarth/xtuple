@@ -1,0 +1,26 @@
+-- Group: mrpDetail
+-- Name: item
+-- Notes: used by dspMRPDetail
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT itemsite_id, item_type, item_number,
+       (item_descrip1 || ' ' || item_descrip2) AS descrip,
+       warehous_code
+FROM itemsite, item, whsinfo
+WHERE ( (itemsite_active)
+    AND (itemsite_item_id=item_id)
+    AND (itemsite_warehous_id=warehous_id)
+    AND (itemsite_planning_type='M')
+<? if exists("plancode_id") ?>
+    AND (itemsite_plancode_id=<? value("plancode_id") ?>)
+<? elseif exists("plancode_pattern") ?>
+    AND (itemsite_plancode_id IN (SELECT plancode_id 
+                                  FROM plancode 
+                                  WHERE (plancode_code ~ <? value("plancode_pattern") ?>)))
+<? endif ?>
+<? if exists("warehous_id") ?>
+    AND (warehous_id=<? value("warehous_id") ?>)
+<? endif ?>
+      )
+ORDER BY item_number, warehous_code;
