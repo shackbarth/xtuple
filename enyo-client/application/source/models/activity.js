@@ -99,7 +99,7 @@ white:true*/
       return fn ? fn.call(this) : this.get("status");
     },
 
-    // XXX TODO - need to create a privilege first
+    // XXX/TODO - need to create a privileges for activity and check them here
     canReassign: function (callback) {
       if (callback) {
         callback(true);

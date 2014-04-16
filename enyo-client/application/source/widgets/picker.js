@@ -798,10 +798,11 @@ regexp:true, undef:true, trailing:true, white:true, strict:false */
   enyo.kind({
     name: "XV.UserPicker",
     kind: "XV.PickerWidget",
-    collection: "XM.users"
-    /*orderBy: [
+    collection: "XM.users",
+    nameAttribute: "username",
+    orderBy: [
       {attribute: 'username'}
-    ]*/
+    ]
   });
 
   // ..........................................................

@@ -11,7 +11,7 @@ select xt.install_js('XM','Activity','xtuple', $$
       i, 
       sql,
       sql2,
-      acttype;
+      actType;
 
     sql = "select acttype_nsname as nsname, " + 
           " acttype_tblname as tblname, " + 
@@ -20,13 +20,6 @@ select xt.install_js('XM','Activity','xtuple', $$
           "join xt.act on act_type = acttype_code " + 
           "where act_uuid = $1; ";
 
-    /**
-      Activities can be incidents, orders, workflows, etc. So we need to dynamically build this query.
-      sql2 ex. "update xt.wowf set wf_assigned_username = 'postgres' 
-      where xt.wowf.obj_uuid = '7551c4e4-ea5e-4192-8dbf-7305448f5a3e'"; 
-    */
-    sql2 = "update {table} set {colname} = $1 where obj_uuid = $2; ";
-
     /* Make into an array if an array not passed */
     if (typeof arguments[0] !== "object") {
       ary = [{activityId: activityId, username: username}];
@@ -34,20 +27,29 @@ select xt.install_js('XM','Activity','xtuple', $$
       ary = arguments;
     }
 
-    /* Make sure user can do this */
+    /** TODO - check for privilege after privilege created for activity
     if (!XT.Data.checkPrivilege("EnterReceipts")) { throw new handleError("Access Denied", 401); }
+    */
 
     for (i = 0; i < ary.length; i++) {
       act = ary[i];
-      acttype = plv8.execute(sql, [act.activityId])[0];
+      actType = plv8.execute(sql, [act.activityId])[0];
 
-      /* TODO - need more error handling */
-      if (!acttype) {
+      /* TODO - may need more error handling */
+      if (!actType || !actType.nsname || !actType.tblname || !actType.colname) {
         throw new handleError("activity type not found in xt.acttype", 400);
-      }
+      } 
       
-      sql2 = sql2.replace(/{table}/g, acttype.nsname + "." + acttype.tblname);
-      sql2 = sql2.replace(/{colname}/g, acttype.colname);
+      /**
+        Activities can be incidents, orders, workflows, etc. 
+        So we need to dynamically build this query. 
+        sql2 ex. "update xt.wowf set wf_assigned_username = 'postgres' 
+        where xt.wowf.obj_uuid = '7551c4e4-ea5e-4192-8dbf-7305448f5a3e'"; 
+      */
+      sql2 = "update " + actType.nsname + "." + actType.tblname + 
+             " set " + actType.colname + " = $1 " + 
+             "where obj_uuid = $2; ";
+
       plv8.execute(sql2, [act.username, act.activityId])[0];
     }
     return; 

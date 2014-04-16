@@ -7,7 +7,7 @@ Globalize:true, async:true, console:true*/
 (function () {
 
   // ..........................................................
-  // ACCOUNT
+  // EMAIL
   //
 
   /**
