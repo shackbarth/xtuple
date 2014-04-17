@@ -40,6 +40,7 @@ View the [Release Notes](RELEASE.md) to see a change log.
 
 ### Additional Resources
 
+  * [How to Setup xTuple](https://github.com/xtuple/xtuple/wiki/How-to-set-up-xTuple)
   * [Creating a Virtual Development Environment using Vagrant](https://github.com/xtuple/xtuple-vagrant/blob/master/README.md)
   * [Architectural Overview](https://github.com/xtuple/xtuple/wiki/Overview)
   * [Building an Extension Tutorial](https://github.com/xtuple/xtuple-extensions/blob/master/docs/TUTORIAL.md)
