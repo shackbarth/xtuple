@@ -307,6 +307,7 @@ var _ = require("underscore"),
         console.log("Model event", model.getStatusString(), arguments);
       });
     }
+    console.log(data.updated ? "About to update" : "About to save", model.recordType, model.id);
     model.save(null, {});
   };
 

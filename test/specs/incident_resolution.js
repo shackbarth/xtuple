@@ -60,8 +60,8 @@
       read: true
     },
     createHash: {
-      description: "test account" + Math.random(),
-      name: "test IncidentResolution",
+      name: "InctRes" + Math.random(),
+      description: "Incident Resolution 123",
       order: 10
     },
     updatableField: "description"
