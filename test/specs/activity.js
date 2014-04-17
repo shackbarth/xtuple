@@ -54,16 +54,16 @@ before:true, exports:true, it:true, describe:true, XG:true */
           setTimeout(function () {
             popup = moduleContainer.$.notifyPopup;
             assert.isTrue(popup.showing);
-            popup.$.customComponent.$.pickerButton.setContent("postgres");
+            popup.$.customComponent.$.picker.setSelected(popup.$.customComponent.$.picker.controls[3]);
+            assert.equal(popup.$.customComponent.$.pickerButton.content, "postgres");
             moduleContainer.notifyTap(null, { originator: {name: "notifyYes"}});
-          }, 3000);
+          }, 2000);
             
           setTimeout(function () {
-            console.log("here6");
+            console.log(actList.selectedIndexes());
             assert.equal(actList.value.models[0].getValue("assignedTo.username"), "postgres");
             done();
-          }, 5000);
-          console.log("here7");
+          }, 3000);
         }
       });
     });
