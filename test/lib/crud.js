@@ -164,6 +164,7 @@ var _ = require("underscore"),
       if (err) {
         assert.fail(err);
       } else {
+        data.model.off('invalid', invalid);
         done();
       }
     });
