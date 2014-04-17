@@ -87,8 +87,8 @@ Globalize:true, async:true, console:true*/
     actions: [
       {name: "reassignUser",
         method: "reassignUser",
-        prerequisite: "canReassign", /// this is required for multi-select actions to work
-        //privilege: need to create "ReassignWorkflow" priv
+        prerequisite: "canReassign", // Required for multi-select actions to work
+        //privilege: need to create workflow/activity privileges
         isViewMethod: true,
         notify: false}
     ],
@@ -170,6 +170,7 @@ Globalize:true, async:true, console:true*/
             });
           }
 
+          // TODO - dispatch error handling
           options.success = function (resp) {
             navigator.requery();
             return;
@@ -179,15 +180,14 @@ Globalize:true, async:true, console:true*/
           XM.Model.prototype.dispatch("XM.Activity", "reassignUser", params, options);
         }
       };
-      // NOTE - just make my own notifyPopup on this view if there are roadblocks here
+
       this.doNotify({
         type: XM.Model.QUESTION,
         callback: callback,
         message: "_reassignSelectedActivities".loc(),
         yesLabel: "_reassign".loc(),
         noLabel: "_cancel".loc(),
-        component: {kind: "XV.UserPicker", attr: "assignedTo", label: "_assignTo".loc()}
-          //{kind: "XV.UserAccountWidget", attr: "assignedTo.username", label: "_assignTo".loc()}
+        component: {kind: "XV.UserPicker", name: "assignTo", label: "_assignTo".loc()}
       });
     },
     getWorkspace: function () {
