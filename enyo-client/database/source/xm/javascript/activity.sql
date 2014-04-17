@@ -27,10 +27,6 @@ select xt.install_js('XM','Activity','xtuple', $$
       ary = arguments;
     }
 
-    /** TODO - check for privilege after privilege created for activity
-    if (!XT.Data.checkPrivilege("EnterReceipts")) { throw new handleError("Access Denied", 401); }
-    */
-
     for (i = 0; i < ary.length; i++) {
       act = ary[i];
       actType = plv8.execute(sql, [act.activityId])[0];

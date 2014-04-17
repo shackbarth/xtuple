@@ -16,7 +16,6 @@ white:true*/
     // ..........................................................
     // METHODS
     //
-    
     /**
       Returns whether the current record could be created on the editableModel
       based on privilege settings.
@@ -99,12 +98,60 @@ white:true*/
       return fn ? fn.call(this) : this.get("status");
     },
 
-    // XXX/TODO - need to create a privileges for activity and check them here
     canReassign: function (callback) {
-      if (callback) {
-        callback(true);
+      var hasPriv,
+        privs = XT.session.privileges,
+        activityType = this.get("activityType");
+      
+      switch (activityType)
+      {
+      case "Incident":
+        hasPriv = privs.get("MaintainAllIncidents");
+        break;
+      case "Opportunity":
+        hasPriv = privs.get("MaintainAllOpportunities");
+        break;
+      case "Project":
+        hasPriv = privs.get("MaintainAllProjects");
+        break;
+      case "ProjectTask":
+        hasPriv = privs.get("MaintainAllProjects");
+        break;
+      case "ProjectWorkflow":
+        hasPriv = privs.get("MaintainAllWorkflows");
+        break;
+      case "PurchaseOrder":
+        hasPriv = privs.get("MaintainPurchaseOrders");
+        break;
+      case "PurchaseOrderWorkflow":
+        hasPriv = privs.get("MaintainAllWorkflows");
+        break;
+      case "SalesOrder":
+        hasPriv = privs.get("MaintainSalesOrders");
+        break;
+      case "SalesOrderWorkflow":
+        hasPriv = privs.get("MaintainAllWorkflows");
+        break;
+      case "ToDo":
+        hasPriv = privs.get("ReassignToDoItems");
+        break;
+      case "TransferOrder":
+        hasPriv = privs.get("MaintainTransferOrders");
+        break;
+      case "TransferOrderWorkflow":
+        hasPriv = privs.get("MaintainAllWorkflows");
+        break;
+      case "WorkOrder":
+        hasPriv = privs.get("MaintainWorkOrders");
+        break;
+      case "WorkOrderWorkflow":
+        hasPriv = privs.get("MaintainAllWorkflows");
+        break;
       }
-      return true;
+      
+      if (callback) {
+        callback(hasPriv);
+      } else {return hasPriv; }
     }
 
   });

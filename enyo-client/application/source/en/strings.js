@@ -890,6 +890,8 @@
     "_maintainTerms": "Maintain Terms ",
     "_maintainTitles": "Maintain Titles",
     "_maintainWarehouses": "Maintain Sites",
+    "_maintainAllWorkflows": "Maintain Other's Workflows",
+    "_maintainWorkflowsSelf": "Maintain Personal Workflows",
     "_overridePrice": "Override Price",
     "_overrideSODate": "Override Order Date",
     "_overrideTax": "Override Tax Type",

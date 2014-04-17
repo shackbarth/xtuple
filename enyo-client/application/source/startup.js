@@ -24,7 +24,9 @@ white:true*/
       };
       var relevantPrivileges = [
         "MaintainUsers",
-        "MaintainPreferencesSelf"
+        "MaintainPreferencesSelf",
+        "MaintainWorkflowsSelf",
+        "MaintainAllWorkflows"
       ];
       XT.session.addRelevantPrivileges("core", relevantPrivileges);
       XT.session.loadSessionObjects(XT.session.PRIVILEGES, options);

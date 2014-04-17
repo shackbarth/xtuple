@@ -54,13 +54,12 @@ before:true, exports:true, it:true, describe:true, XG:true */
           setTimeout(function () {
             popup = moduleContainer.$.notifyPopup;
             assert.isTrue(popup.showing);
-            popup.$.customComponent.$.picker.setSelected(popup.$.customComponent.$.picker.controls[3]);
+            XT.app.$.postbooks.$.notifyPopup.$.customComponent.setValue("postgres");
             assert.equal(popup.$.customComponent.$.pickerButton.content, "postgres");
             moduleContainer.notifyTap(null, { originator: {name: "notifyYes"}});
           }, 2000);
             
           setTimeout(function () {
-            console.log(actList.selectedIndexes());
             assert.equal(actList.value.models[0].getValue("assignedTo.username"), "postgres");
             done();
           }, 3000);

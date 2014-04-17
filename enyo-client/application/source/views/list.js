@@ -1,8 +1,7 @@
 /*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true, white:true, strict: false*/
-/*global XT:true, XM:true, XV:true, _:true, window: true, enyo:true,
-Globalize:true, async:true, console:true*/
+/*global XT:true, XM:true, XV:true, _:true, window: true, enyo:true, Globalize:true*/
 
 (function () {
 
@@ -87,13 +86,12 @@ Globalize:true, async:true, console:true*/
     actions: [
       {name: "reassignUser",
         method: "reassignUser",
-        prerequisite: "canReassign", // Required for multi-select actions to work
-        //privilege: need to create workflow/activity privileges
+        prerequisite: "canReassign",
         isViewMethod: true,
         notify: false}
     ],
     events: {
-      onNotify: ""
+      "onNotify": ""
     },
     query: {orderBy: [
       {attribute: 'dueDate'},
@@ -144,10 +142,11 @@ Globalize:true, async:true, console:true*/
     },
     reassignUser: function () {
       var callback = function (resp) {
+        var navigator = XT.app.$.postbooks.$.navigator;
         if (!resp.answer) {
           return;
         } else if (!resp.componentValue) {
-          this.$.navigator.$.contentPanels.getActive().doNotify({
+          navigator.$.contentPanels.getActive().doNotify({
             type: XM.Model.WARNING,
             message: "_noUserSelected".loc()
           });
@@ -155,8 +154,6 @@ Globalize:true, async:true, console:true*/
           // Gather selected models, assemble dispatch params object and send dispatch to server
           var options = {},
             params = [],
-            result = {},
-            navigator = this.$.navigator,
             models = navigator.$.contentPanels.getActive().selectedModels()[0],
             assignedTo = resp.componentValue.id,
             ids = _.map(models, function (model) {
