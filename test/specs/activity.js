@@ -13,47 +13,57 @@ before:true, exports:true, it:true, describe:true, XG:true */
     zombieAuth = require("../lib/zombie_auth"),
     utils = 1;
 
-  describe('Activity list', function () {
-    var postbooks;
-    this.timeout(40 * 1000);
+  var spec = {
+    recordType: "XM.ActivityListItem",
+    collectionType: "XM.ActivityListItemCollection",
+    cacheName: null,
+    listKind: "XV.ActivityList",
+    instanceOf: "XM.Model",
+    isLockable: false,
+    idAttribute: "uuid",
+    attributes: ["uuid", "activityType", "activityAction", "editorKey", "parent", "name",
+    "description", "status", "priority", "isActive", "startDate", "dueDate",
+    "assignDate", "completeDate", "owner", "assignedTo"],
+    skipSmoke: true,
+    skipCrud: true
+  };
 
-    before(function (done) {
-      this.timeout(30 * 1000);
-      zombieAuth.loadApp(done);
-    });
+  var additionalTests = function () {
+    describe("Activity List actions", function () {
+      this.timeout(40000);
+      it("should navigate to activity list", function () {
+        smoke.navigateToList(XT.app, "XV.ActivityList");
+      });
 
-    it("should navigate to activity list", function () {
-      smoke.navigateToList(XT.app, "XV.ActivityList");
-    });
-
-    it("should select first activity from the list, select reassign, select 'postgres' user " +
-      "from the popup picker and click ok to reassign the user", function (done) {
-      var actList = XT.app.$.postbooks.$.navigator.$.contentPanels.getActive(),
-        assignedTo;
-      assert.equal(actList.kind, "XV.ActivityList");
-      
-      if (actList.value.status === XM.Model.READY_CLEAN) {
-        var model = actList.value.models[0],
-          popup;
-
-        assignedTo = model.get("assignedTo") ? model.getValue("assignedTo.username") : null;
-        actList.select(0);
-        actList.reassignUser();
-
-        popup = XT.app.$.postbooks.$.notifyPopup;
-        popup.$.customComponent.$.pickerButton.setContent("postgres");
-        assert.equal(popup.$.customComponent.$.pickerButton.content, "postgres");
-        XT.app.$.postbooks.notifyTap(null, { originator: {name: "notifyOK"}});
-
-        setTimeout(function () {
-          assert.equal(actList.value.models[0].getValue("assignedTo.username"), "postgres");
-        }, 3000);
+      it("should select first activity from the list, select reassign, select 'postgres' user " +
+        "from the popup picker and click ok to reassign the user", function (done) {
+        var actList = XT.app.$.postbooks.$.navigator.$.contentPanels.getActive(),
+          assignedTo;
+        assert.equal(actList.kind, "XV.ActivityList");
         
-        done();
-      }
+        if (actList.value.status === XM.Model.READY_CLEAN) {
+          var model = actList.value.models[0],
+            popup;
 
+          assignedTo = model.get("assignedTo") ? model.getValue("assignedTo.username") : null;
+          actList.select(0);
+          actList.reassignUser();
+
+          popup = XT.app.$.postbooks.$.notifyPopup;
+          popup.$.customComponent.$.pickerButton.setContent("postgres");
+          assert.equal(popup.$.customComponent.$.pickerButton.content, "postgres");
+          XT.app.$.postbooks.notifyTap(null, { originator: {name: "notifyOK"}});
+
+          setTimeout(function () {
+            assert.equal(actList.value.models[0].getValue("assignedTo.username"), "postgres");
+            done();
+          }, 3000);
+        }
+      });
     });
+  };
 
-  });
+  exports.spec = spec;
+  exports.additionalTests = additionalTests;
 
 }());
