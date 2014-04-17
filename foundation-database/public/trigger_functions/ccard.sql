@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION _ccardtrigger() RETURNS TRIGGER AS '
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
 
@@ -39,5 +39,5 @@ END;
 '
   LANGUAGE 'plpgsql';
 
-DROP TRIGGER ccardtrigger ON ccard;
+DROP TRIGGER IF EXISTS ccardtrigger ON ccard;
 CREATE TRIGGER ccardtrigger BEFORE INSERT OR UPDATE ON ccard FOR EACH ROW EXECUTE PROCEDURE _ccardtrigger();
