@@ -38,7 +38,9 @@ before:true, exports:true, it:true, describe:true, XG:true */
       it("should select first activity from the list, select reassign, select 'postgres' user " +
         "from the popup picker and click ok to reassign the user", function (done) {
         var actList = XT.app.$.postbooks.$.navigator.$.contentPanels.getActive(),
-          assignedTo;
+          assignedTo,
+          moduleContainer = XT.app.$.postbooks;
+        
         assert.equal(actList.kind, "XV.ActivityList");
         
         if (actList.value.status === XM.Model.READY_CLEAN) {
@@ -48,16 +50,20 @@ before:true, exports:true, it:true, describe:true, XG:true */
           assignedTo = model.get("assignedTo") ? model.getValue("assignedTo.username") : null;
           actList.select(0);
           actList.reassignUser();
-
-          popup = XT.app.$.postbooks.$.notifyPopup;
-          popup.$.customComponent.$.pickerButton.setContent("postgres");
-          assert.equal(popup.$.customComponent.$.pickerButton.content, "postgres");
-          XT.app.$.postbooks.notifyTap(null, { originator: {name: "notifyOK"}});
-
+          
           setTimeout(function () {
+            popup = moduleContainer.$.notifyPopup;
+            assert.isTrue(popup.showing);
+            popup.$.customComponent.$.pickerButton.setContent("postgres");
+            moduleContainer.notifyTap(null, { originator: {name: "notifyYes"}});
+          }, 3000);
+            
+          setTimeout(function () {
+            console.log("here6");
             assert.equal(actList.value.models[0].getValue("assignedTo.username"), "postgres");
             done();
-          }, 3000);
+          }, 5000);
+          console.log("here7");
         }
       });
     });
