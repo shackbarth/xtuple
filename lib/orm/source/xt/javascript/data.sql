@@ -1204,7 +1204,7 @@ select xt.install_js('XT','Data','xtuple', $$
         sql = this.prepareUpdate(orm, data, null, encryptionKey);
 
       /* Test for optimistic lock. */
-      if (etag && options.etag !== etag) {
+      if (!XT.disableLocks && etag && options.etag !== etag) {
       // TODO - Improve error handling.
         plv8.elog(ERROR, "The version being updated is not current.");
       }
@@ -1832,8 +1832,8 @@ select xt.install_js('XT','Data','xtuple', $$
         // TODO - Handle insert error.
 
         if (DEBUG) {
-          XT.debug('getVersion sql = ', sql);
-          XT.debug('getVersion values = ', [oid, id, etag]);
+          XT.debug('getVersion insert sql = ', sql);
+          XT.debug('getVersion insert values = ', [oid, id, etag]);
         }
         plv8.execute(sql, [oid, id, etag]);
       }
