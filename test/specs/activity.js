@@ -10,8 +10,7 @@ before:true, exports:true, it:true, describe:true, XG:true */
   var _ = require("underscore"),
     assert = require("chai").assert,
     smoke = require("../lib/smoke"),
-    zombieAuth = require("../lib/zombie_auth"),
-    utils = 1;
+    zombieAuth = require("../lib/zombie_auth");
 
   var spec = {
     recordType: "XM.ActivityListItem",
