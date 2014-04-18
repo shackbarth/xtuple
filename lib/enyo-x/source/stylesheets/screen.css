@@ -1574,6 +1574,9 @@ body {
 .xv-buttons {
   margin: 5px;
 }
+.xv-buttons.center {
+  text-align: center;
+}
 .xv-buttons .onyx-button {
   margin: 2px;
   min-width: 60px;
