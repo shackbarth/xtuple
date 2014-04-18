@@ -38,7 +38,7 @@ CREATE OR REPLACE FUNCTION _addrtrigger() RETURNS "trigger" AS $$
   END;
 $$ LANGUAGE 'plpgsql';
 
-DROP TRIGGER addrtrigger ON addr;
+DROP TRIGGER IF EXISTS addrtrigger ON addr;
 CREATE TRIGGER addrtrigger
   BEFORE  INSERT OR
 	  UPDATE OR DELETE

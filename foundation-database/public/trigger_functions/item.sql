@@ -1,8 +1,8 @@
 CREATE OR REPLACE FUNCTION _itemTrigger () RETURNS TRIGGER AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 BEGIN
- 
+
 -- Override values to avoid invalid data combinations
   IF (NEW.item_type IN ('R','S','O','L','B')) THEN
     NEW.item_picklist := FALSE;
@@ -28,11 +28,11 @@ BEGIN
 END;
 $$ LANGUAGE 'plpgsql';
 
-DROP TRIGGER itemTrigger ON item;
+DROP TRIGGER IF EXISTS itemTrigger ON item;
 CREATE TRIGGER itemTrigger BEFORE INSERT OR UPDATE ON item FOR EACH ROW EXECUTE PROCEDURE _itemTrigger();
 
 CREATE OR REPLACE FUNCTION _itemAfterTrigger () RETURNS TRIGGER AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _cmnttypeid INTEGER;
@@ -42,7 +42,7 @@ BEGIN
    IF (NOT checkPrivilege('MaintainItemMasters')) THEN
      RAISE EXCEPTION 'You do not have privileges to maintain Items.';
    END IF;
-   
+
 -- Integrity checks
   IF (TG_OP = 'UPDATE') THEN
     IF ((OLD.item_type <> NEW.item_type) AND (NEW.item_type = 'L')) THEN
@@ -245,11 +245,11 @@ BEGIN
 
     RETURN OLD;
   END IF;
-  
+
   RETURN NEW;
 
 END;
 $$ LANGUAGE 'plpgsql';
 
-DROP TRIGGER itemAfterTrigger ON item;
+DROP TRIGGER IF EXISTS itemAfterTrigger ON item;
 CREATE TRIGGER itemAfterTrigger AFTER INSERT OR UPDATE OR DELETE ON item FOR EACH ROW EXECUTE PROCEDURE _itemAfterTrigger();

@@ -1,6 +1,6 @@
 
 CREATE OR REPLACE FUNCTION _soheadTrigger() RETURNS TRIGGER AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _p RECORD;
@@ -96,12 +96,12 @@ BEGIN
           IF (_p.cust_creditstatus = 'H') THEN
             SELECT checkPrivilege('CreateSOForHoldCustomer') INTO _check;
             IF NOT (_check) THEN
-              RAISE EXCEPTION 'Customer % has been placed 
-                               on a Credit Hold and you do not have 
-                               privilege to create Sales Orders for 
-                               Customers on Credit Hold.  The selected 
-                               Customer must be taken off of Credit Hold 
-                               before you may create a new Sales Order 
+              RAISE EXCEPTION 'Customer % has been placed
+                               on a Credit Hold and you do not have
+                               privilege to create Sales Orders for
+                               Customers on Credit Hold.  The selected
+                               Customer must be taken off of Credit Hold
+                               before you may create a new Sales Order
                                for the Customer.',_p.cust_number;
             ELSE
               NEW.cohead_holdtype='C';
@@ -110,12 +110,12 @@ BEGIN
           IF (_p.cust_creditstatus = 'W') THEN
             SELECT checkPrivilege('CreateSOForWarnCustomer') INTO _check;
             IF NOT (_check) THEN
-              RAISE EXCEPTION 'Customer % has been placed on 
-                              a Credit Warning and you do not have 
-                              privilege to create Sales Orders for 
-                              Customers on Credit Warning.  The 
-                              selected Customer must be taken off of 
-                              Credit Warning before you may create a 
+              RAISE EXCEPTION 'Customer % has been placed on
+                              a Credit Warning and you do not have
+                              privilege to create Sales Orders for
+                              Customers on Credit Warning.  The
+                              selected Customer must be taken off of
+                              Credit Warning before you may create a
                               new Sales Order for the Customer.',_p.cust_number;
             ELSE
               NEW.cohead_holdtype='C';
@@ -175,13 +175,13 @@ BEGIN
               FROM whsinfo
               WHERE (warehous_id=NEW.cohead_warehous_id);
             END IF;
-            
+
             IF (FOUND) THEN
               NEW.cohead_warehous_id 	:= COALESCE(NEW.cohead_warehous_id,_w.warehous_id);
               NEW.cohead_fob		:= COALESCE(NEW.cohead_fob,_w.warehous_fob);
             END IF;
           END IF;
-          
+
       END IF;
 
       -- Only Check P/O logic for imports, because UI checks when entire order is saved
@@ -191,7 +191,7 @@ BEGIN
         IF (_p.cust_usespos AND ((NEW.cohead_custponumber IS NULL) OR (TRIM(BOTH FROM NEW.cohead_custponumber)=''))) THEN
             RAISE EXCEPTION 'You must enter a Customer P/O for this Sales Order.';
         END IF;
- 
+
         -- Check for duplicate Purchase Orders if not allowed
         IF (_p.cust_usespos AND NOT (_p.cust_blanketpos)) THEN
           SELECT cohead_id INTO _a
@@ -207,7 +207,7 @@ BEGIN
           AND  (UPPER(quhead_custponumber) = UPPER(NEW.cohead_custponumber)) );
           IF (FOUND) THEN
 	    RAISE EXCEPTION 'This Customer does not use Blanket P/O
-                            Numbers and the P/O Number you entered has 
+                            Numbers and the P/O Number you entered has
                             already been used for another Sales Order.
                             Please verify the P/O Number and either
                             enter a new P/O Number or add to the
@@ -243,7 +243,7 @@ BEGIN
         SELECT true INTO _check
         FROM coitem
         WHERE ( (coitem_status='C')
-        AND (coitem_cohead_id=NEW.cohead_id) ) 
+        AND (coitem_cohead_id=NEW.cohead_id) )
         LIMIT 1;
 
         IF (NOT FOUND) THEN
@@ -251,8 +251,8 @@ BEGIN
         --Update project references on supply
         UPDATE pr SET pr_prj_id=NEW.cohead_prj_id
                    FROM coitem
-                   WHERE ((coitem_cohead_id=NEW.cohead_id) 
-                   AND  (coitem_order_type='R') 
+                   WHERE ((coitem_cohead_id=NEW.cohead_id)
+                   AND  (coitem_order_type='R')
                    AND  (coitem_order_id=pr_id));
 
         PERFORM changeWoProject(coitem_order_id, NEW.cohead_prj_id, TRUE)
@@ -273,36 +273,36 @@ BEGIN
           NEW.cohead_billto_cntct_id=COALESCE(NEW.cohead_billto_cntct_id,_p.cntct_id);
           NEW.cohead_billto_cntct_honorific=COALESCE(NEW.cohead_billto_cntct_honorific,_p.cntct_honorific,'');
           NEW.cohead_billto_cntct_first_name=COALESCE(NEW.cohead_billto_cntct_first_name,_p.cntct_first_name,'');
-          NEW.cohead_billto_cntct_middle=COALESCE(NEW.cohead_billto_cntct_middle,_p.cntct_middle,'');    
-          NEW.cohead_billto_cntct_last_name=COALESCE(NEW.cohead_billto_cntct_last_name,_p.cntct_last_name,''); 
+          NEW.cohead_billto_cntct_middle=COALESCE(NEW.cohead_billto_cntct_middle,_p.cntct_middle,'');
+          NEW.cohead_billto_cntct_last_name=COALESCE(NEW.cohead_billto_cntct_last_name,_p.cntct_last_name,'');
           NEW.cohead_billto_cntct_phone=COALESCE(NEW.cohead_billto_cntct_phone,_p.cntct_phone,'');
           NEW.cohead_billto_cntct_title=COALESCE(NEW.cohead_billto_cntct_title,_p.cntct_title,'');
-          NEW.cohead_billto_cntct_fax=COALESCE(NEW.cohead_billto_cntct_fax,_p.cntct_fax,''); 
-          NEW.cohead_billto_cntct_email=COALESCE(NEW.cohead_billto_cntct_email,_p.cntct_email,''); 
+          NEW.cohead_billto_cntct_fax=COALESCE(NEW.cohead_billto_cntct_fax,_p.cntct_fax,'');
+          NEW.cohead_billto_cntct_email=COALESCE(NEW.cohead_billto_cntct_email,_p.cntct_email,'');
           NEW.cohead_billtoname=COALESCE(NEW.cohead_billtoname,_p.cust_name,'');
           NEW.cohead_billtoaddress1=COALESCE(NEW.cohead_billtoaddress1,_p.addr_line1,'');
           NEW.cohead_billtoaddress2=COALESCE(NEW.cohead_billtoaddress2,_p.addr_line2,'');
-          NEW.cohead_billtoaddress3=COALESCE(NEW.cohead_billtoaddress3,_p.addr_line3,'');    
-          NEW.cohead_billtocity=COALESCE(NEW.cohead_billtocity,_p.addr_city,''); 
+          NEW.cohead_billtoaddress3=COALESCE(NEW.cohead_billtoaddress3,_p.addr_line3,'');
+          NEW.cohead_billtocity=COALESCE(NEW.cohead_billtocity,_p.addr_city,'');
           NEW.cohead_billtostate=COALESCE(NEW.cohead_billtostate,_p.addr_state,'');
           NEW.cohead_billtozipcode=COALESCE(NEW.cohead_billtozipcode,_p.addr_postalcode,'');
-          NEW.cohead_billtocountry=COALESCE(NEW.cohead_billtocountry,_p.addr_country,'');   
+          NEW.cohead_billtocountry=COALESCE(NEW.cohead_billtocountry,_p.addr_country,'');
         ELSE
           -- Free form not allowed, we're going to put in the address regardless
           NEW.cohead_billto_cntct_id=_p.cntct_id;
           NEW.cohead_billto_cntct_honorific=COALESCE(_p.cntct_honorific,'');
           NEW.cohead_billto_cntct_first_name=COALESCE(_p.cntct_first_name,'');
-          NEW.cohead_billto_cntct_middle=COALESCE(_p.cntct_middle,'');    
-          NEW.cohead_billto_cntct_last_name=COALESCE(_p.cntct_last_name,''); 
+          NEW.cohead_billto_cntct_middle=COALESCE(_p.cntct_middle,'');
+          NEW.cohead_billto_cntct_last_name=COALESCE(_p.cntct_last_name,'');
           NEW.cohead_billto_cntct_phone=COALESCE(_p.cntct_phone,'');
           NEW.cohead_billto_cntct_title=COALESCE(_p.cntct_title,'');
-          NEW.cohead_billto_cntct_fax=COALESCE(_p.cntct_fax,''); 
-          NEW.cohead_billto_cntct_email=COALESCE(_p.cntct_email,''); 
+          NEW.cohead_billto_cntct_fax=COALESCE(_p.cntct_fax,'');
+          NEW.cohead_billto_cntct_email=COALESCE(_p.cntct_email,'');
           NEW.cohead_billtoname=COALESCE(_p.cust_name,'');
           NEW.cohead_billtoaddress1=COALESCE(_p.addr_line1,'');
           NEW.cohead_billtoaddress2=COALESCE(_p.addr_line2,'');
-          NEW.cohead_billtoaddress3=COALESCE(_p.addr_line3,'');    
-          NEW.cohead_billtocity=COALESCE(_p.addr_city,''); 
+          NEW.cohead_billtoaddress3=COALESCE(_p.addr_line3,'');
+          NEW.cohead_billtocity=COALESCE(_p.addr_city,'');
           NEW.cohead_billtostate=COALESCE(_p.addr_state,'');
           NEW.cohead_billtozipcode=COALESCE(_p.addr_postalcode,'');
           NEW.cohead_billtocountry=COALESCE(_p.addr_country,'');
@@ -310,9 +310,9 @@ BEGIN
       END IF;
 
       -- Now let's look at Shipto Address
-      -- If there's nothing in the address fields and there is a shipto id 
+      -- If there's nothing in the address fields and there is a shipto id
       -- or there is a default address available, let's put in some shipto address data
-      IF ((TG_OP = 'INSERT') 
+      IF ((TG_OP = 'INSERT')
         AND NOT ((NEW.cohead_shipto_id IS NULL) AND NOT _p.cust_ffshipto)
         AND (NEW.cohead_shipto_cntct_id IS NULL)
         AND (NEW.cohead_shipto_cntct_honorific IS NULL)
@@ -337,7 +337,7 @@ BEGIN
           _shiptoId := NEW.cohead_shipto_id;
         END IF;
 
-        SELECT * INTO _a 
+        SELECT * INTO _a
         FROM shiptoinfo
           LEFT OUTER JOIN addr ON (addr_id=shipto_addr_id)
           LEFT OUTER JOIN cntct ON (cntct_id=shipto_cntct_id)
@@ -356,8 +356,8 @@ BEGIN
         NEW.cohead_shiptoname := COALESCE(_p.shipto_name,'');
         NEW.cohead_shiptoaddress1 := COALESCE(_a.addr_line1,'');
         NEW.cohead_shiptoaddress2 := COALESCE(_a.addr_line2,'');
-        NEW.cohead_shiptoaddress3 := COALESCE(_a.addr_line3,'');    
-        NEW.cohead_shiptocity := COALESCE(_a.addr_city,''); 
+        NEW.cohead_shiptoaddress3 := COALESCE(_a.addr_line3,'');
+        NEW.cohead_shiptocity := COALESCE(_a.addr_city,'');
         NEW.cohead_shiptostate := COALESCE(_a.addr_state,'');
         NEW.cohead_shiptozipcode := COALESCE(_a.addr_postalcode,'');
         NEW.cohead_shiptocountry := COALESCE(_a.addr_country,'');
@@ -385,7 +385,7 @@ BEGIN
           SELECT cohead_shipto_id INTO _shiptoid FROM cohead WHERE (cohead_id=NEW.cohead_id);
           -- Get the shipto address
           IF (COALESCE(NEW.cohead_shipto_id,-1) <> COALESCE(_shiptoid,-1)) THEN
-            SELECT * INTO _a 
+            SELECT * INTO _a
             FROM shiptoinfo
               LEFT OUTER JOIN cntct ON (shipto_cntct_id=cntct_id)
               LEFT OUTER JOIN addr ON (shipto_addr_id=addr_id)
@@ -395,21 +395,21 @@ BEGIN
               NEW.cohead_shipto_cntct_id=_a.cntct_id;
               NEW.cohead_shipto_cntct_honorific=COALESCE(_a.cntct_honorific,'');
               NEW.cohead_shipto_cntct_first_name=COALESCE(_a.cntct_first_name,'');
-              NEW.cohead_shipto_cntct_middle=COALESCE(_a.cntct_middle,'');    
-              NEW.cohead_shipto_cntct_last_name=COALESCE(_a.cntct_last_name,''); 
+              NEW.cohead_shipto_cntct_middle=COALESCE(_a.cntct_middle,'');
+              NEW.cohead_shipto_cntct_last_name=COALESCE(_a.cntct_last_name,'');
               NEW.cohead_shipto_cntct_phone=COALESCE(_a.cntct_phone,'');
               NEW.cohead_shipto_cntct_title=COALESCE(_a.cntct_title,'');
-              NEW.cohead_shipto_cntct_fax=COALESCE(_a.cntct_fax,''); 
-              NEW.cohead_shipto_cntct_email=COALESCE(_a.cntct_email,''); 
+              NEW.cohead_shipto_cntct_fax=COALESCE(_a.cntct_fax,'');
+              NEW.cohead_shipto_cntct_email=COALESCE(_a.cntct_email,'');
               NEW.cohead_shiptoname := COALESCE(_a.shipto_name,'');
               NEW.cohead_shiptophone := COALESCE(_a.cntct_phone,'');
               NEW.cohead_shiptoaddress1 := COALESCE(_a.addr_line1,'');
               NEW.cohead_shiptoaddress2 := COALESCE(_a.addr_line2,'');
-              NEW.cohead_shiptoaddress3 := COALESCE(_a.addr_line3,'');    
-              NEW.cohead_shiptocity := COALESCE(_a.addr_city,''); 
+              NEW.cohead_shiptoaddress3 := COALESCE(_a.addr_line3,'');
+              NEW.cohead_shiptocity := COALESCE(_a.addr_city,'');
               NEW.cohead_shiptostate := COALESCE(_a.addr_state,'');
               NEW.cohead_shiptozipcode := COALESCE(_a.addr_postalcode,'');
-              NEW.cohead_shiptocountry := COALESCE(_a.addr_country,''); 
+              NEW.cohead_shiptocountry := COALESCE(_a.addr_country,'');
             ELSE
               -- If no shipto data and free form not allowed, this won't work
               RAISE EXCEPTION 'Free form Shipto is not allowed on this Customer. You must supply a valid Shipto ID.';
@@ -460,7 +460,7 @@ BEGIN
     ELSIF (TG_OP = 'DELETE') THEN
       DELETE FROM docass WHERE docass_source_id = OLD.cohead_id AND docass_source_type = 'S';
       DELETE FROM docass WHERE docass_target_id = OLD.cohead_id AND docass_target_type = 'S';
-      
+
       DELETE FROM comment
       WHERE ( (comment_source='S')
        AND (comment_source_id=OLD.cohead_id) );
@@ -484,7 +484,7 @@ BEGIN
     IF ((OLD.cohead_shipchrg_id != NEW.cohead_shipchrg_id)
         OR (OLD.cohead_freight != NEW.cohead_freight)
         OR (OLD.cohead_shipvia != NEW.cohead_shipvia)) THEN
-      UPDATE shiphead SET 
+      UPDATE shiphead SET
         shiphead_shipchrg_id=
 	     CASE WHEN (NEW.cohead_shipchrg_id <= 0) THEN NULL
 	          ELSE NEW.cohead_shipchrg_id
@@ -508,16 +508,16 @@ BEGIN
 END;
 $$ LANGUAGE 'plpgsql';
 
-DROP TRIGGER soheadTrigger ON cohead;
+DROP TRIGGER IF EXISTS soheadTrigger ON cohead;
 CREATE TRIGGER soheadTrigger BEFORE INSERT OR UPDATE OR DELETE ON cohead FOR EACH ROW EXECUTE PROCEDURE _soheadTrigger();
 
 CREATE OR REPLACE FUNCTION _soheadTriggerAfter() RETURNS TRIGGER AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 BEGIN
   IF (COALESCE(NEW.cohead_taxzone_id,-1) <> COALESCE(OLD.cohead_taxzone_id,-1)) THEN
     UPDATE coitem SET coitem_taxtype_id=getItemTaxType(itemsite_item_id,NEW.cohead_taxzone_id)
-    FROM itemsite 
+    FROM itemsite
     WHERE ((itemsite_id=coitem_itemsite_id)
      AND (coitem_cohead_id=NEW.cohead_id));
   END IF;
