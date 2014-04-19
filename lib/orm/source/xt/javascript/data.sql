@@ -127,7 +127,7 @@ select xt.install_js('XT','Data','xtuple', $$
               /* swap out the attribute in the array for the one with the prepended natural key */
               index = parameter.attribute.indexOf(attribute);
               parameter.attribute.splice(index, 1);
-              parameter.attribute.push(attribute + "." + naturalKey);
+              parameter.attribute.splice(index, 0, attribute + "."  + naturalKey);
             }
           }
         });
