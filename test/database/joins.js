@@ -310,10 +310,13 @@ var _ = require("underscore"),
       });
     });
 
+// incident plus
+//select xt.js_init(true);select xt.get($${"nameSpace":"XM","type":"IncidentListItem","query":{"orderBy":[{"attribute":"priorityOrder"},{"attribute":"updated","descending":true},{"attribute":"number","descending":true,"numeric":true}],"rowOffset":0,"rowLimit":50,"parameters":[{"attribute":["owner.username","assignedTo.username"],"operator":"","isCharacteristic":false,"value":"admin"},{"attribute":"project","operator":"","isCharacteristic":false,"value":"GREENLEAF"},{"attribute":"foundIn","operator":"","isCharacteristic":false,"value":"d0e6c507-eac5-461c-f63e-91e352a3ffb1"}]},"username":"admin","encryptionKey":"this is any content"}$$)
 
 
 
-    // T&E
+// T&E
+//select xt.js_init(true);select xt.get($${"nameSpace":"XM","type":"ProjectListItem","query":{"orderBy":[{"attribute":"number"}],"rowOffset":0,"rowLimit":50,"parameters":[{"attribute":["number","name","projectType","status","department"],"operator":"MATCHES","value":"foo"},{"attribute":"status","operator":"!=","value":"C"},{"attribute":"number","operator":"MATCHES","isCharacteristic":false,"value":"tre"},{"attribute":["owner.username","assignedTo.username"],"operator":"","isCharacteristic":false,"value":"admin"}]},"username":"admin","encryptionKey":"this is any content"}$$)
 //select xt.js_init(true);select xt.get($${"nameSpace":"XM","type":"ItemRelation","query":{"parameters":[{"attribute":"projectExpenseMethod","operator":"=","value":"E"},{"attribute":"isActive","value":true},{"attribute":"number","operator":"BEGINS_WITH","value":"pro","keySearch":false}],"orderBy":[{"attribute":"number"}],"rowLimit":1},"username":"admin","encryptionKey":"this is any content"}$$)
 //select xt.js_init(true);select xt.get($${"nameSpace":"XM","type":"ItemRelation","query":{"parameters":[{"attribute":"projectExpenseMethod","operator":"ANY","value":["E","A"]},{"attribute":"isActive","value":true},{"attribute":"number","operator":"BEGINS_WITH","value":"pro","keySearch":false}],"orderBy":[{"attribute":"number"}],"rowLimit":1},"username":"admin","encryptionKey":"this is any content"}$$)
 

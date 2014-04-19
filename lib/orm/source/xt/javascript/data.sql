@@ -348,6 +348,20 @@ select xt.install_js('XT','Data','xtuple', $$
                       childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
                     }
                   } else {
+                    pertinentExtension = XT.Orm.getProperty(childOrm, parts[n], true);
+                    var isExtension = pertinentExtension.isChild || pertinentExtension.isExtension;
+                    if(isExtension) {
+                      /* We'll need to join this orm extension */
+                      fromKeyProp = XT.Orm.getProperty(orm, pertinentExtension.relations[0].inverse);
+                      joinIdentifiers.push(
+                        this.getNamespaceFromNamespacedTable(pertinentExtension.table),
+                        this.getTableFromNamespacedTable(pertinentExtension.table),
+                        fromKeyProp.attr.column,
+                        pertinentExtension.relations[0].column);
+                      joins.push("left join %" + (joinIdentifiers.length - 3) + "$I.%" + (joinIdentifiers.length - 2)
+                        + "$I jt" + joins.length + " on t1.%"
+                        + (joinIdentifiers.length - 1) + "$I = jt" + joins.length + ".%" + joinIdentifiers.length + "$I");
+                    }
                     /* Build path, e.g. table_name.column_name */
                     if (n === parts.length - 1) {
                       identifiers.push("jt" + (joins.length - 1));
@@ -357,7 +371,7 @@ select xt.install_js('XT','Data','xtuple', $$
                         params[pcount] = "lower(" + params[pcount] + ")";
                       }
                     } else {
-                      sourceTableAlias = n === 0 ? "t1" : "jt" + (joins.length - 1);
+                      sourceTableAlias = n === 0 && !isExtension ? "t1" : "jt" + (joins.length - 1);
                       if (prop.toOne && prop.toOne.type) {
                         childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
                         joinIdentifiers.push(
