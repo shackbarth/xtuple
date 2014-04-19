@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION deleteWo(INTEGER, BOOLEAN) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pWoid ALIAS FOR $1;
@@ -11,7 +11,7 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 CREATE OR REPLACE FUNCTION deleteWo(INTEGER, BOOLEAN, BOOLEAN) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pWoid ALIAS FOR $1;
@@ -27,7 +27,7 @@ DECLARE
 
 BEGIN
   SELECT wo_status, wo_ordtype, wo_ordid, item_type
-  INTO   woStatus, ordtype, ordid, itemType
+  INTO woStatus, ordtype, ordid, itemType
   FROM wo JOIN itemsite ON (itemsite_id=wo_itemsite_id)
           JOIN item ON (item_id=itemsite_item_id)
   WHERE (wo_id=pWoid);
@@ -44,7 +44,7 @@ BEGIN
 
   SELECT fetchMetricBool('Routings') INTO _routings;
 
-  IF _routings THEN
+  IF (_routings AND woStatus != 'C') THEN
     SELECT count(*) INTO _wotcCnt
     FROM xtmfg.wotc
     WHERE (wotc_wo_id=pWoid);
@@ -73,6 +73,8 @@ BEGIN
     WHERE (womatl_wo_id=pWoid);
 
     IF _routings THEN
+      DELETE FROM xtmfg.wotc
+      WHERE (wotc_wo_id=pWoid);
       DELETE FROM xtmfg.wooper
       WHERE (wooper_wo_id=pWoid);
     END IF;
