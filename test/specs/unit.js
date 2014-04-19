@@ -58,12 +58,11 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       @member -
       @memberof Unit
       @description Users can create, update, and delete Units if they have the
-        'MaintainUOMs' privilege, and they can read Units if they have
-        the 'ViewUOMs' privilege.
+        'MaintainUOMs' privilege.
     */
     privileges: {
       createUpdateDelete: "MaintainUOMs",
-      read: "ViewUOMs"
+      read: true
     },
     createHash : {
       name : 'IN' + Math.random(),

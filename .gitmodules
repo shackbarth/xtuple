@@ -1,6 +1,6 @@
 [submodule "enyo-client/application/enyo"]
   path = enyo-client/application/enyo
-  url = https://github.com/enyojs/enyo.git
+  url = https://github.com/xtuple/enyo.git
 [submodule "lib/onyx"]
   path = lib/onyx
   url = https://github.com/enyojs/onyx.git
@@ -12,7 +12,7 @@
   url = https://bitbucket.org/GlitchTechScience/gts-plugins.git
 [submodule "lib/enyo-x/enyo"]
   path = lib/enyo-x/enyo
-  url = https://github.com/enyojs/enyo.git
+  url = https://github.com/xtuple/enyo.git
 [submodule "lib/enyo-x/lib/onyx"]
   path = lib/enyo-x/lib/onyx
   url = https://github.com/enyojs/onyx.git

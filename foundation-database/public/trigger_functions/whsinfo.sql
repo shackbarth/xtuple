@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION _warehousTrigger () RETURNS TRIGGER AS '
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _cmnttypeid INTEGER;
@@ -26,7 +26,7 @@ BEGIN
   IF (LENGTH(COALESCE(NEW.warehous_code,''''))=0) THEN
     RAISE EXCEPTION ''You must supply a valid Site Code.'';
   END IF;
-  
+
   -- Sitetype is required
   IF (NEW.warehous_sitetype_id IS NULL) THEN
     RAISE EXCEPTION ''You must supply a valid Site Type.'';
@@ -45,7 +45,7 @@ BEGIN
   IF (FOUND) THEN
     RAISE EXCEPTION ''You must supply a unique Site Code.'';
   END IF;
-  
+
   -- Count Tag Prefix must be unique
   IF (TG_OP = ''INSERT'') THEN
     SELECT warehous_id INTO _checkId
@@ -60,7 +60,7 @@ BEGIN
   IF (FOUND) THEN
     RAISE EXCEPTION ''You must supply a unique Count Tag Prefix.'';
   END IF;
-  
+
   -- Check Complete
   -- Change Log
   IF ( SELECT (metric_value=''t'')
@@ -98,11 +98,11 @@ BEGIN
       END IF;
     END IF;
   END IF;
-  
+
   RETURN NEW;
 
 END;
 ' LANGUAGE 'plpgsql';
 
-DROP TRIGGER warehousTrigger ON whsinfo;
+DROP TRIGGER IF EXISTS warehousTrigger ON whsinfo;
 CREATE TRIGGER warehousTrigger BEFORE INSERT OR UPDATE ON whsinfo FOR EACH ROW EXECUTE PROCEDURE _warehousTrigger();

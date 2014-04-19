@@ -47,6 +47,9 @@ BEGIN
   SELECT currToCurr(itemsrcp_curr_id, pCurrid, price, _effective) INTO _price
   FROM (
     SELECT *,
+           CASE WHEN (itemsrcp_dropship) THEN 0
+                ELSE 1
+           END AS seq,
            CASE itemsrcp_type WHEN ('N') THEN itemsrcp_price
                               WHEN ('D') THEN (_r.item_listcost - (_r.item_listcost * itemsrcp_discntprcnt) - itemsrcp_fixedamtdiscount)
                               ELSE 0.0
@@ -56,7 +59,7 @@ BEGIN
       AND   ((itemsrcp_warehous_id=pSiteid) OR (itemsrcp_warehous_id=-1))
       AND   ((itemsrcp_dropship=pDropship) OR (NOT itemsrcp_dropship))
       AND   (itemsrcp_qtybreak <= pQty) )
-    ORDER BY itemsrcp_qtybreak DESC
+    ORDER BY seq, itemsrcp_qtybreak DESC
     LIMIT 1
        ) AS data
   ;
@@ -65,3 +68,4 @@ BEGIN
 
 END;
 $$ LANGUAGE 'plpgsql';
+

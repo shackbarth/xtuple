@@ -40,7 +40,7 @@
     "socket.io": "0.9.x",
     "underscore": "1.4.x",
     "winston": "0.7.x",
-    "xmla4js": "git://github.com/rpbouman/xmla4js.git#c4724843",
+    "xmla4js": "git://github.com/rpbouman/xmla4js.git",
     "underscore.string": "~2.3.3",
     "ursa":"0.8.x"
   },

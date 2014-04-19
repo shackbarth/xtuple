@@ -164,55 +164,6 @@ trailing:true, white:true, strict:false*/
     XV.registerModelWorkspace("XM.ProjectWorkflow", "XV.ProjectWorkspace");
 
     enyo.kind({
-      name: "XV.TaskWorkspace",
-      kind: "XV.Workspace",
-      title: "_task".loc(),
-      headerAttrs: ["number", "-", "name"],
-      model: "XM.Task",
-      components: [
-        {kind: "Panels", arrangerKind: "CarouselArranger",
-          classes: "xv-top-panel", fit: true, components: [
-          {kind: "XV.Groupbox", name: "mainPanel", components: [
-            {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-            {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
-              classes: "in-panel", components: [
-              {kind: "XV.ProjectWidget", attr: "project"},
-              {kind: "XV.InputWidget", attr: "number"},
-              {kind: "XV.InputWidget", attr: "name"},
-              {kind: "XV.ProjectStatusPicker", attr: "status"},
-              {kind: "XV.PriorityPicker", attr: "priority"},
-              {kind: "XV.PercentWidget", attr: "percentComplete"},
-              {kind: "onyx.GroupboxHeader", content: "_schedule".loc()},
-              {kind: "XV.DateWidget", attr: "dueDate"},
-              {kind: "XV.DateWidget", attr: "startDate"},
-              {kind: "XV.DateWidget", attr: "assignDate"},
-              {kind: "XV.DateWidget", attr: "completeDate"},
-              {kind: "onyx.GroupboxHeader", content: "_hours".loc()},
-              {kind: "XV.HoursWidget", attr: "budgetedHours",
-               label: "_budgeted".loc()},
-              {kind: "XV.HoursWidget", attr: "actualHours",
-               label: "_actual".loc()},
-              {kind: "onyx.GroupboxHeader", content: "_expenses".loc()},
-              {kind: "XV.MoneyWidget", attr: {localValue: "budgetedExpenses"},
-               label: "_budgeted".loc(), currencyShowing: false},
-              {kind: "XV.MoneyWidget", attr: {localValue: "actualExpenses"},
-               label: "_actual".loc(), currencyShowing: false},
-              {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
-              {kind: "XV.UserAccountWidget", attr: "owner"},
-              {kind: "XV.UserAccountWidget", attr: "assignedTo"},
-              {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
-              {kind: "XV.TextArea", attr: "notes", fit: true}
-            ]}
-          ]},
-          {kind: "XV.TaskCommentBox", attr: "comments"}
-        ]}
-      ]
-    });
-
-    XV.registerModelWorkspace("XM.Task", "XV.TaskWorkspace");
-    XV.registerModelWorkspace("XM.TaskListItem", "XV.TaskWorkspace");
-
-    enyo.kind({
       name: "XV.ProjectTaskWorkspace",
       kind: "XV.ChildWorkspace",
       title: "_projectTask".loc(),
@@ -375,17 +326,6 @@ trailing:true, white:true, strict:false*/
     ];
 
     XV.appendExtension("XV.SalesOrderWorkspace", extensions);
-
-    // ..........................................................
-    // TASK
-    //
-
-    extensions = [
-      {kind: "XV.TaskCharacteristicsWidget", container: "mainGroup",
-        attr: "characteristics"}
-    ];
-
-    XV.appendExtension("XV.TaskWorkspace", extensions);
 
   };
 

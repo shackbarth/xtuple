@@ -14,8 +14,6 @@ SELECT
        CASE WHEN (coitem_scheddate <= current_date AND qtybalance > 0) THEN 'error' 
             WHEN (qtybalance > 0) THEN 'emphasis' 
        END AS coitem_scheddate_qtforegroundrole,
-       CASE WHEN (xtindentrole = 0) THEN ''
-       END AS qtybalance_qtdisplayrole,
        'qty' AS coitem_qtyord_xtnumericrole,
        'qty' AS coitem_qtyshipped_xtnumericrole,
        'qty' AS coitem_qtyreturned_xtnumericrole,
@@ -39,8 +37,8 @@ FROM (
          0 AS xtindentrole,
          -- dummy coitem record
          -1            AS coitem_id,        NULL::INTEGER AS coitem_cohead_id,
-         cohead_number::INTEGER AS coitem_linenumber,NULL::INTEGER AS coitem_itemsite_id,
-         NULL::TEXT    AS coitem_status,    coitem_scheddate,
+         -1            AS coitem_linenumber,NULL::INTEGER AS coitem_itemsite_id,
+         NULL::TEXT    AS coitem_status,    NULL::DATE    AS coitem_scheddate,
          getSoSchedDate(cohead_id) AS sort_scheddate,
          NULL::DATE    AS coitem_promdate,  NULL::NUMERIC AS coitem_qtyord,
          NULL::NUMERIC AS coitem_unitcost,  NULL::NUMERIC AS coitem_price,
@@ -68,7 +66,7 @@ FROM (
          NULL::TEXT AS itemdescription,
          NULL::TEXT AS uom_name,
          NULL::TEXT AS warehous_code,
-         noNeg(coitem_qtyord - coitem_qtyshipped + coitem_qtyreturned) AS qtybalance,
+         NULL::NUMERIC AS qtybalance,
          NULL::NUMERIC AS baseunitprice,
          NULL::NUMERIC AS extprice,
          NULL::NUMERIC AS baseextprice,
@@ -105,12 +103,7 @@ FROM (
      LEFT OUTER JOIN char char_alias<? literal("char_id_date_list") ?> 
           ON (charass_alias<? literal("char_id_date_list") ?>.charass_char_id=char_alias<? literal("char_id_date_list") ?>.char_id)
 <? endforeach ?>
-  WHERE (coitem_id IN (SELECT coitem_id
-                     FROM coitem
-                    WHERE coitem_status = 'O'
-                      AND coitem_cohead_id=cohead_id
-                    ORDER BY coitem_scheddate ASC -- TODO: find a better way
-                    LIMIT 1)
+  WHERE ( (coitem_status='O')
   <? if exists("cohead_id") ?>
     AND  (coitem_cohead_id=<? value("cohead_id") ?>)
   <? endif ?>

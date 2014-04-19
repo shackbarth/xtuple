@@ -20,7 +20,7 @@
     });
 
     describe('Customer Prospect Widget', function () {
-      it('should allow users to create a new customer', function (done) {
+      it.skip('should allow users to create a new customer', function (done) {
         smoke.navigateToNewWorkspace(XT.app, "XV.QuoteList", function (workspaceContainer) {
 
           var quoteWorkspace = workspaceContainer.$.workspace,
@@ -43,7 +43,7 @@
             setTimeout(function () {
               done();
             }, 3000);
-          }, 3000);
+          }, 7000);
         });
       });
     });

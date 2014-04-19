@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION _quitemtrigger() RETURNS "trigger" AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _changelog BOOLEAN := FALSE;
@@ -32,7 +32,7 @@ BEGIN
     DELETE FROM charass
      WHERE ((charass_target_type='QI')
        AND  (charass_target_id=OLD.quitem_id));
- 
+
     RETURN OLD;
   END IF;
 
@@ -65,7 +65,7 @@ BEGIN
 END;
 $$ LANGUAGE 'plpgsql';
 
-DROP TRIGGER quitemtrigger ON quitem;
+DROP TRIGGER IF EXISTS quitemtrigger ON quitem;
 CREATE TRIGGER quitemtrigger
   BEFORE INSERT OR UPDATE OR DELETE
   ON quitem
@@ -73,7 +73,7 @@ CREATE TRIGGER quitemtrigger
   EXECUTE PROCEDURE _quitemtrigger();
 
 CREATE OR REPLACE FUNCTION _quitemBeforeTrigger() RETURNS TRIGGER AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _check NUMERIC;
@@ -86,13 +86,13 @@ BEGIN
 
   -- If this is imported, go ahead and insert default characteristics
    IF ((TG_OP = 'INSERT') AND NEW.quitem_imported) THEN
-     PERFORM updateCharAssignment('SI', NEW.quitem_id, char_id, charass_value) 
+     PERFORM updateCharAssignment('SI', NEW.quitem_id, char_id, charass_value)
      FROM (
        SELECT DISTINCT char_id, char_name, charass_value
        FROM charass, char, itemsite, item
        WHERE ((itemsite_id=NEW.quitem_itemsite_id)
        AND (itemsite_item_id=item_id)
-       AND (charass_target_type='I') 
+       AND (charass_target_type='I')
        AND (charass_target_id=item_id)
        AND (charass_default)
        AND (char_id=charass_char_id))
@@ -103,7 +103,7 @@ BEGIN
 END;
 $$ LANGUAGE 'plpgsql';
 
-DROP TRIGGER quitemBeforeTrigger ON quitem;
+DROP TRIGGER IF EXISTS quitemBeforeTrigger ON quitem;
 CREATE TRIGGER quitemBeforeTrigger
   BEFORE INSERT OR UPDATE
   ON quitem
@@ -113,7 +113,7 @@ CREATE TRIGGER quitemBeforeTrigger
 
 
 CREATE OR REPLACE FUNCTION _quitemAfterTrigger() RETURNS TRIGGER AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _check NUMERIC;
@@ -136,7 +136,7 @@ BEGIN
 END;
 $$ LANGUAGE 'plpgsql';
 
-DROP TRIGGER quitemAfterTrigger ON quitem;
+DROP TRIGGER IF EXISTS quitemAfterTrigger ON quitem;
 CREATE TRIGGER quitemAfterTrigger
   AFTER INSERT OR UPDATE
   ON quitem

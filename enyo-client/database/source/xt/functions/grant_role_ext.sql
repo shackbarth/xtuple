@@ -18,7 +18,7 @@ create or replace function xt.grant_role_ext(role_name text, ext_name text) retu
     return false;
   } else {
     roleId = role[0].grp_id;
-    extId = ext[0].grp_id;
+    extId = ext[0].ext_id;
     count = plv8.execute(sqlCount, [roleId, extId])[0].count;
   }
 

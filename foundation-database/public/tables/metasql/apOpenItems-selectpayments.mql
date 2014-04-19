@@ -1,6 +1,6 @@
 -- Group: apOpenItems
 -- Name:  selectpayments
--- Notes: 
+-- Notes:
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 
@@ -9,10 +9,11 @@ SELECT *,
             WHEN (apopen_doctype='D') THEN <? value("debitMemo") ?>
             WHEN (apopen_doctype='C') THEN <? value("creditMemo") ?>
        END AS doctype,
+       CASE WHEN (apopen_doctype='C') THEN 'emphasis' END AS doctype_qtforegroundrole,
        CASE WHEN (apopen_duedate < CURRENT_DATE) THEN 'error'
             WHEN(apopen_duedate > CURRENT_DATE) THEN 'emphasis'
             WHEN(CURRENT_DATE <= determineDiscountDate(apopen_terms_id, apopen_docdate)) THEN 'altemphasis'
-       END AS apopen_duedate_qtforegroundrole, 
+       END AS apopen_duedate_qtforegroundrole,
        CASE WHEN (apopen_status = 'H') THEN 'error' END AS qtforegroundrole,
        'curr' AS amount_xtnumericrole,
        'curr' AS selected_xtnumericrole,

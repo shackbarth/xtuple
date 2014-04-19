@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION _itemCostTrigger() RETURNS TRIGGER AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 BEGIN
 
@@ -78,13 +78,13 @@ BEGIN
 END;
 $$ LANGUAGE 'plpgsql';
 
-DROP TRIGGER itemCostTrigger ON itemcost;
+DROP TRIGGER IF EXISTS itemCostTrigger ON itemcost;
 CREATE TRIGGER itemCostTrigger BEFORE INSERT OR UPDATE OR DELETE ON itemcost FOR EACH ROW EXECUTE PROCEDURE _itemCostTrigger();
 
 
 
 CREATE OR REPLACE FUNCTION _itemCostAfterTrigger() RETURNS TRIGGER AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _itemNumber TEXT;
@@ -93,53 +93,53 @@ DECLARE
   _oldActCost NUMERIC;
   _actualCost NUMERIC;
   _standardCost NUMERIC;
-  
+
 BEGIN
 
 --  Create Event if Standard or Actual Cost is greater than Max Cost
 
-IF NOT EXISTS(SELECT 1 
+IF NOT EXISTS(SELECT 1
      FROM evntnot
        JOIN evnttype ON (evnttype_id = evntnot_evnttype_id)
        JOIN usrpref ON (evntnot_username = usrpref_username)
      WHERE
           evnttype_name = 'CostExceedsMaxDesired'
-          AND usrpref_name = 'active' 
-          AND usrpref_value = 't')     
+          AND usrpref_name = 'active'
+          AND usrpref_value = 't')
    THEN
-     RETURN NEW;     
-END IF; 
+     RETURN NEW;
+END IF;
 
   SELECT item_number, item_maxcost, actcost(item_id), stdcost(item_id) INTO _itemNumber, _maxCost, _actualCost, _standardCost
   FROM item
   WHERE (item_id=NEW.itemcost_item_id);
 
   IF (_maxCost > 0.0) THEN
-   -- IF (_standardCost > _maxCost) 
-      IF NOT EXISTS(SELECT 1 --COUNT(evntlog_id) 
+   -- IF (_standardCost > _maxCost)
+      IF NOT EXISTS(SELECT 1 --COUNT(evntlog_id)
                     FROM
                       evntlog, evnttype
-                      WHERE evntlog_evnttype_id = evnttype_id 
-                      AND evntlog_number LIKE 
+                      WHERE evntlog_evnttype_id = evnttype_id
+                      AND evntlog_number LIKE
                           (_itemNumber || ' -Standard- New:' || '%')
-                   
+
                       AND (evntlog_dispatched IS NULL)
                       AND CAST(evntlog_evnttime AS DATE) = current_date
-                     
-                      ) 
+
+                      )
                       AND (_standardCost > _maxCost) THEN
-                               
-                       
+
+
       IF (TG_OP = 'INSERT') THEN
         _oldStdCost := 0;
         _oldActCost := 0;
       ELSE
         _oldStdCost := OLD.itemcost_stdcost;
         _oldActCost := OLD.itemcost_stdcost;
-      END IF; 
+      END IF;
       PERFORM postEvent('CostExceedsMaxDesired', NULL, NEW.itemcost_item_id,
                         itemsite_warehous_id,
-                        (_itemNumber || ' -Standard- ' || 
+                        (_itemNumber || ' -Standard- ' ||
                          'New: ' || formatCost(_standardCost) ||
                          ' Max: '|| formatCost(_MaxCost)),
                         NEW.itemcost_stdcost, _oldStdCost,
@@ -150,8 +150,8 @@ END IF;
        IF NOT EXISTS(
                      SELECT 1 FROM
                       evntlog, evnttype
-                      WHERE evntlog_evnttype_id = evnttype_id 
-                      AND evntlog_number LIKE 
+                      WHERE evntlog_evnttype_id = evnttype_id
+                      AND evntlog_number LIKE
                           (_itemNumber || ' -Actual- New:' || '%')
 
                       AND (evntlog_dispatched IS NULL)
@@ -160,10 +160,10 @@ END IF;
 
                  AND  (_actualCost > _maxCost)
           THEN
-                            
+
       PERFORM postEvent('CostExceedsMaxDesired', NULL, NEW.itemcost_item_id,
                         itemsite_warehous_id,
-                        (_itemNumber || ' -Actual- ' || 
+                        (_itemNumber || ' -Actual- ' ||
                          'New: ' || formatCost(_actualCost) ||
                          ' Max: '|| formatCost(_MaxCost)),
                         NEW.itemcost_actcost, _oldActCost,
@@ -178,5 +178,5 @@ END IF;
 END;
 $$ LANGUAGE 'plpgsql';
 
-DROP TRIGGER itemCostAfterTrigger ON itemcost;
+DROP TRIGGER IF EXISTS itemCostAfterTrigger ON itemcost;
 CREATE TRIGGER itemCostAfterTrigger AFTER INSERT OR UPDATE ON itemcost FOR EACH ROW EXECUTE PROCEDURE _itemCostAfterTrigger();
