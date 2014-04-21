@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION _woTrigger() RETURNS TRIGGER AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
 
@@ -8,7 +8,7 @@ BEGIN
   IF (TG_OP = 'INSERT') THEN
     PERFORM postEvent('WoCreated', 'W', NEW.wo_id,
                       itemsite_warehous_id,
-                      (NEW.wo_number || '-' || NEW.wo_subnumber), 
+                      (NEW.wo_number || '-' || NEW.wo_subnumber),
                       NULL, NULL, NULL, NULL)
     FROM itemsite
     WHERE (itemsite_id=NEW.wo_itemsite_id)
@@ -27,7 +27,7 @@ BEGIN
       IF (TG_OP = 'DELETE') THEN
       PERFORM postEvent('WoCancelled', 'W', OLD.wo_id,
                         itemsite_warehous_id,
-                        (OLD.wo_number || '-' || OLD.wo_subnumber), 
+                        (OLD.wo_number || '-' || OLD.wo_subnumber),
                         NULL, NULL, NULL, NULL)
       FROM itemsite
       WHERE (itemsite_id=OLD.wo_itemsite_id)
@@ -52,7 +52,7 @@ BEGIN
         IF (NEW.wo_qtyord <> OLD.wo_qtyord) THEN
           PERFORM postEvent('WoQtyChanged', 'W', NEW.wo_id,
                             itemsite_warehous_id,
-                            (NEW.wo_number || '-' || NEW.wo_subnumber), 
+                            (NEW.wo_number || '-' || NEW.wo_subnumber),
                             NEW.wo_qtyord, OLD.wo_qtyord, NULL, NULL)
           FROM itemsite
           WHERE (itemsite_id=NEW.wo_itemsite_id)
@@ -67,7 +67,7 @@ BEGIN
         IF (NEW.wo_duedate <> OLD.wo_duedate) THEN
           PERFORM postEvent('WoDueDateChanged', 'W', NEW.wo_id,
                             itemsite_warehous_id,
-                            (NEW.wo_number || '-' || NEW.wo_subnumber), 
+                            (NEW.wo_number || '-' || NEW.wo_subnumber),
                             NULL, NULL, NEW.wo_duedate, OLD.wo_duedate)
           FROM itemsite
           WHERE (itemsite_id=NEW.wo_itemsite_id)
@@ -84,7 +84,7 @@ BEGIN
                                ('Status Changed from ' || OLD.wo_status || ' to ' || NEW.wo_status) );
         END IF;
 
-      END IF; 
+      END IF;
     END IF;
   END IF;
 
@@ -101,5 +101,5 @@ BEGIN
 END;
 $$ LANGUAGE 'plpgsql';
 
-DROP TRIGGER woTrigger ON wo;
+DROP TRIGGER IF EXISTS woTrigger ON wo;
 CREATE TRIGGER woTrigger BEFORE INSERT OR UPDATE OR DELETE ON wo FOR EACH ROW EXECUTE PROCEDURE _woTrigger();

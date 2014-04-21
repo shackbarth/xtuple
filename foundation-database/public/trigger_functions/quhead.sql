@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION _quheadtrigger() RETURNS "trigger" AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _cmnttypeid INTEGER;
@@ -42,7 +42,7 @@ BEGIN
         END IF;
       END IF;
     END IF;
-    
+
     IF (fetchMetricText('QUNumberGeneration') IN ('A','O')) THEN
       --- clear the number from the issue cache
       PERFORM clearNumberIssue('QuNumber', NEW.quhead_number);
@@ -50,7 +50,7 @@ BEGIN
       --- clear the number from the issue cache
       PERFORM clearNumberIssue('SoNumber', NEW.quhead_number);
     END IF;
-    
+
   ELSE
     IF (TG_OP = 'UPDATE') THEN
        IF (NEW.quhead_number <> OLD.quhead_number) THEN
@@ -135,14 +135,14 @@ BEGIN
               FROM whsinfo
               WHERE (warehous_id=NEW.quhead_warehous_id);
             END IF;
-            
+
             IF (FOUND) THEN
               NEW.quhead_warehous_id 	:= COALESCE(NEW.quhead_warehous_id,_w.warehous_id);
               NEW.quhead_fob		:= COALESCE(NEW.quhead_fob,_w.warehous_fob);
             END IF;
           END IF;
       END IF;
-      
+
       --Auto create project if applicable
       IF ((TG_OP = 'INSERT') AND (COALESCE(NEW.quhead_prj_id,-1)=-1)) THEN
         SELECT fetchMetricBool('AutoCreateProjectsForOrders') INTO _check;
@@ -175,18 +175,18 @@ BEGIN
           NEW.quhead_billtoname=COALESCE(NEW.quhead_billtoname,_p.cust_name,'');
           NEW.quhead_billtoaddress1=COALESCE(NEW.quhead_billtoaddress1,_p.addr_line1,'');
           NEW.quhead_billtoaddress2=COALESCE(NEW.quhead_billtoaddress2,_p.addr_line2,'');
-          NEW.quhead_billtoaddress3=COALESCE(NEW.quhead_billtoaddress3,_p.addr_line3,'');    
-          NEW.quhead_billtocity=COALESCE(NEW.quhead_billtocity,_p.addr_city,''); 
+          NEW.quhead_billtoaddress3=COALESCE(NEW.quhead_billtoaddress3,_p.addr_line3,'');
+          NEW.quhead_billtocity=COALESCE(NEW.quhead_billtocity,_p.addr_city,'');
           NEW.quhead_billtostate=COALESCE(NEW.quhead_billtostate,_p.addr_state,'');
           NEW.quhead_billtozip=COALESCE(NEW.quhead_billtozip,_p.addr_postalcode,'');
-          NEW.quhead_billtocountry=COALESCE(NEW.quhead_billtocountry,_p.addr_country,'');   
+          NEW.quhead_billtocountry=COALESCE(NEW.quhead_billtocountry,_p.addr_country,'');
         ELSE
           -- Free form not allowed, we're going to put in the address regardless
           NEW.quhead_billtoname=COALESCE(_p.cust_name,'');
           NEW.quhead_billtoaddress1=COALESCE(_p.addr_line1,'');
           NEW.quhead_billtoaddress2=COALESCE(_p.addr_line2,'');
-          NEW.quhead_billtoaddress3=COALESCE(_p.addr_line3,'');    
-          NEW.quhead_billtocity=COALESCE(_p.addr_city,''); 
+          NEW.quhead_billtoaddress3=COALESCE(_p.addr_line3,'');
+          NEW.quhead_billtocity=COALESCE(_p.addr_city,'');
           NEW.quhead_billtostate=COALESCE(_p.addr_state,'');
           NEW.quhead_billtozip=COALESCE(_p.addr_postalcode,'');
           NEW.quhead_billtocountry=COALESCE(_p.addr_country,'');
@@ -194,9 +194,9 @@ BEGIN
       END IF;
 
       -- Now let's look at Shipto Address
-      -- If there's nothing in the address fields and there is a shipto id 
+      -- If there's nothing in the address fields and there is a shipto id
       -- or there is a default address available, let's put in some shipto address data
-      IF ((TG_OP = 'INSERT') 
+      IF ((TG_OP = 'INSERT')
        AND NOT ((NEW.quhead_shipto_id IS NULL) AND NOT _p.cust_ffshipto)
        AND (NEW.quhead_shiptoname IS NULL)
        AND (NEW.quhead_shiptoaddress1 IS NULL)
@@ -211,16 +211,16 @@ BEGIN
           _shiptoId := NEW.quhead_shipto_id;
         END IF;
 
-        SELECT * INTO _a 
-        FROM shiptoinfo, addr 
+        SELECT * INTO _a
+        FROM shiptoinfo, addr
         WHERE ((shipto_id=_shiptoId)
         AND (addr_id=shipto_addr_id));
 
         NEW.quhead_shiptoname := COALESCE(_p.shipto_name,'');
         NEW.quhead_shiptoaddress1 := COALESCE(_a.addr_line1,'');
         NEW.quhead_shiptoaddress2 := COALESCE(_a.addr_line2,'');
-        NEW.quhead_shiptoaddress3 := COALESCE(_a.addr_line3,'');    
-        NEW.quhead_shiptocity := COALESCE(_a.addr_city,''); 
+        NEW.quhead_shiptoaddress3 := COALESCE(_a.addr_line3,'');
+        NEW.quhead_shiptocity := COALESCE(_a.addr_city,'');
         NEW.quhead_shiptostate := COALESCE(_a.addr_state,'');
         NEW.quhead_shiptozipcode := COALESCE(_a.addr_postalcode,'');
         NEW.quhead_shiptocountry := COALESCE(_a.addr_country,'');
@@ -248,7 +248,7 @@ BEGIN
           SELECT quhead_shipto_id INTO _shiptoid FROM quhead WHERE (quhead_id=NEW.quhead_id);
           -- Get the shipto address
             IF (COALESCE(NEW.quhead_shipto_id,-1) <> COALESCE(_shiptoid,-1)) THEN
-            SELECT * INTO _a 
+            SELECT * INTO _a
             FROM shiptoinfo
             LEFT OUTER JOIN cntct ON (shipto_cntct_id=cntct_id)
             LEFT OUTER JOIN addr ON (shipto_addr_id=addr_id)
@@ -259,11 +259,11 @@ BEGIN
               NEW.quhead_shiptophone := COALESCE(_a.cntct_phone,'');
               NEW.quhead_shiptoaddress1 := COALESCE(_a.addr_line1,'');
               NEW.quhead_shiptoaddress2 := COALESCE(_a.addr_line2,'');
-              NEW.quhead_shiptoaddress3 := COALESCE(_a.addr_line3,'');    
-              NEW.quhead_shiptocity := COALESCE(_a.addr_city,''); 
+              NEW.quhead_shiptoaddress3 := COALESCE(_a.addr_line3,'');
+              NEW.quhead_shiptocity := COALESCE(_a.addr_city,'');
               NEW.quhead_shiptostate := COALESCE(_a.addr_state,'');
               NEW.quhead_shiptozipcode := COALESCE(_a.addr_postalcode,'');
-              NEW.quhead_shiptocountry := COALESCE(_a.addr_country,''); 
+              NEW.quhead_shiptocountry := COALESCE(_a.addr_country,'');
             ELSE
               -- If no shipto data and free form not allowed, this won't work
               RAISE EXCEPTION 'Free form Shipto is not allowed on this Customer. You must supply a valid Shipto ID.';
@@ -313,7 +313,7 @@ BEGIN
 END;
 $$ LANGUAGE 'plpgsql';
 
-DROP TRIGGER quheadtrigger ON quhead;
+DROP TRIGGER IF EXISTS quheadtrigger ON quhead;
 CREATE TRIGGER quheadtrigger
   BEFORE INSERT OR UPDATE OR DELETE
   ON quhead

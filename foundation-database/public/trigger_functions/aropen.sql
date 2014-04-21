@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION _aropenTrigger() RETURNS TRIGGER AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _openAmount NUMERIC;
@@ -94,7 +94,7 @@ BEGIN
     SELECT curr_rate INTO _currrate
       FROM curr_rate
     WHERE ( (NEW.aropen_curr_id=curr_id)
-      AND ( NEW.aropen_docdate BETWEEN curr_effective 
+      AND ( NEW.aropen_docdate BETWEEN curr_effective
                                    AND curr_expires) );
     IF (FOUND) THEN
       NEW.aropen_curr_rate := _currrate;
@@ -112,15 +112,15 @@ BEGIN
   END IF;
 
   IF (TG_OP = 'INSERT') THEN
-    IF (NEW.aropen_open=FALSE) 
+    IF (NEW.aropen_open=FALSE)
     AND (NEW.aropen_closedate IS NULL) THEN
       NEW.aropen_closedate=current_date;
     END IF;
   END IF;
-  
+
   IF (TG_OP = 'UPDATE') THEN
-    IF ((OLD.aropen_open=TRUE) 
-    AND (NEW.aropen_open=FALSE) 
+    IF ((OLD.aropen_open=TRUE)
+    AND (NEW.aropen_open=FALSE)
     AND (NEW.aropen_closedate IS NULL)) THEN
       NEW.aropen_closedate=current_date;
     END IF;
@@ -205,11 +205,11 @@ END;
 $$
  LANGUAGE 'plpgsql';
 
-DROP TRIGGER aropenTrigger ON aropen;
+DROP TRIGGER IF EXISTS aropenTrigger ON aropen;
 CREATE TRIGGER aropenTrigger BEFORE INSERT OR UPDATE ON aropen FOR EACH ROW EXECUTE PROCEDURE _aropenTrigger();
 
 CREATE OR REPLACE FUNCTION _aropenAfterTrigger() RETURNS TRIGGER AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _openAmount NUMERIC;

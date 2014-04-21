@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION _commentTrigger () RETURNS TRIGGER AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 BEGIN
   IF (NEW.comment_cmnttype_id IS NULL) THEN
@@ -12,5 +12,5 @@ BEGIN
 END;
 $$ LANGUAGE 'plpgsql';
 
-DROP TRIGGER commentTrigger ON comment;
+DROP TRIGGER IF EXISTS commentTrigger ON comment;
 CREATE TRIGGER commentTrigger AFTER INSERT OR UPDATE ON comment FOR EACH ROW EXECUTE PROCEDURE _commentTrigger();

@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION _reportTrigger () RETURNS TRIGGER AS '
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 BEGIN
 
@@ -9,5 +9,5 @@ BEGIN
 END;
 ' LANGUAGE 'plpgsql';
 
-DROP TRIGGER reportTrigger ON report;
+DROP TRIGGER IF EXISTS reportTrigger ON report;
 CREATE TRIGGER reportTrigger BEFORE INSERT OR UPDATE ON report FOR EACH ROW EXECUTE PROCEDURE _reportTrigger();
