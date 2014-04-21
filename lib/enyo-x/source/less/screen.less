@@ -14,6 +14,7 @@
 @slate-blue: #357ec7;
 @dark-slate-blue: #1a4f77;
 @lightest-gray: #efefef;
+@button-gray: #e1e1e1;
 @earl-grey: #f3f3f3;
 @silver: #aaa;
 @smoke: #d7d7d7;
@@ -130,10 +131,14 @@ body {
 */
 .xv-buttons {
   margin: 5px;
+  &.center {
+    text-align: center;
+  }
 
   .onyx-button {
     margin: 2px;
     min-width: 60px;
+    background: @button-gray;
     color: @charcoal;
     font-size: 20px;
     &.text {

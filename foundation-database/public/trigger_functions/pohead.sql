@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION _poheadTrigger() RETURNS TRIGGER AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _cmnttypeid 	INTEGER;
@@ -63,7 +63,7 @@ BEGIN
       ELSIF (TG_OP = 'DELETE') THEN
         DELETE FROM docass WHERE docass_source_id = OLD.pohead_id AND docass_source_type = 'P';
         DELETE FROM docass WHERE docass_target_id = OLD.pohead_id AND docass_target_type = 'P';
-        
+
         DELETE FROM comment
         WHERE ( (comment_source='P')
          AND (comment_source_id=OLD.pohead_id) );
@@ -80,16 +80,16 @@ BEGIN
 END;
 $$ LANGUAGE 'plpgsql';
 
-DROP TRIGGER poheadTrigger ON pohead;
+DROP TRIGGER IF EXISTS poheadTrigger ON pohead;
 CREATE TRIGGER poheadTrigger BEFORE INSERT OR UPDATE OR DELETE ON pohead FOR EACH ROW EXECUTE PROCEDURE _poheadTrigger();
 
 CREATE OR REPLACE FUNCTION _poheadTriggerAfter() RETURNS TRIGGER AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 BEGIN
   IF (COALESCE(NEW.pohead_taxzone_id,-1) <> COALESCE(OLD.pohead_taxzone_id,-1)) THEN
     UPDATE poitem SET poitem_taxtype_id=getItemTaxType(itemsite_item_id,NEW.pohead_taxzone_id)
-    FROM itemsite 
+    FROM itemsite
     WHERE ((itemsite_id=poitem_itemsite_id)
      AND (poitem_pohead_id=NEW.pohead_id));
   END IF;

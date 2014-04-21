@@ -92,7 +92,7 @@ FROM (
   <? endif ?>
       )
       GROUP BY cohead_id, item_number, cust_number,
-               cust_name, cohead_orderdate, pack_id
+               cust_name, cohead_orderdate, pack_id, coitem_scheddate
   <? if exists("onlyShowShortages") ?>
       HAVING (MIN(noNeg(itemsite_qtyonhand) +
                   qtyOrdered(itemsite_id, coitem_scheddate) -
@@ -190,5 +190,5 @@ FROM (
   )
 <? endif ?>
 ) AS data
-ORDER BY cohead_number, trueitem_number,
+ORDER BY duedate, cohead_number, trueitem_number,
          xtindentrole;

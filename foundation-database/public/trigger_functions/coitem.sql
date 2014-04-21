@@ -536,7 +536,8 @@ BEGIN
     IF ((NEW.coitem_order_type='P') AND (NEW.coitem_order_id=-1)) THEN
       SELECT itemsrc_id INTO _itemsrcid
       FROM itemsite JOIN itemsrc ON (itemsrc_item_id=itemsite_item_id AND itemsrc_default)
-      WHERE (itemsite_id=NEW.coitem_itemsite_id);
+      WHERE (itemsite_id=NEW.coitem_itemsite_id)
+        AND (NOT itemsite_stocked);
       IF (FOUND) THEN
         SELECT createPurchaseToSale(NEW.coitem_id,
                                     _itemsrcid,

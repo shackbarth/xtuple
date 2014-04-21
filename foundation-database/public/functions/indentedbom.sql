@@ -240,10 +240,10 @@ BEGIN
        bomhist_actunitcost AS actunitcost,
        bomhist_stdunitcost AS stdunitcost,
        CASE WHEN item_type NOT IN ('R','T') THEN
-         (bomist_qtyfxd/_batchsize + bomhist_qtyper) * (1 + bomhist_scrap) * bomhist_actunitcost
+         (bomhist_qtyfxd/_batchsize + bomhist_qtyper) * (1 + bomhist_scrap) * bomhist_actunitcost
        ELSE 0 END AS actextendedcost,
        CASE WHEN item_type NOT IN ('R','T') THEN
-         (bomist_qtyfxd/_batchsize + bomhist_qtyper) * (1 + bomhist_scrap) * bomhist_stdunitcost
+         (bomhist_qtyfxd/_batchsize + bomhist_qtyper) * (1 + bomhist_scrap) * bomhist_stdunitcost
        ELSE 0 END AS stdextendedcost,
        bomhist_char_id, bomhist_value, bomhist_notes, bomhist_ref 
        FROM bomhist, item, uom 
@@ -286,7 +286,7 @@ BEGIN
         _row.bomdata_itemdescription := _x.itemdescription;
         _row.bomdata_batchsize := _batchsize;
         _row.bomdata_qtyreq := _x.bomhist_qtyreq;
-        _row.bomdata_qtyfxd := _x.bomist_qtyfxd;
+        _row.bomdata_qtyfxd := _x.bomhist_qtyfxd;
         _row.bomdata_qtyper := _x.bomhist_qtyper;
         _row.bomdata_scrap := _x.bomhist_scrap;
         _row.bomdata_createchild := _x.bomhist_createwo;

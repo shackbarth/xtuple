@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION currOneBase() RETURNS trigger AS '
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   baseCount INTEGER := 0;
@@ -32,6 +32,6 @@ BEGIN
 END;
 ' LANGUAGE 'plpgsql';
 
-DROP TRIGGER currOneBase ON curr_symbol;
+DROP TRIGGER IF EXISTS currOneBase ON curr_symbol;
 CREATE TRIGGER currOneBase AFTER INSERT OR UPDATE ON curr_symbol
     FOR EACH ROW EXECUTE PROCEDURE currOneBase();

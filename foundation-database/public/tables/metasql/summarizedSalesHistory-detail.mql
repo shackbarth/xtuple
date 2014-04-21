@@ -1,6 +1,6 @@
 -- Group: summarizedSalesHistory
 -- Name: detail
--- Notes: 
+-- Notes:
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 
@@ -9,75 +9,76 @@ SELECT 1 AS dummy,
 <? foreach("groupLitList") ?>
   <? literal("groupLitList") ?>
   <? if not isLast("groupLitList") ?>
-  || E'\n' || 
+  || E'\n' ||
   <? endif ?>
 <? endforeach ?> AS groupsLit,
 <? foreach("groupList") ?>
-  substring(<? literal("groupList") ?> from 1 for 15) 
+  substring(<? literal("groupList") ?> from 1 for 15)
   <? if not isLast("groupList") ?>
-  || E'\n' || 
+  || E'\n' ||
   <? endif ?>
 <? endforeach ?> AS groups,
 <? foreach("groupDescripList") ?>
-  substring(<? literal("groupDescripList") ?> from 1 for 30) 
+  substring(<? literal("groupDescripList") ?> from 1 for 30)
   <? if not isLast("groupDescripList") ?>
-  || E'\n' || 
+  || E'\n' ||
   <? endif ?>
 <? endforeach ?> AS groupsDescrip,
 -- End of columns for printed report
        <? if exists("byCustomer") ?>
          cust_number, cohist_cust_id AS cust_number_xtidrole, cust_name,
-       <? endif ?> 
+       <? endif ?>
        <? if exists("byCustomerType") ?>
-         custtype_code, cust_custtype_id AS custtype_code_xtidrole, 
-       <? endif ?>  
+         custtype_code, cust_custtype_id AS custtype_code_xtidrole,
+       <? endif ?>
        <? if exists("byItem") ?>
-         item_number, item_id AS item_number_xtidrole, itemdescription, 
-       <? endif ?> 
+         item_number, item_id AS item_number_xtidrole, itemdescription,
+       <? endif ?>
        <? if exists("bySalesRep") ?>
-         salesrep_number, cohist_salesrep_id AS salesrep_number_xtidrole, salesrep_name, 
-       <? endif ?> 
+         salesrep_number, cohist_salesrep_id AS salesrep_number_xtidrole, salesrep_name,
+       <? endif ?>
        <? if exists("byShippingZone") ?>
          shipzone_name, shipzone_id AS shipzone_name_xtidrole,
-       <? endif ?> 
+       <? endif ?>
        <? if exists("bySite") ?>
          warehous_code, itemsite_warehous_id AS warehous_code_xtidrole,
-       <? endif ?>  
+       <? endif ?>
        <? if exists("byCurrency") ?>
          currAbbr,
-         MIN(custunitprice) AS minprice, MAX(custunitprice) AS maxprice, 
+         MIN(custunitprice) AS minprice, MAX(custunitprice) AS maxprice,
          AVG(custunitprice) AS avgprice,
-         SUM(custextprice) AS totalsales, 
-         CASE WHEN (SUM(cohist_qtyshipped) = 0) THEN 0 
-         ELSE SUM(custextprice) / SUM(cohist_qtyshipped) 
+         SUM(custextprice) AS totalsales,
+         CASE WHEN (SUM(cohist_qtyshipped) = 0) THEN 0
+         ELSE SUM(custextprice) / SUM(cohist_qtyshipped)
          END AS wtavgprice,
        <? else ?>
-         currConcat(baseCurrId()) AS currAbbr, 
-         MIN(baseunitprice) AS minprice, MAX(baseunitprice) AS maxprice, 
-         AVG(baseunitprice) AS avgprice, 
-         SUM(baseextprice) AS totalsales, 
-         CASE WHEN (SUM(cohist_qtyshipped) = 0) THEN 0 
-         ELSE SUM(baseextprice) / SUM(cohist_qtyshipped) 
+         currConcat(baseCurrId()) AS currAbbr,
+         MIN(baseunitprice) AS minprice, MAX(baseunitprice) AS maxprice,
+         AVG(baseunitprice) AS avgprice,
+         SUM(baseextprice) AS totalsales,
+         CASE WHEN (SUM(cohist_qtyshipped) = 0) THEN 0
+         ELSE SUM(baseextprice) / SUM(cohist_qtyshipped)
          END AS wtavgprice,
        <? endif ?>
-         SUM(cohist_qtyshipped) AS totalunits, 
-         MIN(cohist_invcdate) AS firstdate, 
-         MAX(cohist_invcdate) AS lastdate, 
-         SUM(cohist_qtyshipped) AS qtyshipped, 
-         'salesprice' AS minprice_xtnumericrole, 
-         'salesprice' AS maxprice_xtnumericrole, 
-         'salesprice' AS avgprice_xtnumericrole, 
-         'salesprice' AS wtavgprice_xtnumericrole, 
-         'qty' AS qtyshipped_xtnumericrole, 
+         SUM(cohist_qtyshipped) AS totalunits,
+         MIN(cohist_invcdate) AS firstdate,
+         MAX(cohist_invcdate) AS lastdate,
+         SUM(cohist_qtyshipped) AS qtyshipped,
+         'salesprice' AS minprice_xtnumericrole,
+         'salesprice' AS maxprice_xtnumericrole,
+         'salesprice' AS avgprice_xtnumericrole,
+         'salesprice' AS wtavgprice_xtnumericrole,
+         'qty' AS qtyshipped_xtnumericrole,
          'curr' AS extprice_xtnumericrole,
-         'qty' AS totalunits_xtnumericrole, 
-         'curr' AS totalsales_xtnumericrole, 
-         'qty' AS totalunits_xtnumericrole, 
-         'curr' AS totalsales_xtnumericrole, 
-         0 AS totalunits_xttotalrole, 
-         0 AS totalsales_xttotalrole 
-FROM saleshistory 
-WHERE (cohist_doctype NOT IN ('C')
+         'qty' AS totalunits_xtnumericrole,
+         'curr' AS totalsales_xtnumericrole,
+         'qty' AS totalunits_xtnumericrole,
+         'curr' AS totalsales_xtnumericrole,
+         0 AS totalunits_xttotalrole,
+         0 AS totalsales_xttotalrole
+FROM saleshistory
+WHERE ((COALESCE(cohist_misc_type, '') <> 'F')
+ AND  (COALESCE(cohist_misc_type, '') <> 'T')
 <? if exists("startDate") ?>
  AND (cohist_invcdate >= <? value("startDate") ?>)
 <? endif ?>
@@ -119,7 +120,7 @@ WHERE (cohist_doctype NOT IN ('C')
 <? endif ?>
 
 <? if exists("prodcat_pattern") ?>
- AND (prodcat_code ~ <? value("prodcat_pattern") ?>) 
+ AND (prodcat_code ~ <? value("prodcat_pattern") ?>)
 <? endif ?>
 
 <? if exists("custtype_id") ?>
@@ -128,7 +129,7 @@ WHERE (cohist_doctype NOT IN ('C')
 
 <? if exists("custtype_pattern") ?>
    AND (custtype_code ~ <? value("custtype_pattern") ?>)
-<? endif ?> 
+<? endif ?>
 
 <? if exists("custgrp_id") ?>
   AND (cust_id IN (SELECT DISTINCT custgrpitem_cust_id
@@ -152,9 +153,9 @@ WHERE (cohist_doctype NOT IN ('C')
 <? endif ?>
 
 <? if exists("currConcat_pattern") ?>
- AND (currAbbr ~ <? value("currConcat_pattern") ?>) 
+ AND (currAbbr ~ <? value("currConcat_pattern") ?>)
 <? endif ?>
-) 
+)
 GROUP BY dummy
 <? if exists("bySalesRep") ?>
  , cohist_salesrep_id, salesrep_number, salesrep_name

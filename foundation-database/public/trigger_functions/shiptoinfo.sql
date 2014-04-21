@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION _shiptoinfoAfterTrigger () RETURNS TRIGGER AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _cmnttypeid INTEGER;
@@ -74,6 +74,6 @@ BEGIN
 END;
 $$ LANGUAGE 'plpgsql';
 
-DROP TRIGGER shiptoinfoAfterTrigger ON shiptoinfo;
+DROP TRIGGER IF EXISTS shiptoinfoAfterTrigger ON shiptoinfo;
 CREATE TRIGGER shiptoinfoAfterTrigger AFTER INSERT OR UPDATE ON shiptoinfo FOR EACH ROW EXECUTE PROCEDURE _shiptoinfoAfterTrigger();
 
