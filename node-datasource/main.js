@@ -141,14 +141,11 @@ if (X.options.extensionRoutes && X.options.extensionRoutes.length > 0) {
           extension.name, "node-datasource", routeDetails.filename))[routeDetails.functionName];
 
       if (_.contains(["all", "get", "post", "patch", "delete"], verb)) {
-        console.log(typeof func, "test");
         app[verb]('/:org/' + routeDetails.path, func);
       } else {
         console.log("Invalid verb for extension-defined route " + routeDetails.path);
       }
     });
-
-    console.log("loadRoute", extension.name, extension.location, manifest);
   };
 
   schemaSessionOptions.username = X.options.databaseServer.user;
