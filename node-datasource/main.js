@@ -125,7 +125,7 @@ if (X.options.extensionRoutes && X.options.extensionRoutes.length > 0) {
 */
 
   var loadExtensionRoutes = function (extension) {
-    if (!_.contains(["/private-extensions", "public-extensions"], extension.location)) {
+    if (!_.contains(["/private-extensions", "/xtuple-extensions"], extension.location)) {
       return;
     }
     if (!app) {
