@@ -43,7 +43,7 @@ select xt.install_js('XT','Session','xtuple', $$
         "from xt.dict " +
         "left join xt.ext on dict_ext_id = ext_id " +
         "left join xt.usrext on ext_id = usrext_ext_id " +
-        "left join xt.grpext on ext_id = grpext_id " +
+        "left join xt.grpext on ext_id = grpext_ext_id " +
         "left join usrgrp on grpext_grp_id = usrgrp_grp_id " +
         "where dict_language_name = $1 " +
         "and dict_is_database = false " +
