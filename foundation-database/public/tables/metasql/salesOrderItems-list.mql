@@ -99,7 +99,7 @@ SELECT coitem_id,
        END AS discountfromcust,
        coitem_unitcost,
        ROUND((coitem_qtyord * coitem_qty_invuomratio) *
-             ((coitem_price / coitem_price_invuomratio) - coitem_unitcost),2) AS margin,
+             ((coitem_price / coitem_price_invuomratio) - (coitem_unitcost / coitem_price_invuomratio)),2) AS margin,
        CASE WHEN (coitem_price = 0.0) THEN 100.0
             ELSE ((coitem_price - coitem_unitcost) / coitem_price)
        END AS marginpercent,

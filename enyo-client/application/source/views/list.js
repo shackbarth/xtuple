@@ -120,6 +120,10 @@ trailing:true, white:true, strict: false*/
       ]}
     ],
     getWorkspace: function () {
+      if (!this._lastTapIndex) {
+        // don't respond to events waterfalled from other models
+        return;
+      }
       var collection = this.getValue(),
         model = collection.at(this._lastTapIndex),
         recordType = "XM." + model.get("activityType");
