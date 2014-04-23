@@ -128,21 +128,22 @@ trailing:true, white:true, strict: false*/
       ]}
     ],
     selectedModels: function () {
-      var collection = this.getValue(),
+      var that = this,
+        collection = this.getValue(),
         models = [],
         selected;
       if (collection.length) {
         selected = _.keys(this.getSelection().selected);
         // Using the selected index keys, go grab the models and return them in an array
         models.push(_.map(selected, function (index) {
-          return XT.app.$.postbooks.$.navigator.$.contentPanels.$.activityList.getModel(index);
+          return that.getModel(index);
         }));
       }
-      return models;
+      return models[0];
     },
     reassignUser: function () {
-      var callback = function (resp) {
-        var navigator = XT.app.$.postbooks.$.navigator;
+      var callback = function (resp, optionsObj) {
+        var navigator = this.$.navigator;
         if (!resp.answer) {
           return;
         } else if (!resp.componentValue) {
@@ -154,7 +155,7 @@ trailing:true, white:true, strict: false*/
           // Gather selected models, assemble dispatch params object and send dispatch to server
           var options = {},
             params = [],
-            models = navigator.$.contentPanels.getActive().selectedModels()[0],
+            models = optionsObj.models,
             assignedTo = resp.componentValue.id,
             ids = _.map(models, function (model) {
               return model.id;
@@ -184,7 +185,8 @@ trailing:true, white:true, strict: false*/
         message: "_reassignSelectedActivities".loc(),
         yesLabel: "_reassign".loc(),
         noLabel: "_cancel".loc(),
-        component: {kind: "XV.UserPicker", name: "assignTo", label: "_assignTo".loc()}
+        component: {kind: "XV.UserPicker", name: "assignTo", label: "_assignTo".loc()},
+        options: {models: this.selectedModels()}
       });
     },
     getWorkspace: function () {

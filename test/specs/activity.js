@@ -10,7 +10,10 @@ before:true, exports:true, it:true, describe:true, XG:true */
   var _ = require("underscore"),
     assert = require("chai").assert,
     smoke = require("../lib/smoke"),
-    zombieAuth = require("../lib/zombie_auth");
+    zombieAuth = require("../lib/zombie_auth"),
+    navigator,
+    actList,
+    moduleContainer;
 
   var spec = {
     recordType: "XM.ActivityListItem",
@@ -28,32 +31,39 @@ before:true, exports:true, it:true, describe:true, XG:true */
   };
 
   var additionalTests = function () {
-    it("should navigate to activity list", function () {
-      smoke.navigateToList(XT.app, "XV.ActivityList");
+    it("should navigate to activity list", function (done) {
+      this.timeout(10000);
+      navigator = smoke.navigateToList(XT.app, "XV.ActivityList");
+      actList = navigator.$.contentPanels.getActive();
+      moduleContainer = XT.app.$.postbooks;
+
+      assert.equal(actList.kind, "XV.ActivityList");
+
+      actList.value.once("status:READY_CLEAN", function () {
+        done();
+      });
     });
 
-    it("should select first activity from the list, select reassign, select 'postgres' user " +
-      "from the popup picker and click ok to reassign the user", function (done) {
+    it("should select first activity from the list, call reassignUser(), select user " +
+      "from the popup picker and tap popup's OK to reassign the user", function (done) {
       this.timeout(40000);
-      var actList = XT.app.$.postbooks.$.navigator.$.contentPanels.getActive(),
-        moduleContainer = XT.app.$.postbooks,
-        model = actList.value.models[0],
+      var model = actList.value.models[0],
         assignedTo = model.get("assignedTo") ? model.getValue("assignedTo.username") : null,
+        newAssignedTo = assignedTo === "postgres" ? "admin" : "postgres",
         popup;
       
-      assert.equal(actList.kind, "XV.ActivityList");
-      assert.equal(actList.value.status, XM.Model.READY_CLEAN);
-      
+      // Select the first model from the list, call the reassignUser function
       actList.select(0);
       actList.reassignUser();
+      // Verify the popup is displayed, set picker to new assigned to, tap Ok
+      popup = moduleContainer.$.notifyPopup;
+      assert.isTrue(popup.showing);
+      popup.$.customComponent.setValue(newAssignedTo);
+      assert.equal(popup.$.customComponent.$.pickerButton.content, newAssignedTo);
+      moduleContainer.notifyTap(null, { originator: {name: "notifyYes"}});
       
       setTimeout(function () {
-        popup = moduleContainer.$.notifyPopup;
-        assert.isTrue(popup.showing);
-        XT.app.$.postbooks.$.notifyPopup.$.customComponent.setValue("postgres");
-        assert.equal(popup.$.customComponent.$.pickerButton.content, "postgres");
-        moduleContainer.notifyTap(null, { originator: {name: "notifyYes"}});
-        assert.equal(actList.value.models[0].getValue("assignedTo.username"), "postgres");
+        assert.equal(actList.value.models[0].getValue("assignedTo.username"), newAssignedTo);
         done();
       }, 5000);
     });
