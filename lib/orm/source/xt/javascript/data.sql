@@ -276,8 +276,8 @@ select xt.install_js('XT','Data','xtuple', $$
                 plv8.elog(ERROR, 'Attribute not found in object map: ' + param.attribute);
               }
 
-              identifiers.push(pertinentExtension.isChild || pertinentExtension.isExtension ? 
-                "jt" + (joins.length - 1) : 
+              identifiers.push(pertinentExtension.isChild || pertinentExtension.isExtension ?
+                "jt" + (joins.length - 1) :
                 "t1");
               identifiers.push(prop.attr.column);
               pgType = this.getPgTypeFromOrmType(
@@ -402,8 +402,8 @@ select xt.install_js('XT','Data','xtuple', $$
                   plv8.elog(ERROR, 'Attribute not found in object map: ' + param.attribute[c]);
                 }
 
-                identifiers.push(pertinentExtension.isChild || pertinentExtension.isExtension ? 
-                  "jt" + (joins.length - 1) : 
+                identifiers.push(pertinentExtension.isChild || pertinentExtension.isExtension ?
+                  "jt" + (joins.length - 1) :
                   "t1");
                 identifiers.push(prop.attr.column);
 
@@ -514,7 +514,7 @@ select xt.install_js('XT','Data','xtuple', $$
             /*
               We might need to look at toOne if the client is asking for a toOne without specifying
               the path. Unfortunately, if they do specify the path, then sql2 will fail. So this does
-              work, although we're really sorting by the primary key of the toOne, whereas the 
+              work, although we're really sorting by the primary key of the toOne, whereas the
               user probably wants us to sort by the natural key TODO
             */
             orderByColumnIdentifiers.push(prop.attr ? prop.attr.column : prop.toOne.column);
@@ -1905,6 +1905,13 @@ select xt.install_js('XT','Data','xtuple', $$
 
         ret.data = plv8.execute(sqlCount, clause.parameters);
         return ret;
+      }
+
+      /* Because we query views of views, you can get inconsistent results */
+      /* when doing limit and offest queries without an order by. Add a default. */
+      if (limit && offset && !orderBy.length && !clause.orderByColumns) {
+        /* We only want this on sql1, not sql2's clause.orderBy. */
+        clause.orderByColumns = XT.format('order by t1.%1$I', [pkeyColumn]);
       }
 
       /* Query the model. */
