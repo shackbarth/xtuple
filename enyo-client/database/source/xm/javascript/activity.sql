@@ -8,6 +8,7 @@ select xt.install_js('XM','Activity','xtuple', $$
 
   XM.Activity.reassignUser = function (activityId, username) {
     var act, i, sql, sql2, actType, query, hasPriv, permissionsMap,
+      ary = arguments,
       data = Object.create(XT.Data);
 
     sql = "select acttype_nsname as nsname, " + 
