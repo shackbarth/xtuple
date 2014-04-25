@@ -91,7 +91,7 @@ trailing:true, white:true, strict: false*/
         notify: false}
     ],
     events: {
-      "onNotify": ""
+      onNotify: ""
     },
     query: {orderBy: [
       {attribute: 'dueDate'},

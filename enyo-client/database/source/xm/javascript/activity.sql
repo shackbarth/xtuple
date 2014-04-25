@@ -7,7 +7,7 @@ select xt.install_js('XM','Activity','xtuple', $$
   XM.Activity.isDispatchable = true;
 
   XM.Activity.reassignUser = function (activityId, username) {
-    var act, i, sql, sql2, actType, query, hasPriv,
+    var act, i, sql, sql2, actType, query, hasPriv, permissionsMap,
       data = Object.create(XT.Data);
 
     sql = "select acttype_nsname as nsname, " + 
@@ -16,13 +16,6 @@ select xt.install_js('XM','Activity','xtuple', $$
           "  acttype_code as code " + 
           "from xt.acttype join xt.act on act_type = acttype_code " + 
           "where act_uuid = $1; ";
-
-    /* Make into an array if an array not passed */
-    if (typeof arguments[0] !== "object") {
-      ary = [{activityId: activityId, username: username}];
-    } else {
-      ary = arguments;
-    }
 
     for (i = 0; i < ary.length; i++) {
       act = ary[i];
@@ -34,51 +27,24 @@ select xt.install_js('XM','Activity','xtuple', $$
       } 
 
       /* Check privileges for each activity type */
-      switch (actType.code)
-      {
-      case "Incident":
-        hasPriv = data.checkPrivilege("MaintainAllIncidents");
-        break;
-      case "Opportunity":
-        hasPriv = data.checkPrivilege("MaintainAllOpportunities");
-        break;
-      case "Project":
-        hasPriv = data.checkPrivilege("MaintainAllProjects");
-        break;
-      case "ProjectTask":
-        hasPriv = data.checkPrivilege("MaintainAllProjects");
-        break;
-      case "ProjectWorkflow":
-        hasPriv = data.checkPrivilege("MaintainAllWorkflows");
-        break;
-      case "PurchaseOrder":
-        hasPriv = data.checkPrivilege("MaintainPurchaseOrders");
-        break;
-      case "PurchaseOrderWorkflow":
-        hasPriv = data.checkPrivilege("MaintainAllWorkflows");
-        break;
-      case "SalesOrder":
-        hasPriv = data.checkPrivilege("MaintainSalesOrders");
-        break;
-      case "SalesOrderWorkflow":
-        hasPriv = data.checkPrivilege("MaintainAllWorkflows");
-        break;
-      case "ToDo":
-        hasPriv = data.checkPrivilege("ReassignToDoItems");
-        break;
-      case "TransferOrder":
-        hasPriv = data.checkPrivilege("MaintainTransferOrders");
-        break;
-      case "TransferOrderWorkflow":
-        hasPriv = data.checkPrivilege("MaintainAllWorkflows");
-        break;
-      case "WorkOrder":
-        hasPriv = data.checkPrivilege("MaintainWorkOrders");
-        break;
-      case "WorkOrderWorkflow":
-        hasPriv = data.checkPrivilege("MaintainAllWorkflows");
-        break;
-      }
+      permissionsMap = {
+        Incident: "MaintainAllIncidents",
+        Opportunity: "MaintainAllOpportunities",
+        Project: "MaintainAllProjects",
+        ProjectTask: "MaintainAllProjects",
+        ProjectWorkflow: "MaintainAllWorkflows",
+        PurchaseOrder: "MaintainPurchaseOrders",
+        PurchaseOrderWorkflow: "MaintainAllWorkflows",
+        SalesOrder: "MaintainSalesOrders",
+        SalesOrderWorkflow: "MaintainAllWorkflows",
+        ToDo: "ReassignToDoItems",
+        TransferOrder: "MaintainTransferOrders",
+        TransferOrderWorkflow: "MaintainAllWorkflows",
+        WorkOrder: "MaintainWorkOrders",
+        WorkOrderWorkflow: "MaintainAllWorkflows"
+      };
+ 
+      hasPriv = data.checkPrivilege(permissionsMap[actType.code]);
 
       /* check privileges */
       if(!hasPriv) throw new Error('Access Denied');

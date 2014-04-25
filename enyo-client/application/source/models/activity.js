@@ -101,53 +101,25 @@ white:true*/
     canReassign: function (callback) {
       var hasPriv,
         privs = XT.session.privileges,
-        activityType = this.get("activityType");
-      
-      switch (activityType)
-      {
-      case "Incident":
-        hasPriv = privs.get("MaintainAllIncidents");
-        break;
-      case "Opportunity":
-        hasPriv = privs.get("MaintainAllOpportunities");
-        break;
-      case "Project":
-        hasPriv = privs.get("MaintainAllProjects");
-        break;
-      case "ProjectTask":
-        hasPriv = privs.get("MaintainAllProjects");
-        break;
-      case "ProjectWorkflow":
-        hasPriv = privs.get("MaintainAllWorkflows");
-        break;
-      case "PurchaseOrder":
-        hasPriv = privs.get("MaintainPurchaseOrders");
-        break;
-      case "PurchaseOrderWorkflow":
-        hasPriv = privs.get("MaintainAllWorkflows");
-        break;
-      case "SalesOrder":
-        hasPriv = privs.get("MaintainSalesOrders");
-        break;
-      case "SalesOrderWorkflow":
-        hasPriv = privs.get("MaintainAllWorkflows");
-        break;
-      case "ToDo":
-        hasPriv = privs.get("ReassignToDoItems");
-        break;
-      case "TransferOrder":
-        hasPriv = privs.get("MaintainTransferOrders");
-        break;
-      case "TransferOrderWorkflow":
-        hasPriv = privs.get("MaintainAllWorkflows");
-        break;
-      case "WorkOrder":
-        hasPriv = privs.get("MaintainWorkOrders");
-        break;
-      case "WorkOrderWorkflow":
-        hasPriv = privs.get("MaintainAllWorkflows");
-        break;
-      }
+        activityType = this.get("activityType"),
+        permissionsMap = {
+          Incident: 'MaintainAllIncidents',
+          Opportunity: 'MaintainAllOpportunities',
+          Project: 'MaintainAllProjects',
+          ProjectTask: "MaintainAllProjects",
+          ProjectWorkflow: "MaintainAllWorkflows",
+          PurchaseOrder: "MaintainPurchaseOrders",
+          PurchaseOrderWorkflow: "MaintainAllWorkflows",
+          SalesOrder: "MaintainSalesOrders",
+          SalesOrderWorkflow: "MaintainAllWorkflows",
+          ToDo: "ReassignToDoItems",
+          TransferOrder: "MaintainTransferOrders",
+          TransferOrderWorkflow: "MaintainAllWorkflows",
+          WorkOrder: "MaintainWorkOrders",
+          WorkOrderWorkflow: "MaintainAllWorkflows"
+        };
+ 
+      hasPriv = privs.get(permissionsMap[activityType]);
       
       if (callback) {
         callback(hasPriv);
