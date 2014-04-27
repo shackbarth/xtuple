@@ -625,19 +625,7 @@ strict: false*/
           ]}
         ]}
       ]}
-    ],
-    attributesChanged: function () {
-      this.inherited(arguments);
-      // If there is a base currency set disable the checkbox
-      var coll = this.value.collection,
-        hasBase = _.find(coll.models, function (model) {
-          return model.get("isBase") === true;
-        });
-
-      if (hasBase) {
-        this.$.isBase.setDisabled(true);
-      }
-    }
+    ]
   });
 
   XV.registerModelWorkspace("XM.Currency", "XV.CurrencyWorkspace");
