@@ -95,7 +95,7 @@ select xt.install_js('XM','ItemSite','xtuple', $$
       })
     }
 
-    clause = data.buildClauseOptimized(namespace, type, query.parameters, query.orderByColumns);
+    clause = data.buildClause(namespace, type, query.parameters, query.orderByColumns);
 
     /* If customer passed, restrict results to item sites allowed to be sold to that customer */
     if (customerId) {
