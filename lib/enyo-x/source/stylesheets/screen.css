@@ -1741,7 +1741,7 @@ body {
   width: 120px;
   margin: 6px;
 }
-.xv-check {
+.xv-half-check {
   background: transparent url(../../../../../../assets/checkbox.png) no-repeat 0 -96px scroll;
 }
 .xv-menuitem.disabled {
