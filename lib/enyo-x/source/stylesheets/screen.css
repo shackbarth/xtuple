@@ -1741,7 +1741,7 @@ body {
   width: 120px;
   margin: 6px;
 }
-.xv-half-check {
+.xv-check {
   background: transparent url(../../../../../../assets/checkbox.png) no-repeat 0 -96px scroll;
 }
 .xv-menuitem.disabled {
@@ -2458,10 +2458,7 @@ body {
 .xv-list-column.third {
   width: 100px;
 }
-.xv-list-column.money {
-  width: 75px;
-  text-align: right;
-}
+.xv-list-column.money,
 .xv-list-column.quantity {
   width: 75px;
   text-align: right;
