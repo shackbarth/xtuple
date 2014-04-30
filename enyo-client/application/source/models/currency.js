@@ -116,9 +116,13 @@
     statusReadyClean: function () {
       // If there is no Base currency set, make it not readOnly
       var coll = this.collection,
+        hasBase;
+
+      if (coll && coll.models) {
         hasBase = _.find(coll.models, function (model) {
           return model.get("isBase") === true;
         });
+      } 
 
       if (!hasBase) {
         this.setReadOnly("isBase", false);
