@@ -1,3 +1,7 @@
+-- this priv does not exist in postbooks so create it here
+select xt.add_priv('MaintainAllWorkflows', 'Can Maintains All Workflows', 'Workflow', 'Workflow');
+select xt.add_priv('MaintainWorkflowsSelf', 'Can Maintain Personal Workflows', 'Workflow', 'Workflow');
+
 drop view if exists xt.act cascade;
 
 -- placeholder view

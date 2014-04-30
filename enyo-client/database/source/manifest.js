@@ -193,6 +193,7 @@
     "xt/views/vendaddrxt.sql",
     "xt/tables/usrlite.sql",
     "xm/javascript/account.sql",
+    "xm/javascript/activity.sql",
     "xm/javascript/address.sql",
     "xm/javascript/contact.sql",
     "xm/javascript/credit_card.sql",
