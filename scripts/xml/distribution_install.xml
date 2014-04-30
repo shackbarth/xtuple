@@ -1,4 +1,4 @@
-<package id        = "pb441"
+<package id        = "pbtodist441"
          version   = "4.4.1"
          developer = "xTuple"
          descrip   = "load PostBooks resources"
@@ -6,17 +6,18 @@
 
   <prerequisite type = "query"
                 name = "Checking xTuple Edition" >
-    <query>SELECT fetchMetricText('Application') = 'PostBooks';</query>
-    <message>This package must be applied to a PostBooks database.</message>
+    <query>SELECT fetchMetricText('Application') = 'Postbooks';</query>
+    <message>This package must be applied to a Distribution database.</message>
   </prerequisite>
 
   <prerequisite type = "query"
                 name = "Checking xTuple ERP database version" >
     <query>SELECT fetchMetricText('ServerVersion') ~ '^4.4.';</query>
-    <message>This package must be applied to a 4.4+ PostBooks database.
+    <message>This package must be applied to a 4.4+ Postbooks database.
     </message>
   </prerequisite>
 
-  <script file="updates.sql" />
+  <script file="inventory_basic_install.sql" />
+  <script file="inventory_upgrade.sql" />
 
 </package>

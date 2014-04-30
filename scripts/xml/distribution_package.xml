@@ -7,7 +7,7 @@
   <prerequisite type = "query"
                 name = "Checking xTuple Edition" >
     <query>SELECT fetchMetricText('Application') = 'Standard';</query>
-    <message>This package must be applied to a PostBooks database.</message>
+    <message>This package must be applied to a Distribution database.</message>
   </prerequisite>
 
   <prerequisite type = "query"
