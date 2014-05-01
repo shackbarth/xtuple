@@ -297,7 +297,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             scriptCallback("Error: " + fullFilename + " contents do not end in a semicolon.");
           }
 
-          scriptCallback(null, beforeNoticeSql + scriptContents);
+          scriptCallback(null, '\n' + scriptContents);
         });
       };
       async.mapSeries(databaseScripts || [], getScriptSql, function (err, scriptSql) {
