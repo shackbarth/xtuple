@@ -207,7 +207,7 @@ trailing:true, white:true*/
         };
 
       if (creditCard && amount && (ccv || !XT.session.settings.get("CCRequireCCV"))) {
-        this.doNotify({
+        this.doNotify(this, {
           type: XM.Model.QUESTION,
           message: "_confirmAction".loc(),
           callback: function (response) {

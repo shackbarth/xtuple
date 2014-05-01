@@ -124,9 +124,7 @@
         });
       } 
 
-      if (!hasBase) {
-        this.setReadOnly("isBase", false);
-      } 
+      this.setReadOnly("isBase", hasBase);
     },
 
     /**
