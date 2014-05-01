@@ -6,7 +6,7 @@
 
   <prerequisite type = "query"
                 name = "Checking xTuple Edition" >
-    <query>SELECT fetchMetricText('Application') = 'Postbooks';</query>
+    <query>SELECT fetchMetricText('Application') = 'PostBooks';</query>
     <message>This package must be applied to a Distribution database.</message>
   </prerequisite>
 
