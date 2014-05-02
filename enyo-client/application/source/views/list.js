@@ -6,7 +6,7 @@ trailing:true, white:true, strict: false*/
 (function () {
 
   // ..........................................................
-  // ACCOUNT
+  // EMAIL
   //
 
   /**
@@ -83,8 +83,15 @@ trailing:true, white:true, strict: false*/
     published: {
       activityActions: []
     },
+    actions: [
+      {name: "reassignUser",
+        method: "reassignUser",
+        prerequisite: "canReassign",
+        isViewMethod: true,
+        notify: false}
+    ],
     events: {
-      "onNotify": ""
+      onNotify: ""
     },
     query: {orderBy: [
       {attribute: 'dueDate'},
@@ -92,6 +99,7 @@ trailing:true, white:true, strict: false*/
       {attribute: 'uuid'}
     ]},
     allowPrint: true,
+    multiSelect: true,
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
@@ -113,13 +121,79 @@ trailing:true, white:true, strict: false*/
           {kind: "XV.ListColumn", fit: true, components: [
             {kind: "XV.ListAttr", attr: "owner.username",
               placeholder: "_noOwner".loc()},
-            {kind: "XV.ListAttr", attr: "assignedTo.username",
+            {kind: "XV.ListAttr", attr: "assignedTo.username", name: "assignedTo",
               placeholder: "_noAssignedTo".loc()}
           ]}
         ]}
       ]}
     ],
+    selectedModels: function () {
+      var that = this,
+        collection = this.getValue(),
+        models = [],
+        selected;
+      if (collection.length) {
+        selected = _.keys(this.getSelection().selected);
+        // Using the selected index keys, go grab the models and return them in an array
+        models.push(_.map(selected, function (index) {
+          return that.getModel(index);
+        }));
+      }
+      return models[0];
+    },
+    reassignUser: function () {
+      var callback = function (resp, optionsObj) {
+        var navigator = this.$.navigator;
+        if (!resp.answer) {
+          return;
+        } else if (!resp.componentValue) {
+          navigator.$.contentPanels.getActive().doNotify({
+            type: XM.Model.WARNING,
+            message: "_noUserSelected".loc()
+          });
+        } else {
+          // Gather selected models, assemble dispatch params object and send dispatch to server
+          var options = {},
+            params = [],
+            models = optionsObj.models,
+            assignedTo = resp.componentValue.id,
+            ids = _.map(models, function (model) {
+              return model.id;
+            });
+          // Loop through and assemble dispatch param object
+          for (var i = 0; i < ids.length; i++) {
+            params.push({
+              activityId: ids[i],
+              username: assignedTo
+            });
+          }
+
+          // TODO - dispatch error handling
+          options.success = function (resp) {
+            navigator.requery();
+            return;
+          };
+
+          // Send to server with dispath. Need to pass options.error callback for error handling
+          XM.Model.prototype.dispatch("XM.Activity", "reassignUser", params, options);
+        }
+      };
+
+      this.doNotify({
+        type: XM.Model.QUESTION,
+        callback: callback,
+        message: "_reassignSelectedActivities".loc(),
+        yesLabel: "_reassign".loc(),
+        noLabel: "_cancel".loc(),
+        component: {kind: "XV.UserPicker", name: "assignTo", label: "_assignTo".loc()},
+        options: {models: this.selectedModels()}
+      });
+    },
     getWorkspace: function () {
+      if (!this._lastTapIndex) {
+        // don't respond to events waterfalled from other models
+        return;
+      }
       var collection = this.getValue(),
         model = collection.at(this._lastTapIndex),
         recordType = "XM." + model.get("activityType");
@@ -166,7 +240,7 @@ trailing:true, white:true, strict: false*/
         this.inherited(arguments);
         model.id = oldId;
       }
-    },
+    }
   });
 
   // ..........................................................

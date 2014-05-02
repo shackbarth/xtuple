@@ -2458,10 +2458,7 @@ body {
 .xv-list-column.third {
   width: 100px;
 }
-.xv-list-column.money {
-  width: 75px;
-  text-align: right;
-}
+.xv-list-column.money,
 .xv-list-column.quantity {
   width: 75px;
   text-align: right;
