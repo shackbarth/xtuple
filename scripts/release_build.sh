@@ -1,3 +1,5 @@
+#!/bin/sh
+
 #git fetch XTUPLE
 #git checkout XTUPLE/4_4_x
 
@@ -14,6 +16,7 @@ cd ../private-extensions
 npm run-script build-basic-manufacturing-package-sql
 npm run-script build-basic-manufacturing-empty
 npm run-script build-basic-manufacturing-quickstart
+npm run-script build-basic-manufacturing-demo
 npm run-script build-basic-distribution-package-sql
 npm run-script build-basic-distribution-empty
 npm run-script build-basic-distribution-quickstart
@@ -58,3 +61,12 @@ cp scripts/output/manufacturing_basic_install.sql scripts/output/xtmfg_install44
 cp scripts/output/manufacturing_upgrade.sql scripts/output/xtmfg_install441
 cd scripts/output
 tar -zcvf xtmfg_install-441.gz xtmfg_install441/
+
+ADMIN=admin
+PORT=5432
+HOST=xtuple-vagrant
+
+DB_LIST="postbooks_demo empty quickstart distempty distquickstart mfgempty mfgquickstart mfgdemo";
+for DB in $DB_LIST ; do
+  /usr/bin/pg_dump --host $HOST --username $ADMIN --port $PORT --format c --file $DB-4.4.1.backup $DB
+done
