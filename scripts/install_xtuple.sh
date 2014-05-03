@@ -176,7 +176,7 @@ setup_postgres() {
 	sudo service postgresql restart
 
   log "dropping existing db, if any..."
-	sudo -u postgres dropdb $DATABASE
+	sudo -u postgres dropdb $DATABASE || true
 
 	cdir $BASEDIR/postgres
 
