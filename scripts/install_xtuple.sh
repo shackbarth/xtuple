@@ -24,6 +24,9 @@ sudo apt-get -q -y install \
 
 NODE_VERSION=0.8.26
 
+DEBDIST=`lsb_release -c -s`
+echo "Trying to install xTuple for platform ${DEBDIST}"
+
 RUN_DIR=$(pwd)
 LOG_FILE=$RUN_DIR/install.log
 cp $LOG_FILE $LOG_FILE.old 2>&1 &> /dev/null || true
@@ -128,7 +131,7 @@ fi
 
 install_packages() {
   log "installing debian packages..."
-  sudo add-apt-repository -y "deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main"
+  sudo add-apt-repository -y "deb http://apt.postgresql.org/pub/repos/apt/ ${DEBDIST}-pgdg main"
   sudo wget -qO- https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
   sudo apt-get -qq update 2>&1 | tee -a $LOG_FILE
   sudo apt-get -q -y install curl build-essential libssl-dev postgresql-9.1 postgresql-server-dev-9.1 postgresql-contrib-9.1 postgresql-9.1-plv8 2>&1 | tee -a $LOG_FILE
