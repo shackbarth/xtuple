@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 alias sudo='sudo env PATH=$PATH $@'
 
 NODE_VERSION=0.8.26
