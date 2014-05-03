@@ -2,7 +2,25 @@
 
 set -e
 
+echo -n "Checking for sudo..."
+if ! which sudo ;
+then
+  echo "Please install sudo and grant yourself access to sudo:"
+  echo
+  echo "   # apt-get install sudo"
+  echo "   # addgroup $USER sudo"
+  echo
+  exit 1
+fi
+
 alias sudo='sudo env PATH=$PATH $@'
+
+# Make sure we have all the essential tools we need
+sudo apt-get -q -y install \
+  git \
+  curl \
+  python-software-properties \
+  software-properties-common
 
 NODE_VERSION=0.8.26
 
