@@ -8,7 +8,7 @@ NODE_VERSION=0.8.26
 
 RUN_DIR=$(pwd)
 LOG_FILE=$RUN_DIR/install.log
-cp $LOG_FILE $LOG_FILE.old 2>&1 &> /dev/null
+cp $LOG_FILE $LOG_FILE.old 2>&1 &> /dev/null || true
 log() {
 	echo "xtuple >> $@"
 	echo $@ >> $LOG_FILE
