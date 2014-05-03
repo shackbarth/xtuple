@@ -131,6 +131,11 @@ fi
 
 install_packages() {
   log "installing debian packages..."
+  if [ "${DEBDIST}" = "wheezy" ];
+  then
+    # for Debian wheezy (7.x) we need some things from the wheezy-backports
+    sudo add-apt-repository -y "deb http://ftp.debian.org/debian wheezy-backports main"
+  fi
   sudo add-apt-repository -y "deb http://apt.postgresql.org/pub/repos/apt/ ${DEBDIST}-pgdg main"
   sudo wget -qO- https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
   sudo apt-get -qq update 2>&1 | tee -a $LOG_FILE
