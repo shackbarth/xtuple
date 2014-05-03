@@ -128,7 +128,7 @@ fi
 
 install_packages() {
   log "installing debian packages..."
-  echo 'deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main' | sudo tee /etc/apt/sources.list.d/pgdg.list > /dev/null
+  sudo add-apt-repository -y "deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main"
   sudo wget -qO- https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
   sudo apt-get -qq update 2>&1 | tee -a $LOG_FILE
   sudo apt-get -q -y install curl build-essential libssl-dev postgresql-9.1 postgresql-server-dev-9.1 postgresql-contrib-9.1 postgresql-9.1-plv8 2>&1 | tee -a $LOG_FILE
