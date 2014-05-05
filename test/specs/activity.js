@@ -51,7 +51,7 @@ before:true, exports:true, it:true, describe:true, XG:true */
         assignedTo = model.get("assignedTo") ? model.getValue("assignedTo.username") : null,
         newAssignedTo = assignedTo === "postgres" ? "admin" : "postgres",
         popup;
-      
+
       // Select the first model from the list, call the reassignUser function
       actList.select(0);
       actList.reassignUser();
@@ -61,7 +61,7 @@ before:true, exports:true, it:true, describe:true, XG:true */
       popup.$.customComponent.setValue(newAssignedTo);
       assert.equal(popup.$.customComponent.$.pickerButton.content, newAssignedTo);
       moduleContainer.notifyTap(null, { originator: {name: "notifyYes"}});
-      
+
       setTimeout(function () {
         assert.equal(actList.value.models[0].getValue("assignedTo.username"), newAssignedTo);
         done();
