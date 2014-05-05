@@ -16,6 +16,7 @@ fi
 alias sudo='sudo env PATH=$PATH $@'
 
 # Make sure we have all the essential tools we need
+sudo apt-get update
 sudo apt-get -q -y install \
   git \
   curl \
