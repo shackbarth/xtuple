@@ -1909,7 +1909,7 @@ select xt.install_js('XT','Data','xtuple', $$
 
       /* Because we query views of views, you can get inconsistent results */
       /* when doing limit and offest queries without an order by. Add a default. */
-      if (limit && offset && !orderBy.length && !clause.orderByColumns) {
+      if (limit && offset && (!orderBy || !orderBy.length) && !clause.orderByColumns) {
         /* We only want this on sql1, not sql2's clause.orderBy. */
         clause.orderByColumns = XT.format('order by t1.%1$I', [pkeyColumn]);
       }
