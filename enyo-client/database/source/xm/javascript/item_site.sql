@@ -54,7 +54,7 @@ select xt.install_js('XM','ItemSite','xtuple', $$
         /* Over-ride usual search behavior */
         if (param.keySearch) {
           keySearch = param.value;
-          sql1 += ' and (jt0.item_number ~^ ${p1} or jt0.item_upccode ~^ ${p1}) ' +
+          sql1 += ' and itemsite_item_id in (select item_id from item where item_number ~^ ${p1} or item_upccode ~^ ${p1}) ' +
             'union ' +
 	    'select t1.itemsite_id ' +
 	    'from %1$I.%2$I t1 {joins} ' +
@@ -131,9 +131,7 @@ select xt.install_js('XM','ItemSite','xtuple', $$
     /* Query the model */
     sql1 = sql1.replace(/{conditions}/g, clause.conditions)
              .replace(/{extra}/g, extra)
-             .replace('{joins}', clause.joins)
-             .replace('{joins}', clause.joins)
-             .replace('{joins}', clause.joins)
+             .replace(/{joins}/g, clause.joins)
              .replace('{orderBy}', clause.orderBy)
              .replace('{limit}', limit)
              .replace('{offset}', offset)
