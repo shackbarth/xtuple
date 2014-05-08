@@ -1780,6 +1780,7 @@ body {
   color: #ff9c00;
 }
 .onyx-toolbar .onyx-popup-decorator {
+  text-align: center;
   width: 50px;
   height: 40px;
 }
