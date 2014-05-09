@@ -1768,7 +1768,7 @@ body {
 }
 .onyx-toolbar .onyx-icon-button,
 .onyx-toolbar .onyx-popup-decorator {
-  margin: 0 6px 0 3px;
+  margin: 0 5px 0 3px;
 }
 .onyx-toolbar .onyx-icon-button div,
 .onyx-toolbar .onyx-popup-decorator div {
@@ -1780,8 +1780,9 @@ body {
   color: #ff9c00;
 }
 .onyx-toolbar .onyx-popup-decorator {
+  text-align: center;
+  width: 50px;
   height: 40px;
-  width: 40px;
 }
 .onyx-toolbar .onyx-popup-decorator .onyx-icon-button {
   margin: 0;
