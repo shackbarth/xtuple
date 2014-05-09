@@ -26,6 +26,15 @@
         "isVoid": {
           "update": false
         }
+      },
+      "personal": {
+        "create": false,
+        "read": "ViewPersonalCRMAccounts",
+        "update": false,
+        "delete": false,
+        "properties": [
+          "crmaccountUsers"
+        ]
       }
     },
     "properties": [
@@ -365,6 +374,14 @@
           "type": "InvoiceItem",
           "column": "invchead_id",
           "inverse": "source"
+        }
+      },
+      {
+        "name": "crmaccountUsers",
+        "toMany": {
+          "type": "ShareUsers",
+          "column": "obj_uuid",
+          "inverse": "uuid"
         }
       }
     ],
