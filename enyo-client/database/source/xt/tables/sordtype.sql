@@ -16,7 +16,7 @@ select
 select dropIfExists('TRIGGER', 'sordtype_did_change', 'xt');
 
 -- Flush the current table. We rebuild it on each run.
-delete from xt.sordtype;
+drop table if exists xt.sordtype;
 
 -- table definition
 select xt.create_table('sordtype', 'xt');
