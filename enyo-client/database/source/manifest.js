@@ -44,6 +44,7 @@
     "public/tables/prj.sql",
     "public/tables/prjtask.sql",
     "public/tables/quitem.sql",
+    "public/tables/shiphead.sql",
     "public/tables/shiptoinfo.sql",
     "public/tables/todoitem.sql",
     "public/tables/usrpref.sql",
