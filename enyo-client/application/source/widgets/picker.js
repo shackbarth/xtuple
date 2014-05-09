@@ -849,6 +849,12 @@ regexp:true, undef:true, trailing:true, white:true, strict:false */
   });
 
   enyo.kind({
+    name: "XV.HeavyweightSitePicker",
+    kind: "XV.SitePicker",
+    collection: "XM.sites"
+  });
+
+  enyo.kind({
     name: "XV.OptionalSitePicker",
     kind: "XV.SitePicker",
     showNone: true
