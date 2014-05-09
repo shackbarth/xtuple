@@ -1520,7 +1520,7 @@ body {
   bottom: 4px !important;
 }
 .disabled {
-  opacity: 0.6;
+  opacity: 0.8;
   cursor: default;
 }
 .xv-app-panel {
@@ -1918,12 +1918,18 @@ body {
   width: 100% !important;
   height: 100% !important;
 }
+.xv-workspace-container .xv-workspace .xv-buttons .onyx-button {
+  border: 1px solid #d7d7d7;
+}
+.xv-workspace-container .xv-workspace .xv-buttons .onyx-button[disabled] {
+  opacity: 0.6;
+  cursor: default;
+}
 .xv-workspace-container .xv-workspace .panel .xv-buttons {
   background-color: #efefef;
   margin: 0;
 }
 .xv-workspace-container .xv-workspace .panel .xv-buttons .onyx-button {
-  border: 1px solid #d7d7d7;
   border-radius: 0;
   margin: 0;
 }
@@ -1972,6 +1978,10 @@ body {
 }
 .xv-workspace-container .xv-workspace .xv-workspace-panel .enyo-fittable-columns-layout > * {
   vertical-align: middle;
+}
+.xv-workspace-container .xv-workspace .onyx-input-decorator.onyx-disabled {
+  opacity: 0.8;
+  cursor: default;
 }
 .xv-workspace-container .xv-workspace .xv-totals-panel .onyx-input-decorator > input,
 .xv-workspace-container .xv-workspace .xv-totals-panel * {
@@ -2135,8 +2145,8 @@ body {
   display: inline-block;
 }
 .xv-grid-box .xv-grid-row .xv-grid-header {
-  background-color: #d8d8d8;
-  color: #fdfdfd;
+  background-color: #d7d7d7;
+  color: #0e0e0e;
   font-size: .8em;
   font-weight: bold;
   text-transform: uppercase;
