@@ -35,13 +35,23 @@
       height: 100% !important;
     }
 
+    // Standard button styling
+    .xv-buttons {
+      .onyx-button {
+        border: 1px solid @smoke;
+        &[disabled] {
+          opacity: 0.6;
+          cursor: default;
+        }
+      }
+    }
+
+    // Inside the panel, the buttons are in a bar
     .panel {
       .xv-buttons {
         background-color: @lightest-gray;
         margin: 0;
-
         .onyx-button {
-          border: 1px solid @smoke;
           border-radius: 0;
           margin: 0;
         }
@@ -98,6 +108,12 @@
 
       .enyo-fittable-columns-layout > * {
         vertical-align: middle;
+      }
+    }
+
+    .onyx-input-decorator {
+      &.onyx-disabled {
+        .disabled;
       }
     }
 
