@@ -2328,7 +2328,7 @@ strict: false*/
             {kind: "XV.HoldTypePicker", attr: "holdType"},
             {kind: "onyx.GroupboxHeader", content: "_shipping".loc()},
             {kind: "XV.CheckboxWidget", attr: "shipComplete"},
-            {kind: "XV.SitePicker", attr: "site"},
+            {kind: "XV.HeavyweightSitePicker", attr: "site"},
             {kind: "XV.InputWidget", attr: "fob"},
             {kind: "XV.InputWidget", attr: "customerPurchaseOrderNumber",
              label: "_custPO".loc()},

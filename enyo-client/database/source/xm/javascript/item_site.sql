@@ -20,11 +20,13 @@ select xt.install_js('XM','ItemSite','xtuple', $$
   };
 
   /** @private */
-  var _fetch = function (recordType, query) {
+  var _fetch = function (recordType, backingType, query) {
     query = query || {};
     var data = Object.create(XT.Data),
       namespace = recordType.beforeDot(),
       type = recordType.afterDot(),
+      tableNamespace = backingType.beforeDot(),
+      table = backingType.afterDot(),
       customerId = null,
       accountId = -1,
       shiptoId,
@@ -35,9 +37,14 @@ select xt.install_js('XM','ItemSite','xtuple', $$
       clause,
       keySearch = false,
       extra = "",
-      sql = 'select * ' +
-            'from %1$I.%2$I  ' +
-            'where {conditions} {extra}';
+      qry,
+      counter = 1,
+      ids = [],
+      idParams = [],
+      sql1 = 'select t1.itemsite_id as id ' +
+            'from %1$I.%2$I t1 {joins} ' +
+            'where {conditions} {extra}',
+      sql2 = 'select * from %1$I.%2$I where id in ({ids}) {orderBy}';
 
     /* Handle special parameters */
     if (query.parameters) {
@@ -47,19 +54,17 @@ select xt.install_js('XM','ItemSite','xtuple', $$
         /* Over-ride usual search behavior */
         if (param.keySearch) {
           keySearch = param.value;
-          sql += ' and (number ~^ ${p1} or barcode ~^ ${p1}) ' +
+          sql1 += ' and itemsite_item_id in (select item_id from item where item_number ~^ ${p1} or item_upccode ~^ ${p1}) ' +
             'union ' +
-	    'select %2$I.* ' +
-	    'from %1$I.%2$I  ' +
-	    ' join itemsite on itemsite_id=id ' +
+	    'select t1.itemsite_id ' +
+	    'from %1$I.%2$I t1 {joins} ' +
             ' join itemalias on itemsite_item_id=itemalias_item_id ' +
             '   and itemalias_crmacct_id is null ' +
             'where {conditions} {extra} ' +
             ' and (itemalias_number ~^ ${p1}) ' +
             'union ' +
-	    'select %2$I.* ' +
-	    'from %1$I.%2$I  ' +
-	    ' join itemsite on itemsite_id=id ' +
+	    'select t1.itemsite_id ' +
+	    'from %1$I.%2$I t1 {joins} ' +
             ' join itemalias on itemsite_item_id=itemalias_item_id ' +
             '   and itemalias_crmacct_id={accountId} ' +
             'where {conditions} {extra} ' +
@@ -90,11 +95,11 @@ select xt.install_js('XM','ItemSite','xtuple', $$
       })
     }
 
-    clause = data.buildClause(namespace, type, query.parameters, query.orderBy);
+    clause = data.buildClause(namespace, type, query.parameters, query.orderByColumns);
 
     /* If customer passed, restrict results to item sites allowed to be sold to that customer */
     if (customerId) {
-      extra += ' and (item).id in (' +
+      extra += ' and jt0.item_id in (' + /* XXX jt0 is a dangerous assumption */
              'select item_id from item where item_sold and not item_exclusive ' +
              'union ' +
              'select item_id from xt.custitem where cust_id=${p2} ' +
@@ -111,21 +116,22 @@ select xt.install_js('XM','ItemSite','xtuple', $$
 
     /* If vendor passed, and vendor can only supply against defined item sources, then restrict results */
     if (vendorId) {
-      extra +=  ' and (item).id in (' +
+      extra +=  ' and jt0.item_id in (' + /* XXX jt0 is a dangerous assumption */
               '  select itemsrc_item_id ' +
               '  from itemsrc ' +
               '  where itemsrc_active ' +
               '    and itemsrc_vend_id=' + vendorId + ')';
     }
 
-    sql = XT.format(
-      sql += '{orderBy} %3$s %4$s;',
-      [namespace.decamelize(), type.decamelize(), limit, offset]
+    sql1 = XT.format(
+      sql1 += '{orderBy} %3$s %4$s;',
+      [tableNamespace, table, limit, offset]
     );
 
     /* Query the model */
-    sql = sql.replace(/{conditions}/g, clause.conditions)
+    sql1 = sql1.replace(/{conditions}/g, clause.conditions)
              .replace(/{extra}/g, extra)
+             .replace(/{joins}/g, clause.joins)
              .replace('{orderBy}', clause.orderBy)
              .replace('{limit}', limit)
              .replace('{offset}', offset)
@@ -142,13 +148,32 @@ select xt.install_js('XM','ItemSite','xtuple', $$
       clause.parameters = clause.parameters.concat([customerId, shiptoId, effectiveDate]);
     }
     if (DEBUG) {
-      plv8.elog(NOTICE, 'sql = ', sql.slice(0,500));
-      plv8.elog(NOTICE, 'sql = ', sql.slice(500, 1000));
-      plv8.elog(NOTICE, 'sql = ', sql.slice(1000, 1500));
-      plv8.elog(NOTICE, 'sql = ', sql.slice(1500, 2000));
+      plv8.elog(NOTICE, 'sql1 = ', sql1.slice(0,500));
+      plv8.elog(NOTICE, sql1.slice(500, 1000));
+      plv8.elog(NOTICE, sql1.slice(1000, 1500));
+      plv8.elog(NOTICE, sql1.slice(1500, 2000));
+      plv8.elog(NOTICE, sql1.slice(2000, 2500));
       plv8.elog(NOTICE, 'parameters = ', clause.parameters);
     }
-    return plv8.execute(sql, clause.parameters);
+    qry = plv8.execute(sql1, clause.parameters);
+
+    if (!qry.length) { return [] };
+    qry.forEach(function (row) {
+      ids.push(row.id);
+      idParams.push("$" + counter);
+      counter++;
+    });
+
+    sql2 = XT.format(sql2, [namespace.decamelize(), type.decamelize()]);
+    sql2 = sql2.replace(/{orderBy}/g, clause.orderBy)
+               .replace('{ids}', idParams.join());
+
+    if (DEBUG) {
+      XT.debug('fetch sql2 = ', sql2);
+      XT.debug('fetch values = ', JSON.stringify(ids));
+    }
+    return plv8.execute(sql2, ids);
+    
   };
 
   if (!XM.ItemSiteListItem) { XM.ItemSiteListItem = {}; }
@@ -166,7 +191,7 @@ select xt.install_js('XM','ItemSite','xtuple', $$
     @returns {Array}
   */
   XM.ItemSiteListItem.fetch = function (query) {
-    return _fetch("XM.ItemSiteListItem", query);
+    return _fetch("XM.ItemSiteListItem", "public.itemsite", query);
   };
 
   if (!XM.ItemSiteRelation) { XM.ItemSiteRelation = {}; }
@@ -184,7 +209,7 @@ select xt.install_js('XM','ItemSite','xtuple', $$
     @returns {Array}
   */
   XM.ItemSiteRelation.fetch = function (query) {
-    return _fetch("XM.ItemSiteRelation", query);
+    return _fetch("XM.ItemSiteRelation", "xt.itemsiteinfo", query);
   };
 
 }());
