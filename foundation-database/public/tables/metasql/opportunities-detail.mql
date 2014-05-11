@@ -1,0 +1,120 @@
+-- Group: opportunities
+-- Name: detail
+-- Notes: used by opportunityList
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT DISTINCT ON (incdtpriority_order, ophead_target_date, ophead_name, ophead_id) 
+       ophead_id AS id,
+       CASE WHEN (ophead_active) THEN 0 ELSE 1 END AS altId,
+       ophead_number,
+       ophead_name,
+       ophead_active,
+       crmacct_number,
+       ophead_owner_username,
+       ophead_username,
+       opstage_name,
+       incdtpriority_name,
+       opsource_name,
+       optype_name,
+       (ophead_probability_prcnt * .01) AS ophead_probability_prcnt,
+       ophead_amount,
+       currConcat(ophead_curr_id) As f_currency,
+       ophead_target_date,
+       ophead_actual_date,
+       formatMoney(ophead_amount) AS f_amount,
+       formatMoney(COALESCE(ophead_amount,0) * COALESCE(ophead_probability_prcnt * 0.01)) AS f_value,	
+       formatDate(ophead_target_date) AS f_targetdate,
+       formatDate(ophead_actual_date) AS f_actualdate,
+       'extprice' AS ophead_amount_xtnumericrole,
+       'percent' AS ophead_probability_prcnt_xtnumericrole
+<? foreach("char_id_text_list") ?>
+  , charass_alias<? literal("char_id_text_list") ?>.charass_value AS char<? literal("char_id_text_list") ?>
+<? endforeach ?>
+<? foreach("char_id_list_list") ?>
+  , charass_alias<? literal("char_id_list_list") ?>.charass_value AS char<? literal("char_id_list_list") ?>
+<? endforeach ?>
+<? foreach("char_id_date_list") ?>
+  , charass_alias<? literal("char_id_date_list") ?>.charass_value::date AS char<? literal("char_id_date_list") ?>
+<? endforeach ?>
+FROM ophead()
+  LEFT OUTER JOIN incdtpriority ON (ophead_priority_id=incdtpriority_id)
+  LEFT OUTER JOIN crmacct ON (ophead_crmacct_id=crmacct_id)
+  LEFT OUTER JOIN opstage ON (ophead_opstage_id=opstage_id)
+  LEFT OUTER JOIN opsource ON (ophead_opsource_id=opsource_id)
+  LEFT OUTER JOIN optype ON (ophead_optype_id=optype_id)
+<? foreach("char_id_text_list") ?>
+  LEFT OUTER JOIN charass charass_alias<? literal("char_id_text_list") ?> ON ((charass_alias<? literal("char_id_text_list") ?>.charass_target_type='OPP') 
+                                                                    AND  (charass_alias<? literal("char_id_text_list") ?>.charass_target_id=ophead_id)
+                                                                    AND  (charass_alias<? literal("char_id_text_list") ?>.charass_char_id=<? value("char_id_text_list") ?>))
+  LEFT OUTER JOIN char char_alias<? literal("char_id_text_list") ?> ON (charass_alias<? literal("char_id_text_list") ?>.charass_char_id=char_alias<? literal("char_id_text_list") ?>.char_id)
+<? endforeach ?>
+<? foreach("char_id_list_list") ?>
+  LEFT OUTER JOIN charass charass_alias<? literal("char_id_list_list") ?> ON ((charass_alias<? literal("char_id_list_list") ?>.charass_target_type='OPP') 
+                                                                    AND  (charass_alias<? literal("char_id_list_list") ?>.charass_target_id=ophead_id)
+                                                                    AND  (charass_alias<? literal("char_id_list_list") ?>.charass_char_id=<? value("char_id_list_list") ?>))
+  LEFT OUTER JOIN char char_alias<? literal("char_id_list_list") ?> ON (charass_alias<? literal("char_id_list_list") ?>.charass_char_id=char_alias<? literal("char_id_list_list") ?>.char_id)
+<? endforeach ?>
+<? foreach("char_id_date_list") ?>
+  LEFT OUTER JOIN charass charass_alias<? literal("char_id_date_list") ?> ON ((charass_alias<? literal("char_id_date_list") ?>.charass_target_type='OPP') 
+                                                                    AND  (charass_alias<? literal("char_id_date_list") ?>.charass_target_id=ophead_id)
+                                                                    AND  (charass_alias<? literal("char_id_date_list") ?>.charass_char_id=<? value("char_id_date_list") ?>))
+  LEFT OUTER JOIN char char_alias<? literal("char_id_date_list") ?> ON (charass_alias<? literal("char_id_date_list") ?>.charass_char_id=char_alias<? literal("char_id_date_list") ?>.char_id)
+<? endforeach ?>
+WHERE((true)
+<? if exists("startDate") ?>
+   AND ((ophead_target_date >= <? value("startDate") ?>)
+    OR (<? value("startDate") ?> <= startOfTime()) AND (ophead_target_date IS NULL))
+<? endif ?>
+<? if exists("endDate") ?>
+   AND ((ophead_target_date <= <? value("endDate") ?>)
+    OR (<? value("endDate") ?> >= endOfTime()) AND (ophead_target_date IS NULL))
+<? endif ?>
+<? if exists("opsource_id") ?>
+   AND (ophead_opsource_id=<? value("opsource_id") ?>)
+<? endif ?>
+<? if exists("opsource_pattern") ?>
+   AND (opsource_name ~ <? value("opsource_pattern") ?>)
+<? endif ?>
+<? if exists("opstage_id") ?>
+   AND (ophead_opstage_id=<? value("opstage_id") ?>)
+<? endif ?>
+<? if exists("opstage_pattern") ?>
+   AND (opstage_name ~ <? value("opstage_pattern") ?>)
+<? endif ?>
+<? if exists("optype_id") ?>
+   AND (ophead_optype_id=<? value("optype_id") ?>)
+<? endif ?>
+<? if exists("optype_pattern") ?>
+   AND (optype_name ~ <? value("optype_pattern") ?>)
+<? endif ?>
+<? if exists("username") ?>
+   AND (<? value("username") ?> IN (ophead_username, ophead_owner_username))
+<? endif ?>
+<? if exists("assigned_username") ?>
+   AND (ophead_username=<? value("assigned_username") ?>)
+<? endif ?>
+<? if exists("assigned_usr_pattern") ?>
+   AND (ophead_username ~ <? value("assigned_usr_pattern") ?>)
+<? endif ?>
+<? if exists("owner_username") ?>
+   AND (ophead_owner_username=<? value("owner_username") ?>)
+<? endif ?>
+<? if exists("owner_usr_pattern") ?>
+   AND (ophead_owner_username ~ <? value("owner_usr_pattern") ?>)
+<? endif ?>
+<? if exists("crmacct_id") ?>
+   AND (ophead_crmacct_id = <? value("crmacct_id") ?>)
+<? endif ?>
+<? if exists("search_pattern") ?> 
+   AND (ophead_name ~* <? value("search_pattern") ?>)
+<? endif ?>
+<? if exists("activeOnly") ?> 
+   AND (ophead_active)
+<? endif ?>
+<? if exists("id") ?>
+   AND (ophead_id=<? value("id") ?>
+<? endif ?>
+<? literal("charClause") ?>
+ )
+ORDER BY incdtpriority_order, ophead_target_date, ophead_name, ophead_id;

@@ -1,0 +1,28 @@
+-- Group: currencyConversions
+-- Name: detail
+-- Notes: used by currencyConversions
+--        the N in round(curr_rate, N) has to be SCALE - 1 of curr_rates
+--        NUMERIC(p, SCALE) type definition
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT curr_rate_id, currConcat(curr_id) AS f_curr,
+<? if exists("invert") ?>
+       round((1.0 / curr_rate),5) AS rate,
+<? else ?>
+       round(curr_rate,5) AS rate,
+<? endif ?>
+       'uomratio' AS rate_xtnumericrole,
+       curr_effective, curr_expires
+FROM curr_symbol NATURAL JOIN curr_rate
+WHERE ( (curr_base = FALSE)
+  AND   (curr_expires >= <? value("startDate") ?>)
+  AND   (curr_effective <= <? value("endDate") ?>)
+<? if exists("curr_id") ?>
+  AND   (curr_id = <? value("curr_id") ?>)
+<? endif ?>
+<? if exists("currConcat_pattern") ?>
+  AND   (currConcat(curr_id) ~ <? value("currConcat_pattern") ?>)
+<? endif ?>
+      )
+ORDER BY f_curr, curr_effective, curr_expires;

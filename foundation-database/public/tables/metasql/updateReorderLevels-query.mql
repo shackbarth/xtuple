@@ -1,0 +1,50 @@
+-- Group: updateReorderLevels
+-- Name:  query
+-- Notes: Calculates reorder point levels and returns a proposed result set
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT *,
+  'qty' AS reordlvl_curr_level_xtnumericrole,
+  'qty' AS reordlvl_total_usage_xtnumericrole
+FROM updateReorderLevel((
+  SELECT array(
+    SELECT itemsite_id
+    FROM itemsite
+    JOIN item ON (itemsite_item_id=item_id)
+    LEFT OUTER JOIN plancode ON (itemsite_plancode_id=plancode_id)
+    LEFT OUTER JOIN classcode ON (item_classcode_id=classcode_id)
+    WHERE ( (itemsite_active)
+<? if exists("warehous_id") ?>
+     AND (itemsite_warehous_id=<? value("warehous_id") ?>)
+<? endif ?>
+<? if exists("item_id") ?>
+     AND (item_id=<? value("item_id") ?>)
+<? elseif exists("classcode_id") ?>
+     AND (item_classcode_id=<? value("classcode_id") ?>)
+<? elseif exists("classcode_pattern") ?>
+     AND (classcode_code ~ <? value("classcode_pattern") ?>)
+<? elseif exists("plancode_id") ?>
+     AND (itemsite_plancode_id=<? value("plancode_id") ?>)
+<? elseif exists("plancode_pattern") ?>
+     AND (plancode_code ~ <? value("plancode_pattern") ?>)
+<? endif ?>
+     )
+  )
+),
+<? value("daysOfStock") ?>, 
+<? if exists("addLeadtime") ?>
+  true,
+<? else ?>
+  false,
+<? endif ?>
+
+ARRAY[
+   <? foreach("period_id_list") ?>
+     <? if not isfirst("period_id_list") ?>
+      ,
+     <? endif ?>
+    <? value("period_id_list") ?>
+   <? endforeach ?> ]
+)
+ORDER BY reordlvl_warehous_code, reordlvl_item_number;

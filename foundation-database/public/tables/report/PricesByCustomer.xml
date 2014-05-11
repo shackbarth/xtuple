@@ -1,0 +1,909 @@
+<!DOCTYPE openRPTDef>
+<report>
+ <title>Prices By Customer</title>
+ <name>PricesByCustomer</name>
+ <description></description>
+ <size>Letter</size>
+ <portrait/>
+ <topmargin>50</topmargin>
+ <bottommargin>50</bottommargin>
+ <rightmargin>50</rightmargin>
+ <leftmargin>50</leftmargin>
+ <querysource>
+  <name>head</name>
+  <sql>SELECT cust_name,
+       addr_line1 AS cust_address1,
+       addr_line2 AS cust_address2,
+       addr_line3 AS cust_address3,
+       &lt;? if exists("showExpired") ?>
+         text('Yes')
+       &lt;? else ?>
+         text('No')
+       &lt;? endif ?>
+       AS f_showexpired,
+       &lt;? if exists("showFuture") ?>
+         text('Yes')
+       &lt;? else ?>
+         text('No')
+       &lt;? endif ?>
+       AS f_showfuture,
+       &lt;? if exists("showCosts") ?>
+         &lt;? if exists("actualCosts") ?>
+           text('Show Costs and Margins using Actual Costs')
+         &lt;? else ?>
+           text('Show Costs and Margins using Standard Costs')
+         &lt;? endif ?>
+         AS f_showcosts,
+         text('Cost') AS f_costlabel,
+         text('Margin') AS f_marginlabel
+       &lt;? else ?>
+         text('') AS f_showcosts,
+         text('') AS f_costlabel,
+         text('') AS f_marginlabel
+       &lt;? endif ?>
+   FROM custinfo
+   LEFT OUTER JOIN cntct ON (cust_cntct_id=cntct_id)
+   LEFT OUTER JOIN addr ON (cntct_addr_id=addr_id)
+WHERE (cust_id=&lt;? value("cust_id") ?>);
+</sql>
+ </querysource>
+ <querysource>
+  <name>detail</name>
+  <sql>SELECT itemid, sourcetype, schedulename, type, itemnumber,
+       item_descrip1, item_descrip2,
+       CASE WHEN (qtybreak = -1) THEN 'N/A'
+            ELSE formatQty(qtybreak)
+       END AS f_qtybreak,
+       price, formatPrice(price) AS f_price,
+       &lt;? if exists("showCosts") ?>
+         cost AS cost,
+         formatCost(cost) AS f_cost,
+         CASE WHEN ((price = 0) OR (cost = 0)) THEN 'N/A'
+              ELSE formatScrap((price - cost) / price)
+         END AS f_margin
+       &lt;? else ?>
+         0 AS cost,
+         text('') AS f_cost,
+         text('') AS f_margin
+       &lt;? endif ?>
+FROM (
+  SELECT ipsprice_id AS itemid, 1 AS sourcetype,
+         ipshead_name AS schedulename, 'Customer' AS type,
+         item_number AS itemnumber, item_descrip1, item_descrip2,
+         ipsprice_qtybreak AS qtybreak, ipsprice_price AS price,
+         &lt;? if exists("actualCosts") ?>
+           (actcost(item_id) * iteminvpricerat(item_id))
+         &lt;? else ?>
+           (stdcost(item_id) * iteminvpricerat(item_id))
+         &lt;? endif ?>
+         AS cost
+    FROM ipsass, ipshead, ipsprice, item
+   WHERE ((ipsass_ipshead_id=ipshead_id)
+     AND (ipsprice_ipshead_id=ipshead_id)
+     AND (ipsprice_item_id=item_id)
+     AND (ipsass_cust_id=&lt;? value("cust_id") ?>)
+&lt;? if not exists("showExpired") ?>
+     AND (ipshead_expires > CURRENT_DATE)
+&lt;? endif ?>
+&lt;? if not exists("showFuture") ?>
+     AND (ipshead_effective &lt;= CURRENT_DATE)
+&lt;? endif ?>
+  )
+
+  UNION
+  SELECT ipsprice_id AS itemid, 2 AS sourcetype,
+         ipshead_name AS schedulename, 'Cust. Type' AS type,
+         item_number AS itemnumber, item_descrip1, item_descrip2,
+         ipsprice_qtybreak AS qtybreak, ipsprice_price AS price,
+         &lt;? if exists("actualCosts") ?>
+           (actcost(item_id) * iteminvpricerat(item_id))
+         &lt;? else ?>
+           (stdcost(item_id) * iteminvpricerat(item_id))
+         &lt;? endif ?>
+         AS cost
+    FROM ipsass, ipshead, ipsprice, item, custinfo
+   WHERE ((ipsass_ipshead_id=ipshead_id)
+     AND (ipsprice_ipshead_id=ipshead_id)
+     AND (ipsprice_item_id=item_id)
+     AND (ipsass_custtype_id=cust_custtype_id)
+     AND (cust_id=&lt;? value("cust_id") ?>)
+&lt;? if not exists("showExpired") ?>
+     AND (ipshead_expires > CURRENT_DATE)
+&lt;? endif ?>
+&lt;? if not exists("showFuture") ?>
+     AND (ipshead_effective &lt;= CURRENT_DATE)
+&lt;? endif ?>
+  )
+
+  UNION
+  SELECT ipsprice_id AS itemid, 3 AS sourcetype,
+         ipshead_name AS schedulename, ('Sale' || '-' || sale_name) AS type,
+         item_number AS itemnumber, item_descrip1, item_descrip2,
+         ipsprice_qtybreak AS qtybreak, ipsprice_price AS price,
+         &lt;? if exists("actualCosts") ?>
+           (actcost(item_id) * iteminvpricerat(item_id))
+         &lt;? else ?>
+           (stdcost(item_id) * iteminvpricerat(item_id))
+         &lt;? endif ?>
+         AS cost
+    FROM sale, ipshead, ipsprice, item
+   WHERE ((sale_ipshead_id=ipshead_id)
+     AND (ipsprice_ipshead_id=ipshead_id)
+     AND (ipsprice_item_id=item_id)
+&lt;? if not exists("showExpired") ?>
+     AND (sale_enddate > CURRENT_DATE)
+&lt;? endif ?>
+&lt;? if not exists("showFuture") ?>
+     AND (sale_startdate &lt;= CURRENT_DATE)
+&lt;? endif ?>
+  )
+
+  UNION
+  SELECT item_id AS itemid, 0 AS sourcetype,
+         '' AS schedulename, 'List Price' AS type,
+         item_number AS itemnumber, item_descrip1, item_descrip2,
+         -1 AS qtybreak, (item_listprice - (item_listprice * cust_discntprcnt)) AS price,
+         &lt;? if exists("actualCosts") ?>
+           (actcost(item_id) * iteminvpricerat(item_id))
+         &lt;? else ?>
+           (stdcost(item_id) * iteminvpricerat(item_id))
+         &lt;? endif ?>
+         AS cost
+    FROM item, custinfo
+   WHERE ( (item_sold)
+     AND (item_active)
+     AND (cust_id=&lt;? value("cust_id") ?>)
+     AND (NOT item_exclusive) )
+) AS data
+ORDER BY itemnumber, price;</sql>
+ </querysource>
+ <rpthead>
+  <height>236</height>
+  <label>
+   <rect>
+    <x>405</x>
+    <y>120</y>
+    <width>155</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Show Future Prices:</string>
+  </label>
+  <label>
+   <rect>
+    <x>405</x>
+    <y>100</y>
+    <width>155</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Show Expired Prices:</string>
+  </label>
+  <field>
+   <rect>
+    <x>565</x>
+    <y>120</y>
+    <width>114</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>f_showfuture</column>
+   </data>
+  </field>
+  <field>
+   <rect>
+    <x>100</x>
+    <y>80</y>
+    <width>605</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>cust_name</column>
+   </data>
+  </field>
+  <field>
+   <rect>
+    <x>665</x>
+    <y>200</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>f_marginlabel</column>
+   </data>
+  </field>
+  <field>
+   <rect>
+    <x>585</x>
+    <y>200</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>f_costlabel</column>
+   </data>
+  </field>
+  <line>
+   <xstart>5</xstart>
+   <ystart>229</ystart>
+   <xend>745</xend>
+   <yend>229</yend>
+   <weight>2</weight>
+  </line>
+  <label>
+   <rect>
+    <x>320</x>
+    <y>200</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Source</string>
+  </label>
+  <field>
+   <rect>
+    <x>100</x>
+    <y>140</y>
+    <width>300</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>cust_address3</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>10</x>
+    <y>200</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Item Number</string>
+  </label>
+  <field>
+   <rect>
+    <x>100</x>
+    <y>100</y>
+    <width>300</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>cust_address1</column>
+   </data>
+  </field>
+  <field>
+   <rect>
+    <x>405</x>
+    <y>140</y>
+    <width>335</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>f_showcosts</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>195</x>
+    <y>200</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Schedule</string>
+  </label>
+  <field>
+   <rect>
+    <x>565</x>
+    <y>100</y>
+    <width>114</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>f_showexpired</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>425</x>
+    <y>200</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Qty. Break</string>
+  </label>
+  <label>
+   <rect>
+    <x>10</x>
+    <y>215</y>
+    <width>155</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Description</string>
+  </label>
+  <label>
+   <rect>
+    <x>15</x>
+    <y>80</y>
+    <width>80</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Customer:</string>
+  </label>
+  <label>
+   <rect>
+    <x>375</x>
+    <y>10</y>
+    <width>350</width>
+    <height>38</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>18</size>
+    <weight>bold</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Prices by Customer</string>
+  </label>
+  <label>
+   <rect>
+    <x>505</x>
+    <y>200</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Price</string>
+  </label>
+  <field>
+   <rect>
+    <x>100</x>
+    <y>120</y>
+    <width>300</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>cust_address2</column>
+   </data>
+  </field>
+ </rpthead>
+ <pghead>
+  <firstpage/>
+  <height>6</height>
+ </pghead>
+ <pghead>
+  <height>41</height>
+  <field>
+   <rect>
+    <x>665</x>
+    <y>5</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>f_marginlabel</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>195</x>
+    <y>5</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Schedule</string>
+  </label>
+  <label>
+   <rect>
+    <x>425</x>
+    <y>5</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Qty. Break</string>
+  </label>
+  <line>
+   <xstart>5</xstart>
+   <ystart>35</ystart>
+   <xend>745</xend>
+   <yend>35</yend>
+   <weight>2</weight>
+  </line>
+  <label>
+   <rect>
+    <x>10</x>
+    <y>20</y>
+    <width>155</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Description</string>
+  </label>
+  <label>
+   <rect>
+    <x>505</x>
+    <y>5</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Price</string>
+  </label>
+  <field>
+   <rect>
+    <x>585</x>
+    <y>5</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>f_costlabel</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>320</x>
+    <y>5</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Source</string>
+  </label>
+  <label>
+   <rect>
+    <x>10</x>
+    <y>5</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Item Number</string>
+  </label>
+ </pghead>
+ <section>
+  <name>detail</name>
+  <detail>
+   <key>
+    <query>detail</query>
+   </key>
+   <height>56</height>
+   <field>
+    <rect>
+     <x>10</x>
+     <y>30</y>
+     <width>240</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>item_descrip2</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>10</x>
+     <y>0</y>
+     <width>150</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>itemnumber</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>425</x>
+     <y>0</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_qtybreak</column>
+    </data>
+   </field>
+   <line>
+    <xstart>5</xstart>
+    <ystart>50</ystart>
+    <xend>745</xend>
+    <yend>50</yend>
+    <weight>0</weight>
+   </line>
+   <field>
+    <rect>
+     <x>585</x>
+     <y>0</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_cost</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>195</x>
+     <y>0</y>
+     <width>120</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>schedulename</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>505</x>
+     <y>0</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_price</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>10</x>
+     <y>15</y>
+     <width>240</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>item_descrip1</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>665</x>
+     <y>0</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_margin</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>320</x>
+     <y>0</y>
+     <width>100</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>type</column>
+    </data>
+   </field>
+  </detail>
+ </section>
+ <pgfoot>
+  <height>16</height>
+  <field>
+   <rect>
+    <x>90</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>Context Query</query>
+    <column>report_date</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>85</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Report Date:</string>
+  </label>
+  <label>
+   <rect>
+    <x>615</x>
+    <y>0</y>
+    <width>85</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Page:</string>
+  </label>
+  <field>
+   <rect>
+    <x>705</x>
+    <y>0</y>
+    <width>40</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>Context Query</query>
+    <column>page_number</column>
+   </data>
+  </field>
+ </pgfoot>
+</report>

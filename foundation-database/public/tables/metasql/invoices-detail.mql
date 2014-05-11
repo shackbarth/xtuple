@@ -1,0 +1,67 @@
+-- Group: invoices
+-- Name: detail
+-- Notes: used by reprintInvoices, unpostedInvoices, dspRecurringInvoices
+--        Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+--        See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT invchead_id, cust_id,
+       invchead.*,
+       cust_number, cust_name,
+       (TEXT(cust_number) || ' - ' || cust_name) AS customer,
+       COALESCE(invchead_gldistdate, invchead_invcdate) AS gldistdate,
+       invoicetotal(invchead_id) AS extprice,
+       CASE WHEN (aropen_open) THEN (aropen_amount - aropen_paid)
+            ELSE 0
+       END AS balance,
+       (invchead_recurring_invchead_id IS NOT NULL) AS isRecurring,
+       recur_freq,
+       recur_period,
+       CASE WHEN (recur_period='D') THEN <? value("day") ?>
+            WHEN (recur_period='W') THEN <? value("week") ?>
+            WHEN (recur_period='M') THEN <? value("month") ?>
+            WHEN (recur_period='Y') THEN <? value("year") ?>
+            WHEN (recur_period='m') THEN <? value("minute") ?>
+            WHEN (recur_period='H') THEN <? value("hour") ?>
+            ELSE <? value("none") ?>
+       END AS recur_period_qtdisplayrole,
+       recur_end,
+       <? if exists('getForm') ?>
+         invchead_invcnumber AS docnumber,
+         findCustomerForm(cust_id, 'I') AS reportname,
+       <? endif ?>
+       CASE WHEN (calcInvoiceAmt(invchead_id,'S') != 0.0)
+              THEN (calcInvoiceAmt(invchead_id,'M') / calcInvoiceAmt(invchead_id,'S'))
+            ELSE 1.0
+       END AS marginpercent,
+       'percent' AS marginpercent_xtnumericrole,
+       'curr' AS extprice_xtnumericrole,
+       'curr' AS balance_xtnumericrole,
+       CASE WHEN (aropen_id IS NULL) THEN 'Unposted' END AS balance_qtdisplayrole
+FROM invchead JOIN custinfo ON (cust_id=invchead_cust_id)
+              LEFT OUTER JOIN aropen ON ( (aropen_doctype='I') AND (aropen_docnumber=invchead_invcnumber) )
+              LEFT OUTER JOIN recur ON (invchead_recurring_invchead_id=recur_parent_id AND recur_parent_type='I')
+WHERE ( (true)
+<? if exists("unpostedOnly") ?>
+  AND   (NOT invchead_posted)
+<? endif ?>
+<? if exists("postedOnly") ?>
+  AND   (invchead_posted)
+<? endif ?>
+<? if exists("recurringOnly") ?>
+  AND   (invchead_recurring_invchead_id IS NOT NULL)
+<? endif ?>
+<? if exists("cust_id") ?>
+  AND   (invchead_cust_id=<? value("cust_id") ?>)
+<? endif ?>
+<? if exists("startDate") ?>
+  AND   (invchead_invcdate BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+<? endif ?>
+<? if exists("invc_pattern") ?>
+  AND   (invchead_invcnumber ~ <? value("invc_pattern") ?>)
+<? endif ?>
+<? if exists("balanceOnly") ?>
+  AND   (aropen_open AND (aropen_amount - aropen_paid > 0))
+<? endif ?>
+  AND   (checkInvoiceSitePrivs(invchead_id)) )
+ORDER BY invchead_invcnumber
+;

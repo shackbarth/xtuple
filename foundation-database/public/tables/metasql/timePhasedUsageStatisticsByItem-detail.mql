@@ -1,0 +1,77 @@
+-- Group: timePhasedUsageStatisticsByItem
+-- Name: detail
+-- Notes: used by dspTimePhasedUsageStatisticsByItem
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+
+SELECT itemsite_id, <? value("received") ?> AS label, warehous_code
+     <? foreach("period_id_list") ?>
+       , summTransR(itemsite_id, <? value("period_id_list") ?>) AS bucket_<? literal("period_id_list") ?>
+     <? endforeach ?>
+FROM itemsite, whsinfo
+WHERE ((itemsite_warehous_id=warehous_id)
+<? if exists("item_id") ?>
+   AND (itemsite_item_id=<? value("item_id") ?>)
+<? endif ?>
+<? if exists("warehous_id") ?>
+   AND (itemsite_warehous_id=<? value("warehous_id") ?>)
+<? endif ?>
+      )
+UNION ALL
+SELECT itemsite_id, <? value("issued") ?> AS label, warehous_code
+     <? foreach("period_id_list") ?>
+       , summTransI(itemsite_id, <? value("period_id_list") ?>) AS bucket_<? literal("period_id_list") ?>
+     <? endforeach ?>
+FROM itemsite, whsinfo
+WHERE ((itemsite_warehous_id=warehous_id)
+<? if exists("item_id") ?>
+   AND (itemsite_item_id=<? value("item_id") ?>)
+<? endif ?>
+<? if exists("warehous_id") ?>
+   AND (itemsite_warehous_id=<? value("warehous_id") ?>)
+<? endif ?>
+      )
+UNION ALL
+SELECT itemsite_id, <? value("sold") ?> AS label, warehous_code
+     <? foreach("period_id_list") ?>
+       , summTransS(itemsite_id, <? value("period_id_list") ?>) AS bucket_<? literal("period_id_list") ?>
+     <? endforeach ?>
+FROM itemsite, whsinfo
+WHERE ((itemsite_warehous_id=warehous_id)
+<? if exists("item_id") ?>
+   AND (itemsite_item_id=<? value("item_id") ?>)
+<? endif ?>
+<? if exists("warehous_id") ?>
+   AND (itemsite_warehous_id=<? value("warehous_id") ?>)
+<? endif ?>
+      )
+UNION ALL
+SELECT itemsite_id, <? value("scrap") ?> AS label, warehous_code
+     <? foreach("period_id_list") ?>
+       , summTransC(itemsite_id, <? value("period_id_list") ?>) AS bucket_<? literal("period_id_list") ?>
+     <? endforeach ?>
+FROM itemsite, whsinfo
+WHERE ((itemsite_warehous_id=warehous_id)
+<? if exists("item_id") ?>
+   AND (itemsite_item_id=<? value("item_id") ?>)
+<? endif ?>
+<? if exists("warehous_id") ?>
+   AND (itemsite_warehous_id=<? value("warehous_id") ?>)
+<? endif ?>
+      )
+UNION ALL
+SELECT itemsite_id, <? value("adjustments") ?> AS label, warehous_code
+     <? foreach("period_id_list") ?>
+       , summTransA(itemsite_id, <? value("period_id_list") ?>) AS bucket_<? literal("period_id_list") ?>
+     <? endforeach ?>
+FROM itemsite, whsinfo
+WHERE ((itemsite_warehous_id=warehous_id)
+<? if exists("item_id") ?>
+   AND (itemsite_item_id=<? value("item_id") ?>)
+<? endif ?>
+<? if exists("warehous_id") ?>
+   AND (itemsite_warehous_id=<? value("warehous_id") ?>)
+<? endif ?>
+      )
+ORDER BY warehous_code;

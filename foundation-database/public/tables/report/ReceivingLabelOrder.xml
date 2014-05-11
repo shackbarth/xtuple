@@ -1,0 +1,234 @@
+<!DOCTYPE openRPTDef>
+<report>
+ <title>Receiving Label Order</title>
+ <name>ReceivingLabelOrder</name>
+ <description></description>
+ <parameter default="" active="false" listtype="static" type="integer" name="daysback">
+  <description>must be a positive number or 0. used to specify how many day back from today the report takes into account when printing recieving labels</description>
+ </parameter>
+ <parameter default="" active="false" listtype="static" type="string" name="itemstring">
+  <description>Item Number - Used to filter the item numbers by the first matching characters from the left of the string</description>
+ </parameter>
+ <parameter default="" active="false" listtype="static" type="integer" name="labelto">
+  <description>used to specify the number of repeated sets of labels required</description>
+ </parameter>
+ <parameter default="" active="false" listtype="static" type="string" name="pohead_id">
+  <description>used with the pirnt receiving label form</description>
+ </parameter>
+ <parameter default="" active="false" listtype="static" type="integer" name="ponumber">
+  <description>used to filter the report by a PO number</description>
+ </parameter>
+ <grid>
+  <snap/>
+  <show/>
+  <x>0.05</x>
+  <y>0.05</y>
+ </grid>
+ <labeltype>CILS ALP1-9200-1</labeltype>
+ <size>Labels</size>
+ <portrait/>
+ <topmargin>10</topmargin>
+ <bottommargin>0</bottommargin>
+ <rightmargin>0</rightmargin>
+ <leftmargin>10</leftmargin>
+ <querysource>
+  <name>detail</name>
+  <sql>SELECT formatDate(current_date) AS date, 
+       COALESCE(item_number,poitem_vend_item_number) AS item_number, 
+       COALESCE(item_descrip1, poitem_vend_item_descrip) AS item_descrip1,
+       &lt;? value("vendorItemLit") ?> AS vendoritemlit,
+       poitem_vend_item_number, 
+       &lt;? value("orderhead_type") ?> || '#:' AS typenum,
+       pohead_number AS head_number   
+  FROM pohead
+    JOIN poitem ON (poitem_pohead_id = pohead_id)
+    LEFT OUTER JOIN itemsite ON (itemsite_id = poitem_itemsite_id)
+    LEFT OUTER JOIN item  ON (item_id = itemsite_item_id)  
+  WHERE ((pohead_id = &lt;? value("orderhead_id") ?>)
+    AND ('PO' = &lt;? value("orderhead_type") ?>))
+UNION
+SELECT formatDate(current_date) AS date, 
+       item_number AS item_number, 
+       item_descrip1 AS item_descrip1,
+       NULL, NULL, 
+       &lt;? value("orderhead_type") ?> || '#:' AS typenum,
+       rahead_number AS head_number
+  FROM rahead
+    JOIN raitem ON (raitem_rahead_id = rahead_id)
+    JOIN itemsite ON (itemsite_id = raitem_itemsite_id)
+    JOIN item  ON (item_id = itemsite_item_id)  
+  WHERE ((rahead_id =  &lt;? value("orderhead_id") ?>)
+    AND ('RA' = &lt;? value("orderhead_type") ?>))
+UNION
+SELECT formatDate(current_date) AS date, 
+       item_number AS item_number, 
+       item_descrip1 AS item_descrip1,
+       NULL, NULL, 
+       &lt;? value("orderhead_type") ?> || '#:' AS typenum,
+       tohead_number AS head_number
+  FROM tohead
+    JOIN toitem ON (toitem_tohead_id = tohead_id)
+    JOIN item  ON (item_id = toitem_item_id)  
+  WHERE ((tohead_id =  &lt;? value("orderhead_id") ?>)
+    AND ('TO' = &lt;? value("orderhead_type") ?>))</sql>
+ </querysource>
+ <section>
+  <name>detail</name>
+  <detail>
+   <key>
+    <query>detail</query>
+   </key>
+   <height>698</height>
+   <field>
+    <rect>
+     <x>5</x>
+     <y>5</y>
+     <width>190</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>11</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>item_number</column>
+    </data>
+   </field>
+   <text>
+    <rect>
+     <x>5</x>
+     <y>20</y>
+     <width>175</width>
+     <height>10</height>
+    </rect>
+    <bottompad>0</bottompad>
+    <font>
+     <face>Arial</face>
+     <size>7</size>
+     <weight>normal</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>item_descrip1</column>
+    </data>
+   </text>
+   <field>
+    <rect>
+     <x>80</x>
+     <y>50</y>
+     <width>100</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Helvetica</face>
+     <size>8</size>
+     <weight>normal</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>poitem_vend_item_number</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>35</x>
+     <y>65</y>
+     <width>45</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Helvetica</face>
+     <size>8</size>
+     <weight>normal</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>head_number</column>
+    </data>
+   </field>
+   <label>
+    <rect>
+     <x>85</x>
+     <y>65</y>
+     <width>25</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Helvetica</face>
+     <size>8</size>
+     <weight>normal</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <string>Date:</string>
+   </label>
+   <field>
+    <rect>
+     <x>115</x>
+     <y>65</y>
+     <width>65</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Helvetica</face>
+     <size>8</size>
+     <weight>normal</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>date</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>5</x>
+     <y>65</y>
+     <width>25</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Helvetica</face>
+     <size>8</size>
+     <weight>normal</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>typenum</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>5</x>
+     <y>50</y>
+     <width>75</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Helvetica</face>
+     <size>8</size>
+     <weight>normal</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>vendoritemlit</column>
+    </data>
+   </field>
+  </detail>
+ </section>
+</report>

@@ -1,0 +1,27 @@
+-- Group: accountNumbers
+-- Name: detail
+-- Notes: used by accountNumbers
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT accnt_id, *,
+       CASE WHEN(accnt_type='A') THEN <? value("asset") ?>
+            WHEN(accnt_type='E') THEN <? value("expense") ?>
+            WHEN(accnt_type='L') THEN <? value("liability") ?>
+            WHEN(accnt_type='Q') THEN <? value("equity") ?>
+            WHEN(accnt_type='R') THEN <? value("revenue") ?>
+            ELSE accnt_type
+       END AS accnt_type_qtdisplayrole,
+       accnt_active 
+  FROM (ONLY accnt LEFT OUTER JOIN
+             company ON (accnt_company=company_number)) 
+       LEFT OUTER JOIN subaccnttype ON (accnt_type=subaccnttype_accnt_type AND accnt_subaccnttype_code=subaccnttype_code)
+ WHERE true
+<? if not exists("showExternal") ?>
+  AND (NOT COALESCE(company_external, false)) 
+<? endif ?>
+<? if not exists("showInactive") ?>
+  AND COALESCE(accnt_active, false)
+<? endif ?>
+ORDER BY accnt_number, accnt_sub, accnt_profit;
+

@@ -1,0 +1,54 @@
+-- Group: quoteItems
+-- Name: list
+-- Notes: used by salesOrder
+--        Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+--        See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT quitem_id,
+       quitem_linenumber AS f_linenumber,
+       0 AS coitem_subnumber, item_type,
+       item_number, (item_descrip1 || ' ' || item_descrip2) AS description,
+       warehous_code, '' AS enhanced_status,
+       quitem_scheddate AS coitem_scheddate,
+       quom.uom_name AS qty_uom,
+       quitem_qtyord AS coitem_qtyord,
+       0 AS qtyshipped, 0 AS qtyatshipping, 0 AS balance,
+       puom.uom_name AS price_uom,
+       quitem_price AS coitem_price,
+       ROUND((quitem_qtyord * quitem_qty_invuomratio) *
+             (quitem_price / quitem_price_invuomratio),2) AS extprice,
+       quitem_custprice AS coitem_custprice,
+       CASE WHEN (quitem_custprice = 0.0) THEN 100.0
+            ELSE ((1.0 - (quitem_price / quitem_custprice)) * 100.0)
+       END AS discountfromcust,
+       quitem_unitcost AS coitem_unitcost,
+       ROUND((quitem_qtyord * quitem_qty_invuomratio) *
+             ((quitem_price / quitem_price_invuomratio) - (quitem_unitcost / quitem_price_invuomratio)),2) AS margin,
+       CASE WHEN (quitem_price = 0.0) THEN 100.0
+            ELSE ((quitem_price - quitem_unitcost) / quitem_price)
+       END AS marginpercent,
+       CASE WHEN (quitem_custpn != '') THEN quitem_custpn
+            ELSE item_number
+       END AS item_number_cust,
+       (quitem_qtyord * quitem_qty_invuomratio * item_prodweight) AS prodweight,
+       (quitem_qtyord * quitem_qty_invuomratio * item_packweight) AS packweight,
+       itemsite_qtyonhand,
+       'qty' AS coitem_qtyord_xtnumericrole,
+       'qty' AS qtyshipped_xtnumericrole,
+       'qty' AS balance_xtnumericrole,
+       'qty' AS qtyatshipping_xtnumericrole,
+       'qty' AS prodweight_xtnumericrole,
+       'qty' AS packweight_xtnumericrole,
+       'qty' AS itemsite_qtyonhand_xtnumericrole,
+       'salesprice' AS coitem_price_xtnumericrole,
+       'cost' AS coitem_unitcost_xtnumericrole,
+       'curr' AS margin_xtnumericrole,
+       'percent' AS marginpercent_xtnumericrole,
+       'curr' AS extprice_xtnumericrole
+  FROM item, uom AS quom, uom AS puom,
+       quitem LEFT OUTER JOIN (itemsite JOIN whsinfo ON (itemsite_warehous_id=warehous_id)) ON (quitem_itemsite_id=itemsite_id)
+ WHERE ( (quitem_item_id=item_id)
+   AND   (quitem_qty_uom_id=quom.uom_id)
+   AND   (quitem_price_uom_id=puom.uom_id)
+   AND   (quitem_quhead_id=<? value("quhead_id") ?>) )
+ORDER BY quitem_linenumber;

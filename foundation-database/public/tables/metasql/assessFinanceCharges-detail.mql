@@ -1,0 +1,51 @@
+-- Group: assessFinanceCharges
+-- Name:  detail
+-- Notes: 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT aropen_id, aropen_docnumber, aropen_duedate, aropen_docdate,
+       aropen_amount, aropen_paid, balance, aropen_fincharg_date, aropen_fincharg_amount,
+       cust_number, cust_name,
+       CASE WHEN (currToLocal(aropen_curr_id, fincharg_mincharg, aropen_distdate) >
+                  (CASE WHEN (fincharg_assessoverdue)
+                        THEN (balance + prevfincharge)
+                        ELSE balance END * fincharg_air / 100.0 / 365 * CASE WHEN (fincharg_calcfrom=1)
+                                                                             THEN duedateoverdue
+                                                                             ELSE docdateoverdue END))
+            THEN currToLocal(aropen_curr_id, fincharg_mincharg, aropen_distdate)
+            ELSE (CASE WHEN (fincharg_assessoverdue)
+                       THEN (balance + prevfincharge)
+                       ELSE balance END * fincharg_air / 100.0 / 365 * CASE WHEN (fincharg_calcfrom=1)
+                                                                            THEN duedateoverdue
+                                                                            ELSE docdateoverdue END)
+       END AS fincharge
+FROM fincharg,
+     (SELECT *,
+             (aropen_amount - aropen_paid) AS balance,
+             COALESCE(aropen_fincharg_amount, 0.0) AS prevfincharge,
+             (<? value("assessmentDate") ?> - COALESCE(aropen_fincharg_date, aropen_duedate)) AS duedateoverdue,
+             (<? value("assessmentDate") ?> - COALESCE(aropen_fincharg_date, aropen_docdate)) AS docdateoverdue
+      FROM aropen JOIN custinfo ON (cust_id=aropen_cust_id)
+                  LEFT OUTER JOIN terms ON (terms_id=aropen_terms_id)
+                  LEFT OUTER JOIN custtype ON (cust_custtype_id=custtype_id)
+                  LEFT OUTER JOIN custgrpitem ON (custgrpitem_cust_id=cust_id)
+      WHERE ((aropen_doctype='I')
+        AND  (aropen_open)
+        AND  (COALESCE(terms_fincharg, FALSE))
+        AND  (COALESCE(cust_financecharge, TRUE))
+      <? if exists("cust_id") ?>
+        AND   (aropen_cust_id=<? value("cust_id") ?>)
+      <? endif ?>
+      <? if exists("custtype_id") ?>
+        AND   (custtype_id=<? value("custtype_id") ?>)
+      <? endif ?>
+      <? if exists("custtype_pattern") ?>
+        AND   (custtype_code~<? value("custtype_pattern") ?>)
+      <? endif ?>
+      <? if exists("custgrp_id") ?>
+        AND   (custgrpitem_custgrp_id=<? value("custgrp_id") ?>)
+      <? endif ?>
+      )) AS data
+WHERE ((COALESCE(aropen_fincharg_date, aropen_duedate) + COALESCE(cust_gracedays, fincharg_graceperiod)) < <? value("assessmentDate") ?>)
+ORDER BY cust_number, aropen_docnumber;

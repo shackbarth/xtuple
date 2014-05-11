@@ -1,0 +1,18 @@
+-- Group: invoices
+-- Name: print
+-- Notes: used by printInvoices
+--        Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+--        See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT invchead_id,          invchead_id         AS docid,
+       invchead_invcnumber,  invchead_invcnumber AS docnumber,
+       invchead_ordernumber, invchead_posted     AS posted,
+       findCustomerForm(invchead_cust_id, 'I')   AS reportname
+  FROM invchead
+  WHERE (NOT invchead_printed)
+    AND (NOT invchead_posted)
+    AND (checkInvoiceSitePrivs(invchead_id))
+<? if exists("shipvia") ?>
+    AND (invchead_shipvia=<? value("shipvia") ?>) 
+<? endif ?>
+ORDER BY invchead_ordernumber;

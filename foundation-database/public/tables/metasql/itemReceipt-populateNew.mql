@@ -1,0 +1,130 @@
+-- Group: itemReceipt
+-- Name: populateNew
+-- Notes: used by enterPoitemReceipt
+---------PURCHASE ORDERS-------------
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT pohead_number AS order_number, poitem_linenumber AS orderitem_linenumber,
+       (poitem_itemsite_id > 0) AS inventoryitem,
+       COALESCE(poitem_itemsite_id, -1) AS itemsiteid,
+       COALESCE(poitem_vend_item_number, '') AS vend_item_number,
+       COALESCE(poitem_vend_uom, '') AS vend_uom,
+       COALESCE(poitem_vend_item_descrip, '') AS vend_item_descrip,
+       poitem_invvenduomratio AS orderitem_qty_invuomratio,
+       poitem_duedate AS duedate,
+       poitem_qty_ordered AS orderitem_qty_ordered,
+       poitem_qty_received AS qtyreceived,
+       poitem_qty_returned AS qtyreturned,
+       qtyToReceive('PO', poitem_id) AS qtytoreceive,
+       (poitem_qty_ordered - poitem_qty_received) AS receivable,
+       ( SELECT recv_notes
+           FROM recv
+          WHERE ((recv_orderitem_id=poitem_id)
+	    AND  (recv_order_type='PO')
+            AND  (NOT recv_posted))
+	  LIMIT 1 ) AS notes,
+       COALESCE(freightForRecv('PO', poitem_id, false),
+		poitem_freight - freightForRecv('PO', poitem_id, true),
+		freightForRecv('PO', poitem_id, true)) AS recv_freight,
+       pohead_curr_id AS curr_id, CURRENT_DATE AS effective, 
+       poitem_unitprice AS recv_purchcost,
+       pohead_curr_id AS recv_purchcost_curr_id,
+       CASE WHEN (itemsite_costmethod='A') THEN TRUE 
+	    ELSE FALSE 
+       END AS costmethod_average,
+       'uomratio' AS orderitem_qty_invuomratio_xtnumericrole,
+       'qty' AS orderitem_qty_ordered_xtnumericrole, 
+       'qty' AS qtyreceived_xtnumericrole, 
+       'qty' AS qtyreturned_xtnumericrole, 
+       'qty' AS qtytoreceive_xtnumericrole, 
+       'qty' AS receivable_xtnumericrole,
+       'purchprice' AS recv_purchcost_xtnumericrole 
+FROM pohead
+  JOIN poitem ON (pohead_id=poitem_pohead_id)
+  LEFT OUTER JOIN itemsite ON (poitem_itemsite_id=itemsite_id)
+WHERE ((poitem_status <> 'C')
+  AND  (poitem_id=<? value("orderitem_id") ?>)
+  AND  ('PO'=<? value("ordertype") ?>) )
+<? if exists ("EnableReturnAuth") ?>
+UNION
+---------RETURN AUTHORIZATIONS-------------
+SELECT rahead_number AS order_number, raitem_linenumber AS orderitem_linenumber,
+       (raitem_itemsite_id > 0) AS inventoryitem,
+       COALESCE(raitem_itemsite_id, -1) AS itemsiteid,
+       '' AS vend_item_number,
+       '' AS vend_uom,
+       '' AS vend_item_descrip,
+       raitem_qty_invuomratio AS orderitem_qty_invuomratio,
+       raitem_scheddate AS duedate,
+       raitem_qtyauthorized AS orderitem_qty_ordered,
+       raitem_qtyreceived AS qtyreceived,
+       0 AS qtyreturned,
+       qtyToReceive('RA', raitem_id) AS qtytoreceive,
+       (raitem_qtyauthorized - raitem_qtyreceived) AS receivable,
+       ( SELECT recv_notes
+           FROM recv
+          WHERE ((recv_orderitem_id=raitem_id)
+	    AND  (recv_order_type='RA')
+            AND  (NOT recv_posted))
+	  LIMIT 1 ) AS notes,
+       COALESCE(freightForRecv('RA', raitem_id, false),
+		freightForRecv('RA', raitem_id, true)) AS recv_freight,
+       rahead_curr_id AS curr_id, CURRENT_DATE AS effective, 
+       NULL AS recv_purchcost, NULL AS recv_purchcost_curr_id,
+       NULL AS costmethod_average,
+       'uomratio' AS orderitem_qty_invuomratio_xtnumericrole,
+       'qty' AS orderitem_qty_ordered_xtnumericrole, 
+       'qty' AS qtyreceived_xtnumericrole, 
+       'qty' AS qtyreturned_xtnumericrole, 
+       'qty' AS qtytoreceive_xtnumericrole, 
+       'qty' AS receivable_xtnumericrole,
+       'purchprice' AS recv_purchcost_xtnumericrole 
+FROM rahead
+  JOIN raitem ON (rahead_id=raitem_rahead_id)
+WHERE ((raitem_status <> 'C')
+  AND  (raitem_id=<? value("orderitem_id") ?>)
+  AND  ('RA'=<? value("ordertype") ?>) )
+<? endif ?>
+<? if exists ("MultiWhs") ?>
+UNION
+-------------TRANSFER ORDERS--------------
+SELECT tohead_number AS order_number, toitem_linenumber AS orderitem_linenumber,
+       (itemsite_id > 0) AS inventoryitem,
+       COALESCE(itemsite_id, -1) AS itemsiteid,
+       '' AS vend_item_number,
+       '' AS vend_uom,
+       '' AS vend_item_descrip,
+       1 AS orderitem_qty_invuomratio,
+       toitem_duedate AS duedate,
+       toitem_qty_ordered AS orderitem_qty_ordered,
+       toitem_qty_received AS qtyreceived,
+       toitem_qty_shipped AS qtyreturned,
+       qtyToReceive('TO', toitem_id) AS qtytoreceive,
+       (toitem_qty_ordered - toitem_qty_received) AS receivable,
+       ( SELECT recv_notes
+           FROM recv
+          WHERE ((recv_orderitem_id=toitem_id)
+	    AND  (recv_order_type='TO')
+            AND  (NOT recv_posted))
+	  LIMIT 1 ) AS notes,
+       COALESCE(freightForRecv('TO', toitem_id, false),
+		freightForRecv('TO', toitem_id, true)) AS recv_freight,
+       baseCurrId() AS curr_id, CURRENT_DATE AS effective, 
+       NULL AS recv_purchcost, NULL AS recv_purchcost_curr_id,
+       NULL AS costmethod_average,
+       'uomratio' AS orderitem_qty_invuomratio_xtnumericrole,
+       'qty' AS orderitem_qty_ordered_xtnumericrole, 
+       'qty' AS qtyreceived_xtnumericrole, 
+       'qty' AS qtyreturned_xtnumericrole, 
+       'qty' AS qtytoreceive_xtnumericrole, 
+       'qty' AS receivable_xtnumericrole,
+       'purchprice' AS recv_purchcost_xtnumericrole 
+FROM itemsite, tohead
+  JOIN toitem ON (tohead_id=toitem_tohead_id) 
+WHERE ((toitem_status NOT IN ('C', 'X'))
+  AND  (toitem_id=<? value("orderitem_id") ?>)
+  AND  ('TO'=<? value("ordertype") ?>)
+  AND  (tohead_dest_warehous_id=itemsite_warehous_id)
+  AND  (toitem_item_id=itemsite_item_id))
+<? endif ?>;

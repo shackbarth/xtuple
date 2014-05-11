@@ -1,0 +1,134 @@
+-- Group: issueToShipping
+-- Name:  detail
+-- Notes: 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT *,
+       noNeg(qtyord - qtyshipped + qtyreturned) AS balance,
+       indent AS xtindentrole,
+       'qty' AS qtyord_xtnumericrole,
+       'qty' AS qtyshipped_xtnumericrole,
+       'qty' AS qtyreturned_xtnumericrole,
+       'qty' AS balance_xtnumericrole,
+       'qty' AS atshipping_xtnumericrole,
+       CASE WHEN (scheddate > CURRENT_DATE AND
+                  noNeg(qtyord - qtyshipped + qtyreturned) <> atshipping) THEN 'future'
+            WHEN (noNeg(qtyord - qtyshipped + qtyreturned) <> atshipping) THEN 'expired'
+       END AS qtforegroundrole 
+FROM (
+<? if exists("sohead_id") ?>
+SELECT coitem_id AS lineitem_id, 
+       CASE WHEN (itemsite_costmethod = 'J') THEN 1 
+            ELSE 0 
+       END AS job, 0 AS indent,
+       getOpenShipment('SO', <? value("sohead_id") ?>, <? value("warehous_id") ?>) AS shiphead_number, 
+       formatSoLineNumber(coitem_id) AS linenumber, item_number,
+       (item_descrip1 || ' ' || item_descrip2) AS itemdescrip,
+       warehous_code,
+       coitem_scheddate AS scheddate,
+       uom_name,
+       coitem_qtyord AS qtyord,
+       coitem_qtyshipped AS qtyshipped,
+       coitem_qtyreturned AS qtyreturned,
+       qtyAtShipping(coitem_id) AS atshipping, 
+       coitem_scheddate AS seq1, coitem_linenumber AS seq2, coitem_subnumber AS seq3 
+FROM coitem JOIN itemsite ON (itemsite_id=coitem_itemsite_id)
+            JOIN item ON (item_id=itemsite_item_id)
+            JOIN site() ON (warehous_id=itemsite_warehous_id)
+            JOIN uom ON (uom_id=coitem_qty_uom_id)
+WHERE ( (coitem_status NOT IN ('C','X'))
+  AND   (item_type != 'K')
+<? if exists("warehous_id") ?>
+  AND   (itemsite_warehous_id=<? value("warehous_id") ?>) 
+<? endif ?>
+  AND   (coitem_cohead_id=<? value("sohead_id") ?>) ) 
+
+<? if exists("includeReservations") ?>
+UNION ALL
+SELECT coitem_id AS lineitem_id, 
+       CASE WHEN (itemsite_costmethod = 'J') THEN 1 
+            ELSE 0 
+       END AS job, 1 AS indent,
+       '' AS shiphead_number, 
+       '' AS linenumber, formatLocationName(itemloc_location_id) AS item_number,
+       formatLotSerialNumber(itemloc_ls_id) AS itemdescrip,
+       '' AS warehous_code,
+       NULL AS scheddate,
+       '' AS uom_name,
+       reserve_qty AS qtyord,
+       NULL AS qtyshipped,
+       NULL AS qtyreturned,
+       NULL AS atshipping, 
+       coitem_scheddate AS seq1, coitem_linenumber AS seq2, coitem_subnumber AS seq3 
+FROM coitem JOIN itemsite ON (itemsite_id=coitem_itemsite_id)
+            JOIN item ON (item_id=itemsite_item_id)
+            JOIN site() ON (warehous_id=itemsite_warehous_id)
+            JOIN reserve ON (reserve_demand_id=coitem_id AND
+                             reserve_demand_type='SO' AND
+                             reserve_supply_type='I')
+            JOIN itemloc ON (itemloc_id=reserve_supply_id)
+WHERE ( (coitem_status NOT IN ('C','X'))
+  AND   (item_type != 'K')
+  AND   ((itemsite_controlmethod IN ('L', 'S')) OR (itemsite_loccntrl))
+<? if exists("warehous_id") ?>
+  AND   (itemsite_warehous_id=<? value("warehous_id") ?>) 
+<? endif ?>
+  AND   (coitem_cohead_id=<? value("sohead_id") ?>) ) 
+UNION ALL
+SELECT coitem_id AS lineitem_id, 
+       CASE WHEN (itemsite_costmethod = 'J') THEN 1 
+            ELSE 0 
+       END AS job, 1 AS indent,
+       '' AS shiphead_number, 
+       '' AS linenumber, 'N/A',
+       'N/A' AS itemdescrip,
+       '' AS warehous_code,
+       NULL AS scheddate,
+       '' AS uom_name,
+       coitem_qtyreserved AS qtyord,
+       NULL AS qtyshipped,
+       NULL AS qtyreturned,
+       NULL AS atshipping, 
+       coitem_scheddate AS seq1, coitem_linenumber AS seq2, coitem_subnumber AS seq3 
+FROM coitem JOIN itemsite ON (itemsite_id=coitem_itemsite_id)
+            JOIN item ON (item_id=itemsite_item_id)
+            JOIN site() ON (warehous_id=itemsite_warehous_id)
+WHERE ( (coitem_status NOT IN ('C','X'))
+  AND   (item_type != 'K')
+  AND   ((itemsite_controlmethod = 'R') AND (NOT itemsite_loccntrl))
+  AND   (coitem_qtyreserved > 0.0)
+<? if exists("warehous_id") ?>
+  AND   (itemsite_warehous_id=<? value("warehous_id") ?>) 
+<? endif ?>
+  AND   (coitem_cohead_id=<? value("sohead_id") ?>) ) 
+<? endif ?>
+
+<? elseif exists("tohead_id") ?>
+
+SELECT toitem_id AS lineitem_id, 
+       0 AS lsJob, 0 AS indent,
+       getOpenShipment('TO', <? value("tohead_id") ?>, <? value("warehous_id") ?>) AS shiphead_number, 
+       toitem_linenumber AS linenumber, item_number,
+       (item_descrip1 || ' ' || item_descrip2) AS itemdescrip,
+       tohead_srcname AS warehous_code,
+       toitem_schedshipdate AS scheddate,
+       uom_name,
+       toitem_qty_ordered AS qtyord,
+       toitem_qty_shipped AS qtyshipped,
+       0 AS qtyreturned,
+       qtyAtShipping('TO', toitem_id) AS atshipping, 
+       toitem_schedshipdate AS seq1, toitem_linenumber AS seq2, 0 AS seq3 
+FROM item, tohead, site(), uom, toitem
+WHERE ( (toitem_item_id=item_id)
+ AND (toitem_status NOT IN ('C','X'))
+ AND (toitem_tohead_id=tohead_id)
+ AND (tohead_src_warehous_id=warehous_id)
+ AND (item_inv_uom_id=uom_id)
+<? if exists("warehous_id") ?>
+  AND   (tohead_src_warehous_id=<? value("warehous_id") ?>) 
+<? endif ?>
+ AND (tohead_id=<? value("tohead_id") ?>) ) 
+<? endif ?>
+) AS sub 
+ORDER BY seq1, seq2, seq3, indent;

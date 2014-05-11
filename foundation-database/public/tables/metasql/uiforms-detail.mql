@@ -1,0 +1,37 @@
+-- Group: uiforms
+-- Name:  detail
+-- Notes: 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+<? if exists('byPackage') ?>
+SELECT uiform_id, uiform_name, uiform_enabled,
+       firstline(uiform_notes) AS uiform_notes, uiform_order,
+       CASE nspname WHEN 'public' THEN '' ELSE nspname END AS pkgname,
+       CASE nspname WHEN 'public' THEN 0
+                                  ELSE 1 END AS xtindentrole,
+       uiform_notes AS uiform_notes_qttooltiprole
+  FROM uiform
+  JOIN pg_class     ON (uiform.tableoid=pg_class.oid)
+  JOIN pg_namespace ON (relnamespace=pg_namespace.oid)
+UNION 
+SELECT -1, pkghead_name, NULL,
+       firstline(pkghead_descrip), NULL,
+       pkghead_name, 0, pkghead_descrip
+  FROM uiform, pg_class, pg_namespace
+  RIGHT OUTER JOIN pkghead ON (nspname=pkghead_name) 
+ WHERE ((uiform.tableoid=pg_class.oid)
+    AND (relnamespace=pg_namespace.oid))
+ ORDER BY pkgname, xtindentrole, uiform_name,
+          uiform_order, uiform_id;
+<? else ?>
+SELECT uiform_id, uiform_name, uiform_enabled,
+       firstline(uiform_notes) AS uiform_notes,
+       uiform_order,
+       CASE nspname WHEN 'public' THEN '' ELSE nspname END AS pkgname,
+       uiform_notes AS uiform_notes_qttooltiprole
+  FROM uiform
+  JOIN pg_class     ON (uiform.tableoid=pg_class.oid)
+  JOIN pg_namespace ON (relnamespace=pg_namespace.oid)
+ORDER BY uiform_name, uiform_order, uiform_id;
+<? endif ?>

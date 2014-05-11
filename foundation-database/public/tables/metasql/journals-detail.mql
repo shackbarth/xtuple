@@ -1,0 +1,98 @@
+-- Group: journals
+-- Name:  detail
+-- Notes: 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT sltrans.*,
+       CASE WHEN(sltrans_docnumber='Misc.' AND
+              invhist_docnumber IS NOT NULL) THEN
+              (sltrans_docnumber || ' - ' || invhist_docnumber)
+            ELSE sltrans_docnumber
+       END AS docnumber,
+       firstLine(sltrans_notes) AS notes,
+       sltrans_journalnumber,
+       (formatGLAccount(accnt_id) || ' - ' || accnt_descrip) AS account,
+       CASE WHEN (sltrans_amount < 0) THEN ABS(sltrans_amount)
+            ELSE NULL
+       END AS debit,
+       CASE WHEN (sltrans_amount > 0) THEN sltrans_amount
+            ELSE NULL
+       END AS credit,
+       sltrans_gltrans_journalnumber,
+       'curr' AS debit_xtnumericrole,
+       'curr' AS credit_xtnumericrole
+FROM sltrans JOIN accnt ON (sltrans_accnt_id=accnt_id) 
+     LEFT OUTER JOIN invhist ON (sltrans_misc_id=invhist_id
+                            AND sltrans_docnumber='Misc.') 
+<? if exists("company_id") ?>
+     JOIN company ON (accnt_company=company_number) 
+<? endif ?>
+<? if exists("prfcntr_id") ?>
+     JOIN prftcntr ON (accnt_profit=prftcntr_number) 
+<? endif ?>
+<? if exists("subaccnt_id") ?>
+     JOIN subaccnt ON (accnt_sub=subaccnt_number) 
+<? endif ?>
+<? if exists("subType") ?>
+     JOIN subaccnttype ON (subaccnttype_code=accnt_subaccnttype_code) 
+<? endif ?>
+WHERE (
+<? if exists("startDate") ?>
+  <? if exists("endDate") ?>
+       (sltrans_date BETWEEN <? value("startDate") ?>
+                         AND <? value("endDate") ?>)
+  <? else ?>
+       (sltrans_date BETWEEN <? value("startDate") ?>
+                         AND endoftime())
+  <? endif ?>
+<? else ?>
+  <? if exists("endDate") ?>
+       (sltrans_date BETWEEN startoftime()
+                         AND <? value("endDate") ?>)
+  <? else ?>
+       (sltrans_date BETWEEN startoftime()
+                         AND endoftime())
+  <? endif ?>
+<? endif ?>
+<? if exists("company_id") ?>
+   AND (company_id=<? value("company_id") ?>)
+<? endif ?>
+<? if exists("prfcntr_id") ?>
+   AND (prftcntr_id=<? value("prfcntr_id") ?>)
+<? endif ?>
+<? if exists("accnt_number") ?>
+   AND (accnt_number=<? value("accnt_number") ?>)
+<? endif ?>
+<? if exists("subaccnt_id") ?>
+   AND (subaccnt_id=<? value("subaccnt_id") ?>)
+<? endif ?>
+<? if exists("subType") ?>
+   AND (subaccnttype_id=<? value("subType") ?>)
+<? endif ?>
+<? if exists("accntType") ?>
+   AND (accnt_type= <? value("accntType") ?>)
+<? endif ?>
+<? if exists("accnt_id") ?>
+   AND (sltrans_accnt_id=<? value("accnt_id") ?>)
+<? endif ?>
+<? if exists("docnum") ?>
+   AND (sltrans_docnumber = case when <? value("docnum") ?> = '' then 
+ sltrans_docnumber else 
+<? value("docnum") ?> end ) 
+<? endif ?>
+<? if exists("source") ?>
+   AND (sltrans_source=<? value("source") ?>)
+<? endif ?>
+<? if exists("source_pattern") ?>
+   AND (sltrans_source ~* <? value("source_pattern") ?>)
+<? endif ?>
+<? if exists("posted") ?>
+   AND (sltrans_posted=<? value("posted") ?>)
+<? endif ?>
+<? if exists("journalnumber") ?>
+   AND (sltrans_gltrans_journalnumber::text=<? value("journalnumber") ?>)
+<? endif ?>
+) 
+ORDER BY sltrans_created,
+   sltrans_sequence, sltrans_amount;

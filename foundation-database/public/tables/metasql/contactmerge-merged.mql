@@ -1,0 +1,25 @@
+-- Group: contactmerge
+-- Name: merged
+-- Notes:  Lists all merged contacts
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT cntct_id,
+  CASE
+    WHEN (cntctUsed(cntctmrgd_cntct_id)=false) THEN
+      3 -- Already merged contact
+    ELSE
+      4 -- Already merged contact, but still has relationships
+  END AS status,
+  cntct.*,crmacct_number,crmacct_name,addr.*, 
+ 0 AS xtindentrole,
+  CASE
+    WHEN (cntctUsed(cntctmrgd_cntct_id)=false) THEN
+      'warning' -- Already merged contact
+    ELSE
+      'error'  -- Already merged contact, but still has relationships
+  END AS qtforegroundrole
+FROM cntct
+  JOIN cntctmrgd ON (cntct_id=cntctmrgd_cntct_id)
+  LEFT OUTER JOIN addr ON (cntct_addr_id=addr_id)
+  LEFT OUTER JOIN crmacct ON (cntct_crmacct_id=crmacct_id);

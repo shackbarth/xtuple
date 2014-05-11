@@ -1,0 +1,18 @@
+-- Group: itemsWithoutItemSources
+-- Name: detail
+-- Notes: used by dspItemsWithoutItemSources
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT item_id, item_number,
+       (item_descrip1 || ' ' || item_descrip2) AS descrip,
+       CASE WHEN (item_type = 'P') THEN <? value("purchased") ?>
+            WHEN (item_type = 'O') THEN <? value("outside") ?>
+       END AS type 
+FROM item 
+WHERE ( (item_type IN ('P', 'O'))
+    AND (item_active)
+    AND (item_id NOT IN (SELECT DISTINCT itemsrc_item_id
+                         FROM itemsrc 
+                         WHERE (itemsrc_active))) ) 
+ORDER BY item_number;

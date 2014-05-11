@@ -1,0 +1,84 @@
+-- Group: bankrecHistory
+-- Name: reconciled
+-- Notes: 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+<? if exists("treeView") ?>
+SELECT -1 AS gltrans_id, bankrec_opendate AS gltrans_date, formatDate(bankrec_opendate) AS f_date,
+       <? value("openingBalance") ?> AS gltrans_docnumber, <? value("openingBalance") ?> AS type, 0 AS sort, NULL AS gltrans_notes, 
+       bankrec_openbal AS amount, formatMoney(bankrec_openbal) AS f_amount,
+       'curr' AS amount_xtnumericrole,
+       0 AS xtindentrole
+  FROM bankrec
+  WHERE (bankrec_id=<? value("bankrec_id") ?>)
+  
+UNION
+<? endif ?>
+
+SELECT gltrans_id, gltrans_date, formatDate(gltrans_date) AS f_date,
+       gltrans_docnumber,
+       CASE WHEN gltrans_doctype = 'CK' THEN <? value("Checks") ?>
+            WHEN gltrans_doctype = 'CR' THEN <? value("Deposits") ?>
+            ELSE <? value("Adjustments") ?> END AS type,
+       CASE WHEN gltrans_doctype = 'CK' THEN 1
+            WHEN gltrans_doctype = 'CR' THEN 2
+            ELSE '3' END AS sort,
+       gltrans_notes AS notes,
+       COALESCE( bankrecitem_amount,
+                 (currtolocal(bankaccnt_curr_id, gltrans_amount, gltrans_date) * -1.0) ) AS amount,
+       formatMoney(COALESCE( bankrecitem_amount,
+                             (currtolocal(bankaccnt_curr_id, gltrans_amount, gltrans_date) * -1.0) ) ) AS f_amount,
+       'curr' AS amount_xtnumericrole,
+       1 AS xtindentrole
+  FROM gltrans, bankrecitem 
+    JOIN bankrec ON (bankrecitem_bankrec_id=bankrec_id)
+    JOIN bankaccnt ON (bankaccnt_id=bankrec_bankaccnt_id)
+ WHERE ((bankrecitem_bankrec_id=<? value("bankrec_id") ?>)
+   AND (bankrecitem_source='GL')
+   AND (bankrecitem_source_id=gltrans_id) ) 
+
+UNION
+
+SELECT sltrans_id, sltrans_date, formatDate(sltrans_date) AS f_date,
+       sltrans_docnumber,
+       CASE WHEN sltrans_doctype = 'CK' THEN <? value("Checks") ?>
+            WHEN sltrans_doctype = 'CR' THEN <? value("Deposits") ?>
+            ELSE <? value("Adjustments") ?> END AS type,
+       CASE WHEN sltrans_doctype = 'CK' THEN 1
+            WHEN sltrans_doctype = 'CR' THEN 2
+            ELSE '3' END AS sort,
+       sltrans_notes AS notes,
+       COALESCE( bankrecitem_amount,
+                 (currtolocal(bankaccnt_curr_id, sltrans_amount, sltrans_date) * -1.0) ) AS amount,
+       formatMoney(COALESCE( bankrecitem_amount,
+                             (currtolocal(bankaccnt_curr_id, sltrans_amount, sltrans_date) * -1.0) ) ) AS f_amount,
+       'curr' AS amount_xtnumericrole,
+       1 AS xtindentrole
+  FROM sltrans, bankrecitem 
+    JOIN bankrec ON (bankrecitem_bankrec_id=bankrec_id)
+    JOIN bankaccnt ON (bankaccnt_id=bankrec_bankaccnt_id)
+ WHERE ((bankrecitem_bankrec_id=<? value("bankrec_id") ?>)
+   AND (bankrecitem_source='SL')
+   AND (bankrecitem_source_id=sltrans_id) ) 
+
+<? if exists("treeView") ?>
+UNION
+
+SELECT -1 AS gltrans_id, bankrec_enddate, formatDate(bankrec_enddate) AS f_date,
+       <? value("closingBalance") ?>, <? value("closingBalance") ?> AS type, 7 AS sort, NULL, 
+       bankrec_endbal AS amount, formatMoney(bankrec_endbal) AS f_amount,
+       'curr' AS amount_xtnumericrole,
+       0 AS xtindentrole
+  FROM bankrec
+  WHERE (bankrec_id=<? value("bankrec_id") ?>)
+
+UNION
+SELECT -1, NULL, NULL, <? value("Checks") ?>, NULL, 1, NULL, NULL, NULL, 'curr', 0 
+UNION
+SELECT -1, NULL, NULL, <? value("Deposits") ?>, NULL, 2, NULL, NULL, NULL, 'curr', 0 
+UNION
+SELECT -1, NULL, NULL, <? value("Adjustments") ?>, NULL, 3, NULL, NULL, NULL, 'curr', 0 
+<? endif ?>
+
+ORDER BY  sort, xtindentrole, type, f_date, gltrans_id

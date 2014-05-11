@@ -946,7 +946,6 @@
     "_viewTaxTypes": "View Tax Types",
     "_viewTaxZones": "View Tax Zones",
     "_viewTerms": "View Terms",
-    "_viewUOMs": "View Units of Measure",
     "_viewTitles": "View Honorifics",
     "_viewWarehouses": "View Sites",
 
@@ -957,6 +956,7 @@
     "_accountExists": "This number is currently assigned to an Account.",
     "_automaticFreight": "Manually clearing the freight will enable automatic " +
       "Freight recalculations.",
+    "_baseCurrencyMustBeSet": "You must first set a base currency",
     "_closeLine?": "Are you sure you want to close this line?",
     "_continue?": " Do you want to continue?",
     "_convertAccount": "Convert this Account to a Customer?",

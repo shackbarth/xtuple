@@ -1,0 +1,686 @@
+<!DOCTYPE openRPTDef>
+<report>
+ <title>Approve Payments List</title>
+ <name>SelectPaymentsList</name>
+ <description></description>
+ <size>Letter</size>
+ <portrait/>
+ <topmargin>50</topmargin>
+ <bottommargin>50</bottommargin>
+ <rightmargin>50</rightmargin>
+ <leftmargin>50</leftmargin>
+ <querysource>
+  <name>detail</name>
+  <sql>SELECT apopen_id, apselectid, vendor, apopen_docnumber, apopen_ponumber,
+              formatDate(apopen_duedate) AS f_duedate,
+              formatDate(apopen_docdate) AS f_docdate,
+              formatMoney(amount) AS f_amount,
+              f_selected, f_late, status
+ FROM (SELECT apopen_id, COALESCE(apselect_id, -1) AS apselectid,
+       (vend_number || '-' || vend_name) AS vendor,
+       apopen_docnumber, apopen_ponumber,
+       apopen_duedate, apopen_docdate,
+       (apopen_amount - apopen_paid -
+                   COALESCE((SELECT SUM(checkitem_amount / checkitem_curr_rate)
+                             FROM checkitem, checkhead
+                             WHERE ((checkitem_checkhead_id=checkhead_id)
+                              AND (checkitem_apopen_id=apopen_id)
+                              AND (NOT checkhead_void)
+                              AND (NOT checkhead_posted))
+                           ), 0)) AS amount,
+       formatMoney(COALESCE(SUM(apselect_amount), 0)) AS f_selected,
+       formatBoolYN(apopen_duedate &lt;= CURRENT_DATE) AS f_late,
+       CASE WHEN (apopen_status='O') THEN TEXT('Open')
+                    ELSE CASE WHEN (apopen_status='H') THEN TEXT('On Hold')
+                      ELSE CASE WHEN (apopen_status='C') THEN TEXT('Close')
+                      END
+                    END
+                  END AS status
+  FROM vendinfo, apopen LEFT OUTER JOIN apselect ON (apselect_apopen_id=apopen_id)
+ WHERE ( (apopen_open)
+   AND (apopen_doctype IN ('V', 'D'))
+   AND (apopen_vend_id=vend_id)
+&lt;? if exists("vend_id") ?>
+   AND (vend_id=&lt;? value("vend_id") ?>)
+&lt;? elseif exists("vendtype_id") ?>
+   AND (vend_vendtype_id=&lt;? value("vendtype_id") ?>)
+&lt;? elseif exists("vendtype_pattern") ?>
+   AND (vend_vendtype_id IN (SELECT vendtype_id
+                               FROM vendtype
+                              WHERE (vendtype_code ~ &lt;? value("vendtype_pattern") ?>)))
+&lt;? endif ?>
+       )
+GROUP BY apopen_id, apselect_id, vend_number, vend_name,
+         apopen_docnumber, apopen_ponumber,
+         apopen_duedate, apopen_docdate, apopen_amount, apopen_paid, apopen_curr_id, apopen_status) AS data
+ WHERE (amount &lt;> 0.0)
+ORDER BY apopen_duedate, amount DESC;</sql>
+ </querysource>
+ <querysource>
+  <name>head</name>
+  <sql>SELECT &lt;? if exists("vend_id") ?>
+         ( SELECT vend_name
+             FROM vendinfo
+            WHERE (vend_id=&lt;? value("vend_id") ?>) )
+       &lt;? elseif exists("vendtype_id") ?>
+         ( SELECT (vendtype_code || '-' || vendtype_descrip)
+             FROM vendtype
+            WHERE (vendtype_id=&lt;? value("vendtype_id") ?>) )
+       &lt;? elseif exists("vendtype_pattern") ?>
+         text(&lt;? value("vendtype_pattern") ?>)
+       &lt;? else ?>
+         text('All Vendors')
+       &lt;? endif ?>
+       AS f_value,
+       &lt;? if reExists("vendtype_.*") ?>
+         text('Vendor Type:')
+       &lt;? else ?>
+         text('Vendor:')
+       &lt;? endif ?>
+       AS f_label;
+       </sql>
+ </querysource>
+ <rpthead>
+  <height>141</height>
+  <field>
+   <rect>
+    <x>20</x>
+    <y>65</y>
+    <width>125</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>f_label</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>130</x>
+    <y>120</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Voucher #</string>
+  </label>
+  <label>
+   <rect>
+    <x>205</x>
+    <y>120</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>P/O #</string>
+  </label>
+  <label>
+   <rect>
+    <x>590</x>
+    <y>120</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Approved</string>
+  </label>
+  <label>
+   <rect>
+    <x>680</x>
+    <y>120</y>
+    <width>65</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Late</string>
+  </label>
+  <label>
+   <rect>
+    <x>360</x>
+    <y>120</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Doc. Date</string>
+  </label>
+  <label>
+   <rect>
+    <x>280</x>
+    <y>120</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Due Date</string>
+  </label>
+  <label>
+   <rect>
+    <x>5</x>
+    <y>120</y>
+    <width>120</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Vendor</string>
+  </label>
+  <field>
+   <rect>
+    <x>150</x>
+    <y>65</y>
+    <width>200</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>f_value</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>505</x>
+    <y>120</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Amount</string>
+  </label>
+  <line>
+   <xstart>5</xstart>
+   <ystart>135</ystart>
+   <xend>745</xend>
+   <yend>135</yend>
+   <weight>2</weight>
+  </line>
+  <label>
+   <rect>
+    <x>215</x>
+    <y>5</y>
+    <width>530</width>
+    <height>38</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>18</size>
+    <weight>bold</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Approve Payments List</string>
+  </label>
+  <label>
+   <rect>
+    <x>435</x>
+    <y>120</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Status</string>
+  </label>
+ </rpthead>
+ <pghead>
+  <firstpage/>
+  <height>6</height>
+ </pghead>
+ <pghead>
+  <height>21</height>
+  <label>
+   <rect>
+    <x>680</x>
+    <y>0</y>
+    <width>65</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Late</string>
+  </label>
+  <label>
+   <rect>
+    <x>215</x>
+    <y>0</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>P/O #</string>
+  </label>
+  <label>
+   <rect>
+    <x>575</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Approved</string>
+  </label>
+  <label>
+   <rect>
+    <x>300</x>
+    <y>0</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Due Date</string>
+  </label>
+  <label>
+   <rect>
+    <x>385</x>
+    <y>0</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Doc. Date</string>
+  </label>
+  <label>
+   <rect>
+    <x>5</x>
+    <y>0</y>
+    <width>120</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Vendor</string>
+  </label>
+  <line>
+   <xstart>5</xstart>
+   <ystart>15</ystart>
+   <xend>745</xend>
+   <yend>15</yend>
+   <weight>2</weight>
+  </line>
+  <label>
+   <rect>
+    <x>130</x>
+    <y>0</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Voucher #</string>
+  </label>
+  <label>
+   <rect>
+    <x>470</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Amount</string>
+  </label>
+ </pghead>
+ <section>
+  <name>detail</name>
+  <detail>
+   <key>
+    <query>detail</query>
+   </key>
+   <height>17</height>
+   <field>
+    <rect>
+     <x>205</x>
+     <y>-1</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>apopen_ponumber</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>280</x>
+     <y>0</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <hcenter/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_duedate</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>590</x>
+     <y>0</y>
+     <width>100</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_selected</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>505</x>
+     <y>0</y>
+     <width>100</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_amount</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>360</x>
+     <y>0</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <hcenter/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_docdate</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>680</x>
+     <y>0</y>
+     <width>65</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <hcenter/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_late</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>130</x>
+     <y>0</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>apopen_docnumber</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>5</x>
+     <y>0</y>
+     <width>120</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>vendor</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>435</x>
+     <y>0</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <hcenter/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>status</column>
+    </data>
+   </field>
+  </detail>
+ </section>
+ <pgfoot>
+  <height>17</height>
+  <field>
+   <rect>
+    <x>90</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>Context Query</query>
+    <column>report_date</column>
+   </data>
+  </field>
+  <field>
+   <rect>
+    <x>705</x>
+    <y>0</y>
+    <width>40</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>Context Query</query>
+    <column>page_number</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>85</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Report Date:</string>
+  </label>
+  <label>
+   <rect>
+    <x>615</x>
+    <y>0</y>
+    <width>85</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Page:</string>
+  </label>
+ </pgfoot>
+</report>

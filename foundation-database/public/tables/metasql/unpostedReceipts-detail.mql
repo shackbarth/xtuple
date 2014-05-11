@@ -1,0 +1,96 @@
+-- Group: unpostedReceipts
+-- Name: detail
+-- Notes: used by unpostedPoReceipts
+---------PURCHASE ORDERS----------
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT recv_id, recv_orderitem_id, recv_order_number, recv_order_type,
+       vend_name AS orderhead_from,
+       poitem_linenumber AS orderitem_linenumber,
+       formatDate(recv_duedate) AS recv_duedate,
+       warehous_code,
+       COALESCE(item_number, <? value("nonInventory") ?>) AS item_number,
+       COALESCE(uom_name, <? value("na") ?>) AS uom_name,
+       recv_vend_item_number,
+       recv_vend_uom,
+       poitem_qty_ordered AS orderitem_qty_ordered, 
+       poitem_qty_received AS orderitem_qty_received,
+       recv_qty, recv_date,
+       COALESCE(recv_gldistdate, recv_date) AS recv_gldistdate,
+       'qty' AS orderitem_qty_ordered_xtnumericrole,
+       'qty' AS orderitem_qty_received_xtnumericrole,
+       'qty' AS recv_qty_xtnumericrole
+FROM pohead JOIN
+     poitem ON (poitem_pohead_id=pohead_id) JOIN 
+     recv  ON ((recv_orderitem_id=poitem_id)
+	   AND (recv_order_type='PO')) LEFT OUTER JOIN
+     (itemsite JOIN item ON (itemsite_item_id=item_id)
+	       JOIN uom ON (item_inv_uom_id=uom_id)
+               JOIN site() ON (itemsite_warehous_id=warehous_id)
+       )
+      ON (recv_itemsite_id=itemsite_id) JOIN
+     vendinfo ON (pohead_vend_id=vend_id)
+WHERE (NOT recv_posted)
+<? if exists ("EnableReturnAuth") ?>
+-------RETURN AUTHORIZATIONS--------------
+UNION
+SELECT recv_id, recv_orderitem_id, recv_order_number, recv_order_type,
+       cust_name AS orderhead_from,
+       raitem_linenumber AS orderitem_linenumber,
+       formatDate(recv_duedate) AS recv_duedate,
+       warehous_code,
+       COALESCE(item_number, <? value("nonInventory") ?>) AS item_number,
+       COALESCE(uom_name, <? value("na") ?>) AS uom_name,
+       recv_vend_item_number,
+       recv_vend_uom,
+       raitem_qtyauthorized AS orderitem_qty_ordered, 
+       raitem_qtyreceived AS orderitem_qty_received,
+       recv_qty, recv_date,
+       COALESCE(recv_gldistdate, recv_date) AS recv_gldistdate,
+       'qty' AS orderitem_qty_ordered_xtnumericrole,
+       'qty' AS orderitem_qty_received_xtnumericrole,
+       'qty' AS recv_qty_xtnumericrole
+FROM rahead JOIN
+     raitem ON (raitem_rahead_id=rahead_id) JOIN 
+     recv  ON ((recv_orderitem_id=raitem_id)
+	   AND (recv_order_type='RA')) LEFT OUTER JOIN
+     (itemsite JOIN item ON (itemsite_item_id=item_id)
+	       JOIN uom ON (item_inv_uom_id=uom_id)
+               JOIN site() ON (itemsite_warehous_id=warehous_id)
+       )
+      ON (recv_itemsite_id=itemsite_id) LEFT OUTER JOIN
+     custinfo ON (rahead_cust_id=cust_id)
+WHERE (NOT recv_posted)
+<? endif ?>
+<? if exists ("MultiWhs") ?>
+------TRANSFER ORDERS---------
+UNION
+SELECT recv_id, recv_orderitem_id, recv_order_number, recv_order_type,
+       tohead_srcname AS orderhead_from,
+       toitem_linenumber AS orderitem_linenumber,
+       formatDate(recv_duedate) AS recv_duedate,
+       warehous_code,
+       COALESCE(item_number, <? value("nonInventory") ?>) AS item_number,
+       COALESCE(uom_name, <? value("na") ?>) AS uom_name,
+       recv_vend_item_number,
+       recv_vend_uom,
+       toitem_qty_ordered AS orderitem_qty_ordered, 
+       toitem_qty_received AS orderitem_qty_received,
+       recv_qty, recv_date,
+       COALESCE(recv_gldistdate, recv_date) AS recv_gldistdate,
+       'qty' AS orderitem_qty_ordered_xtnumericrole,
+       'qty' AS orderitem_qty_received_xtnumericrole,
+       'qty' AS recv_qty_xtnumericrole
+FROM tohead JOIN
+     toitem ON (toitem_tohead_id=tohead_id) JOIN 
+     recv  ON ((recv_orderitem_id=toitem_id)
+	   AND (recv_order_type='TO')) LEFT OUTER JOIN
+     (itemsite JOIN item ON (itemsite_item_id=item_id)
+	       JOIN uom ON (item_inv_uom_id=uom_id)
+               JOIN site() ON (itemsite_warehous_id=warehous_id)
+       )
+      ON (recv_itemsite_id=itemsite_id) 
+WHERE (NOT recv_posted)
+<? endif ?>
+ORDER BY recv_order_number, orderitem_linenumber;

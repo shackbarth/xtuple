@@ -1,0 +1,54 @@
+-- Group: voucher
+-- Name: editlist
+-- Notes: used by voucheringEditList
+-- indent: order
+--            line item
+--              credit account
+--            line item
+--              credit account
+--            debit account for entire order
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT orderid, seq,
+       CASE WHEN seq = 0 THEN vouchernumber
+            ELSE ''
+       END AS vouchernumber, ponumber, itemnumber,
+       vendnumber, description, itemtype, iteminvuom, f_qty, cost,
+       'curr' AS cost_xtnumericrole,
+       0 AS cost_xttotalrole,
+       CASE WHEN seq = 3 THEN 1
+            ELSE seq END AS xtindentrole,
+       CASE WHEN findAPAccount(vendid) < 0 THEN 'error'
+       END AS qtforegroundrole
+FROM (SELECT orderid,
+       CASE WHEN length(ponumber) > 0 THEN 0 ELSE 1 END AS seq,
+       vouchernumber, ponumber,
+       CASE WHEN (itemid = 1) THEN invoicenumber
+            ELSE itemnumber END AS itemnumber,
+       CASE WHEN (itemid = 1) THEN itemnumber
+            ELSE ''         END AS vendnumber,
+       vendid, description,
+       itemtype, iteminvuom, f_qty, cost
+FROM voucheringEditList
+UNION
+-- pull out the credits
+SELECT DISTINCT orderid, 2 AS seq, vouchernumber, '' AS ponumber,
+       <? value("credit") ?> AS itemnumber, '' AS vendnumber, vendid,
+       account AS description,
+       '' AS itemtype, '' AS iteminvuom, NULL as f_qty, cost
+FROM voucheringEditList
+WHERE itemid = 2
+UNION
+-- calculate the debits
+SELECT orderid, 3 AS seq, vouchernumber, '' AS ponumber,
+       <? value("debit") ?> AS itemnumber, '' AS vendnumber, vendid,
+       CASE WHEN findAPAccount(vendid) < 0 THEN <? value("notassigned") ?>
+            ELSE formatGLAccountLong(findAPAccount(vendid))
+       END AS description,
+       '' AS itemtype, '' AS iteminvuom, NULL as f_qty,
+       SUM(cost) AS cost
+FROM voucheringEditList
+WHERE itemid = 2
+GROUP BY orderid, vouchernumber, vendid
+ORDER BY vouchernumber, ponumber desc, seq) AS sub;

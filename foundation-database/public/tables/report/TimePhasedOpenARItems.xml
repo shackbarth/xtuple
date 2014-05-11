@@ -1,0 +1,519 @@
+<!DOCTYPE openRPTDef>
+<report>
+ <title>Time Phased Open A/R Items</title>
+ <name>TimePhasedOpenARItems</name>
+ <description></description>
+ <size>Letter</size>
+ <portrait/>
+ <topmargin>50</topmargin>
+ <bottommargin>50</bottommargin>
+ <rightmargin>50</rightmargin>
+ <leftmargin>50</leftmargin>
+ <querysource>
+  <name>head</name>
+  <sql>SELECT &lt;? if exists(&quot;cust_id&quot;) ?>
+         ( SELECT cust_name
+             FROM custinfo
+            WHERE (cust_id=&lt;? value(&quot;cust_id&quot;) ?>) )
+       &lt;? elseif exists(&quot;custtype_id&quot;) ?>
+         ( SELECT (custtype_code || '-' || custtype_descrip)
+             FROM custtype
+            WHERE (custtype_id=&lt;? value(&quot;custtype_id&quot;) ?>) )
+      &lt;? elseif exists(&quot;custgrp_id&quot;) ?>
+         ( SELECT (custgrp_name || '-' ||  custgrp_descrip)
+	   FROM custgrp
+            WHERE (custgrp_id=&lt;? value(&quot;custgrp_id&quot;) ?>) )
+       &lt;? elseif exists(&quot;custtype_pattern&quot;) ?>
+         text(&lt;? value(&quot;custtype_pattern&quot;) ?>)
+       &lt;? else ?>
+         text('All Customers')
+       &lt;? endif ?>
+       AS f_value,
+       &lt;? if reExists(&quot;custtype_.*&quot;) ?>
+         text('Customer Type:')
+       &lt;? elseif exists(&quot;custgrp_id&quot;) ?>
+         text('Customer Group:')
+       &lt;? else ?>
+         text('Customer:')
+       &lt;? endif ?>
+       AS f_label;
+       </sql>
+ </querysource>
+ <querysource>
+  <name>detail</name>
+  <sql>SELECT pstart, pend,
+       period,
+       cust_number, cust_name,
+       value,
+       formatMoney(value) AS f_value
+  FROM (
+  SELECT calitem_start AS pstart,
+         calitem_end AS pend,
+         (formatDate(calitem_start) || '-' || formatDate(calitem_end)) AS period,
+         cust_number,
+         cust_name,
+         openARItemsValue(cust_id, calitem_id) AS value
+    FROM custinfo LEFT OUTER JOIN custgrpitem ON (cust_id=custgrpitem_cust_id)
+         LEFT OUTER JOIN custgrp ON (custgrpitem_custgrp_id=custgrp_id),
+         ( SELECT rcalitem_id AS calitem_id,
+                  findPeriodStart(rcalitem_id) AS calitem_start,
+                  findPeriodEnd(rcalitem_id) AS calitem_end
+             FROM rcalitem
+            WHERE (rcalitem_id IN (
+  &lt;? foreach(&quot;period_id_list&quot;) ?>
+    &lt;? if not isfirst(&quot;period_id_list&quot;) ?>
+      ,
+    &lt;? endif ?>
+    &lt;? value(&quot;period_id_list&quot;) ?>
+  &lt;? endforeach ?>
+                                  )
+                  )
+            UNION
+           SELECT acalitem_id AS calitem_id,
+                  findPeriodStart(acalitem_id) AS calitem_start,
+                  findPeriodEnd(acalitem_id) AS calitem_end
+             FROM acalitem
+            WHERE (acalitem_id IN (
+  &lt;? foreach(&quot;period_id_list&quot;) ?>
+    &lt;? if not isfirst(&quot;period_id_list&quot;) ?>
+      ,
+    &lt;? endif ?>
+    &lt;? value(&quot;period_id_list&quot;) ?>
+  &lt;? endforeach ?>
+                                  )
+                  )
+           ) AS calitem
+  &lt;? if exists(&quot;cust_id&quot;) ?>
+   WHERE (cust_id=&lt;? value(&quot;cust_id&quot;) ?>)
+  &lt;? elseif exists(&quot;custtype_id&quot;) ?>
+   WHERE (cust_custtype_id=&lt;? value(&quot;custtype_id&quot;) ?>)
+  &lt;? elseif exists(&quot;custgrp_id&quot;) ?>
+   WHERE (custgrp_id=&lt;? value(&quot;custgrp_id&quot;) ?>)
+  &lt;? elseif exists(&quot;custtype_pattern&quot;) ?>
+   WHERE (cust_custtype_id IN (SELECT custtype_id
+                                 FROM custtype
+                                WHERE (custtype_code ~ &lt;? value(&quot;custtype_pattern&quot;) ?>) ))
+  &lt;? endif ?>
+  ) AS data
+ WHERE (value != 0)
+ORDER BY pstart, pend, cust_number
+</sql>
+ </querysource>
+ <rpthead>
+  <height>222</height>
+  <label>
+   <rect>
+    <x>430</x>
+    <y>200</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Customer Name</string>
+  </label>
+  <field>
+   <rect>
+    <x>10</x>
+    <y>100</y>
+    <width>125</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>f_label</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>320</x>
+    <y>200</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Customer #</string>
+  </label>
+  <label>
+   <rect>
+    <x>645</x>
+    <y>200</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Amount</string>
+  </label>
+  <label>
+   <rect>
+    <x>10</x>
+    <y>200</y>
+    <width>250</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Period</string>
+  </label>
+  <line>
+   <xstart>5</xstart>
+   <ystart>215</ystart>
+   <xend>745</xend>
+   <yend>215</yend>
+   <weight>2</weight>
+  </line>
+  <label>
+   <rect>
+    <x>145</x>
+    <y>10</y>
+    <width>580</width>
+    <height>38</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>18</size>
+    <weight>bold</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Time Phased Open A/R Items</string>
+  </label>
+  <field>
+   <rect>
+    <x>140</x>
+    <y>100</y>
+    <width>200</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>f_value</column>
+   </data>
+  </field>
+ </rpthead>
+ <pghead>
+  <firstpage/>
+  <height>7</height>
+ </pghead>
+ <pghead>
+  <height>22</height>
+  <label>
+   <rect>
+    <x>320</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Customer #</string>
+  </label>
+  <line>
+   <xstart>5</xstart>
+   <ystart>15</ystart>
+   <xend>745</xend>
+   <yend>15</yend>
+   <weight>2</weight>
+  </line>
+  <label>
+   <rect>
+    <x>10</x>
+    <y>0</y>
+    <width>250</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Period</string>
+  </label>
+  <label>
+   <rect>
+    <x>430</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Customer Name</string>
+  </label>
+  <label>
+   <rect>
+    <x>645</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Amount</string>
+  </label>
+ </pghead>
+ <section>
+  <name>detail</name>
+  <group>
+   <name>detail</name>
+   <column>pstart</column>
+   <head>
+    <height>7</height>
+    <field>
+     <rect>
+      <x>10</x>
+      <y>5</y>
+      <width>250</width>
+      <height>15</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>bold</weight>
+     </font>
+     <hcenter/>
+     <vcenter/>
+     <data>
+      <query>detail</query>
+      <column>period</column>
+     </data>
+    </field>
+   </head>
+   <foot>
+    <height>27</height>
+    <line>
+     <xstart>635</xstart>
+     <ystart>5</ystart>
+     <xend>745</xend>
+     <yend>5</yend>
+     <weight>0</weight>
+    </line>
+    <field>
+     <rect>
+      <x>645</x>
+      <y>5</y>
+      <width>100</width>
+      <height>15</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>bold</weight>
+     </font>
+     <right/>
+     <vcenter/>
+     <data>
+      <query>detail</query>
+      <column>value</column>
+     </data>
+     <tracktotal subtotal="true" builtin="true" >money</tracktotal>
+    </field>
+    <label>
+     <rect>
+      <x>520</x>
+      <y>5</y>
+      <width>100</width>
+      <height>15</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>normal</weight>
+     </font>
+     <right/>
+     <vcenter/>
+     <string>Total:</string>
+    </label>
+   </foot>
+  </group>
+  <detail>
+   <key>
+    <query>detail</query>
+   </key>
+   <height>17</height>
+   <field>
+    <rect>
+     <x>430</x>
+     <y>0</y>
+     <width>210</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>cust_name</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>320</x>
+     <y>0</y>
+     <width>100</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>cust_number</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>645</x>
+     <y>0</y>
+     <width>100</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_value</column>
+    </data>
+   </field>
+  </detail>
+ </section>
+ <pgfoot>
+  <height>17</height>
+  <field>
+   <rect>
+    <x>95</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>Context Query</query>
+    <column>report_date</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>600</x>
+    <y>0</y>
+    <width>85</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Page:</string>
+  </label>
+  <field>
+   <rect>
+    <x>690</x>
+    <y>0</y>
+    <width>51</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>Context Query</query>
+    <column>page_number</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>5</x>
+    <y>0</y>
+    <width>85</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Report Date:</string>
+  </label>
+ </pgfoot>
+</report>

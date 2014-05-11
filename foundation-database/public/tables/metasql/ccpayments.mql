@@ -1,0 +1,68 @@
+-- Group: ccpayments
+-- Name:  list
+-- Notes: list credit card payments, optionally by customer
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT ccpay_id AS id, 
+       CASE WHEN ((ccpay_status = 'A') AND 
+                 (date_part('day', CURRENT_TIMESTAMP - ccpay_transaction_datetime) < COALESCE(<? value("ccValidDays") ?>,0))) THEN
+         1
+       ELSE 0
+       END AS altid, cohead_id,
+       ccpay.*,
+       cust_number, cust_name,       
+       ccpay_type AS type,       
+       CASE WHEN (ccpay_type='A') THEN <? value("preauth") ?>
+            WHEN (ccpay_type='C') THEN <? value("charge") ?>
+            WHEN (ccpay_type='R') THEN <? value("refund") ?>
+            ELSE ccpay_type
+       END AS type_qtdisplayrole,
+       ccpay_status AS status,
+       CASE WHEN (ccpay_status='A') THEN <? value("authorized") ?>
+            WHEN (ccpay_status='C') THEN <? value("approved") ?>
+            WHEN (ccpay_status='D') THEN <? value("declined") ?>
+            WHEN (ccpay_status='V') THEN <? value("voided") ?>
+            WHEN (ccpay_status='X') THEN <? value("noapproval") ?>
+            ELSE ccpay_status
+       END AS status_qtdisplayrole,
+       currConcat(ccpay_curr_id) AS currAbbr,
+       COALESCE(cohead_number, ccpay_order_number) AS docnumber,
+       ABS(COALESCE(payco_amount, ccpay_amount)) AS allocated,
+       currConcat(COALESCE(payco_curr_id, ccpay_curr_id)) AS payco_currAbbr,
+       cust_number, cust_name,
+       'curr' AS ccpay_amount_xtnumericrole,
+       'curr' AS allocated_xtnumericrole,
+        CASE WHEN ((ccpay_status = 'A')
+              AND (date_part('day', CURRENT_TIMESTAMP - ccpay_transaction_datetime) >= COALESCE(<? value("ccValidDays") ?>,0))) THEN
+          'error'
+        END AS qtforegroundrole
+  FROM ccpay LEFT OUTER JOIN 
+       (payco JOIN cohead ON (payco_cohead_id=cohead_id))
+         ON (payco_ccpay_id=ccpay_id)
+      JOIN custinfo ON (ccpay_cust_id=cust_id)
+      JOIN custtype ON (cust_custtype_id=custtype_id)
+      LEFT OUTER JOIN custgrpitem ON (custgrpitem_cust_id=cust_id)
+  WHERE ((true)
+<? if exists("processed") ?>
+  AND (ccpay_status != 'A')
+<? elseif exists("authorizations") ?>
+  AND (ccpay_status = 'A')
+<? endif ?>
+<? if exists("validOnly") ?>
+  AND ((ccpay_status != 'A')
+  OR (date_part('day', CURRENT_TIMESTAMP - ccpay_transaction_datetime) < <? value("ccValidDays") ?>))
+<? endif ?>
+<? if exists("cust_id") ?>
+  AND   (ccpay_cust_id=<? value("cust_id") ?>)
+<? endif ?>
+<? if exists("custtype_id") ?>
+  AND   (custtype_id=<? value("custtype_id") ?>)
+<? endif ?>
+<? if exists("custtype_pattern") ?>
+  AND   (custtype_code~<? value("custtype_pattern") ?>)
+<? endif ?>
+<? if exists("custgrp_id") ?>
+  AND   (custgrpitem_custgrp_id=<? value("custgrp_id") ?>)
+<? endif ?>)
+ ORDER BY ccpay_transaction_datetime;

@@ -1,0 +1,75 @@
+-- Group: apOpenItems
+-- Name:  selectedpayments
+-- Notes:
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT *,
+       CASE WHEN (apopen_doctype='V') THEN <? value("voucher") ?>
+            WHEN (apopen_doctype='D') THEN <? value("debitmemo") ?>
+            WHEN (apopen_doctype='C') THEN <? value("creditmemo") ?>
+       END AS doctype,
+       CASE WHEN (apopen_doctype='C') THEN 'emphasis' END AS doctype_qtforegroundrole,
+       'curr' AS apselect_amount_xtnumericrole,
+       'curr' AS apselect_amount_base_xtnumericrole,
+       'curr' AS apselect_running_base_xtnumericrole,
+       0 AS apselect_running_base_xtrunninginit,
+       1 AS apselect_running_base_xtrunningrole
+FROM (
+-- Vouchers and Debits
+SELECT apopen_id, apselect_id,
+       (bankaccnt_name || '-' || bankaccnt_descrip) AS f_bank,
+       (vend_number || '-' || vend_name) AS f_vendor,
+       apopen_docnumber, apopen_ponumber, apselect_amount,
+       apopen_invcnumber, apopen_doctype,
+       currToBase(apselect_curr_id, apselect_amount, CURRENT_DATE) AS apselect_amount_base,
+       currToBase(apselect_curr_id, apselect_amount, CURRENT_DATE) AS apselect_running_base,
+       currConcat(apselect_curr_id) AS currAbbr
+FROM apopen, apselect, vendinfo, bankaccnt
+WHERE ( (apopen_vend_id=vend_id)
+  AND   (apselect_apopen_id=apopen_id)
+  AND   (apselect_bankaccnt_id=bankaccnt_id)
+  AND   (apopen_doctype IN ('V', 'D'))
+<? if exists("bankaccntid") ?>
+  AND   (bankaccnt_id=<? value("bankaccntid") ?>)
+<? endif ?>
+<? if exists("vend_id") ?>
+  AND (vend_id=<? value("vend_id") ?>)
+<? elseif exists("vendtype_id") ?>
+  AND (vend_vendtype_id=<? value("vendtype_id") ?>)
+<? elseif exists("vendtype_pattern") ?>
+  AND (vend_vendtype_id IN (SELECT vendtype_id
+                            FROM vendtype
+                            WHERE (vendtype_code ~ <? value("vendtype_pattern") ?>)))
+<? endif ?>
+ )
+UNION
+-- Credits
+SELECT apopen_id, apselect_id,
+       (bankaccnt_name || '-' || bankaccnt_descrip) AS f_bank,
+       (vend_number || '-' || vend_name) AS f_vendor,
+       apopen_docnumber, apopen_ponumber, apselect_amount,
+       apopen_invcnumber, apopen_doctype,
+       currToBase(apselect_curr_id, apselect_amount, CURRENT_DATE) AS apselect_amount_base,
+       currToBase(apselect_curr_id, apselect_amount, CURRENT_DATE) * -1.0 AS apselect_running_base,
+       currConcat(apselect_curr_id) AS currAbbr
+FROM apopen, apselect, vendinfo, bankaccnt
+WHERE ( (apopen_vend_id=vend_id)
+  AND   (apselect_apopen_id=apopen_id)
+  AND   (apselect_bankaccnt_id=bankaccnt_id)
+  AND   (apopen_doctype='C')
+<? if exists("bankaccntid") ?>
+  AND   (bankaccnt_id=<? value("bankaccntid") ?>)
+<? endif ?>
+<? if exists("vend_id") ?>
+  AND (vend_id=<? value("vend_id") ?>)
+<? elseif exists("vendtype_id") ?>
+  AND (vend_vendtype_id=<? value("vendtype_id") ?>)
+<? elseif exists("vendtype_pattern") ?>
+  AND (vend_vendtype_id IN (SELECT vendtype_id
+                            FROM vendtype
+                            WHERE (vendtype_code ~ <? value("vendtype_pattern") ?>)))
+<? endif ?>
+ )
+ORDER BY f_bank, f_vendor, apopen_docnumber
+) AS data;

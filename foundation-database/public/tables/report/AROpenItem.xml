@@ -1,0 +1,907 @@
+<!DOCTYPE openRPTDef>
+<report>
+ <title>AROpenItem</title>
+ <name>AROpenItem</name>
+ <description>A report showing details of a single AR Open Item</description>
+ <parameter default="-1" active="true" listtype="static" type="integer" name="aropen_id">
+  <description></description>
+ </parameter>
+ <parameter default="-1" active="false" listtype="static" type="integer" name="docTypeID">
+  <description></description>
+ </parameter>
+ <parameter default="-1" active="true" listtype="static" type="integer" name="docTypeRC">
+  <description></description>
+ </parameter>
+ <size>Letter</size>
+ <portrait/>
+ <topmargin>50</topmargin>
+ <bottommargin>50</bottommargin>
+ <rightmargin>50</rightmargin>
+ <leftmargin>50</leftmargin>
+ <querysource>
+  <name>head</name>
+  <sql>SELECT aropen_cust_id, aropen_docdate, aropen_duedate, 
+aropen_doctype,
+CASE WHEN (aropen_doctype = 'C' AND ((SELECT COUNT(*) AS num_rows FROM cmhead, aropen WHERE cmhead_number = aropen_ordernumber AND aropen_id = &lt;? value("aropen_id") ?> ) = 0)) THEN 'Misc. Credit Memo'
+     WHEN (aropen_doctype = 'D' AND ((SELECT COUNT(*) AS num_rows FROM cmhead, aropen WHERE cmhead_number = aropen_ordernumber AND aropen_id = &lt;? value("aropen_id") ?> ) = 0)) THEN 'Misc. Debit Memo'
+     WHEN (aropen_doctype = 'C' AND ((SELECT COUNT(*) AS num_rows FROM cmhead, aropen WHERE cmhead_number = aropen_ordernumber AND aropen_id = &lt;? value("aropen_id") ?> ) > 0)) THEN 'Credit Memo'
+     WHEN (aropen_doctype = 'D' AND ((SELECT COUNT(*) AS num_rows FROM cmhead, aropen WHERE cmhead_number = aropen_ordernumber AND aropen_id = &lt;? value("aropen_id") ?> ) > 0)) THEN 'Debit Memo'
+     END AS doc_name, 
+aropen_docnumber, 
+aropen_ordernumber, aropen_journalnumber, 
+aropen_amount, aropen_amount, 
+aropen_paid, 
+(aropen_amount - aropen_paid) AS f_balance, 
+aropen_terms_id, aropen_salesrep_id, 
+aropen_commission_due, 
+aropen_notes, aropen_rsncode_id, aropen_salescat_id, 
+aropen_accnt_id, aropen_curr_id, cust_name, salesrep_name, terms_code, 
+rsncode_code, formatboolyn(aropen_commission_paid) AS commission_paid 
+FROM aropen 
+JOIN custinfo ON(cust_id = aropen_cust_id)
+LEFT OUTER JOIN salesrep ON(aropen_salesrep_id = salesrep_id)
+LEFT OUTER JOIN terms ON(terms_id = aropen_terms_id)
+LEFT OUTER JOIN rsncode ON(rsncode_id = aropen_rsncode_id)
+WHERE (aropen_id=&lt;? value("aropen_id") ?>)</sql>
+ </querysource>
+ <querysource>
+  <name>applications</name>
+  <sql>&lt;? if exists("docTypeID") ?>
+SELECT arapply_id, arapply_source_aropen_id,
+     CASE WHEN (arapply_source_doctype = 'C') THEN &lt;? value("creditMemo") ?>
+       WHEN (arapply_source_doctype = 'R') THEN &lt;? value("cashdeposit") ?>
+       WHEN (arapply_fundstype='C') THEN &lt;? value("check") ?>
+       WHEN (arapply_fundstype='T') THEN &lt;? value("certifiedCheck") ?>
+       WHEN (arapply_fundstype='M') THEN &lt;? value("masterCard") ?>
+       WHEN (arapply_fundstype='V') THEN &lt;? value("visa") ?>
+       WHEN (arapply_fundstype='A') THEN &lt;? value("americanExpress") ?>
+       WHEN (arapply_fundstype='D') THEN &lt;? value("discoverCard") ?>       
+       WHEN (arapply_fundstype='R') THEN &lt;? value("otherCreditCard") ?>
+       WHEN (arapply_fundstype='K') THEN &lt;? value("cash") ?>
+       WHEN (arapply_fundstype='W') THEN &lt;? value("wireTransfer") ?>
+       WHEN (arapply_fundstype='O') THEN &lt;? value("other") ?>
+     END AS doctype,
+     CASE WHEN (arapply_source_doctype IN ('C','R')) THEN arapply_source_docnumber
+     WHEN (arapply_source_doctype = 'K') THEN arapply_refnumber
+     ELSE 'Other'
+     END AS docnumber,
+arapply_postdate, arapply_applied, 
+currConcat(arapply_curr_id) AS currabbr, 
+currToBase(arapply_curr_id, arapply_applied, arapply_postdate) AS baseapplied, 
+'curr' AS arapply_applied_xtnumericrole, 
+'curr' AS baseapplied_xtnumericrole 
+FROM arapply 
+WHERE (arapply_target_aropen_id=&lt;? value("aropen_id") ?> ) 
+ORDER BY arapply_postdate
+
+&lt;? elseif exists("docTypeRC") ?>
+
+SELECT arapply_id, arapply_target_aropen_id, 
+     CASE WHEN (arapply_target_doctype = 'I') THEN &lt;? value("invoice") ?>
+      WHEN (arapply_target_doctype = 'D') THEN &lt;? value("debitMemo") ?>
+      WHEN (arapply_target_doctype = 'K') THEN &lt;? value("apcheck") ?>
+      WHEN (arapply_target_doctype = 'R') THEN &lt;? value("cashreceipt") ?>
+      ELSE &lt;? value("other") ?>
+     END AS doctype, 
+arapply_target_docnumber AS docnumber, 
+arapply_postdate, arapply_applied, 
+currConcat(arapply_curr_id) AS currabbr, 
+currToBase(arapply_curr_id, arapply_applied, arapply_postdate) AS baseapplied, 
+'curr' AS arapply_applied_xtnumericrole, 
+'curr' AS baseapplied_xtnumericrole 
+FROM arapply 
+WHERE (arapply_source_aropen_id=&lt;? value("aropen_id") ?> )
+ORDER BY arapply_postdate
+
+&lt;? endif ?></sql>
+ </querysource>
+ <rpthead>
+  <height>445</height>
+  <field>
+   <rect>
+    <x>492.06</x>
+    <y>160.717</y>
+    <width>196</width>
+    <height>25</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>12</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <top/>
+   <data>
+    <query>head</query>
+    <column>aropen_paid</column>
+   </data>
+  </field>
+  <field>
+   <rect>
+    <x>491.06</x>
+    <y>184.717</y>
+    <width>195</width>
+    <height>25</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>12</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <top/>
+   <data>
+    <query>head</query>
+    <column>f_balance</column>
+   </data>
+  </field>
+  <field>
+   <rect>
+    <x>167.902</x>
+    <y>68.2357</y>
+    <width>201</width>
+    <height>25</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>12</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <top/>
+   <data>
+    <query>head</query>
+    <column>aropen_docdate</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>34.5239</x>
+    <y>44.9813</y>
+    <width>126.032</width>
+    <height>18.3</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>12</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <top/>
+   <string>Customer:</string>
+  </label>
+  <label>
+   <rect>
+    <x>18.2</x>
+    <y>184.717</y>
+    <width>142</width>
+    <height>25</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>12</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <top/>
+   <string>Order Number:</string>
+  </label>
+  <label>
+   <rect>
+    <x>60.5562</x>
+    <y>91.1645</y>
+    <width>100</width>
+    <height>25</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>12</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <top/>
+   <string>Due Date:</string>
+  </label>
+  <field>
+   <rect>
+    <x>169.06</x>
+    <y>233</y>
+    <width>175</width>
+    <height>25</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>12</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <top/>
+   <data>
+    <query>head</query>
+    <column>rsncode_code</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>399.729</x>
+    <y>91.8</y>
+    <width>85.8</width>
+    <height>19.6</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>12</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <top/>
+   <string>Sales Rep.:</string>
+  </label>
+  <label>
+   <rect>
+    <x>434.029</x>
+    <y>68.9</y>
+    <width>51.5</width>
+    <height>18.4</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>12</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <top/>
+   <string>Terms:</string>
+  </label>
+  <field>
+   <rect>
+    <x>492.06</x>
+    <y>136</y>
+    <width>216</width>
+    <height>25</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>12</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <top/>
+   <data>
+    <query>head</query>
+    <column>aropen_amount</column>
+   </data>
+  </field>
+  <field>
+   <rect>
+    <x>494.06</x>
+    <y>68.8712</y>
+    <width>247.562</width>
+    <height>25</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>12</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <top/>
+   <data>
+    <query>head</query>
+    <column>terms_code</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>416</x>
+    <y>185</y>
+    <width>67</width>
+    <height>18.2</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>12</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <top/>
+   <string>Balance:</string>
+  </label>
+  <label>
+   <rect>
+    <x>8.84</x>
+    <y>160.717</y>
+    <width>152</width>
+    <height>25</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>12</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <top/>
+   <string>Document Number:</string>
+  </label>
+  <field>
+   <rect>
+    <x>169.06</x>
+    <y>160.717</y>
+    <width>176</width>
+    <height>25</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>12</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <top/>
+   <data>
+    <query>head</query>
+    <column>aropen_docnumber</column>
+   </data>
+  </field>
+  <field>
+   <rect>
+    <x>167.902</x>
+    <y>91.1813</y>
+    <width>216</width>
+    <height>25</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>12</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <top/>
+   <data>
+    <query>head</query>
+    <column>aropen_duedate</column>
+   </data>
+  </field>
+  <field>
+   <rect>
+    <x>167.902</x>
+    <y>44.9813</y>
+    <width>432.315</width>
+    <height>25</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>12</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <top/>
+   <data>
+    <query>head</query>
+    <column>cust_name</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>17.3649</x>
+    <y>68.2645</y>
+    <width>143.191</width>
+    <height>25</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>12</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <top/>
+   <string>Document Date:</string>
+  </label>
+  <label>
+   <rect>
+    <x>14.2</x>
+    <y>233</y>
+    <width>146</width>
+    <height>25</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>12</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <top/>
+   <string>Reason Code:</string>
+  </label>
+  <label>
+   <rect>
+    <x>352</x>
+    <y>209</y>
+    <width>131</width>
+    <height>18.8</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>12</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <top/>
+   <string>Commission Due:</string>
+  </label>
+  <field>
+   <rect>
+    <x>169.06</x>
+    <y>136</y>
+    <width>175</width>
+    <height>25</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>12</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <top/>
+   <data>
+    <query>head</query>
+    <column>aropen_doctype</column>
+   </data>
+  </field>
+  <field>
+   <rect>
+    <x>87.7597</x>
+    <y>271.717</y>
+    <width>624</width>
+    <height>127.611</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>12</size>
+    <weight>normal</weight>
+   </font>
+   <wordwrap/>
+   <left/>
+   <top/>
+   <data>
+    <query>head</query>
+    <column>aropen_notes</column>
+   </data>
+  </field>
+  <field>
+   <rect>
+    <x>169.06</x>
+    <y>209</y>
+    <width>177</width>
+    <height>25</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>12</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <top/>
+   <data>
+    <query>head</query>
+    <column>aropen_journalnumber</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>31.3131</x>
+    <y>136</y>
+    <width>133</width>
+    <height>25</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>12</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <top/>
+   <string>Document Type:</string>
+  </label>
+  <field>
+   <rect>
+    <x>490</x>
+    <y>233</y>
+    <width>199</width>
+    <height>25</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>12</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <top/>
+   <data>
+    <query>head</query>
+    <column>commission_paid</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>422</x>
+    <y>136</y>
+    <width>61.4</width>
+    <height>17.2</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>12</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <top/>
+   <string>Amount:</string>
+  </label>
+  <label>
+   <rect>
+    <x>441</x>
+    <y>161</y>
+    <width>42.6</width>
+    <height>19.9</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>12</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <top/>
+   <string>Paid:</string>
+  </label>
+  <field>
+   <rect>
+    <x>494.06</x>
+    <y>91.8168</y>
+    <width>242.264</width>
+    <height>25</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>12</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <top/>
+   <data>
+    <query>head</query>
+    <column>salesrep_name</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>351</x>
+    <y>233</y>
+    <width>132</width>
+    <height>20.8</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>12</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <top/>
+   <string>Commission Paid:</string>
+  </label>
+  <field>
+   <rect>
+    <x>491.06</x>
+    <y>209</y>
+    <width>198</width>
+    <height>25</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>12</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <top/>
+   <data>
+    <query>head</query>
+    <column>aropen_commission_due</column>
+   </data>
+  </field>
+  <field>
+   <rect>
+    <x>169.06</x>
+    <y>184.717</y>
+    <width>176</width>
+    <height>25</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>12</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <top/>
+   <data>
+    <query>head</query>
+    <column>aropen_ordernumber</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>20.3924</x>
+    <y>267.207</y>
+    <width>100</width>
+    <height>25</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>14</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <top/>
+   <string>Notes:</string>
+  </label>
+  <label>
+   <rect>
+    <x>-5.68</x>
+    <y>209</y>
+    <width>166</width>
+    <height>25</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>12</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <top/>
+   <string>Journal Number:</string>
+  </label>
+  <label>
+   <rect>
+    <x>9</x>
+    <y>416.355</y>
+    <width>100</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>12</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <top/>
+   <string>Doc Type</string>
+  </label>
+  <label>
+   <rect>
+    <x>123</x>
+    <y>416.355</y>
+    <width>100</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>12</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <top/>
+   <string>Doc Number</string>
+  </label>
+  <label>
+   <rect>
+    <x>242</x>
+    <y>416.355</y>
+    <width>100</width>
+    <height>21</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>12</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <top/>
+   <string>Apply Date</string>
+  </label>
+  <label>
+   <rect>
+    <x>351</x>
+    <y>416.355</y>
+    <width>100</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>12</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <top/>
+   <string>Amount</string>
+  </label>
+  <label>
+   <rect>
+    <x>470</x>
+    <y>416.355</y>
+    <width>100</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>12</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <top/>
+   <string>Currency</string>
+  </label>
+  <label>
+   <rect>
+    <x>608</x>
+    <y>416.355</y>
+    <width>100</width>
+    <height>19</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>12</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <top/>
+   <string>Base Amount</string>
+  </label>
+  <line>
+   <xstart>4</xstart>
+   <ystart>434</ystart>
+   <xend>737</xend>
+   <yend>434</yend>
+   <weight>2</weight>
+  </line>
+  <field>
+   <rect>
+    <x>30.7855</x>
+    <y>9.22414</y>
+    <width>698.682</width>
+    <height>37.1</height>
+   </rect>
+   <font>
+    <face>Sans Serif</face>
+    <size>20</size>
+    <weight>bold</weight>
+   </font>
+   <right/>
+   <top/>
+   <data>
+    <query>head</query>
+    <column>doc_name</column>
+   </data>
+  </field>
+ </rpthead>
+ <section>
+  <name>applications_detail</name>
+  <detail>
+   <key>
+    <query>applications</query>
+   </key>
+   <height>23</height>
+   <field>
+    <rect>
+     <x>8</x>
+     <y>1.71311</y>
+     <width>100</width>
+     <height>25</height>
+    </rect>
+    <font>
+     <face>Sans Serif</face>
+     <size>12</size>
+     <weight>normal</weight>
+    </font>
+    <left/>
+    <top/>
+    <data>
+     <query>applications</query>
+     <column>doctype</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>124</x>
+     <y>1.71311</y>
+     <width>100</width>
+     <height>25</height>
+    </rect>
+    <font>
+     <face>Sans Serif</face>
+     <size>12</size>
+     <weight>normal</weight>
+    </font>
+    <left/>
+    <top/>
+    <data>
+     <query>applications</query>
+     <column>docnumber</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>241</x>
+     <y>1.71311</y>
+     <width>100</width>
+     <height>25</height>
+    </rect>
+    <font>
+     <face>Sans Serif</face>
+     <size>12</size>
+     <weight>normal</weight>
+    </font>
+    <left/>
+    <top/>
+    <data>
+     <query>applications</query>
+     <column>arapply_postdate</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>352</x>
+     <y>1.71311</y>
+     <width>100</width>
+     <height>25</height>
+    </rect>
+    <font>
+     <face>Sans Serif</face>
+     <size>12</size>
+     <weight>normal</weight>
+    </font>
+    <left/>
+    <top/>
+    <data>
+     <query>applications</query>
+     <column>arapply_applied</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>474</x>
+     <y>1.71311</y>
+     <width>100</width>
+     <height>25</height>
+    </rect>
+    <font>
+     <face>Sans Serif</face>
+     <size>12</size>
+     <weight>normal</weight>
+    </font>
+    <left/>
+    <top/>
+    <data>
+     <query>applications</query>
+     <column>currabbr</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>611</x>
+     <y>1.71311</y>
+     <width>100</width>
+     <height>25</height>
+    </rect>
+    <font>
+     <face>Sans Serif</face>
+     <size>12</size>
+     <weight>normal</weight>
+    </font>
+    <left/>
+    <top/>
+    <data>
+     <query>applications</query>
+     <column>baseapplied</column>
+    </data>
+   </field>
+  </detail>
+ </section>
+</report>

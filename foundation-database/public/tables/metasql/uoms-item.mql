@@ -1,0 +1,37 @@
+-- Group: uoms
+-- Name: item
+-- Notes: used by bomItem
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT uom_id, uom_name
+  FROM item
+  JOIN uom ON (item_inv_uom_id=uom_id)
+ WHERE(item_id=<? value("item_id") ?>)
+UNION
+SELECT uom_id, uom_name
+  FROM item
+  JOIN itemuomconv ON (itemuomconv_item_id=item_id)
+  JOIN uom ON (itemuomconv_to_uom_id=uom_id),
+  itemuom, uomtype
+ WHERE (itemuomconv_from_uom_id=item_inv_uom_id)
+   AND (item_id=<? value("item_id") ?>)
+   AND (itemuom_itemuomconv_id=itemuomconv_id)
+   AND (uomtype_id=itemuom_uomtype_id)
+<? if exists("uomtype") ?>
+   AND (uomtype_name=<? value("uomtype") ?>)
+<? endif ?>
+UNION
+SELECT uom_id, uom_name
+  FROM item
+  JOIN itemuomconv ON (itemuomconv_item_id=item_id)
+  JOIN uom ON (itemuomconv_from_uom_id=uom_id),
+  itemuom, uomtype
+ WHERE (itemuomconv_to_uom_id=item_inv_uom_id)
+   AND (item_id=<? value("item_id") ?>)
+   AND (itemuom_itemuomconv_id=itemuomconv_id)
+   AND (uomtype_id=itemuom_uomtype_id)
+<? if exists("uomtype") ?>
+   AND (uomtype_name=<? value("uomtype") ?>)
+<? endif ?>
+ ORDER BY uom_name;

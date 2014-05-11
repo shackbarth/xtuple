@@ -1,0 +1,57 @@
+-- Group: countTags
+-- Name: detail
+-- Notes: used by dspCountTagsByClassCode, dspCountTagsByItem, dspCountTagsByWarehouse
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT invcnt_id, invcnt_tagnumber, warehous_code,
+       item_number, (item_descrip1 || item_descrip2) AS item_descrip,
+       invcnt_tagdate,
+       CASE WHEN invcnt_tagdate IS NOT NULL THEN invcnt_tag_username
+       END AS creator,
+       invcnt_cntdate,
+       CASE WHEN invcnt_cntdate IS NOT NULL THEN invcnt_cnt_username
+       END AS counter,
+       invcnt_postdate,
+       CASE WHEN invcnt_postdate IS NOT NULL THEN invcnt_post_username
+       END AS poster,
+       CASE WHEN (NOT invcnt_posted) THEN NULL
+            ELSE invcnt_qoh_before
+       END AS qohbefore,
+       invcnt_qoh_after,
+       CASE WHEN (NOT invcnt_posted) THEN NULL
+            ELSE (invcnt_qoh_after - invcnt_qoh_before)
+       END AS variance,
+       CASE WHEN (NOT invcnt_posted) THEN NULL
+            WHEN ((invcnt_qoh_before = 0) AND (invcnt_qoh_after = 0)) THEN 0
+            WHEN (invcnt_qoh_before = 0) THEN 1
+            ELSE ((1 - (invcnt_qoh_after / invcnt_qoh_before)) * -1)
+       END AS percent,
+      'qty' AS qohbefore_xtnumericrole,
+      'qty' AS invcnt_qoh_after_xtnumericrole,
+      'qty' AS variance_xtnumericrole,
+      'percent' AS percent_xtnumericrole 
+FROM invcnt, itemsite, item, whsinfo
+WHERE ((invcnt_itemsite_id=itemsite_id)
+  AND  (itemsite_item_id=item_id)
+  AND  (itemsite_warehous_id=warehous_id)
+  AND  (DATE(invcnt_tagdate) BETWEEN <? value("startDate") ?>
+                                 AND <? value("endDate") ?>)
+<? if not exists("showUnposted") ?>
+  AND  invcnt_posted
+<? endif ?>
+<? if exists("warehous_id") ?>
+  AND  (itemsite_warehous_id=<? value("warehous_id") ?>)
+<? endif ?>
+<? if exists("classcode_id") ?>
+  AND  (item_classcode_id=<? value("classcode_id") ?>)
+<? elseif exists("classcode_pattern") ?>
+  AND  (item_classcode_id IN (SELECT classcode_id
+                             FROM classcode
+                             WHERE (classcode_code ~ <? value("classcode_pattern") ?>)))
+<? endif ?>
+<? if exists("item_id") ?>
+  AND  (item_id=<? value("item_id") ?>)
+<? endif ?>
+)
+ORDER BY invcnt_tagdate;
