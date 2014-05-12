@@ -127,6 +127,7 @@ white:true*/
   XT.cacheCollection("XM.privileges", "XM.PrivilegeCollection");
   XT.cacheCollection("XM.projectTypes", "XM.ProjectTypeCollection", "code");
   XT.cacheCollection("XM.siteRelations", "XM.SiteRelationCollection", "code");
+  XT.cacheCollection("XM.sites", "XM.SiteCollection", "code");
   XT.cacheCollection("XM.shifts", "XM.ShiftCollection", "number");
   XT.cacheCollection("XM.sources", "XM.SourceCollection");
   XT.cacheCollection("XM.states", "XM.StateCollection", "abbreviation");

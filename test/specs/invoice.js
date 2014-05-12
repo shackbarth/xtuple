@@ -360,7 +360,6 @@ TODO deferred to later sprint:
         @property {TaxType} taxType
         @property {Money} taxTotal sum of all taxes
         @property {InvoiceLineTax} taxes
-        @property {SalesOrderLine} salesOrderLine Added by sales extension
       */
       var invoiceLine = it("A nested only model called XM.InvoiceLine extending " +
           "XM.Model should exist", function () {
