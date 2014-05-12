@@ -7,8 +7,8 @@ select xt.add_report_definition('XM.SalesOrder', 0, $${
   "headerElements": [
     {
       "element": "image",
-      "definition": "Sales Order Logo",
-      "options": {"x": 0, "y": 40, "width": 150}
+      "definition": "Logo",
+      "options": {"x": 40, "y": 25, "width": 250}
     },
     {
       "definition": [{"text": "_salesOrderAck"}],
