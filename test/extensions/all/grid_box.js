@@ -4,13 +4,6 @@
 /*global XT:true, XM:true, XV:true, process:true, module:true, require:true,
   describe:true, before:true, enyo:true, it:true, _:true, console:true */
 
-
-// NOTE! This test will fail in an extensionless build. This failure represents
-// a low-burning bug in the app, that many kinds are defined but not instantiable
-// in the core itself, usually because they rely on pickers that rely on caches
-// that don't exist. We don't see this problem in the app because those kinds
-// are hidden without the pertinent extension.
-
 (function () {
   "use strict";
 
@@ -34,25 +27,24 @@
 
     describe('Test Grid Boxes', function () {
       it('Test Grid Box Functionality', function () {
-        // look at all the lists in XV
+
         _.each(XV, function (value, key) {
           var list,
-            kinds = ['SalesOrderList', 'QuoteList', 'InvoiceList', 'ReturnList', 'ProjectList'],
-            master = new enyo.Control();
-
+            kinds = ['SalesOrderList', 'QuoteList', 'InvoiceList', 'ReturnList', 'ProjectList'];
+          // loop through lists with grid boxes
           if (XV.inheritsFrom(value.prototype, "XV.List") && _.contains(kinds, key)) {
+
             describe('Create Workspace for XV.' + key, function () {
               it('Create a Workspace', function () {
                 list = "XV." + key;
                 smoke.navigateToNewWorkspace(XT.app, list, function (workspaceContainer) {
-                  var workspace = workspaceContainer.$.workspace, gridBox, gridRow;
-
+                  var workspace = workspaceContainer.$.workspace;
                   _.each(workspace.$, function (component) {
                     if (XV.inheritsFrom(component, 'XV.GridBox') && XV.inheritsFrom(component, 'XV.WorkflowGridBox')) {
 
                       describe('Test creating line items for ' + component, function () {
                         it('Create line items', function () {
-                          gridBox = component;
+                          var gridBox = component, gridRow;
                           // Be sure that there are no rows
                           assert.equal(gridBox.liveModels().length, 0);
 
@@ -67,7 +59,6 @@
                           assert.equal(gridBox.liveModels().length, 2);
                         });
                       });
-
                     }
                   });
                 });
