@@ -59,7 +59,7 @@
       it('User navigates to Sales Order-New and selects to create a new Sales order', function (done) {
         smoke.navigateToNewWorkspace(XT.app, "XV.SalesOrderList", function (workspaceContainer) {
           var workspace = workspaceContainer.$.workspace,
-            gridRow, gridBox, collection;
+            gridRow, gridBox;
 
           assert.equal(workspace.value.recordType, "XM.SalesOrder");
 
@@ -95,8 +95,6 @@
 
           // Be sure that there are no rows
           gridBox = workspace.$.salesOrderLineItemBox;
-          collection = gridBox.getValue();
-
           assert.equal(gridBox.liveModels().length, 0);
 
           gridBox.newItem();
