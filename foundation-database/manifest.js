@@ -1594,6 +1594,8 @@
     "public/tables/report/WOSchedule.xml",
     "public/tables/report/WarehouseLocationMasterList.xml",
     "public/tables/report/WarehouseMasterList.xml",
-    "public/tables/report/items.xml"
+    "public/tables/report/items.xml",
+
+    "public/patches/fixacl.sql"
   ]
 }

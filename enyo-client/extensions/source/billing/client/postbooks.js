@@ -11,8 +11,8 @@
           {name: "billing_customerList", kind: "XV.CustomerList"},
           {name: "invoiceList", kind: "XV.InvoiceList"},
           {name: "returnList", kind: "XV.ReturnList"},
-          {name: "receivableList", kind: "XV.ReceivableList"},
-          {name: "cashReceiptList", kind: "XV.CashReceiptList"}
+          {name: "receivableList", kind: "XV.ReceivableList"}//,
+          //{name: "cashReceiptList", kind: "XV.CashReceiptList"}
         ]
       },
       relevantPrivileges = [
