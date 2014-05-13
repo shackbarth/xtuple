@@ -157,7 +157,7 @@ select xt.install_js('XM','ItemSite','xtuple', $$
     }
     qry = plv8.execute(sql1, clause.parameters);
 
-    if (!qry.length) { return [] };
+    if (!qry.length) { return []; }
     qry.forEach(function (row) {
       ids.push(row.id);
       idParams.push("$" + counter);
@@ -197,7 +197,7 @@ select xt.install_js('XM','ItemSite','xtuple', $$
   /**
    Wrapper for XM.ItemSiteListItem.fetch with support for REST query formatting.
    Sample usage:
-    select xt.post($${
+    select xt.post('{
       "nameSpace":"XM",
       "type":"ItemSiteListItem",
       "dispatch":{
@@ -214,7 +214,7 @@ select xt.install_js('XM','ItemSite','xtuple', $$
       },
       "username":"admin",
       "encryptionKey":"hm6gnf3xsov9rudi"
-    }$$);
+    }');
 
    @param {Object} options: query
    @returns Object
