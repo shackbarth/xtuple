@@ -386,8 +386,8 @@ select xt.install_js('XM','Model','xtuple', $$
         for (var o = 0; o < options.orderBy.length; o++) {
           for (var column in options.orderBy[o]) {
             order = {};
-            order.attribute = options.orderBy[o][column];
-            if (column === 'DESC') {
+            order.attribute = column;
+            if (options.orderBy[o][column] === 'DESC') {
               order.descending = true;
             }
             query.orderBy.push(order);

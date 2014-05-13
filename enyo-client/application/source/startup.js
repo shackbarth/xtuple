@@ -24,7 +24,9 @@ white:true*/
       };
       var relevantPrivileges = [
         "MaintainUsers",
-        "MaintainPreferencesSelf"
+        "MaintainPreferencesSelf",
+        "MaintainWorkflowsSelf",
+        "MaintainAllWorkflows"
       ];
       XT.session.addRelevantPrivileges("core", relevantPrivileges);
       XT.session.loadSessionObjects(XT.session.PRIVILEGES, options);
@@ -125,6 +127,7 @@ white:true*/
   XT.cacheCollection("XM.privileges", "XM.PrivilegeCollection");
   XT.cacheCollection("XM.projectTypes", "XM.ProjectTypeCollection", "code");
   XT.cacheCollection("XM.siteRelations", "XM.SiteRelationCollection", "code");
+  XT.cacheCollection("XM.sites", "XM.SiteCollection", "code");
   XT.cacheCollection("XM.shifts", "XM.ShiftCollection", "number");
   XT.cacheCollection("XM.sources", "XM.SourceCollection");
   XT.cacheCollection("XM.states", "XM.StateCollection", "abbreviation");
@@ -134,6 +137,7 @@ white:true*/
   XT.cacheCollection("XM.taxZones", "XM.TaxZoneCollection");
   XT.cacheCollection("XM.taxCodes", "XM.TaxCodeCollection");
   XT.cacheCollection("XM.units", "XM.UnitCollection");
+  XT.cacheCollection("XM.users", "XM.UserAccountRelationCollection", "username");
   XT.cacheCollection("XM.filters", "XM.FilterCollection");
   XT.cacheCollection("XM.reasonCodes", "XM.ReasonCodeCollection");
   XT.cacheCollection("XM.vendorTypes", "XM.VendorTypeCollection");

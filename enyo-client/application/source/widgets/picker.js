@@ -792,6 +792,20 @@ regexp:true, undef:true, trailing:true, white:true, strict:false */
   });
 
   // ..........................................................
+  // USER
+  //
+
+  enyo.kind({
+    name: "XV.UserPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.users",
+    nameAttribute: "username",
+    orderBy: [
+      {attribute: 'username'}
+    ]
+  });
+
+  // ..........................................................
   // VENDOR TYPE
   //
 
@@ -846,6 +860,12 @@ regexp:true, undef:true, trailing:true, white:true, strict:false */
         this.inherited(arguments, [false]);
       }
     },
+  });
+
+  enyo.kind({
+    name: "XV.HeavyweightSitePicker",
+    kind: "XV.SitePicker",
+    collection: "XM.sites"
   });
 
   enyo.kind({

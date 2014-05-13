@@ -33,7 +33,7 @@ BEGIN
   SELECT COALESCE(SUM(ROUND((coitem_qtyord * coitem_qty_invuomratio) *
                             (coitem_price / coitem_price_invuomratio), 2)), 0.0),
          COALESCE(SUM(ROUND((coitem_qtyord * coitem_qty_invuomratio) *
-                            coitem_unitcost, 2)), 0.0)
+                            (coitem_unitcost / coitem_price_invuomratio), 2)), 0.0)
          INTO _subtotal, _cost
   FROM coitem
   WHERE (coitem_cohead_id=pCoheadid)

@@ -188,6 +188,20 @@ var _ = require("underscore"),
       });
     });
 
+    it('should be able to do an item-site search with a keysearch', function (done) {
+      var sql = 'select xt.js_init(true);select xt.post($${"nameSpace":"XM","type":"ItemSiteRelation","dispatch":{"functionName":"fetch","parameters":{"parameters":[{"attribute":["number","barcode"],"operator":"BEGINS_WITH","value":"BTR","keySearch":true}],"orderBy":[{"attribute":"number"},{"attribute":"barcode"}],"rowLimit":10}},"username":"admin","encryptionKey":"this is any content"}$$);';
+
+      datasource.query(sql, creds, function (err, res) {
+        var results;
+        assert.isNull(err);
+        assert.equal(1, res.rowCount, JSON.stringify(res.rows));
+        results = JSON.parse(res.rows[1].post);
+        assert.isNumber(results.length);
+        done();
+      });
+    });
+
+
     it('should support a nested order-by', function (done) {
       var sql = 'select xt.js_init(true);select xt.get($${"nameSpace":"XM","type":"ItemSource","query":{"orderBy":[{"attribute":"vendorItemNumber"},{"attribute":"vendor.name"}],"parameters":[{"attribute":"isActive","value":true},{"attribute":"effective","operator":"<=","value":"2014-03-20T04:00:00.000Z"},{"attribute":"expires","operator":">=","value":"2014-03-22T01:18:09.202Z"}],"rowOffset":0,"rowLimit":50},"username":"admin","encryptionKey":"this is any content"}$$);';
 
@@ -297,8 +311,27 @@ var _ = require("underscore"),
       });
     });
 
+    it('should correctly fix a long list of natural key attributes', function (done) {
+      var sql = 'select xt.js_init();select xt.get($${"nameSpace":"XM","type":"IncidentListItem","query":{"orderBy":[{"attribute":"priorityOrder"},{"attribute":"updated","descending":true},{"attribute":"number","descending":true,"numeric":true}],"rowOffset":0,"rowLimit":50,"parameters":[{"attribute":["number","description","status","category","severity","priority","resolution","project"],"operator":"MATCHES","value":"Certify"},{"attribute":["owner.username","assignedTo.username"],"operator":"","isCharacteristic":false,"value":"admin"}]},"username":"admin","encryptionKey":"this is any content"}$$);';
 
-    // T&E
+      datasource.query(sql, creds, function (err, res) {
+        var results;
+        assert.isNull(err);
+        assert.equal(1, res.rowCount, JSON.stringify(res.rows));
+        results = JSON.parse(res.rows[1].get);
+        assert.isNumber(results.data.length);
+        done();
+      });
+    });
+
+
+// incident plus
+//select xt.js_init(true);select xt.get($${"nameSpace":"XM","type":"IncidentListItem","query":{"orderBy":[{"attribute":"priorityOrder"},{"attribute":"updated","descending":true},{"attribute":"number","descending":true,"numeric":true}],"rowOffset":0,"rowLimit":50,"parameters":[{"attribute":["owner.username","assignedTo.username"],"operator":"","isCharacteristic":false,"value":"admin"},{"attribute":"project","operator":"","isCharacteristic":false,"value":"GREENLEAF"},{"attribute":"foundIn","operator":"","isCharacteristic":false,"value":"d0e6c507-eac5-461c-f63e-91e352a3ffb1"}]},"username":"admin","encryptionKey":"this is any content"}$$)
+
+
+
+// T&E
+//select xt.js_init(true);select xt.get($${"nameSpace":"XM","type":"ProjectListItem","query":{"orderBy":[{"attribute":"number"}],"rowOffset":0,"rowLimit":50,"parameters":[{"attribute":["number","name","projectType","status","department"],"operator":"MATCHES","value":"foo"},{"attribute":"status","operator":"!=","value":"C"},{"attribute":"number","operator":"MATCHES","isCharacteristic":false,"value":"tre"},{"attribute":["owner.username","assignedTo.username"],"operator":"","isCharacteristic":false,"value":"admin"}]},"username":"admin","encryptionKey":"this is any content"}$$)
 //select xt.js_init(true);select xt.get($${"nameSpace":"XM","type":"ItemRelation","query":{"parameters":[{"attribute":"projectExpenseMethod","operator":"=","value":"E"},{"attribute":"isActive","value":true},{"attribute":"number","operator":"BEGINS_WITH","value":"pro","keySearch":false}],"orderBy":[{"attribute":"number"}],"rowLimit":1},"username":"admin","encryptionKey":"this is any content"}$$)
 //select xt.js_init(true);select xt.get($${"nameSpace":"XM","type":"ItemRelation","query":{"parameters":[{"attribute":"projectExpenseMethod","operator":"ANY","value":["E","A"]},{"attribute":"isActive","value":true},{"attribute":"number","operator":"BEGINS_WITH","value":"pro","keySearch":false}],"orderBy":[{"attribute":"number"}],"rowLimit":1},"username":"admin","encryptionKey":"this is any content"}$$)
 
