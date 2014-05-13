@@ -1816,7 +1816,9 @@ trailing:true, white:true, strict: false*/
     label: "_salesOrders".loc(),
     collection: "XM.SalesOrderListItemCollection",
     parameterWidget: "XV.SalesOrderListParameters",
-    actions: [],
+    actions: [
+      {name: "print", privilege: "MaintainSalesOrders", method: "doPrint", isViewMethod: true }
+    ],
     query: {orderBy: [
       {attribute: 'number'}
     ]},
@@ -1844,6 +1846,16 @@ trailing:true, white:true, strict: false*/
         ]}
       ]}
     ],
+    doPrint: function (options) {
+      if (XT.session.config.printAvailable) {
+        // send it to be printed silently by the server
+        options.model.doPrint();
+      } else {
+        // no print server set up: just pop open a tab
+        window.open(XT.getOrganizationPath() + options.model.getReportUrl(),
+          "_newtab");
+      }
+    },
     formatBillto: function (value, view, model) {
       var city = model.get("billtoCity"),
         state = model.get("billtoState"),

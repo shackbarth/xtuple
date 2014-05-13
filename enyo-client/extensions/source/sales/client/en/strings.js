@@ -46,7 +46,7 @@ strict:true, trailing:true, white:true */
     "_pricing": "Pricing",
     "_pricingOnLineItemEdits": "Pricing on Line Item edits",
     "_printCreditMemos": "Print Credit Memos",
-    "_printOnSave": "Print on Save",
+    "_printSalesOrder": "Print Sales Order",
     "_process": "Process",
     "_processCreditCards": "Process Credit Cards",
     "_prompt": "Prompt",
