@@ -112,6 +112,12 @@ select xt.install_js('XM','ItemSite','xtuple', $$
       }
 
       extra += ") ";
+
+      if (!clause.joins) {
+        clause.joins = [];
+      }
+
+      clause.joins.push('left join item jt0 on itemsite_item_id = item_id')
     }
 
     /* If vendor passed, and vendor can only supply against defined item sources, then restrict results */
@@ -121,6 +127,12 @@ select xt.install_js('XM','ItemSite','xtuple', $$
               '  from itemsrc ' +
               '  where itemsrc_active ' +
               '    and itemsrc_vend_id=' + vendorId + ')';
+
+      if (!clause.joins) {
+        clause.joins = [];
+      }
+
+      clause.joins.push('left join item jt0 on itemsite_item_id = item_id')
     }
 
     sql1 = XT.format(
