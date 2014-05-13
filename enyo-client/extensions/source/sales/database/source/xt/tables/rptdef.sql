@@ -42,7 +42,7 @@ select xt.add_report_definition('XM.SalesOrder', 0, $${
       "options": {"x": 0, "y": 160, "width": 250}
     },
     {
-      "definition": [{"text": "_billto", "label": true}],
+      "definition": [{"text": "_billTo", "label": true}],
       "options": {"x": 225, "y": 140, "fontBold": true}
     },
     {
@@ -61,7 +61,7 @@ select xt.add_report_definition('XM.SalesOrder', 0, $${
       "options": {"x": 225, "y": 160, "width": 250}
     },
     {
-      "definition": [{"text": "_shipto", "label": true}],
+      "definition": [{"text": "_shipTo", "label": true}],
       "options": {"x": 425, "y": 140, "fontBold": true}
     },
     {
@@ -100,7 +100,7 @@ select xt.add_report_definition('XM.SalesOrder', 0, $${
       "options": {"fontBold": true, "x": 250, "y": 230}
     },
     {
-      "definition": [{"attr": "packDate"}],
+      "definition": [{"attr": "scheduleDate"}],
       "options": {"x": 250, "y": 245}
     },
     {
@@ -127,8 +127,8 @@ select xt.add_report_definition('XM.SalesOrder', 0, $${
         {"text": "_ordered", "width": 80},
         {"text": "_balance", "width": 80},
         {"text": "_uom", "width": 50},
-        {"text": "_unitPrice", "width": 80},
-        {"text": "_amount", "width": 80}
+        {"text": "_unitPrice", "width": 90},
+        {"text": "_amount", "width": 70}
       ],
       "options": {"border": 0, "padding": 5, "x": 0, "y": 325}
     },
@@ -140,17 +140,29 @@ select xt.add_report_definition('XM.SalesOrder', 0, $${
       "element": "band",
       "definition": [
         {"attr": "lineItems*item.number", "width": 100},
-        {"attr": "lineItems*item.description", "width": 100},
+        {"attr": "lineItems*item.description1", "width": 100},
         {"attr": "lineItems*quantity", "width": 80},
-        {"attr": "lineItems*quantity", "width": 80},
+        {"attr": "lineItems*balance", "width": 80},
         {"attr": "lineItems*quantityUnit", "width": 50},
-        {"attr": "lineItems*price", "width": 80},
-        {"attr": "lineItems*price", "width": 80}
+        {"attr": "lineItems*price", "width": 90},
+        {"attr": "lineItems*extendedPrice", "width": 70}
       ],
       "options": {"fontBold": true, "border": 0, "padding": 12}
     }
   ],
   "footerElements": [
+    {"element": "bandLine", "size": 2},
+    {"element": "newline"},
+    {
+      "definition": [
+        {"attr": "subtotal", "label": true},
+        {"attr": "miscCharge", "label": true},
+        {"attr": "taxTotal", "label": true},
+        {"attr": "total", "label": true},
+        {"attr": "balance", "label": true}
+      ],
+      "options": {"fontBold": true, "width": 550, "align": "right"}
+    }
   ],
   "pageFooterElements": [
     {

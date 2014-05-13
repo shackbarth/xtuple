@@ -2227,6 +2227,7 @@ select xt.install_js('XT','Data','xtuple', $$
           if (printFormat && !prop.toOne && !prop.toMany) {
             switch(prop.attr.type) {
               case "Date":
+              case "DueDate":
                 preOffsetDate = item[itemAttr];
                 offsetDate = preOffsetDate &&
                   new Date(preOffsetDate.valueOf() + 60000 * preOffsetDate.getTimezoneOffset());
