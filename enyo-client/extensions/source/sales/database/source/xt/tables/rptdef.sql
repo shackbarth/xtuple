@@ -147,12 +147,10 @@ select xt.add_report_definition('XM.SalesOrder', 0, $${
         {"attr": "lineItems*price", "width": 90},
         {"attr": "lineItems*extendedPrice", "width": 70}
       ],
-      "options": {"fontBold": true, "border": 0, "padding": 12}
+      "options": {"fontBold": true, "border": 0, "padding": 14}
     }
   ],
   "footerElements": [
-    {"element": "bandLine", "size": 2},
-    {"element": "newline"},
     {
       "definition": [
         {"attr": "subtotal", "label": true},
@@ -161,7 +159,7 @@ select xt.add_report_definition('XM.SalesOrder', 0, $${
         {"attr": "total", "label": true},
         {"attr": "balance", "label": true}
       ],
-      "options": {"fontBold": true, "width": 550, "align": "right"}
+      "options": {"fontBold": true, "fontSize": 14, "width": 550, "align": "right"}
     }
   ],
   "pageFooterElements": [
