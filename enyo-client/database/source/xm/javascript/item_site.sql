@@ -99,7 +99,7 @@ select xt.install_js('XM','ItemSite','xtuple', $$
 
     /* If customer passed, restrict results to item sites allowed to be sold to that customer */
     if (customerId) {
-      extra += ' and jt0.item_id in (' + /* XXX jt0 is a dangerous assumption */
+      extra += ' and sidejoin.item_id in (' +
              'select item_id from item where item_sold and not item_exclusive ' +
              'union ' +
              'select item_id from xt.custitem where cust_id=${p2} ' +
@@ -117,12 +117,12 @@ select xt.install_js('XM','ItemSite','xtuple', $$
         clause.joins = [];
       }
 
-      clause.joins.push('left join item jt0 on itemsite_item_id = item_id')
+      clause.joins.push('left join item sidejoin on itemsite_item_id = item_id')
     }
 
     /* If vendor passed, and vendor can only supply against defined item sources, then restrict results */
     if (vendorId) {
-      extra +=  ' and jt0.item_id in (' + /* XXX jt0 is a dangerous assumption */
+      extra +=  ' and sidejoin.item_id in (' +
               '  select itemsrc_item_id ' +
               '  from itemsrc ' +
               '  where itemsrc_active ' +
@@ -132,7 +132,7 @@ select xt.install_js('XM','ItemSite','xtuple', $$
         clause.joins = [];
       }
 
-      clause.joins.push('left join item jt0 on itemsite_item_id = item_id')
+      clause.joins.push('left join item sidejoin on itemsite_item_id = item_id')
     }
 
     sql1 = XT.format(
