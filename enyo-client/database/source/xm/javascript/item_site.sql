@@ -2,7 +2,7 @@
 delete from xt.js where js_context='xtuple' and js_type = 'item_site';
 
 select xt.install_js('XM','ItemSite','xtuple', $$
-  /* Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+  /* Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
 (function () {
@@ -15,7 +15,7 @@ select xt.install_js('XM','ItemSite','xtuple', $$
     Return the current cost for a particular item site.
   */
   XM.ItemSite.cost = function (itemsiteId) {
-    if (!XT.Data.checkPrivilege('ViewCosts')) { return null };
+    if (!XT.Data.checkPrivilege('ViewCosts')) { return null; }
     return plv8.execute('select itemcost(itemsite_id) as cost from itemsite where obj_uuid = $1;', [itemsiteId])[0].cost;
   };
 
@@ -48,22 +48,22 @@ select xt.install_js('XM','ItemSite','xtuple', $$
         if (param.keySearch) {
           keySearch = param.value;
           sql += ' and (number ~^ ${p1} or barcode ~^ ${p1}) ' +
-            'union ' +
-	    'select %2$I.* ' +
-	    'from %1$I.%2$I  ' +
-	    ' join itemsite on itemsite_id=id ' +
-            ' join itemalias on itemsite_item_id=itemalias_item_id ' +
-            '   and itemalias_crmacct_id is null ' +
-            'where {conditions} {extra} ' +
-            ' and (itemalias_number ~^ ${p1}) ' +
-            'union ' +
-	    'select %2$I.* ' +
-	    'from %1$I.%2$I  ' +
-	    ' join itemsite on itemsite_id=id ' +
-            ' join itemalias on itemsite_item_id=itemalias_item_id ' +
-            '   and itemalias_crmacct_id={accountId} ' +
-            'where {conditions} {extra} ' +
-            ' and (itemalias_number ~^ ${p1}) ';
+                'union ' +
+                'select %2$I.* ' +
+                'from %1$I.%2$I  ' +
+                ' join itemsite on itemsite_id=id ' +
+                ' join itemalias on itemsite_item_id=itemalias_item_id ' +
+                '   and itemalias_crmacct_id is null ' +
+                'where {conditions} {extra} ' +
+                ' and (itemalias_number ~^ ${p1}) ' +
+                'union ' +
+                'select %2$I.* ' +
+                'from %1$I.%2$I  ' +
+                ' join itemsite on itemsite_id=id ' +
+                ' join itemalias on itemsite_item_id=itemalias_item_id ' +
+                '   and itemalias_crmacct_id={accountId} ' +
+                'where {conditions} {extra} ' +
+                ' and (itemalias_number ~^ ${p1}) ';
           return false;
         }
 
@@ -87,7 +87,7 @@ select xt.install_js('XM','ItemSite','xtuple', $$
           result = true;
         }
         return result;
-      })
+      });
     }
 
     clause = data.buildClause(namespace, type, query.parameters, query.orderBy);
@@ -142,11 +142,11 @@ select xt.install_js('XM','ItemSite','xtuple', $$
       clause.parameters = clause.parameters.concat([customerId, shiptoId, effectiveDate]);
     }
     if (DEBUG) {
-      plv8.elog(NOTICE, 'sql = ', sql.slice(0,500));
-      plv8.elog(NOTICE, 'sql = ', sql.slice(500, 1000));
-      plv8.elog(NOTICE, 'sql = ', sql.slice(1000, 1500));
-      plv8.elog(NOTICE, 'sql = ', sql.slice(1500, 2000));
-      plv8.elog(NOTICE, 'parameters = ', clause.parameters);
+      XT.debug('ItemSiteListItem sql = ', sql.slice(0,500));
+      XT.debug('ItemSiteListItem sql = ', sql.slice(500, 1000));
+      XT.debug('ItemSiteListItem sql = ', sql.slice(1000, 1500));
+      XT.debug('ItemSiteListItem sql = ', sql.slice(1500, 2000));
+      XT.debug('ItemSiteListItem parameters = ', clause.parameters);
     }
     return plv8.execute(sql, clause.parameters);
   };
@@ -167,6 +167,126 @@ select xt.install_js('XM','ItemSite','xtuple', $$
   */
   XM.ItemSiteListItem.fetch = function (query) {
     return _fetch("XM.ItemSiteListItem", query);
+  };
+
+  /**
+   Wrapper for XM.ItemSiteListItem.fetch with support for REST query formatting.
+   Sample usage:
+    select xt.post($${
+      "nameSpace":"XM",
+      "type":"ItemSiteListItem",
+      "dispatch":{
+        "functionName":"restFetch",
+        "parameters":[
+          {
+            "query":[
+              {"customer":{"EQUALS":"TTOYS"}},
+              {"shipto":{"EQUALS":"1d103cb0-dac6-11e3-9c1a-0800200c9a66"}},
+              {"effectiveDate":{"EQUALS":"2014-05-01"}}
+            ]
+          }
+        ]
+      },
+      "username":"admin",
+      "encryptionKey":"hm6gnf3xsov9rudi"
+    }$$);
+
+   @param {Object} options: query
+   @returns Object
+  */
+  XM.ItemSiteListItem.restFetch = function (options) {
+    options = options || {};
+
+    var items = {},
+      query = {},
+      result = {};
+
+    if (options) {
+      /* Convert from rest_query to XM.Model.query structure. */
+      query = XM.Model.restQueryFormat(options);
+
+      /* Perform the query. */
+      items = XM.ItemSiteListItem.fetch(query);
+    }
+
+    result = {items: items};
+
+    return items;
+  };
+  XM.ItemSiteListItem.restFetch.description = "Returns ItemSiteListItems with additional special support for exclusive item rules, to filter on only items with associated item sources and Cross check on `alias` and `barcode` attributes for item numbers.";
+  XM.ItemSiteListItem.restFetch.request = {
+    "$ref": "ItemSiteListItemQuery"
+  };
+  XM.ItemSiteListItem.restFetch.parameterOrder = ["options"];
+  // For JSON-Schema deff, see:
+  // https://github.com/fge/json-schema-validator/issues/46#issuecomment-14681103
+  XM.ItemSiteListItem.restFetch.schema = {
+    ItemSiteListItemQuery: {
+      properties: {
+        attributes: {
+          title: "ItemSiteListItem Service request attributes",
+          description: "An array of attributes needed to perform a ItemSiteListItem query.",
+          type: "array",
+          items: [
+            {
+              title: "Options",
+              type: "object",
+              "$ref": "ItemSiteListItemOptions"
+            }
+          ],
+          "minItems": 1,
+          "maxItems": 1,
+          required: true
+        }
+      }
+    },
+    ItemSiteListItemOptions: {
+      properties: {
+        query: {
+          title: "query",
+          description: "The query to perform.",
+          type: "array",
+          items: [
+            {
+              title: "column",
+              type: "object"
+            }
+          ],
+          "minItems": 1
+        },
+        orderby: {
+          title: "Order By",
+          description: "The query order by.",
+          type: "array",
+          items: [
+            {
+              title: "column",
+              type: "object"
+            }
+          ]
+        },
+        rowlimit: {
+          title: "Row Limit",
+          description: "The query for paged results.",
+          type: "integer"
+        },
+        maxresults: {
+          title: "Max Results",
+          description: "The query limit for total results.",
+          type: "integer"
+        },
+        pagetoken: {
+          title: "Page Token",
+          description: "The query offset page token.",
+          type: "integer"
+        },
+        count: {
+          title: "Count",
+          description: "Set to true to return only the count of results for this query.",
+          type: "boolean"
+        }
+      }
+    }
   };
 
   if (!XM.ItemSiteRelation) { XM.ItemSiteRelation = {}; }
