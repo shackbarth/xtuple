@@ -151,11 +151,12 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     }}],
     beforeSaveUIActions: [{it: 'sets up a valid line item',
       action: function (workspace, done) {
-        var gridRow;
+        var gridRow,
+          gridBox = workspace.$.salesOrderLineItemBox;
 
         primeSubmodels(function (submodels) {
-          workspace.$.salesOrderLineItemBox.newItem();
-          gridRow = workspace.$.salesOrderLineItemBox.$.editableGridRow;
+          gridBox.newItem();
+          gridRow = gridBox.$.editableGridRow;
           gridRow.$.itemSiteWidget.doValueChange({value: {item: submodels.itemModel,
             site: submodels.siteModel}});
           gridRow.$.quantityWidget.doValueChange({value: 5});
@@ -756,4 +757,3 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
   exports.getBeforeSaveAction = getBeforeSaveAction;
 
 }());
-
