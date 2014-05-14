@@ -278,6 +278,32 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
         }), "isSalesOrders");
       });
     });
+    describe("Sales Order list", function () {
+      /**
+        @member Buttons
+        @memberof Invoice
+        @description The InvoiceWorkspace should be printable
+      */
+      it("XV.SalesOrderList should be printable", function () {
+        var list = new XV.SalesOrderList(),
+          actions = list.actions;
+        assert.include(_.pluck(actions, 'name'), 'print');
+        assert.include(_.pluck(actions, 'name'), 'email');
+      });
+    });
+    describe("Sales Order workspace", function () {
+      /**
+        @member Buttons
+        @memberof SalesOrder
+        @description The SalesOrderWorkspace should be printable
+      */
+      it("XV.SalesOrderWorkspace should be printable", function () {
+        var workspace = new XV.SalesOrderWorkspace(),
+          actions = workspace.actions;
+        assert.include(_.pluck(actions, 'name'), 'print');
+        assert.include(_.pluck(actions, 'name'), 'email');
+      });
+    });
     describe("Sales order workflow", function () {
       var salesOrderModel,
         saleTypeModel,
@@ -756,4 +782,3 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
   exports.getBeforeSaveAction = getBeforeSaveAction;
 
 }());
-

@@ -1168,7 +1168,8 @@ TODO deferred to later sprint:
       it("XV.InvoiceList should be printable", function () {
         var list = new XV.InvoiceList(),
           actions = list.actions;
-        assert.true(actions.name === 'print');
+        assert.include(_.pluck(actions, 'name'), 'print');
+        assert.include(_.pluck(actions, 'name'), 'email');
       });
 
     });
@@ -1185,6 +1186,17 @@ TODO deferred to later sprint:
         var widgetModel = XT.getObjectByName(workspace.$.customerWidget.getCollection())
           .prototype.model.prototype.recordType;
         assert.equal(attrModel, widgetModel);
+      });
+      /**
+        @member Buttons
+        @memberof Invoice
+        @description The InvoiceWorkspace should be printable
+      */
+      it("XV.InvoiceWorkspace should be printable", function () {
+        var workspace = new XV.InvoiceWorkspace(),
+          actions = workspace.actions;
+        assert.include(_.pluck(actions, 'name'), 'print');
+        assert.include(_.pluck(actions, 'name'), 'email');
       });
       /**
         @member Navigation
