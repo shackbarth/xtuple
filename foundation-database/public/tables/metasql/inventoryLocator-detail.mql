@@ -40,7 +40,9 @@ FROM (SELECT itemloc_id, 1 AS type, warehous_code,
   , charass_alias<? literal("char_id_list_list") ?>.charass_value AS char<? literal("char_id_list_list") ?>
 <? endforeach ?>
 <? foreach("char_id_date_list") ?>
-  , charass_alias<? literal("char_id_date_list") ?>.charass_value::date AS char<? literal("char_id_date_list") ?>
+  , CASE WHEN (charass_alias<? literal("char_id_date_list") ?>.charass_value = '') THEN NULL::date
+         ELSE charass_alias<? literal("char_id_date_list") ?>.charass_value::date 
+    END AS char<? literal("char_id_date_list") ?>
 <? endforeach ?>
       FROM itemsite, whsinfo,
            itemloc LEFT OUTER JOIN location ON (itemloc_location_id=location_id)
