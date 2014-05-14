@@ -35,6 +35,8 @@ select xt.install_js('XM','ItemSite','xtuple', $$
       limit = query.rowLimit ? 'limit ' + Number(query.rowLimit) : '',
       offset = query.rowOffset ? 'offset ' + Number(query.rowOffset) : '',
       clause,
+      itemJoinMatches,
+      itemJoinTable,
       keySearch = false,
       extra = "",
       qry,
@@ -97,9 +99,23 @@ select xt.install_js('XM','ItemSite','xtuple', $$
 
     clause = data.buildClause(namespace, type, query.parameters, query.orderByColumns);
 
+    /* Check if public.item is already joined through clause.joins. */
+    if (clause.joins && clause.joins.length) {
+      itemJoinMatches = clause.joins.match(/(.item )(jt\d+)/g);
+
+      if (itemJoinMatches && itemJoinMatches.length) {
+        itemJoinTable = itemJoinMatches[0].match(/(jt\d+)/g);
+      }
+    }
+
+    if (!itemJoinTable) {
+      /* public.item is not already joined. Set the default name. */
+      itemJoinTable = 'sidejoin';
+    }
+
     /* If customer passed, restrict results to item sites allowed to be sold to that customer */
     if (customerId) {
-      extra += ' and sidejoin.item_id in (' +
+      extra += ' and ' + itemJoinTable + '.item_id in (' +
              'select item_id from item where item_sold and not item_exclusive ' +
              'union ' +
              'select item_id from xt.custitem where cust_id=${p2} ' +
@@ -117,12 +133,15 @@ select xt.install_js('XM','ItemSite','xtuple', $$
         clause.joins = '';
       }
 
-      clause.joins = clause.joins + ' left join item sidejoin on t1.itemsite_item_id = sidejoin.item_id ';
+      /* public.item is not already joined. Add it here. */
+      if (itemJoinTable === 'sidejoin') {
+        clause.joins = clause.joins + ' left join item ' + itemJoinTable + ' on t1.itemsite_item_id = ' + itemJoinTable + '.item_id ';
+      }
     }
 
     /* If vendor passed, and vendor can only supply against defined item sources, then restrict results */
     if (vendorId) {
-      extra +=  ' and sidejoin.item_id in (' +
+      extra +=  ' and ' + itemJoinTable + '.item_id in (' +
               '  select itemsrc_item_id ' +
               '  from itemsrc ' +
               '  where itemsrc_active ' +
@@ -132,7 +151,10 @@ select xt.install_js('XM','ItemSite','xtuple', $$
         clause.joins = '';
       }
 
-      clause.joins = clause.joins + ' left join item sidejoin on t1.itemsite_item_id = sidejoin.item_id ';
+      /* public.item is not already joined. Add it here. */
+      if (itemJoinTable === 'sidejoin') {
+        clause.joins = clause.joins + ' left join item ' + itemJoinTable + ' on t1.itemsite_item_id = ' + itemJoinTable + '.item_id ';
+      }
     }
 
     sql1 = XT.format(
