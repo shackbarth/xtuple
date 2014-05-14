@@ -41,7 +41,7 @@ white:true*/
 
     numberPolicySetting: 'CONumberGeneration',
 
-    printOnSave: 'DefaultPrintSOOnSave',
+    printOnSaveSetting: 'DefaultPrintSOOnSave',
 
     documentDateKey: "orderDate",
 

@@ -1166,8 +1166,9 @@ TODO deferred to later sprint:
         @description The InvoiceList should be printable
       */
       it("XV.InvoiceList should be printable", function () {
-        var list = new XV.InvoiceList();
-        assert.isTrue(list.getAllowPrint());
+        var list = new XV.InvoiceList(),
+          actions = list.actions;
+        assert.true(actions.name === 'print');
       });
 
     });
