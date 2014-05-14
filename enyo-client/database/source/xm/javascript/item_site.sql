@@ -114,10 +114,10 @@ select xt.install_js('XM','ItemSite','xtuple', $$
       extra += ") ";
 
       if (!clause.joins) {
-        clause.joins = [];
+        clause.joins = '';
       }
 
-      clause.joins.push('left join item sidejoin on itemsite_item_id = item_id')
+      clause.joins = clause.joins + ' left join item sidejoin on t1.itemsite_item_id = sidejoin.item_id ';
     }
 
     /* If vendor passed, and vendor can only supply against defined item sources, then restrict results */
@@ -129,10 +129,10 @@ select xt.install_js('XM','ItemSite','xtuple', $$
               '    and itemsrc_vend_id=' + vendorId + ')';
 
       if (!clause.joins) {
-        clause.joins = [];
+        clause.joins = '';
       }
 
-      clause.joins.push('left join item sidejoin on itemsite_item_id = item_id')
+      clause.joins = clause.joins + ' left join item sidejoin on t1.itemsite_item_id = sidejoin.item_id ';
     }
 
     sql1 = XT.format(
