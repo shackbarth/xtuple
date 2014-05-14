@@ -265,7 +265,8 @@ select xt.install_js('XM','ItemSite','xtuple', $$
     @returns {Array}
   */
   XM.ItemSiteListItem.fetch = function (query) {
-    return _fetch("XM.ItemSiteListItem", "public.itemsite", query);
+    var result = _fetch("XM.ItemSiteListItem", "public.itemsite", query);
+    return result.data;
   };
 
   /**
@@ -401,10 +402,10 @@ select xt.install_js('XM','ItemSite','xtuple', $$
     @returns {Array}
   */
   XM.ItemSiteRelation.fetch = function (query) {
-    return _fetch("XM.ItemSiteRelation", "xt.itemsiteinfo", query);
+    var result = _fetch("XM.ItemSiteRelation", "xt.itemsiteinfo", query);
+    return result.data;
   };
 
 }());
 
 $$ );
-
