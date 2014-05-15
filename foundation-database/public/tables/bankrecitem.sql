@@ -1,0 +1,1 @@
+select xt.add_column('bankrecitem','bankrecitem_effdate', 'DATE', NULL, 'public');

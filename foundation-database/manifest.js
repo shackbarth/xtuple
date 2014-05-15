@@ -990,7 +990,13 @@
     "public/trigger_functions/wo.sql",
     "public/trigger_functions/womatl.sql",
 
+    "public/tables/bankrecitem.sql",
+    "public/tables/cashrcpt.sql",
     "public/tables/metric.sql",
+    "public/tables/priv.sql",
+    "public/tables/tax.sql",
+    "public/tables/taxpay.sql",
+
     "public/views/address.sql",
     "public/views/apmemo.sql",
     "public/views/armemo.sql",
