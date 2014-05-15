@@ -29,6 +29,7 @@ select xt.install_js('XM','ItemSite','xtuple', $$
       type = recordType.afterDot(),
       tableNamespace = backingType.beforeDot(),
       table = backingType.afterDot(),
+      orderBy = query.orderBy,
       orm = data.fetchOrm(nameSpace, type),
       keyColumn = XT.Orm.primaryKey(orm, true),
       customerId = null,
@@ -54,7 +55,7 @@ select xt.install_js('XM','ItemSite','xtuple', $$
       sqlCount,
       sql1 = 'select t1.%3$I as id ' +
             'from %1$I.%2$I t1 {joins} ' +
-            'where {conditions} {extra}',
+            'where {conditions} {extra} group by t1.%3$I{groupBy} ',
       sql2 = 'select * from %1$I.%2$I where id in ({ids}) {orderBy}';
 
     /* Handle special parameters */
@@ -106,7 +107,7 @@ select xt.install_js('XM','ItemSite','xtuple', $$
       });
     }
 
-    clause = data.buildClause(nameSpace, type, query.parameters, query.orderByColumns);
+    clause = data.buildClause(nameSpace, type, query.parameters, orderBy);
 
     /* Check if public.item is already joined through clause.joins. */
     if (clause.joins && clause.joins.length) {
@@ -196,11 +197,19 @@ select xt.install_js('XM','ItemSite','xtuple', $$
       [tableNamespace, table, idColumn, limit, offset]
     );
 
+    /* Because we query views of views, you can get inconsistent results */
+    /* when doing limit and offest queries without an order by. Add a default. */
+    if (limit && offset && (!orderBy || !orderBy.length) && !clause.orderByColumns) {
+      /* We only want this on sql1, not sql2's clause.orderBy. */
+      clause.orderByColumns = XT.format('order by t1.%1$I', [idColumn]);
+    }
+
     /* Query the model */
     sql1 = sql1.replace(/{conditions}/g, clause.conditions)
              .replace(/{extra}/g, extra)
              .replace(/{joins}/g, clause.joins)
-             .replace('{orderBy}', clause.orderBy)
+             .replace(/{groupBy}/g, clause.groupByColumns)
+             .replace('{orderBy}', clause.orderByColumns)
              .replace('{limit}', limit)
              .replace('{offset}', offset)
              .replace('{accountId}', accountId)
@@ -306,7 +315,7 @@ select xt.install_js('XM','ItemSite','xtuple', $$
       query = XM.Model.restQueryFormat(options);
 
       /* Perform the query. */
-      return  _fetch("XM.ItemSiteListItem", "public.itemsite", query);
+      return _fetch("XM.ItemSiteListItem", "public.itemsite", query);
     } else {
       throw new handleError("Bad Request", 400);
     }
