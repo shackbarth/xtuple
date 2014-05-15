@@ -319,29 +319,20 @@ select xt.install_js('XM','Model','xtuple', $$
   };
 
   /**
-   Returns a complex query's results using the REST query structure. This is a
-   wrapper for XM.Model.query that reformats the query structure from a
-   rest_query to our XT.Rest structure. This dispatch function can be used by
-   a REST API client to query a resource when the query would be too long to
-   pass to the API as a GET URL query.
+   Format acomplex query's using the REST query structure into an xTuple's query.
+   This is a helper function that reformats the query structure from a
+   rest_query to our XT.Rest structure. This function should be used by reformat
+   any REST API client queriers.
 
    Sample usage:
-    select xt.post('{
-      "username": "admin",
-      "nameSpace": "XM",
-      "type": "Model",
-      "dispatch":{
-        "functionName":"restQuery",
-        "parameters":["Address", {"query": [{"city":{"EQUALS":"Norfolk"}}], "orderby": [{"ASC": "line1"}, {"DESC": "line2"}]}]
-      }
-    }');
+    XM.Model.restQueryFormat({"query": [{"city":{"EQUALS":"Norfolk"}}], "orderby": [{"ASC": "line1"}, {"DESC": "line2"}]})
 
-   @param {String} recordType to query
    @param {Object} options: query
-   @returns Object
+   @returns {Object} The formated query
   */
-  XM.Model.restQuery = function (recordType, options) {
+  XM.Model.restQueryFormat = function (options) {
     options = options || {};
+
     var order = {},
         param = {},
         query = {},
@@ -365,7 +356,7 @@ select xt.install_js('XM','Model','xtuple', $$
         };
 
     /* Convert from rest_query to XM.Model.query structure. */
-    if (recordType && options) {
+    if (options) {
       if (options.query) {
         query.parameters = [];
         for (var i = 0; i < options.query.length; i++) {
@@ -415,7 +406,43 @@ select xt.install_js('XM','Model','xtuple', $$
       }
     }
 
-    result = XM.Model.query(recordType, {"query": query});
+    return query;
+  };
+
+  /**
+   Returns a complex query's results using the REST query structure. This is a
+   wrapper for XM.Model.query that reformats the query structure from a
+   rest_query to our XT.Rest structure. This dispatch function can be used by
+   a REST API client to query a resource when the query would be too long to
+   pass to the API as a GET URL query.
+
+   Sample usage:
+    select xt.post('{
+      "username": "admin",
+      "nameSpace": "XM",
+      "type": "Model",
+      "dispatch":{
+        "functionName":"restQuery",
+        "parameters":["Address", {"query": [{"city":{"EQUALS":"Norfolk"}}], "orderby": [{"ASC": "line1"}, {"DESC": "line2"}]}]
+      }
+    }');
+
+   @param {String} recordType to query
+   @param {Object} options: query
+   @returns Object
+  */
+  XM.Model.restQuery = function (recordType, options) {
+    options = options || {};
+    var formattedOptions = {};
+
+    /* Convert from rest_query to XM.Model.query structure. */
+    if (recordType && options) {
+      formattedOptions = {
+        "query": XM.Model.restQueryFormat(options)
+      };
+    }
+
+    result = XM.Model.query(recordType, formattedOptions);
 
     return result;
   };
