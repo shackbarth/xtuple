@@ -20,8 +20,9 @@ select xt.install_js('XM','ItemSite','xtuple', $$
   };
 
   /** @private */
-  var _fetch = function (recordType, backingType, query, idColumn) {
+  var _fetch = function (recordType, backingType, query, backingTypeJoinColumn, idColumn) {
     query = query || {};
+    backingTypeJoinColumn = backingTypeJoinColumn || 'itemsite_item_id';
     idColumn = idColumn || 'itemsite_id';
 
     var data = Object.create(XT.Data),
@@ -55,7 +56,7 @@ select xt.install_js('XM','ItemSite','xtuple', $$
       sqlCount,
       sql1 = 'select t1.%3$I as id ' +
             'from %1$I.%2$I t1 {joins} ' +
-            'where {conditions} {extra} group by t1.%3$I{groupBy} ',
+            'where {conditions} {extra}',
       sql2 = 'select * from %1$I.%2$I where id in ({ids}) {orderBy}';
 
     /* Handle special parameters */
@@ -66,18 +67,18 @@ select xt.install_js('XM','ItemSite','xtuple', $$
         /* Over-ride usual search behavior */
         if (param.keySearch) {
           keySearch = param.value;
-          sql1 += ' and itemsite_item_id in (select item_id from item where item_number ~^ ${p1} or item_upccode ~^ ${p1}) ' +
+          sql1 += ' and t1.%4$I in (select item_id from item where item_number ~^ ${p1} or item_upccode ~^ ${p1}) ' +
             'union ' +
             'select t1.%3$I ' +
             'from %1$I.%2$I t1 {joins} ' +
-            ' join itemalias on itemsite_item_id=itemalias_item_id ' +
+            ' join itemalias on t1.%4$I=itemalias_item_id ' +
             '   and itemalias_crmacct_id is null ' +
             'where {conditions} {extra} ' +
             ' and (itemalias_number ~^ ${p1}) ' +
             'union ' +
             'select t1.%3$I ' +
             'from %1$I.%2$I t1 {joins} ' +
-            ' join itemalias on itemsite_item_id=itemalias_item_id ' +
+            ' join itemalias on t1.%4$I=itemalias_item_id ' +
             '   and itemalias_crmacct_id={accountId} ' +
             'where {conditions} {extra} ' +
             ' and (itemalias_number ~^ ${p1}) ';
@@ -125,11 +126,11 @@ select xt.install_js('XM','ItemSite','xtuple', $$
 
     /* If customer passed, restrict results to item sites allowed to be sold to that customer */
     if (customerId) {
-      extra += ' and ' + itemJoinTable + '.item_id in (' +
+      extra += XT.format(' and %1$I.item_id in (' +
              'select item_id from item where item_sold and not item_exclusive ' +
              'union ' +
              'select item_id from xt.custitem where cust_id=${p2} ' +
-             '  and ${p4}::date between effective and (expires - 1) ';
+             '  and ${p4}::date between effective and (expires - 1) ', [itemJoinTable]);
 
       if (shiptoId) {
         extra += 'union ' +
@@ -145,17 +146,17 @@ select xt.install_js('XM','ItemSite','xtuple', $$
 
       /* public.item is not already joined. Add it here. */
       if (itemJoinTable === 'sidejoin') {
-        clause.joins = clause.joins + ' left join item ' + itemJoinTable + ' on t1.itemsite_item_id = ' + itemJoinTable + '.item_id ';
+        clause.joins = clause.joins + XT.format(' left join item %1$I on t1.%2$I = %1$I.item_id ', [itemJoinTable, backingTypeJoinColumn]);
       }
     }
 
     /* If vendor passed, and vendor can only supply against defined item sources, then restrict results */
     if (vendorId) {
-      extra +=  ' and ' + itemJoinTable + '.item_id in (' +
+      extra +=  XT.format(' and %1$I.item_id in (' +
               '  select itemsrc_item_id ' +
               '  from itemsrc ' +
               '  where itemsrc_active ' +
-              '    and itemsrc_vend_id=' + vendorId + ')';
+              '    and itemsrc_vend_id=%2$I)', [itemJoinTable, vendorId]);
 
       if (!clause.joins) {
         clause.joins = '';
@@ -163,14 +164,14 @@ select xt.install_js('XM','ItemSite','xtuple', $$
 
       /* public.item is not already joined. Add it here. */
       if (itemJoinTable === 'sidejoin') {
-        clause.joins = clause.joins + ' left join item ' + itemJoinTable + ' on t1.itemsite_item_id = ' + itemJoinTable + '.item_id ';
+        clause.joins = clause.joins + XT.format(' left join item %1$I on t1.%2$I = %1$I.item_id ', [itemJoinTable, backingTypeJoinColumn]);
       }
     }
 
     if (query.count) {
       /* Just get the count of rows that match the conditions */
       sqlCount = 'select count(distinct t1.%3$I) as count from %1$I.%2$I t1 {joins} where {conditions} {extra};';
-      sqlCount = XT.format(sqlCount, [tableNamespace.decamelize(), table.decamelize(), idColumn]);
+      sqlCount = XT.format(sqlCount, [tableNamespace.decamelize(), table.decamelize(), idColumn, backingTypeJoinColumn]);
       sqlCount = sqlCount.replace(/{conditions}/g, clause.conditions)
                          .replace(/{extra}/g, extra)
                          .replace('{joins}', clause.joins)
@@ -193,8 +194,8 @@ select xt.install_js('XM','ItemSite','xtuple', $$
     }
 
     sql1 = XT.format(
-      sql1 += '{orderBy} %4$s %5$s;',
-      [tableNamespace, table, idColumn, limit, offset]
+      sql1 += 'group by t1.%3$I{groupBy} {orderBy} %5$s %6$s;',
+      [tableNamespace, table, idColumn, backingTypeJoinColumn, limit, offset]
     );
 
     /* Because we query views of views, you can get inconsistent results */
@@ -210,8 +211,6 @@ select xt.install_js('XM','ItemSite','xtuple', $$
              .replace(/{joins}/g, clause.joins)
              .replace(/{groupBy}/g, clause.groupByColumns)
              .replace('{orderBy}', clause.orderByColumns)
-             .replace('{limit}', limit)
-             .replace('{offset}', offset)
              .replace('{accountId}', accountId)
              .replace(/{p1}/g, clause.parameters.length + 1)
              .replace(/{p2}/g, clause.parameters.length + (keySearch ? 2 : 1))
@@ -315,7 +314,9 @@ select xt.install_js('XM','ItemSite','xtuple', $$
       query = XM.Model.restQueryFormat(options);
 
       /* Perform the query. */
-      return _fetch("XM.ItemSiteListItem", "public.itemsite", query);
+      // TODO - move this to xdruple extension.
+      //return _fetch("XM.ItemSiteListItem", "public.itemsite", query);
+      return _fetch("XM.XdrupleCommerceProduct", "xdruple.xd_commerce_product", query, 'product_id', 'id');
     } else {
       throw new handleError("Bad Request", 400);
     }
