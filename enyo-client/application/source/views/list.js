@@ -45,7 +45,6 @@ trailing:true, white:true, strict: false*/
     query: {orderBy: [
       {attribute: 'number'}
     ]},
-    allowPrint: true,
     parameterWidget: "XV.AccountListParameters",
     components: [
       {kind: "XV.ListItem", components: [
@@ -98,7 +97,6 @@ trailing:true, white:true, strict: false*/
       {attribute: 'name'},
       {attribute: 'uuid'}
     ]},
-    allowPrint: true,
     multiSelect: true,
     components: [
       {kind: "XV.ListItem", components: [
@@ -424,7 +422,6 @@ trailing:true, white:true, strict: false*/
       {attribute: 'firstName'},
       {attribute: 'primaryEmail'}
     ]},
-    allowPrint: true,
     parameterWidget: "XV.ContactListParameters",
     components: [
       {kind: "XV.ListItem", components: [
@@ -677,7 +674,6 @@ trailing:true, white:true, strict: false*/
     query: {orderBy: [
       {attribute: 'number'}
     ]},
-    allowPrint: true,
     multiSelect: true,
     parameterWidget: "XV.CustomerListParameters",
     components: [
@@ -1119,7 +1115,6 @@ trailing:true, white:true, strict: false*/
       {attribute: 'updated', descending: true},
       {attribute: 'number', descending: true, numeric: true}
     ]},
-    allowPrint: true,
     toggleSelected: false,
     parameterWidget: "XV.IncidentListParameters",
     components: [
@@ -1230,7 +1225,6 @@ trailing:true, white:true, strict: false*/
     name: "XV.InvoiceList",
     kind: "XV.List",
     multiSelect: true,
-    allowPrint: true,
     label: "_invoices".loc(),
     parameterWidget: "XV.InvoiceListParameters",
     collection: "XM.InvoiceListItemCollection",
@@ -1243,8 +1237,9 @@ trailing:true, white:true, strict: false*/
       {name: "post", privilege: "PostMiscInvoices", prerequisite: "canPost",
         method: "doPost" },
       {name: "print", privilege: "PrintInvoices", method: "doPrint", isViewMethod: true },
+      {name: "email", privilege: "PrintInvoices", method: "doEmail", isViewMethod: true},
       {name: "download", privilege: "PrintInvoices", method: "doDownload",
-        isViewMethod: true }
+        isViewMethod: true}
     ],
     components: [
       {kind: "XV.ListItem", components: [
@@ -1271,26 +1266,6 @@ trailing:true, white:true, strict: false*/
         ]}
       ]}
     ],
-    create: function () {
-      if (XT.session.config.emailAvailable) {
-        this.actions.push({name: "email", method: "doEmail" });
-      }
-      this.inherited(arguments);
-    },
-    doPrint: function (options) {
-      if (XT.session.config.printAvailable) {
-        // send it to be printed silently by the server
-        options.model.doPrint();
-      } else {
-        // no print server set up: just pop open a tab
-        window.open(XT.getOrganizationPath() + options.model.getReportUrl(),
-          "_newtab");
-      }
-    },
-    doDownload: function (options) {
-      window.open(XT.getOrganizationPath() + options.model.getReportUrl("download"),
-        "_newtab");
-    },
     // some extensions may override this function (i.e. inventory)
     formatAddress: function (value, view, model) {
       var city = model.get("billtoCity"),
@@ -1518,7 +1493,6 @@ trailing:true, white:true, strict: false*/
       {attribute: 'name'},
       {attribute: 'number', numeric: true}
     ]},
-    allowPrint: true,
     label: "_opportunities".loc(),
     parameterWidget: "XV.OpportunityListParameters",
     components: [
@@ -1742,7 +1716,6 @@ trailing:true, white:true, strict: false*/
     query: {orderBy: [
       {attribute: 'number'}
     ]},
-    allowPrint: true,
     parameterWidget: "XV.ProspectListParameters",
     components: [
       {kind: "XV.ListItem", components: [
@@ -1816,7 +1789,10 @@ trailing:true, white:true, strict: false*/
     label: "_salesOrders".loc(),
     collection: "XM.SalesOrderListItemCollection",
     parameterWidget: "XV.SalesOrderListParameters",
-    actions: [],
+    actions: [
+      {name: "print", privilege: "ViewSalesOrders", method: "doPrint", isViewMethod: true},
+      {name: "email", privilege: "ViewSalesOrders", method: "doEmail", isViewMethod: true}
+    ],
     query: {orderBy: [
       {attribute: 'number'}
     ]},
@@ -2462,7 +2438,6 @@ trailing:true, white:true, strict: false*/
       {attribute: 'dueDate'},
       {attribute: 'name'}
     ]},
-    allowPrint: true,
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
@@ -2606,7 +2581,6 @@ trailing:true, white:true, strict: false*/
     query: {orderBy: [
       {attribute: 'number'}
     ]},
-    allowPrint: true,
     parameterWidget: "XV.VendorListParameters",
     components: [
       {kind: "XV.ListItem", components: [

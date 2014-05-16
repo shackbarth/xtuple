@@ -522,6 +522,7 @@
     "_primaryContact": "Primary Contact",
     "_primaryEmail": "Primary Email",
     "_printed": "Printed",
+    "_printOnSave": "Print on Save",
     "_priority": "Priority",
     "_priorities": "Priorities",
     "_privilege": "Privilege",
