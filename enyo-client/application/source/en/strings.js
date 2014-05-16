@@ -179,6 +179,7 @@
     "_correspondenceContact": "Correspondence Contact",
     "_countries": "Countries",
     "_created": "Created",
+    "_createBaseCurr": "Create new Base Currency",
     "_createdBy": "Created By",
     "_credit": "Credit",
     "_creditCard": "Credit Card",
@@ -608,6 +609,7 @@
     "_sessionTimedOut": "Your session has timed out",
     "_settings": "Settings",
     "_setup": "Setup",
+    "_setBaseCurrToUSD": "Set Base Currency to USD ($)",
     "_severity": "Severity",
     "_shared": "Shared",
     "_shift": "Shift",
@@ -999,6 +1001,7 @@
     "_recalculateAll?": "Do you want to recalculate all prices line items, taxes, and freight ?",
     "_rescheduleAll": "Changing this date will update the Schedule Date on all " +
       "editable line items.",
+    "_selectBaseCurrency": "Please select a base currency for this database:",
     "_updateFractional": "The quantity ordered and unit of measure selected will result in a " +
       "fractional inventory qty for this item. This item does not allow fractional quantities; " +
       "the quantity will be updated accordingly.",

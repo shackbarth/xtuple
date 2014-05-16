@@ -620,7 +620,8 @@ strict: false*/
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "abbreviation"},
             {kind: "XV.InputWidget", attr: "name"},
-            {kind: "XV.InputWidget", attr: "symbol"}
+            {kind: "XV.InputWidget", attr: "symbol"},
+            {kind: "XV.CheckboxWidget", attr: "isBase", name: "isBase"}
           ]}
         ]}
       ]}
