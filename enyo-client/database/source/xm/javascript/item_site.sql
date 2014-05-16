@@ -32,6 +32,8 @@ select xt.install_js('XM','ItemSite','xtuple', $$
       table = backingType.afterDot(),
       orderBy = query.orderBy,
       orm = data.fetchOrm(nameSpace, type),
+      pkey = XT.Orm.primaryKey(orm),
+      nkey = XT.Orm.naturalKey(orm),
       keyColumn = XT.Orm.primaryKey(orm, true),
       customerId = null,
       accountId = -1,
@@ -254,6 +256,27 @@ select xt.install_js('XM','ItemSite','xtuple', $$
       counter++;
     });
 
+    if (orm.lockable) {
+      sql_etags = "select ver_etag as etag, ver_record_id as id " +
+                  "from xt.ver " +
+                  "where ver_table_oid = ( " +
+                    "select pg_class.oid::integer as oid " +
+                    "from pg_class join pg_namespace on relnamespace = pg_namespace.oid " +
+                    /* Note: using $L for quoted literal e.g. 'contact', not an identifier. */
+                    "where nspname = %1$L and relname = %2$L " +
+                  ") " +
+                  "and ver_record_id in ({ids})";
+      sql_etags = XT.format(sql_etags, [tableNamespace, table]);
+      sql_etags = sql_etags.replace('{ids}', idParams.join());
+
+      if (DEBUG) {
+        XT.debug('fetch sql_etags = ', sql_etags);
+        XT.debug('fetch etags_values = ', JSON.stringify(ids));
+      }
+      etags = plv8.execute(sql_etags, ids) || {};
+      ret.etags = {};
+    }
+
     sql2 = XT.format(sql2, [nameSpace.decamelize(), type.decamelize()]);
     sql2 = sql2.replace(/{orderBy}/g, clause.orderBy)
                .replace('{ids}', idParams.join());
@@ -263,7 +286,20 @@ select xt.install_js('XM','ItemSite','xtuple', $$
       XT.debug('fetch values = ', JSON.stringify(ids));
     }
 
-    ret.data = plv8.execute(sql2, ids);
+    ret.data = plv8.execute(sql2, ids) || [];
+
+    for (var i = 0; i < ret.data.length; i++) {
+      if (etags) {
+        /* Add etags to result in pkey->etag format. */
+        for (var j = 0; j < etags.length; j++) {
+          if (etags[j].id === ret.data[i][pkey]) {
+            ret.etags[ret.data[i][nkey]] = etags[j].etag;
+          }
+        }
+      }
+    }
+
+    data.sanitize(nameSpace, type, ret.data);
 
     return ret;
   };
