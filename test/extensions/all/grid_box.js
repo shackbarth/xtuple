@@ -44,19 +44,18 @@
 
                       describe('Test creating line items for ' + component, function () {
                         it('Create line items', function () {
-                          var gridBox = component, gridRow;
-                          // Be sure that there are no rows
-                          assert.equal(gridBox.liveModels().length, 0);
+                          var gridBox = component, gridRow,
+                            startingRows = gridBox.liveModels().length;
 
                           gridBox.newItem();
                           gridRow = gridBox.$.editableGridRow;
-                          // Verify that there is currently one row
-                          assert.equal(gridBox.liveModels().length, 1);
+                          // verify that there is an increase in rows
+                          assert.equal(gridBox.liveModels().length, startingRows += 1);
 
                           // Add a new row using the enter key
                           gridRow.bubble("onkeyup", {keyCode: 13});
-                          // Verify that now there are two rows
-                          assert.equal(gridBox.liveModels().length, 2);
+                          // verify again that a row has been added
+                          assert.equal(gridBox.liveModels().length, startingRows += 1);
                         });
                       });
                     }
