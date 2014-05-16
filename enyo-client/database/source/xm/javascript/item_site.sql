@@ -54,9 +54,11 @@ select xt.install_js('XM','ItemSite','xtuple', $$
       ids = [],
       idParams = [],
       sqlCount,
-      sql1 = 'select t1.%3$I as id ' +
-            'from %1$I.%2$I t1 {joins} ' +
-            'where {conditions} {extra}',
+      sql1 = 'select pt1.%3$I as id ' +
+             'from ( ' +
+             'select t1.* as id ' +
+             'from %1$I.%2$I t1 {joins} ' +
+             'where {conditions} {extra}',
       sql2 = 'select * from %1$I.%2$I where id in ({ids}) {orderBy}';
 
     /* Handle special parameters */
@@ -69,14 +71,14 @@ select xt.install_js('XM','ItemSite','xtuple', $$
           keySearch = param.value;
           sql1 += ' and t1.%4$I in (select item_id from item where item_number ~^ ${p1} or item_upccode ~^ ${p1}) ' +
             'union ' +
-            'select t1.%3$I ' +
+            'select t1.* ' +
             'from %1$I.%2$I t1 {joins} ' +
             ' join itemalias on t1.%4$I=itemalias_item_id ' +
             '   and itemalias_crmacct_id is null ' +
             'where {conditions} {extra} ' +
             ' and (itemalias_number ~^ ${p1}) ' +
             'union ' +
-            'select t1.%3$I ' +
+            'select t1.* ' +
             'from %1$I.%2$I t1 {joins} ' +
             ' join itemalias on t1.%4$I=itemalias_item_id ' +
             '   and itemalias_crmacct_id={accountId} ' +
@@ -194,7 +196,7 @@ select xt.install_js('XM','ItemSite','xtuple', $$
     }
 
     sql1 = XT.format(
-      sql1 += 'group by t1.%3$I{groupBy} {orderBy} %5$s %6$s;',
+      sql1 += ') pt1 group by pt1.%3$I{groupBy} {orderBy} %5$s %6$s;',
       [tableNamespace, table, idColumn, backingTypeJoinColumn, limit, offset]
     );
 
@@ -203,6 +205,14 @@ select xt.install_js('XM','ItemSite','xtuple', $$
     if (limit && offset && (!orderBy || !orderBy.length) && !clause.orderByColumns) {
       /* We only want this on sql1, not sql2's clause.orderBy. */
       clause.orderByColumns = XT.format('order by t1.%1$I', [idColumn]);
+    }
+
+    /* Change table reference in group by and order by to pt1. */
+    if (clause.groupByColumns && clause.groupByColumns.length) {
+      clause.groupByColumns = clause.groupByColumns.replace(/t1./g, 'pt1.');
+    }
+    if (clause.orderByColumns && clause.orderByColumns.length) {
+      clause.orderByColumns = clause.orderByColumns.replace(/t1./g, 'pt1.');
     }
 
     /* Query the model */
