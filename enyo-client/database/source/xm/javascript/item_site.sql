@@ -19,14 +19,23 @@ select xt.install_js('XM','ItemSite','xtuple', $$
     return plv8.execute('select itemcost(itemsite_id) as cost from itemsite where obj_uuid = $1;', [itemsiteId])[0].cost;
   };
 
+  if (!XM.ItemSitePrivate) { XM.ItemSitePrivate = {}; }
+
+  /*
+    This should NEVER be set to true. XM.ItemSitePrivate.fetch can be passed
+    table and column names to drasitcally change it behaviour which could be
+    abused. It should NOT be isDispatchable.
+  **/
+  XM.ItemSitePrivate.isDispatchable = false;
+
   /**
     @private
 
     This function supports the XM.ItemSiteListItem.fetch() and XM.ItemSiteRelation.fetch(),
-    but also xDruple extension call like this:
-    XM.ItemSite._fetch("XM.XdrupleCommerceProduct", "xdruple.xd_commerce_product", query, 'product_id', 'id');
+    but also xDruple extension XM.XdrupleCommerceProduct.xdCommerceProductFetch() call like this:
+    XM.ItemSitePrivate.fetch("XM.XdrupleCommerceProduct", "xdruple.xd_commerce_product", query, 'product_id', 'id');
   */
-  XM.ItemSite._fetch = function (recordType, backingType, query, backingTypeJoinColumn, idColumn) {
+  XM.ItemSitePrivate.fetch = function (recordType, backingType, query, backingTypeJoinColumn, idColumn) {
     query = query || {};
     backingTypeJoinColumn = backingTypeJoinColumn || 'itemsite_item_id';
     idColumn = idColumn || 'itemsite_id';
@@ -326,12 +335,12 @@ select xt.install_js('XM','ItemSite','xtuple', $$
     @returns {Array}
   */
   XM.ItemSiteListItem.fetch = function (query) {
-    var result = XM.ItemSite._fetch("XM.ItemSiteListItem", "public.itemsite", query);
+    var result = XM.ItemSitePrivate.fetch("XM.ItemSiteListItem", "public.itemsite", query);
     return result.data;
   };
 
   /**
-   Wrapper for XM.ItemSiteListItem.fetch with support for REST query formatting.
+   Wrapper for XM.ItemSitePrivate.fetch with support for REST query formatting.
    Sample usage:
     select xt.post('{
       "nameSpace":"XM",
@@ -367,7 +376,7 @@ select xt.install_js('XM','ItemSite','xtuple', $$
       query = XM.Model.restQueryFormat(options);
 
       /* Perform the query. */
-      return XM.ItemSite._fetch("XM.ItemSiteListItem", "public.itemsite", query);
+      return XM.ItemSitePrivate.fetch("XM.ItemSiteListItem", "public.itemsite", query);
     } else {
       throw new handleError("Bad Request", 400);
     }
@@ -463,7 +472,7 @@ select xt.install_js('XM','ItemSite','xtuple', $$
     @returns {Array}
   */
   XM.ItemSiteRelation.fetch = function (query) {
-    var result = XM.ItemSite._fetch("XM.ItemSiteRelation", "xt.itemsiteinfo", query);
+    var result = XM.ItemSitePrivate.fetch("XM.ItemSiteRelation", "xt.itemsiteinfo", query);
     return result.data;
   };
 
