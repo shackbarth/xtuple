@@ -19,8 +19,14 @@ select xt.install_js('XM','ItemSite','xtuple', $$
     return plv8.execute('select itemcost(itemsite_id) as cost from itemsite where obj_uuid = $1;', [itemsiteId])[0].cost;
   };
 
-  /** @private */
-  var _fetch = function (recordType, backingType, query, backingTypeJoinColumn, idColumn) {
+  /**
+    @private
+
+    This function supports the XM.ItemSiteListItem.fetch() and XM.ItemSiteRelation.fetch(),
+    but also xDruple extension call like this:
+    XM.ItemSite._fetch("XM.XdrupleCommerceProduct", "xdruple.xd_commerce_product", query, 'product_id', 'id');
+  */
+  XM.ItemSite._fetch = function (recordType, backingType, query, backingTypeJoinColumn, idColumn) {
     query = query || {};
     backingTypeJoinColumn = backingTypeJoinColumn || 'itemsite_item_id';
     idColumn = idColumn || 'itemsite_id';
@@ -55,6 +61,7 @@ select xt.install_js('XM','ItemSite','xtuple', $$
       counter = 1,
       ids = [],
       idParams = [],
+      etags,
       sqlCount,
       sql1 = 'select pt1.%3$I as id ' +
              'from ( ' +
@@ -319,7 +326,7 @@ select xt.install_js('XM','ItemSite','xtuple', $$
     @returns {Array}
   */
   XM.ItemSiteListItem.fetch = function (query) {
-    var result = _fetch("XM.ItemSiteListItem", "public.itemsite", query);
+    var result = XM.ItemSite._fetch("XM.ItemSiteListItem", "public.itemsite", query);
     return result.data;
   };
 
@@ -360,9 +367,7 @@ select xt.install_js('XM','ItemSite','xtuple', $$
       query = XM.Model.restQueryFormat(options);
 
       /* Perform the query. */
-      // TODO - move this to xdruple extension.
-      //return _fetch("XM.ItemSiteListItem", "public.itemsite", query);
-      return _fetch("XM.XdrupleCommerceProduct", "xdruple.xd_commerce_product", query, 'product_id', 'id');
+      return XM.ItemSite._fetch("XM.ItemSiteListItem", "public.itemsite", query);
     } else {
       throw new handleError("Bad Request", 400);
     }
@@ -458,7 +463,7 @@ select xt.install_js('XM','ItemSite','xtuple', $$
     @returns {Array}
   */
   XM.ItemSiteRelation.fetch = function (query) {
-    var result = _fetch("XM.ItemSiteRelation", "xt.itemsiteinfo", query);
+    var result = XM.ItemSite._fetch("XM.ItemSiteRelation", "xt.itemsiteinfo", query);
     return result.data;
   };
 
