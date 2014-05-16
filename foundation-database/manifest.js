@@ -991,6 +991,7 @@
     "public/trigger_functions/womatl.sql",
 
     "public/tables/metric.sql",
+    "public/tables/location.sql",
     "public/views/address.sql",
     "public/views/apmemo.sql",
     "public/views/armemo.sql",
