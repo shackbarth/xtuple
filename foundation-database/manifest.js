@@ -5,6 +5,13 @@
     "remove from 440_schema.sql everything that's defined here. it's now redundant"
   ],
   "databaseScripts": [
+    "../lib/orm/source/create_xt_schema.sql",
+    "../lib/orm/source/xt/functions/add_column.sql",
+    "../lib/orm/source/xt/functions/add_constraint.sql",
+    "../lib/orm/source/xt/functions/add_index.sql",
+    "../lib/orm/source/xt/functions/add_primary_key.sql",
+    "../lib/orm/source/xt/functions/create_table.sql",
+
     "public/indexes/evntlog.sql",
     "public/indexes/invcitemtax.sql",
     "public/indexes/shipitem.sql",
