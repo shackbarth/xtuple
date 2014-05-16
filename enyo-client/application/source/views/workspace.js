@@ -620,7 +620,8 @@ strict: false*/
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "abbreviation"},
             {kind: "XV.InputWidget", attr: "name"},
-            {kind: "XV.InputWidget", attr: "symbol"}
+            {kind: "XV.InputWidget", attr: "symbol"},
+            {kind: "XV.CheckboxWidget", attr: "isBase", name: "isBase"}
           ]}
         ]}
       ]}
@@ -1217,6 +1218,13 @@ strict: false*/
       name: "print",
       isViewMethod: true,
       label: "_print".loc(),
+      privilege: "PrintInvoices",
+      prerequisite: "isReadyClean"
+    },
+    {
+      name: "email",
+      isViewMethod: true,
+      label: "_email".loc(),
       privilege: "PrintInvoices",
       prerequisite: "isReadyClean"
     }],
@@ -2266,6 +2274,19 @@ strict: false*/
       onPaymentPosted: 'handlePaymentPosted',
     },
     model: "XM.SalesOrder",
+    actions: [{
+      name: "print",
+      isViewMethod: true,
+      label: "_print".loc(),
+      privilege: "ViewSalesOrders",
+      prerequisite: "isReadyClean"
+    },
+    {name: "email",
+      isViewMethod: true,
+      label: "_email".loc(),
+      privilege: "ViewSalesOrders",
+      prerequisite: "isReadyClean"
+    }],
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
@@ -2280,6 +2301,8 @@ strict: false*/
             {kind: "XV.DateWidget", attr: "packDate"},
             {kind: "XV.InputWidget", attr: "formatStatus",
               label: "_status".loc()},
+            {kind: "XV.CheckboxWidget", attr: "printOnSaveSetting",
+              label: "_printOnSave".loc()},
             {kind: "onyx.GroupboxHeader", content: "_billTo".loc()},
             {kind: "XV.SalesCustomerWidget", attr: "customer",
                name: "customerWidget", showAddress: true,
@@ -2343,6 +2366,16 @@ strict: false*/
         {kind: "XV.SalesOrderDocumentsBox", attr: "documents"}
       ]}
     ],
+    /**
+     * When the printOnSaveSetting checkbox is changed,
+     * also change the workspace setting.
+     */
+    controlValueChanged: function (inSender, inEvent) {
+      this.inherited(arguments);
+      if (inEvent.originator.attr === 'printOnSaveSetting') {
+        this.printOnSaveSetting = inEvent.originator.value;
+      }
+    },
     /**
      * @listens onPaymentPosted
      */

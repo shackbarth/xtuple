@@ -78,11 +78,6 @@ var app;
     email: X.smtpTransport.sendMail
   });
 
-  if (typeof X.options.biServer !== 'undefined') {
-    require("./olapcatalog");
-    require("./lib/ext/olapsource");
-  }
-
   // load the encryption key, or create it if it doesn't exist
   // it should created just once, the very first time the datasoruce starts
   var encryptionKeyFilename = X.options.datasource.encryptionKeyFile || './lib/private/encryption_key.txt';
@@ -452,7 +447,6 @@ app.get('/:org/generate-report', routes.generateReport);
 app.get('/:org/locale', routes.locale);
 app.get('/:org/reset-password', routes.resetPassword);
 app.post('/:org/oauth/revoke-token', routes.revokeOauthToken);
-app.get('/:org/queryOlap', routes.queryOlapCatalog);
 app.all('/:org/vcfExport', routes.vcfExport);
 
 

@@ -40,7 +40,7 @@
       });
     };
 
-  describe.skip('Sales Order Workspace', function () {
+  describe('Sales Order Workspace', function () {
     this.timeout(20 * 1000);
 
     //
@@ -59,7 +59,7 @@
       it('User navigates to Sales Order-New and selects to create a new Sales order', function (done) {
         smoke.navigateToNewWorkspace(XT.app, "XV.SalesOrderList", function (workspaceContainer) {
           var workspace = workspaceContainer.$.workspace,
-            gridRow;
+            gridRow, gridBox, collect;
 
           assert.equal(workspace.value.recordType, "XM.SalesOrder");
 
@@ -92,10 +92,18 @@
           //
           // Set the line item fields
           //
-          workspace.$.salesOrderLineItemGridBox.newItem();
-          gridRow = workspace.$.salesOrderLineItemGridBox.$.editableGridRow;
+          // Be sure that there are no rows
+          gridBox = workspace.$.salesOrderLineItemBox;
+          assert.equal(gridBox.liveModels().length, 0);
+
+          gridBox.newItem();
+          gridRow = gridBox.$.editableGridRow;
+
           gridRow.$.itemSiteWidget.doValueChange({value: {item: submodels.itemModel, site: submodels.siteModel}});
           gridRow.$.quantityWidget.doValueChange({value: 5});
+
+          // Verify that there is currently one row
+          assert.equal(gridBox.liveModels().length, 1);
         });
       });
     });

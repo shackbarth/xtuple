@@ -54,7 +54,6 @@ trailing:true, white:true*/
                 label: "_nextNumber".loc(), formatting: false},
               {kind: "XV.ToggleButtonWidget", attr: "DefaultPrintSOOnSave",
                 label: "_printOnSave".loc()},
-
               {kind: "onyx.GroupboxHeader", content: "_quote".loc()},
               {kind: "XV.NumberPolicyPicker", attr: "QUNumberGeneration",
                 label: "_number".loc() + " " + "_policy".loc()},
