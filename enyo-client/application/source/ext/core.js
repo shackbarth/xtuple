@@ -186,9 +186,10 @@ white:true*/
 
     baseCurrency: function () {
       if (baseCurr) { return baseCurr; }
-      baseCurr = _.find(XM.currencies.models, function (curr) {
+      baseCurr = XM.currencies ? _.find(XM.currencies.models, function (curr) {
         return curr.get('isBase');
-      });
+      }) : false;
+      
       return baseCurr;
     },
 

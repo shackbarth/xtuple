@@ -5,6 +5,13 @@
     "remove from 440_schema.sql everything that's defined here. it's now redundant"
   ],
   "databaseScripts": [
+    "../lib/orm/source/create_xt_schema.sql",
+    "../lib/orm/source/xt/functions/add_column.sql",
+    "../lib/orm/source/xt/functions/add_constraint.sql",
+    "../lib/orm/source/xt/functions/add_index.sql",
+    "../lib/orm/source/xt/functions/add_primary_key.sql",
+    "../lib/orm/source/xt/functions/create_table.sql",
+
     "public/indexes/evntlog.sql",
     "public/indexes/invcitemtax.sql",
     "public/indexes/shipitem.sql",
@@ -991,6 +998,7 @@
     "public/trigger_functions/womatl.sql",
 
     "public/tables/metric.sql",
+    "public/tables/location.sql",
     "public/views/address.sql",
     "public/views/apmemo.sql",
     "public/views/armemo.sql",
@@ -1594,6 +1602,8 @@
     "public/tables/report/WOSchedule.xml",
     "public/tables/report/WarehouseLocationMasterList.xml",
     "public/tables/report/WarehouseMasterList.xml",
-    "public/tables/report/items.xml"
+    "public/tables/report/items.xml",
+
+    "public/patches/fixacl.sql"
   ]
 }
