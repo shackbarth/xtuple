@@ -283,6 +283,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             formattedContent[key] = XT.String.formatBraces(reportData[0], value);
           }
         });
+
         formattedContent.text = formattedContent.body;
         formattedContent.attachments = [{fileName: reportPath, contents: data, contentType: "application/pdf"}];
 
