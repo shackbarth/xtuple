@@ -1,5 +1,5 @@
-<package id        = "pbtodist450RC"
-         version   = "4.5.0RC"
+<package id        = "pbtodist450Beta"
+         version   = "4.5.0Beta"
          developer = "xTuple"
          descrip   = "load PostBooks resources"
          updater   = "2.2.4" >
