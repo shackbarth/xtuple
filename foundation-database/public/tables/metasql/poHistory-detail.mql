@@ -1,0 +1,22 @@
+-- Group: poHistory
+-- Name: detail
+-- Notes: used by dspPoHistory
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT poitem_id, poitem.*,
+       COALESCE(item_number, <? value("nonInventory") ?>) AS itemnumber,
+       COALESCE(uom_name, <? value("na") ?>) AS uomname,
+       CASE WHEN (LENGTH(TRIM(BOTH '    ' FROM poitem_vend_item_descrip)) <= 0)
+            THEN(item_descrip1 || ' ' || item_descrip2)
+         ELSE poitem_vend_item_descrip
+       END AS itemdescription,
+       'qty' AS poitem_qty_ordered_xtnumericrole,
+       'qty' AS poitem_qty_received_xtnumericrole,
+       'qty' AS poitem_qty_returned_xtnumericrole
+FROM poitem LEFT OUTER JOIN
+     ( itemsite JOIN item
+       ON (itemsite_item_id=item_id) JOIN uom ON (item_inv_uom_id=uom_id))
+       ON (poitem_itemsite_id=itemsite_id)
+WHERE (poitem_pohead_id=<? value("pohead_id") ?>)
+ORDER BY poitem_linenumber;

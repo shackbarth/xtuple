@@ -1,0 +1,115 @@
+-- Group: purchaseOrders
+-- Name: detail
+-- Notes: used by dspPosByVendor, dspPOsByDate
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT pohead_id, pohead_number,
+       warehous_code AS warehousecode,
+       poitem_status, pohead_orderdate,
+       CASE WHEN(poitem_status='C') THEN TEXT(<? value("closed") ?>)
+            WHEN(poitem_status='U') THEN TEXT(<? value("unposted") ?>)
+            WHEN(poitem_status='O'
+                AND (SUM(poitem_qty_received-poitem_qty_returned) > 0) 
+                AND (SUM(poitem_qty_ordered)>SUM(poitem_qty_received-poitem_qty_returned))) 
+              THEN TEXT(<? value("partial") ?>)
+            WHEN(poitem_status='O'
+                AND (SUM(poitem_qty_received-poitem_qty_returned) > 0) 
+                AND (SUM(poitem_qty_ordered)<=SUM(poitem_qty_received-poitem_qty_returned))) 
+              THEN TEXT(<? value("received") ?>)
+            WHEN(poitem_status='O') THEN TEXT(<? value("open") ?>)
+            ELSE poitem_status
+       END AS poitem_status_qtdisplayrole,
+<? if exists("byDate") ?>
+       vend_name,
+       MIN(poitem_duedate) AS minDueDate,
+       CASE WHEN (MIN(poitem_duedate) < CURRENT_DATE) THEN 'error'
+       END AS minDueDate_qtforegroundrole,
+<? else ?>
+       vend_number,
+<? endif ?>
+<? if exists("byReceiptDate") ?>
+       MIN(date(recv_date)) AS sortDate,
+<? elseif exists("byDueDate") ?>
+       MIN(poitem_duedate) AS sortDate,
+<? else ?>
+       pohead_orderdate AS sortDate,
+<? endif ?>
+       CASE WHEN (MIN(poitem_duedate) < CURRENT_DATE) THEN 'error' END AS sortDate_qtforegroundrole,
+-- Report formatting
+  formatDate(pohead_orderdate) AS f_orderdate,
+  formatDate(MIN(poitem_duedate)) AS f_duedate, 
+       CASE WHEN(poitem_status='C') THEN TEXT(<? value("closed") ?>)
+            WHEN(poitem_status='U') THEN TEXT(<? value("unposted") ?>)
+            WHEN(poitem_status='O'
+                AND (SUM(poitem_qty_received-poitem_qty_returned) > 0) 
+                AND (SUM(poitem_qty_ordered)>SUM(poitem_qty_received-poitem_qty_returned))) 
+              THEN TEXT(<? value("partial") ?>)
+            WHEN(poitem_status='O'
+                AND (SUM(poitem_qty_received-poitem_qty_returned) > 0) 
+                AND (SUM(poitem_qty_ordered)<=SUM(poitem_qty_received-poitem_qty_returned))) 
+              THEN TEXT(<? value("received") ?>)
+            WHEN(poitem_status='O') THEN TEXT(<? value("open") ?>)
+            ELSE poitem_status
+       END AS f_status
+-- End Report formatting
+  FROM vendinfo, poitem,
+<? if exists("byReceiptDate") ?>
+       recv,
+<? endif ?>
+       pohead LEFT OUTER JOIN whsinfo ON (pohead_warehous_id=warehous_id)
+ WHERE ((poitem_pohead_id=pohead_id)
+   AND  (pohead_vend_id=vend_id)
+<? if exists("byReceiptDate") ?>
+   AND  (recv_itemsite_id=poitem_itemsite_id)
+   AND  (recv_order_number=pohead_number)
+   AND  (date(recv_date) BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+   AND  (recv_order_type='PO')
+<? elseif exists("byDueDate") ?>
+   AND  (poitem_duedate BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+<? else ?>
+   AND  (pohead_orderdate BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+<? endif ?>
+<? if exists("vend_id") ?>
+   AND  (vend_id=<? value("vend_id") ?>)
+<? elseif exists("vendtype_id") ?>
+   AND  (vend_vendtype_id=<? value("vendtype_id") ?>)
+<? elseif exists("vendtype_pattern") ?>
+   AND (vend_vendtype_id IN (SELECT vendtype_id
+                               FROM vendtype
+                              WHERE (vendtype_code ~ <? value("vendtype_pattern") ?>)))
+<? endif ?>
+<? if exists("warehous_id") ?>
+   AND (pohead_warehous_id=<? value("warehous_id") ?>)
+<? endif ?>
+<? if not exists("showClosed") ?>
+   AND (poitem_status!='C')
+<? endif ?>
+<? if exists("agentUsername") ?>
+   AND (pohead_agent_username=<? value("agentUsername") ?>)
+<? endif ?>
+<? if exists("descrip_pattern") ?>
+  AND ((poitem_vend_item_descrip ~* <? value("descrip_pattern") ?>)
+    OR (poitem_itemsite_id IN (
+      SELECT itemsite_id
+        FROM itemsite, item
+       WHERE ((itemsite_item_id=item_id)
+         AND  ((item_descrip1 ~* <? value("descrip_pattern") ?>)
+            OR (item_descrip2 ~* <? value("descrip_pattern") ?>)))
+                              )))
+<? endif ?>
+
+)
+GROUP BY pohead_id, pohead_number, warehous_code,
+         poitem_status, pohead_orderdate,
+<? if exists("byDate") ?>
+         vend_name 
+<? else ?>
+         vend_number
+<? endif ?>
+ORDER BY
+<? if exists("byDate") ?>
+  minDueDate
+<? else ?>
+  sortDate
+<? endif ?>;

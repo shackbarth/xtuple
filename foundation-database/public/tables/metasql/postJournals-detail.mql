@@ -1,0 +1,48 @@
+-- Group: postJournals
+-- Name:  detail
+-- Notes: 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT *
+FROM (
+  SELECT 0 AS id,
+  sltrans_source,
+  0 AS xtindentrole,
+  CASE WHEN sltrans_source = 'A/P' THEN <? value("AP") ?>
+       WHEN sltrans_source = 'A/R' THEN <? value("AR") ?>
+       WHEN sltrans_source = 'G/L' THEN <? value("GL") ?>
+       WHEN sltrans_source = 'I/M' THEN <? value("IM") ?>
+       WHEN sltrans_source = 'P/D' THEN <? value("PD") ?>
+       WHEN sltrans_source = 'S/O' THEN <? value("SO") ?>
+       WHEN sltrans_source = 'S/R' THEN <? value("SR") ?>
+       WHEN sltrans_source = 'W/O' THEN <? value("WO") ?>
+       ELSE <? value("Other" ?>
+  END AS description, 
+  NULL AS debit, 
+  NULL AS credit, 
+  count(sltrans_id) AS journals
+  FROM sltrans
+  WHERE ((NOT sltrans_posted)
+   AND (sltrans_amount > 0)
+   AND (sltrans_date BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>))
+  GROUP BY sltrans_source
+<? if exists("preview") ?>
+UNION ALL
+  SELECT 
+    sltrans_accnt_id AS id,
+    sltrans_source,
+    1 AS xtindentrole,
+    formatGLAccountLong(sltrans_accnt_id) AS description,
+    CASE WHEN SUM(sltrans_amount) < 0 THEN ABS(SUM(sltrans_amount))
+    END AS debit,
+    CASE WHEN SUM(sltrans_amount) > 0 THEN SUM(sltrans_amount)
+    END AS credit,
+    NULL AS journals
+    FROM sltrans
+    WHERE ((NOT sltrans_posted)
+     AND (sltrans_date BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>))
+  GROUP BY sltrans_accnt_id, sltrans_source
+<? endif ?>
+) data
+ORDER BY sltrans_source, xtindentrole

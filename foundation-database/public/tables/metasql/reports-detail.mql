@@ -1,0 +1,38 @@
+-- Group: reports
+-- Name:  detail
+-- Notes: 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+<? if exists('byPackage') ?>
+  SELECT report_id, report_name,
+         firstline(report_descrip) AS report_descrip, report_grade,
+         CASE nspname WHEN 'public' THEN '' ELSE nspname END AS pkgname,
+         CASE nspname WHEN 'public' THEN 0
+                      ELSE 1        END AS xtindentrole,
+         report_descrip AS report_descrip_qttooltiprole
+    FROM report
+    JOIN pg_class     ON (report.tableoid=pg_class.oid)
+    JOIN pg_namespace ON (relnamespace=pg_namespace.oid)
+  UNION
+  SELECT -1, pkghead_name,
+         firstline(pkghead_descrip), NULL,
+         pkghead_name, 0, pkghead_descrip
+    FROM report, pg_class, pg_namespace
+    RIGHT OUTER JOIN pkghead ON (nspname=pkghead_name)
+   WHERE ((report.tableoid=pg_class.oid)
+      AND (relnamespace=pg_namespace.oid))
+  ORDER BY pkgname, xtindentrole, report_name,
+           report_grade DESC, report_id;
+<? else ?>
+  SELECT report_id, report_name,
+         firstline(report_descrip) AS report_descrip,
+         report_grade,
+         CASE nspname WHEN 'public' THEN '' ELSE nspname END AS pkgname,
+         report_descrip AS report_descrip_qttooltiprole
+    FROM report
+    JOIN pg_class     ON (report.tableoid=pg_class.oid)
+    JOIN pg_namespace ON (relnamespace=pg_namespace.oid)
+  ORDER BY report_name,
+           report_grade DESC, report_id;
+<? endif ?>

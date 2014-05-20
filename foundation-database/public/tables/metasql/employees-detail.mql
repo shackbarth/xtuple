@@ -1,0 +1,54 @@
+-- Group: employees
+-- Name:  detail
+-- Notes: 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT emp_id, warehous_code, emp_active, emp_code, emp_number,
+  cntct_first_name, cntct_last_name
+<? foreach("char_id_text_list") ?>
+  , charass_alias<? literal("char_id_text_list") ?>.charass_value AS char<? literal("char_id_text_list") ?>
+<? endforeach ?>
+<? foreach("char_id_list_list") ?>
+  , charass_alias<? literal("char_id_list_list") ?>.charass_value AS char<? literal("char_id_list_list") ?>
+<? endforeach ?>
+<? foreach("char_id_date_list") ?>
+  , charass_alias<? literal("char_id_date_list") ?>.charass_value::date AS char<? literal("char_id_date_list") ?>
+<? endforeach ?>
+FROM emp
+  LEFT OUTER JOIN cntct ON (emp_cntct_id=cntct_id)
+  LEFT OUTER JOIN whsinfo ON (emp_warehous_id=warehous_id)
+<? foreach("char_id_text_list") ?>
+  LEFT OUTER JOIN charass charass_alias<? literal("char_id_text_list") ?> ON ((charass_alias<? literal("char_id_text_list") ?>.charass_target_type='EMP') 
+                                                                    AND  (charass_alias<? literal("char_id_text_list") ?>.charass_target_id=emp_id)
+                                                                    AND  (charass_alias<? literal("char_id_text_list") ?>.charass_char_id=<? value("char_id_text_list") ?>))
+  LEFT OUTER JOIN char char_alias<? literal("char_id_text_list") ?> ON (charass_alias<? literal("char_id_text_list") ?>.charass_char_id=char_alias<? literal("char_id_text_list") ?>.char_id)
+<? endforeach ?>
+<? foreach("char_id_list_list") ?>
+  LEFT OUTER JOIN charass charass_alias<? literal("char_id_list_list") ?> ON ((charass_alias<? literal("char_id_list_list") ?>.charass_target_type='EMP') 
+                                                                    AND  (charass_alias<? literal("char_id_list_list") ?>.charass_target_id=emp_id)
+                                                                    AND  (charass_alias<? literal("char_id_list_list") ?>.charass_char_id=<? value("char_id_list_list") ?>))
+  LEFT OUTER JOIN char char_alias<? literal("char_id_list_list") ?> ON (charass_alias<? literal("char_id_list_list") ?>.charass_char_id=char_alias<? literal("char_id_list_list") ?>.char_id)
+<? endforeach ?>
+<? foreach("char_id_date_list") ?>
+  LEFT OUTER JOIN charass charass_alias<? literal("char_id_date_list") ?> ON ((charass_alias<? literal("char_id_date_list") ?>.charass_target_type='EMP') 
+                                                                    AND  (charass_alias<? literal("char_id_date_list") ?>.charass_target_id=emp_id)
+                                                                    AND  (charass_alias<? literal("char_id_date_list") ?>.charass_char_id=<? value("char_id_date_list") ?>))
+  LEFT OUTER JOIN char char_alias<? literal("char_id_date_list") ?> ON (charass_alias<? literal("char_id_date_list") ?>.charass_char_id=char_alias<? literal("char_id_date_list") ?>.char_id)
+<? endforeach ?>
+WHERE (true)
+<? if exists("warehous_id") ?>
+  AND (warehous_id=<? value("warehous_id") ?>)
+<? endif ?>
+<? if exists("activeOnly") ?> 
+  AND emp_active 
+<? endif ?>
+<? if exists("search_pattern") ?>
+  AND ((emp_code ~* <? value("search_pattern") ?>)
+       OR (emp_number ~* <? value("search_pattern") ?>)
+       OR (COALESCE(cntct_first_name,'') || ' ' || COALESCE(cntct_last_name,'') ~* <? value("search_pattern") ?>)
+       OR (COALESCE(cntct_phone,'') || ' ' || COALESCE(cntct_phone2,'') || ' ' || COALESCE(cntct_fax,'') ~* <? value("search_pattern") ?>)
+       OR (COALESCE(cntct_email,'') ~* <? value("search_pattern") ?>))
+<? endif ?>
+<? literal("charClause") ?>
+ORDER BY emp_code;

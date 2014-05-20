@@ -26,6 +26,7 @@ DATABASEHOST=localhost
 DATABASEUSER=admin
 DATABASEPASSWORD=admin
 DATABASEPORT=5432
+DATABASELOADPORT=5432
 DATABASESSL=
 TENANT=default
 CITIES=democities.txt
@@ -33,7 +34,7 @@ COMMONNAME=$(hostname)
 CREATE=Y
 INCREMENTAL=N
 
-while getopts ":ieblpuxyd:s:g:w:t:n:j:z:h:o:f:" opt; do
+while getopts ":ieblmuxyd:U:g:P:t:n:j:z:h:p:c:o:r:k:" opt; do
   case $opt in
     e)
       # Install ErpBI and configure
@@ -50,7 +51,7 @@ while getopts ":ieblpuxyd:s:g:w:t:n:j:z:h:o:f:" opt; do
       RUNALL=
       LOAD=true
       ;;
-    p)
+    m)
       # Prep the Mobile Client to connect to BI Server
       RUNALL=
       PREP=true
@@ -59,7 +60,7 @@ while getopts ":ieblpuxyd:s:g:w:t:n:j:z:h:o:f:" opt; do
       # Set database name (for extract)
       DATABASE=$OPTARG
       ;;
-    o)
+    p)
       # Set database port for extract)
       DATABASEPORT=$OPTARG
       ;;
@@ -67,17 +68,29 @@ while getopts ":ieblpuxyd:s:g:w:t:n:j:z:h:o:f:" opt; do
       # Set database host name (for extract)
       DATABASEHOST=$OPTARG
       ;;
-    s)
+    U)
       # Set database user name (for extract)
       DATABASEUSER=$OPTARG
       ;;
-    w)
+    P)
       # Set database user password (for extract)
       DATABASEPASSWORD=$OPTARG
+      ;;
+    o)
+      # Set database port (for load)
+      DATABASELOADPORT=$OPTARG
       ;;	  
     y)
       # Set database ssl connect option (for extract)
       DATABASESSL="?ssl=true\&sslfactory=org.postgresql.ssl.NonValidatingFactory"
+      ;;
+    k)
+      # Server key file for SSL
+      SSLKEY=$OPTARG
+      ;;
+    r)
+      # Server certificate file for SSL
+      SSLCERT=$OPTARG
       ;;	  
     t)
       # Set tenant name
@@ -91,7 +104,7 @@ while getopts ":ieblpuxyd:s:g:w:t:n:j:z:h:o:f:" opt; do
       # Common name for self signed SSL certificate
       COMMONNAME=$OPTARG
       ;;
-    f)
+    c)
       # Path for config file
       CONFIGPATH=$OPTARG
       ;;
@@ -183,6 +196,32 @@ then
     exit 1
 fi
 
+if  [ $SSLKEY ]
+then
+	if  ! [ $SSLCERT ]
+	then
+		log ""
+		log "####################################################################################"
+		log "Sorry if SSL Key is specified, SSL certificate must be specified."
+		log "####################################################################################"
+		log ""
+		exit 1
+	fi
+fi
+
+if  [ $SSLCERT ]
+then
+	if  ! [ $SSLKEY ]
+	then
+		log ""
+		log "####################################################################################"
+		log "Sorry if SSL certificate is specified, the SSL key must be specified."
+		log "####################################################################################"
+		log ""
+		exit 1
+	fi
+fi
+
 install_packages () {
 	log ""
 	log "######################################################"
@@ -210,9 +249,8 @@ download_files () {
 	log "common name "$COMMONNAME
 	log "######################################################"
 	log ""
-    cdir $RUN_DIR/../..
 
-	rm -R ErpBI	
+	rm -R ../../ErpBI	
 	if  [ $ERPBIPATH ]
 	then
 		log ""
@@ -220,28 +258,42 @@ download_files () {
 		log "Unzipping "$ERPBIPATH
 		log "######################################################"
 		log ""
-		unzip -q $ERPBIPATH
+		unzip -q $ERPBIPATH -d ../..
 	else
-		rm ErpBI.zip
-		wget http://sourceforge.net/projects/erpbi/files/candidate-release/ErpBI.zip/download -O ErpBI.zip
+		rm ../../ErpBI.zip
+		wget http://sourceforge.net/projects/erpbi/files/candidate-release/ErpBI.zip/download -O ../../ErpBI.zip
 		log ""
 		log "######################################################"
 		log "Unzipping ErpBI.zip"
 		log "######################################################"
 		log ""
-		unzip -q ErpBI.zip
+		unzip -q ../../ErpBI.zip -d ../..
 	fi		
 
 	cdir $BISERVER_HOME/biserver-ce/
 	chmod 755 -R . 2>&1 | tee -a $LOG_FILE
 	
-	cdir $BISERVER_HOME/biserver-ce/ssl-keys
-	rm cacerts.jks
-	rm keystore_server.jks
-	rm server.cer
-	keytool -genkey -alias tomcat -keyalg RSA -keypass changeit -storepass changeit -keystore keystore_server.jks -dname "cn="$COMMONNAME", ou=xTuple, o=xTuple, c=US"
-	keytool -export -alias tomcat -file server.cer -storepass changeit -keystore keystore_server.jks
-	keytool -import -alias tomcat -v -trustcacerts -file server.cer -keypass changeit -storepass changeit -keystore cacerts.jks -noprompt
+	if  [ $SSLKEY ]
+	then
+		cp $SSLKEY $BISERVER_HOME/biserver-ce/ssl-keys
+		cp $SSLCERT $BISERVER_HOME/biserver-ce/ssl-keys
+		cdir $BISERVER_HOME/biserver-ce/ssl-keys
+		rm cacerts.jks
+		rm keystore_server.jks
+		rm server.cer
+		openssl pkcs12 -export -out server.pkcs12 -in $SSLCERT -inkey $SSLKEY -passout pass:changeit
+		keytool -importkeystore -srcstorepass changeit -deststorepass changeit -srckeystore server.pkcs12 -srcstoretype PKCS12 -destkeystore keystore_server.jks -deststoretype JKS 
+		keytool -export -alias 1 -file $SSLCERT -storepass changeit -keystore keystore_server.jks
+		keytool -import -alias 1 -v -trustcacerts -file $SSLCERT -keypass changeit -storepass changeit -keystore cacerts.jks -noprompt	
+	else
+		cdir $BISERVER_HOME/biserver-ce/ssl-keys
+		rm cacerts.jks
+		rm keystore_server.jks
+		rm server.cer
+		keytool -genkey -alias tomcat -keyalg RSA -keypass changeit -storepass changeit -keystore keystore_server.jks -dname "cn="$COMMONNAME", ou=xTuple, o=xTuple, c=US"
+		keytool -export -alias tomcat -file server.cer -storepass changeit -keystore keystore_server.jks
+		keytool -import -alias tomcat -v -trustcacerts -file server.cer -keypass changeit -storepass changeit -keystore cacerts.jks -noprompt	
+	fi
 	
 	cdir $BISERVER_HOME/biserver-ce/tomcat/conf/Catalina/localhost
 	mv pentaho.xml pentaho.xml.sample
@@ -297,6 +349,8 @@ load_pentaho() {
 	sed s'#erpi.source.url=.*#erpi.source.url=jdbc\:postgresql\://'$DATABASEHOST'\:'$DATABASEPORT'/'$DATABASE$DATABASESSL'#' | \
 	sed s'#erpi.source.user=.*#erpi.source.user='$DATABASEUSER'#' | \
 	sed s'#erpi.source.password.*#erpi.source.password='$DATABASEPASSWORD'#' | \
+	sed s'#erpi.datamart.port.*#erpi.datamart.port='$DATABASELOADPORT'#' | \
+	sed s'#erpi.datamart.url=.*#erpi.datamart.url=jdbc\:postgresql\://localhost\:'$DATABASELOADPORT'/erpbi#' | \
 	sed s'#erpi.cities.file.*#erpi.cities.file='$CITIES'#' | \
 	sed s'#erpi.tenant.id=.*#erpi.tenant.id='$TENANT'.'$DATABASE'#' | \
 	sed s'#erpi.datamart.create=.*#erpi.datamart.create='$CREATE'#' | \

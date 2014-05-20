@@ -1,0 +1,79 @@
+-- Group: workOrderVariance
+-- Name: material
+-- Notes: used by dspMaterialUsageVarianceByBOMItem, dspMaterialUsageVarianceByComponentItem,
+--                dspMaterialUsageVarianceByItem, dspMaterialUsageVarianceByWarehouse,
+--                dspMaterialUsageVarianceByWorkOrder
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT womatlvar_id, posted, 
+       parentitemnumber, parentdescrip,
+       componentitemnumber, componentdescrip,
+       ordered, received,
+       projreq, projqtyper,
+       actiss, actqtyper,
+       (actqtyper - projqtyper) AS qtypervar,
+       CASE WHEN (actqtyper=projqtyper) THEN 0
+            WHEN (projqtyper=0) THEN actqtyper
+            ELSE ((1 - (actqtyper / projqtyper)) * -1)
+       END AS qtypervarpercent,
+       womatlvar_notes, womatlvar_ref,
+<? if exists("isReport") ?>
+       formatDate(posted) AS f_posted,
+       formatQty(ordered) AS f_ordered,
+       formatQty(received) AS f_received,
+       formatQty(projreq) AS f_projreq,
+       formatQtyPer(projqtyper) AS f_projqtyper,
+       formatQty(actiss) AS f_actiss,
+       formatQty(actqtyper) AS f_actqtyper,
+       formatQty(actqtyper - projqtyper) AS f_qtypervar,
+       CASE WHEN (actqtyper=projqtyper) THEN formatQty(0)
+            WHEN (projqtyper=0) THEN formatQty(actqtyper)
+            ELSE formatPrcnt((1 - (actqtyper / projqtyper)) * -1)
+       END AS f_qtypervarpercent,
+<? endif ?>
+       'qty' AS ordered_xtnumericrole,
+       'qty' AS received_xtnumericrole,
+       'qty' AS projreq_xtnumericrole,
+       'qtyper' AS projqtyper_xtnumericrole,
+       'qty' AS actiss_xtnumericrole,
+       'qtyper' AS actqtyper_xtnumericrole,
+       'qtyper' AS qtypervar_xtnumericrole,
+       'percent' AS qtypervarpercent_xtnumericrole
+FROM ( SELECT womatlvar_id, womatlvar_posted AS posted,
+              parentitem.item_number AS parentitemnumber,
+              parentitem.item_descrip1 || ' ' || parentitem.item_descrip2 as parentdescrip,
+              componentitem.item_number AS componentitemnumber,
+              componentitem.item_descrip1 || ' ' || componentitem.item_descrip2 as componentdescrip,
+              womatlvar_notes, womatlvar_ref,
+              womatlvar_qtyord AS ordered, womatlvar_qtyrcv AS received,
+              ((womatlvar_qtyfxd + womatlvar_qtyrcv * womatlvar_qtyper) * (1 + womatlvar_scrap)) AS projreq,
+              womatlvar_qtyper AS projqtyper,
+              (womatlvar_qtyiss) AS actiss, (NONEG(womatlvar_qtyiss - womatlvar_qtyfxd) / (womatlvar_qtyrcv * (1 + womatlvar_scrap))) AS actqtyper
+       FROM womatlvar LEFT OUTER JOIN wo ON ( (wo_number=womatlvar_number) AND
+                                              (wo_subnumber=womatlvar_subnumber) )
+                      LEFT OUTER JOIN itemsite parent ON (parent.itemsite_id=womatlvar_parent_itemsite_id)
+                      LEFT OUTER JOIN item parentitem ON (parentitem.item_id=parent.itemsite_item_id)
+                      LEFT OUTER JOIN itemsite component ON (component.itemsite_id=womatlvar_component_itemsite_id)
+                      LEFT OUTER JOIN item componentitem ON (componentitem.item_id=component.itemsite_item_id)
+       WHERE ( (1=1)
+<? if exists("startDate") ?>
+         AND   (womatlvar_posted BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+<? endif ?>
+<? if exists("wo_id") ?>
+         AND   (wo_id=<? value("wo_id") ?>)
+<? endif ?>
+<? if exists("warehous_id") ?>
+         AND   (parent.itemsite_warehous_id=<? value("warehous_id") ?>)
+<? endif ?>
+<? if exists("item_id") ?>
+         AND   (parent.itemsite_item_id=<? value("item_id") ?>)
+<? endif ?>
+<? if exists("bomitem_id") ?>
+         AND   (womatlvar_bomitem_id=<? value("bomitem_id") ?>)
+<? endif ?>
+<? if exists("component_item_id") ?>
+         AND   (component.itemsite_item_id=<? value("component_item_id") ?>)
+<? endif ?>
+             ) ) AS data
+ORDER BY posted;

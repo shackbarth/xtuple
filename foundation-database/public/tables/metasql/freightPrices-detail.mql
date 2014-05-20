@@ -1,0 +1,159 @@
+-- Group: freightPrices
+-- Name: detail
+-- Notes: used by dspFreightPricesByCustomer, dspFreightPricesByCustomerType
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT itemid, sourcetype, ipshead_name, source, ipsfreight_qtybreak, ipsfreight_price,
+       CASE WHEN (ipsfreight_type = 'F') THEN <? value("flatrate") ?>
+         ELSE <? value("peruom") ?>
+       END AS method,
+       currConcat(ipshead_curr_id) AS currConcat,
+       warehous_code, shipzone_name, freightclass_code, ipsfreight_shipvia,
+       'qty' AS ipsfreight_qtybreak_xtnumericrole,
+       <? value("na") ?> AS ipsfreight_qtybreak_xtnullrole,
+       'salesprice' AS ipsfreight_price_xtnumericrole,
+       <? value("any") ?> AS warehous_code_xtnullrole,
+       <? value("any") ?> AS shipzone_name_xtnullrole,
+       <? value("any") ?> AS freightclass_code_xtnullrole,
+       <? value("any") ?> AS ipsfreight_shipvia_xtnullrole
+FROM (SELECT ipsfreight_id AS itemid, 1 AS sourcetype,
+             ipshead_name,
+<? if exists("byCust") ?>
+             <? value("customer") ?> AS source,
+<? elseif exists("byCustType") ?>
+             <? value("custType") ?> AS source,
+<? endif ?>
+             ipsfreight_qtybreak, ipsfreight_price,
+             ipsfreight_type, ipshead_curr_id,
+             warehous_code, shipzone_name, freightclass_code, ipsfreight_shipvia
+      FROM ipsass JOIN ipshead ON (ipshead_id=ipsass_ipshead_id)
+           JOIN ipsfreight ON (ipsfreight_ipshead_id=ipshead_id)
+           LEFT OUTER JOIN whsinfo ON (warehous_id=ipsfreight_warehous_id)
+           LEFT OUTER JOIN shipzone ON (shipzone_id=ipsfreight_shipzone_id)
+           LEFT OUTER JOIN freightclass ON (freightclass_id=ipsfreight_freightclass_id)
+      WHERE ((true)
+<? if exists("byCust") ?>
+         AND (ipsass_cust_id=<? value("cust_id") ?>)
+         AND (COALESCE(LENGTH(ipsass_shipto_pattern), 0) = 0)
+<? elseif exists("byCustType") ?>
+         AND (ipsass_custtype_id=<? value("custtype_id") ?>)
+<? endif ?>
+<? if not exists("showExpired") ?>
+         AND (ipshead_expires > CURRENT_DATE)
+<? endif ?>
+<? if not exists("showFuture") ?>
+         AND (ipshead_effective <= CURRENT_DATE)
+<? endif ?>
+            )
+
+      UNION
+
+      SELECT ipsfreight_id AS itemid, 2 AS sourcetype,
+             ipshead_name,
+<? if exists("byCust") ?>
+             <? value("custType") ?> AS source,
+<? elseif exists("byCustType") ?>
+             <? value("custTypePattern") ?> AS source,
+<? endif ?>
+             ipsfreight_qtybreak, ipsfreight_price,
+             ipsfreight_type, ipshead_curr_id,
+             warehous_code, shipzone_name, freightclass_code, ipsfreight_shipvia
+      FROM ipsass
+<? if exists("byCustType") ?>
+           JOIN custtype ON ((coalesce(length(ipsass_custtype_pattern), 0) > 0) AND
+                                         (custtype_code ~ ipsass_custtype_pattern))
+<? endif ?>
+           JOIN ipshead ON (ipshead_id=ipsass_ipshead_id)
+           JOIN ipsfreight ON (ipsfreight_ipshead_id=ipshead_id)
+<? if exists("byCust") ?>
+           JOIN custinfo ON (cust_custtype_id=ipsass_custtype_id)
+<? endif ?>
+           LEFT OUTER JOIN whsinfo ON (warehous_id=ipsfreight_warehous_id)
+           LEFT OUTER JOIN shipzone ON (shipzone_id=ipsfreight_shipzone_id)
+           LEFT OUTER JOIN freightclass ON (freightclass_id=ipsfreight_freightclass_id)
+      WHERE ((true)
+<? if exists("byCust") ?>
+         AND (cust_id=<? value("cust_id") ?>)
+<? elseif exists("byCustType") ?>
+         AND (custtype_id=<? value("custtype_id") ?>)
+<? endif ?>
+<? if not exists("showExpired") ?>
+         AND (ipshead_expires > CURRENT_DATE)
+<? endif ?>
+<? if not exists("showFuture") ?>
+         AND (ipshead_effective <= CURRENT_DATE)
+<? endif ?>
+            )
+
+      UNION
+
+      SELECT ipsfreight_id AS itemid, 3 AS sourcetype,
+             ipshead_name,
+<? if exists("byCust") ?>
+             <? value("custTypePattern") ?> AS source,
+<? elseif exists("byCustType") ?>
+             (<? value("sale") ?> || '-' || sale_name) AS source,
+<? endif ?>
+             ipsfreight_qtybreak, ipsfreight_price,
+             ipsfreight_type, ipshead_curr_id,
+             warehous_code, shipzone_name, freightclass_code, ipsfreight_shipvia
+      FROM
+<? if exists("byCust") ?>
+           custinfo JOIN custtype ON (custtype_id=cust_custtype_id)
+                JOIN ipsass ON ((coalesce(length(ipsass_custtype_pattern), 0) > 0) AND
+                                (custtype_code ~ ipsass_custtype_pattern))
+                JOIN ipshead ON (ipshead_id=ipsass_ipshead_id)
+<? elseif exists("byCustType") ?>
+           sale JOIN ipshead ON (ipshead_id=sale_ipshead_id)
+<? endif ?>
+                JOIN ipsfreight ON (ipsfreight_ipshead_id=ipshead_id)
+                LEFT OUTER JOIN whsinfo ON (warehous_id=ipsfreight_warehous_id)
+                LEFT OUTER JOIN shipzone ON (shipzone_id=ipsfreight_shipzone_id)
+                LEFT OUTER JOIN freightclass ON (freightclass_id=ipsfreight_freightclass_id)
+      WHERE ((true)
+<? if exists("byCust") ?>
+         AND (cust_id=<? value("cust_id") ?>)
+<? elseif exists("byCustType") ?>
+         AND (true)
+<? endif ?>
+<? if not exists("showExpired") ?>
+  <? if exists("byCust") ?>
+         AND (ipshead_expires > CURRENT_DATE)
+  <? elseif exists("byCustType") ?>
+         AND (sale_enddate > CURRENT_DATE)
+  <? endif ?>
+<? endif ?>
+<? if not exists("showFuture") ?>
+  <? if exists("byCust") ?>
+         AND (ipshead_effective <= CURRENT_DATE)
+  <? elseif exists("byCustType") ?>
+         AND (sale_startdate <= CURRENT_DATE)
+  <? endif ?>
+<? endif ?>
+            )
+
+<? if exists("byCust") ?>
+      UNION
+
+      SELECT ipsfreight_id AS itemid, 4 AS sourcetype,
+             ipshead_name, (<? value("sale") ?> || '-' || sale_name) AS source,
+             ipsfreight_qtybreak, ipsfreight_price,
+             ipsfreight_type, ipshead_curr_id,
+             warehous_code, shipzone_name, freightclass_code, ipsfreight_shipvia
+      FROM sale JOIN ipshead ON (ipshead_id=sale_ipshead_id)
+                JOIN ipsfreight ON (ipsfreight_ipshead_id=ipshead_id)
+                LEFT OUTER JOIN whsinfo ON (warehous_id=ipsfreight_warehous_id)
+                LEFT OUTER JOIN shipzone ON (shipzone_id=ipsfreight_shipzone_id)
+                LEFT OUTER JOIN freightclass ON (freightclass_id=ipsfreight_freightclass_id)
+      WHERE ((true)
+  <? if not exists("showExpired") ?>
+         AND (sale_enddate > CURRENT_DATE)
+  <? endif ?>
+  <? if not exists("showFuture") ?>
+         AND (sale_startdate <= CURRENT_DATE)
+  <? endif ?>
+            )
+<? endif ?>
+     ) AS data
+ORDER BY ipsfreight_qtybreak, ipsfreight_price;

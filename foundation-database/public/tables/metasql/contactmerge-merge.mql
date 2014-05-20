@@ -1,0 +1,13 @@
+-- Group: contactmerge
+-- Name: merge
+-- Notes: Merge contact selections
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT cntctmerge(
+  src.cntctsel_cntct_id, 
+  trgt.cntctsel_cntct_id,
+  <? value("purge") ?>::boolean) AS result
+FROM cntctsel src, cntctsel trgt
+WHERE ((trgt.cntctsel_target)
+AND (NOT src.cntctsel_target));

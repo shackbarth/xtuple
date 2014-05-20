@@ -1,0 +1,57 @@
+-- Group: poItems
+-- Name: list
+-- Notes: used by purchaseOrder
+--        Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+--        See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT poitem.*,
+       CASE WHEN(poitem_status='C') THEN <? value("closed") ?>
+            WHEN(poitem_status='U') THEN <? value("unposted") ?>
+            WHEN(poitem_status='O' AND ((poitem_qty_received-poitem_qty_returned) > 0) AND (poitem_qty_ordered>(poitem_qty_received-poitem_qty_returned))) THEN <? value("partial") ?>
+            WHEN(poitem_status='O' AND ((poitem_qty_received-poitem_qty_returned) > 0) AND (poitem_qty_ordered<=(poitem_qty_received-poitem_qty_returned))) THEN <? value("received") ?>
+            WHEN(poitem_status='O') THEN <? value("open") ?>
+            ELSE poitem_status
+       END AS poitemstatus,
+       CASE WHEN (poitem_order_type='S') THEN <? value("so") ?>
+            WHEN (poitem_order_type='W') THEN <? value("wo") ?>
+            ELSE ''
+       END AS demand_type,
+       CASE WHEN (poitem_order_type='S') THEN formatSoNumber(coitem_id)
+            WHEN (poitem_order_type='W') THEN formatWoNumber(womatl_wo_id)
+            ELSE ''
+       END AS order_number,
+       CASE WHEN (itemsite_id IS NULL) THEN poitem_vend_item_number
+            ELSE item_number
+       END AS item_number,
+       CASE WHEN (itemsite_id IS NULL) THEN firstLine(poitem_vend_item_descrip)
+            ELSE (item_descrip1 || ' ' || item_descrip2)
+       END AS item_descrip,
+       contrct_number, 
+       poitem_rlsd_duedate AS orgl_duedate,
+       (poitem_unitprice * poitem_qty_ordered) AS extprice,
+       CASE WHEN(poitem_status='C') THEN <? value("closed") ?>
+            WHEN(poitem_status='U') THEN <? value("unposted") ?>
+            WHEN(poitem_status='O' AND ((poitem_qty_received-poitem_qty_returned) > 0) AND (poitem_qty_ordered>(poitem_qty_received-poitem_qty_returned))) THEN <? value("partial") ?>
+            WHEN(poitem_status='O' AND ((poitem_qty_received-poitem_qty_returned) > 0) AND (poitem_qty_ordered<=(poitem_qty_received-poitem_qty_returned))) THEN <? value("received") ?>
+            WHEN(poitem_status='O') THEN <? value("open") ?>
+            ELSE poitem_status
+       END AS poitem_status_qtdisplayrole,
+       'qty' AS poitem_qty_ordered_xtnumericrole,
+       'qty' AS poitem_qty_received_xtnumericrole,
+       'qty' AS poitem_qty_returned_xtnumericrole,
+       'qty' AS poitem_qty_vouchered_xtnumericrole,
+       'purchprice' AS poitem_unitprice_xtnumericrole,
+       'curr' AS extprice_xtnumericrole,
+       'curr' AS poitem_freight_xtnumericrole,
+       'curr' AS poitem_freight_received_xtnumericrole,
+       'curr' AS poitem_freight_vouchered_xtnumericrole,
+       'curr' AS poitem_stdcost_xtnumericrole
+FROM pohead JOIN poitem  ON (poitem_pohead_id=pohead_id)
+            LEFT OUTER JOIN itemsite ON (poitem_itemsite_id=itemsite_id)
+            LEFT OUTER JOIN item     ON (itemsite_item_id=item_id)
+            LEFT OUTER JOIN coitem   ON (poitem_order_type='S' AND poitem_order_id = coitem_id)
+            LEFT OUTER JOIN womatl   ON (poitem_order_type='W' AND poitem_order_id = womatl_id)
+            LEFT OUTER JOIN itemsrc  ON (poitem_itemsrc_id=itemsrc_id)
+            LEFT OUTER JOIN contrct  ON (itemsrc_contrct_id=contrct_id)
+WHERE (poitem_pohead_id=<? value("pohead_id") ?>)
+ORDER BY poitem_linenumber;

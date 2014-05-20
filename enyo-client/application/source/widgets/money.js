@@ -83,6 +83,9 @@ regexp:true, undef:true, trailing:true, white:true */
       this.inherited(arguments);
 
       var baseCurrency = XT.baseCurrency();
+      if (!baseCurrency) {
+        this.bubble("onNotify", {message: "_baseCurrencyMustBeSet".loc()});
+      }
 
       this.setEffective(new Date());
       this.setCurrency(baseCurrency);

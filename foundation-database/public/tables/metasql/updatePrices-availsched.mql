@@ -1,0 +1,29 @@
+-- Group: updateprices
+-- Name: availsched
+-- Notes:
+-- Notes:
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT ipshead_id, ipshead_name, ipshead_descrip,
+  ipshead_effective, ipshead_expires,
+  CASE WHEN COALESCE(ipshead_effective, startOfTime()) <= startOfTime() THEN 
+	'Always' END AS ipshead_effective_qtdisplayrole,
+  CASE WHEN COALESCE(ipshead_expires, endOfTime()) >= endOfTime() THEN 
+	'Never' END AS ipshead_expires_qtdisplayrole
+FROM ipshead
+WHERE ( (ipshead_id NOT IN (
+  	SELECT selsched_ipshead_id
+  	FROM selsched
+  	WHERE (selsched_ipshead_id=ipshead_id)))
+<? if not exists("showEffective") ?>
+  AND (ipshead_effective <= CURRENT_DATE)
+<? endif ?>
+<? if not exists("showExpired") ?>
+  AND (ipshead_expires > CURRENT_DATE)
+<? endif ?>
+<? if not exists("showCurrent") ?>
+  AND (CURRENT_DATE NOT BETWEEN ipshead_effective AND ipshead_expires -1)
+<? endif ?>
+ )
+ORDER BY ipshead_effective, ipshead_name;

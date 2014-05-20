@@ -1,0 +1,978 @@
+<!DOCTYPE openRPTDef>
+<report>
+ <title>Contract Activity Summary Report</title>
+ <name>ContractActivity</name>
+ <description></description>
+ <parameter default="11" active="true" listtype="static" type="integer" name="contrct_id">
+  <description></description>
+ </parameter>
+ <grid>
+  <snap/>
+  <show/>
+  <x>0.05</x>
+  <y>0.05</y>
+ </grid>
+ <size>Letter</size>
+ <landscape/>
+ <topmargin>50</topmargin>
+ <bottommargin>50</bottommargin>
+ <rightmargin>25</rightmargin>
+ <leftmargin>25</leftmargin>
+ <querysource>
+  <name>head</name>
+  <sql>select contrct_id,
+  contrct_number,
+  contrct_vend_id,
+  contrct_descrip,
+  contrct_effective,
+  contrct_expires,
+  contrct_note,
+  vend_number,
+  vend_name
+  from contrct JOIN vendinfo ON (vend_id = contrct_vend_id)
+  where contrct_id = &lt;? value("contrct_id") ?>;
+   </sql>
+ </querysource>
+ <querysource>
+  <name>detail</name>
+  <sql>-- Group: contrct
+-- Name:  itemsources
+-- Notes: Selection of Contract Related Item Sources
+SELECT itemsrc_id,
+	-1 AS pohead_id, 
+	' ' AS seq,
+	' ' AS poitem_ordnumber, 
+        item_number,
+	item_descrip1,
+	itemsrc_vend_uom,
+	itemsrc_vend_item_number,
+	itemsrc_contrct_min,
+	sum(poitem_qty_unreleased) AS poitem_qty_unreleased,
+	sum(poitem_qty_ordered)    AS poitem_qty_ordered,
+	sum(poitem_qty_received)   AS poitem_qty_received,
+	sum(poitem_qty_returned)   AS poitem_qty_returned,
+	null AS poitem_duedate,
+	null AS poitem_status,
+	0 AS xtindentrole 
+	FROM (SELECT contrct_id, 
+		itemsrc_id,
+		pohead_number || '-' || ltrim(to_char(poitem_linenumber, '999')) AS poitem_ordnumber, 
+		item_number,
+		item_descrip1,
+		itemsrc_vend_uom,
+		itemsrc_vend_item_number,
+		itemsrc_contrct_min,
+		CASE WHEN poitem_status = 'U' THEN poitem_qty_ordered
+		  ELSE 0
+		END AS poitem_qty_unreleased,
+		CASE WHEN poitem_status = 'O' THEN poitem_qty_ordered
+		     WHEN poitem_status = 'C' THEN poitem_qty_ordered
+                  ELSE 0
+		END AS poitem_qty_ordered,
+		poitem_qty_received,
+		poitem_qty_returned,
+		poitem_duedate, 
+		poitem_status
+		FROM contrct JOIN itemsrc    ON (itemsrc_contrct_id  = contrct_id)
+		  LEFT OUTER JOIN poitem     ON (poitem_itemsrc_id   = itemsrc_id)
+		  LEFT OUTER JOIN pohead     ON (pohead_id           = poitem_pohead_id)
+			   JOIN item       ON (itemsrc_item_id     = item_id)
+		WHERE (contrct_id = &lt;? value("contrct_id") ?>)) AS dummy1
+	WHERE (contrct_id = &lt;? value("contrct_id") ?>)
+	GROUP BY itemsrc_id, itemsrc_vend_item_number, itemsrc_vend_uom, itemsrc_contrct_min,
+                item_number, item_descrip1
+
+UNION  -- PO Line Items
+
+SELECT itemsrc_id,
+	pohead_id, 
+	pohead_number || '-' || ltrim(to_char(poitem_linenumber, '999')) AS seq,
+        pohead_number || '-' || ltrim(to_char(poitem_linenumber, '999')) AS poitem_ordnumber,  
+        null AS item_number,
+	null AS item_descrip1,
+	null AS itemsrc_vend_uom,
+	null AS itemsrc_vend_item_number,
+	null AS itemsrc_contrct_min,
+	CASE WHEN poitem_status = 'U' THEN poitem_qty_ordered
+	  ELSE 0
+	END AS poitem_qty_unreleased,
+	CASE WHEN poitem_status = 'O' THEN poitem_qty_ordered
+	     WHEN poitem_status = 'C' THEN poitem_qty_ordered
+          ELSE 0
+	END AS poitem_qty_ordered,
+	poitem_qty_received,
+	poitem_qty_returned,
+	to_char(poitem_duedate, 'YYYY-MM-DD HH24:MI:SS'), 
+	CASE WHEN poitem_status = 'O' THEN 'Open'
+	     WHEN poitem_status = 'C' THEN 'Closed'
+	     ELSE 'Unreleased'
+	END AS poitem_status,
+	1 AS xtindentrole 
+	FROM contrct JOIN itemsrc  ON (itemsrc_contrct_id  = contrct_id)
+		   JOIN poitem   ON (poitem_itemsrc_id   = itemsrc_id)
+		   JOIN pohead   ON (pohead_id           = poitem_pohead_id)
+		   JOIN item     ON (itemsrc_item_id     = item_id)
+	WHERE (contrct_id = &lt;? value("contrct_id") ?>)
+
+UNION -- Receipts
+
+SELECT itemsrc_id,
+	pohead_id,  
+	poitem_ordnumber || 'R' || to_char(recv_date, 'YYYYMMDDHH24:MI:SS') AS seq,
+	'Receipt' AS poitem_ordnumber,
+	null AS item_number,
+	null AS item_descrip1,
+	recv_vend_uom AS vend_uom,
+	null AS itemsrc_vend_item_number,
+	null AS itemsrc_contrct_min,
+	null AS poitem_qty_unreleased,
+	null AS poitem_qty_ordered,
+	recv_qty AS poitem_qty_received,
+	null AS poitem_qty_returned,
+	to_char(recv_date, 'YYYY-MM-DD HH24:MI:SS') AS poitem_duedate,
+	recv_trans_usr_name AS username,
+	2 AS xtindentrole
+  FROM recv JOIN (SELECT pohead_number || '-' || ltrim(to_char(poitem_linenumber, '999')) AS poitem_ordnumber, 
+			    poitem_pohead_id, poitem_linenumber, poitem_id, pohead_id, 
+			    poitem_itemsrc_id
+			FROM poitem JOIN pohead ON (pohead_id = poitem_pohead_id)) AS dummy ON (poitem_id   = recv_orderitem_id)
+               JOIN itemsite ON (itemsite_id = recv_itemsite_id)
+               JOIN item     ON (item_id     = itemsite_item_id)
+               JOIN itemsrc  ON (poitem_itemsrc_id = itemsrc_id)
+  WHERE (itemsrc_contrct_id = &lt;? value("contrct_id") ?>) 
+
+UNION -- Returns
+
+SELECT itemsrc_id, 
+	pohead_id,  
+	poitem_ordnumber || 'R' || to_char(poreject_date, 'YYYYMMDDHH24:MI:SS') AS seq,
+	'Return' AS poitem_ordnumber,
+	null AS item_number,
+	null AS item_descrip1,
+	poreject_vend_uom AS vend_uom,
+	null AS itemsrc_vend_item_number,
+	null AS itemsrc_contrct_min,
+	null AS poitem_qty_unreleased,
+	null AS poitem_qty_ordered,
+	null AS poitem_qty_received,
+	poreject_qty AS poitem_qty_returned,
+	to_char(poreject_date, 'YYYY-MM-DD HH24:MI:SS') AS poitem_duedate,
+	poreject_trans_username AS username,
+	2 AS xtindentrole 
+  FROM poreject JOIN (SELECT pohead_number || '-' || ltrim(to_char(poitem_linenumber, '999')) AS poitem_ordnumber, 
+			    poitem_pohead_id, poitem_linenumber, poitem_id, pohead_id, 
+			    poitem_itemsrc_id
+			FROM poitem JOIN pohead ON (pohead_id = poitem_pohead_id)) AS dummy ON (poitem_id   = poreject_poitem_id)
+               JOIN itemsite ON (itemsite_id = poreject_itemsite_id)
+               JOIN item     ON (item_id     = itemsite_item_id)
+               JOIN itemsrc  ON (poitem_itemsrc_id = itemsrc_id)
+  WHERE (itemsrc_contrct_id = &lt;? value("contrct_id") ?>) 
+
+ORDER BY itemsrc_id, seq, poitem_ordnumber, poitem_duedate, xtindentrole;
+</sql>
+ </querysource>
+ <rpthead>
+  <height>183</height>
+  <field>
+   <rect>
+    <x>135</x>
+    <y>55</y>
+    <width>598</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>contrct_descrip</column>
+   </data>
+  </field>
+  <field>
+   <rect>
+    <x>85</x>
+    <y>120</y>
+    <width>275</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>vend_name</column>
+   </data>
+  </field>
+  <field>
+   <rect>
+    <x>205</x>
+    <y>10</y>
+    <width>171</width>
+    <height>35</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>18</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>contrct_number</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>25</x>
+    <y>55</y>
+    <width>104</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Description:</string>
+  </label>
+  <label>
+   <rect>
+    <x>5</x>
+    <y>120</y>
+    <width>73</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Name:</string>
+  </label>
+  <label>
+   <rect>
+    <x>45</x>
+    <y>10</y>
+    <width>152</width>
+    <height>37</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>18</size>
+    <weight>bold</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>CONTRACT</string>
+  </label>
+  <label>
+   <rect>
+    <x>0</x>
+    <y>140</y>
+    <width>79.8</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Effective:</string>
+  </label>
+  <field>
+   <rect>
+    <x>85</x>
+    <y>140</y>
+    <width>150</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>contrct_effective</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>0</x>
+    <y>160</y>
+    <width>79.8</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Expires:</string>
+  </label>
+  <field>
+   <rect>
+    <x>85</x>
+    <y>160</y>
+    <width>150</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>contrct_expires</column>
+   </data>
+  </field>
+  <field>
+   <rect>
+    <x>85</x>
+    <y>100</y>
+    <width>140</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>vend_number</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>5</x>
+    <y>100</y>
+    <width>72</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Vendor:</string>
+  </label>
+  <label>
+   <rect>
+    <x>335</x>
+    <y>100</y>
+    <width>72</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Notes:</string>
+  </label>
+  <text>
+   <rect>
+    <x>415</x>
+    <y>100</y>
+    <width>330</width>
+    <height>20</height>
+   </rect>
+   <bottompad>0</bottompad>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>contrct_note</column>
+   </data>
+  </text>
+ </rpthead>
+ <pghead>
+  <firstpage/>
+  <height>6</height>
+ </pghead>
+ <pghead>
+  <height>36</height>
+  <line>
+   <xstart>5</xstart>
+   <ystart>30</ystart>
+   <xend>1045</xend>
+   <yend>30</yend>
+   <weight>1</weight>
+  </line>
+ </pghead>
+ <section>
+  <name>detail</name>
+  <group>
+   <name>ItemSource</name>
+   <column>itemsrc_id</column>
+   <head>
+    <height>30</height>
+    <line>
+     <xstart>3.5</xstart>
+     <ystart>23.5</ystart>
+     <xend>1043.5</xend>
+     <yend>23.5</yend>
+     <weight>1</weight>
+    </line>
+    <label>
+     <rect>
+      <x>5</x>
+      <y>5</y>
+      <width>79.8</width>
+      <height>20</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>bold</weight>
+     </font>
+     <left/>
+     <vcenter/>
+     <string>Item #</string>
+    </label>
+    <label>
+     <rect>
+      <x>85</x>
+      <y>5</y>
+      <width>79.8</width>
+      <height>20</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>bold</weight>
+     </font>
+     <left/>
+     <vcenter/>
+     <string>Description</string>
+    </label>
+    <label>
+     <rect>
+      <x>265</x>
+      <y>5</y>
+      <width>95</width>
+      <height>20</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>bold</weight>
+     </font>
+     <left/>
+     <vcenter/>
+     <string>Vendor Part #</string>
+    </label>
+    <label>
+     <rect>
+      <x>360</x>
+      <y>5</y>
+      <width>95</width>
+      <height>20</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>bold</weight>
+     </font>
+     <left/>
+     <vcenter/>
+     <string>Description</string>
+    </label>
+    <label>
+     <rect>
+      <x>460</x>
+      <y>5</y>
+      <width>65</width>
+      <height>20</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>bold</weight>
+     </font>
+     <left/>
+     <vcenter/>
+     <string>Order/Oper</string>
+    </label>
+    <label>
+     <rect>
+      <x>555</x>
+      <y>5</y>
+      <width>55</width>
+      <height>20</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>bold</weight>
+     </font>
+     <left/>
+     <vcenter/>
+     <string>Cont Qty</string>
+    </label>
+    <label>
+     <rect>
+      <x>620</x>
+      <y>5</y>
+      <width>55</width>
+      <height>20</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>bold</weight>
+     </font>
+     <left/>
+     <vcenter/>
+     <string>Unrel Qty</string>
+    </label>
+    <label>
+     <rect>
+      <x>690</x>
+      <y>5</y>
+      <width>55</width>
+      <height>20</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>bold</weight>
+     </font>
+     <left/>
+     <vcenter/>
+     <string>Order Qty</string>
+    </label>
+    <label>
+     <rect>
+      <x>760</x>
+      <y>5</y>
+      <width>55</width>
+      <height>20</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>bold</weight>
+     </font>
+     <left/>
+     <vcenter/>
+     <string>Rcpt Qty</string>
+    </label>
+    <label>
+     <rect>
+      <x>830</x>
+      <y>5</y>
+      <width>55</width>
+      <height>20</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>bold</weight>
+     </font>
+     <left/>
+     <vcenter/>
+     <string>Rtrn Qty</string>
+    </label>
+    <label>
+     <rect>
+      <x>920</x>
+      <y>5</y>
+      <width>55</width>
+      <height>20</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>bold</weight>
+     </font>
+     <left/>
+     <vcenter/>
+     <string>Date</string>
+    </label>
+    <label>
+     <rect>
+      <x>995</x>
+      <y>5</y>
+      <width>55</width>
+      <height>20</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>bold</weight>
+     </font>
+     <left/>
+     <vcenter/>
+     <string>Stat/User</string>
+    </label>
+   </head>
+   <foot>
+    <height>10</height>
+   </foot>
+  </group>
+  <group>
+   <name>PurchaseOrder</name>
+   <column>pohead_id</column>
+   <foot>
+    <height>10</height>
+    <line>
+     <xstart>458.5</xstart>
+     <ystart>3.5</ystart>
+     <xend>1043.5</xend>
+     <yend>3.5</yend>
+     <weight>1</weight>
+    </line>
+   </foot>
+  </group>
+  <detail>
+   <key>
+    <query>detail</query>
+   </key>
+   <height>25</height>
+   <field>
+    <rect>
+     <x>885</x>
+     <y>5</y>
+     <width>110</width>
+     <height>20</height>
+    </rect>
+    <font>
+     <face>Helvetica</face>
+     <size>8</size>
+     <weight>normal</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>poitem_duedate</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>5</x>
+     <y>5</y>
+     <width>65</width>
+     <height>20</height>
+    </rect>
+    <font>
+     <face>Helvetica</face>
+     <size>8</size>
+     <weight>normal</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>item_number</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>810</x>
+     <y>5</y>
+     <width>65</width>
+     <height>20</height>
+    </rect>
+    <font>
+     <face>Helvetica</face>
+     <size>8</size>
+     <weight>normal</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>poitem_qty_returned</column>
+    </data>
+    <format builtin="true">qty</format>
+   </field>
+   <field>
+    <rect>
+     <x>345</x>
+     <y>5</y>
+     <width>155</width>
+     <height>20</height>
+    </rect>
+    <font>
+     <face>Helvetica</face>
+     <size>8</size>
+     <weight>normal</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>item_descrip1</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>740</x>
+     <y>5</y>
+     <width>65</width>
+     <height>20</height>
+    </rect>
+    <font>
+     <face>Helvetica</face>
+     <size>8</size>
+     <weight>normal</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>poitem_qty_received</column>
+    </data>
+    <format builtin="true">qty</format>
+   </field>
+   <field>
+    <rect>
+     <x>530</x>
+     <y>5</y>
+     <width>65</width>
+     <height>20</height>
+    </rect>
+    <font>
+     <face>Helvetica</face>
+     <size>8</size>
+     <weight>normal</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>itemsrc_contrct_min</column>
+    </data>
+    <format builtin="true">qty</format>
+   </field>
+   <field>
+    <rect>
+     <x>670</x>
+     <y>5</y>
+     <width>65</width>
+     <height>20</height>
+    </rect>
+    <font>
+     <face>Helvetica</face>
+     <size>8</size>
+     <weight>normal</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>poitem_qty_ordered</column>
+    </data>
+    <format builtin="true">qty</format>
+   </field>
+   <field>
+    <rect>
+     <x>80</x>
+     <y>5</y>
+     <width>185</width>
+     <height>20</height>
+    </rect>
+    <font>
+     <face>Helvetica</face>
+     <size>8</size>
+     <weight>normal</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>item_descrip1</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>1000</x>
+     <y>5</y>
+     <width>45</width>
+     <height>20</height>
+    </rect>
+    <font>
+     <face>Helvetica</face>
+     <size>8</size>
+     <weight>normal</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>poitem_status</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>460</x>
+     <y>5</y>
+     <width>65</width>
+     <height>20</height>
+    </rect>
+    <font>
+     <face>Helvetica</face>
+     <size>8</size>
+     <weight>normal</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>poitem_ordnumber</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>275</x>
+     <y>5</y>
+     <width>65</width>
+     <height>20</height>
+    </rect>
+    <font>
+     <face>Helvetica</face>
+     <size>8</size>
+     <weight>normal</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>itemsrc_vend_item_number</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>600</x>
+     <y>5</y>
+     <width>65</width>
+     <height>20</height>
+    </rect>
+    <font>
+     <face>Helvetica</face>
+     <size>8</size>
+     <weight>normal</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>poitem_qty_unreleased</column>
+    </data>
+    <format builtin="true">qty</format>
+   </field>
+  </detail>
+ </section>
+ <pgfoot>
+  <height>27.4814</height>
+  <label>
+   <rect>
+    <x>910</x>
+    <y>7.4814</y>
+    <width>85</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Page:</string>
+  </label>
+  <field>
+   <rect>
+    <x>1000</x>
+    <y>7.4814</y>
+    <width>40</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>Context Query</query>
+    <column>page_number</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>5</x>
+    <y>7.4814</y>
+    <width>85</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Report Date:</string>
+  </label>
+  <field>
+   <rect>
+    <x>95</x>
+    <y>7.4814</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>Context Query</query>
+    <column>report_date</column>
+   </data>
+  </field>
+ </pgfoot>
+ <rptfoot>
+  <height>27.5186</height>
+ </rptfoot>
+</report>

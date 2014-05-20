@@ -331,13 +331,15 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
       */
       // this is somewhat limited
       it("can get added to a sales order", function () {
+        var workflowCount;
         assert.isTrue(workflowModel.isReady());
         workflowModel.set({
           name: "First step",
           priority: XM.priorities.models[0]
         });
+        workflowCount = salesOrderModel.get("workflow").length;
         salesOrderModel.get("workflow").add(workflowModel);
-        assert.equal(salesOrderModel.get("workflow").length, 1);
+        assert.equal(salesOrderModel.get("workflow").length - workflowCount, 1);
         salesOrderModel.get("workflow").remove(workflowModel);
       });
       /**

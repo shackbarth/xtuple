@@ -57,7 +57,6 @@ trailing:true, white:true, strict:false*/
       "ViewClassCodes",
       "ViewItemMasters",
       "ViewPurchaseOrders",
-      "ViewUOMs",
       "ViewTitles",
     ];
     XT.session.addRelevantPrivileges(module.name, relevantPrivileges);

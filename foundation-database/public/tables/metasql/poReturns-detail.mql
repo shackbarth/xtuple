@@ -1,0 +1,26 @@
+-- Group: poReturns
+-- Name: detail
+-- Notes: used by dspPoReturnsByVendor
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT poreject_id, poreject_ponumber, vend_name,
+       poreject_date, poreject_qty,
+       poreject_vend_item_number, poreject_vend_item_descrip,
+       rjctcode_code,
+       'qty' AS poreject_qty_xtnumericrole 
+FROM poreject, vendinfo, itemsite, rjctcode
+WHERE ((poreject_posted)
+   AND (poreject_vend_id=vend_id)
+   AND (poreject_rjctcode_id=rjctcode_id)
+   AND (poreject_itemsite_id=itemsite_id)
+   AND (vend_id=<? value("vend_id") ?>)
+   AND (DATE(poreject_date) BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+<? if exists("warehous_id") ?>
+   AND (itemsite_warehous_id=<? value("warehous_id") ?>)
+<? endif ?>
+<? if exists("username") ?>
+   AND (poreject_agent_username=<? value("username") ?>)
+<? endif ?>
+      ) 
+ORDER BY poreject_date DESC;

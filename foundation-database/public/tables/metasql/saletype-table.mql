@@ -1,0 +1,45 @@
+-- Group: saletype
+-- Name: table
+-- Notes: maintain saletype table
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+<? if exists("ViewMode") ?>
+  SELECT *
+    FROM saletype
+   WHERE true
+  <? if exists("saletype_id") ?>
+    AND (saletype_id=<? value("saletype_id") ?>) 
+  <? endif ?>
+  <? if exists("saletype_code") ?>
+    AND (UPPER(saletype_code)=UPPER(<? value("saletype_code") ?>)) 
+  <? endif ?>
+  ORDER BY saletype_code;
+
+<? elseif exists("NewMode") ?>
+  INSERT INTO saletype
+    ( saletype_code,
+      saletype_descr,
+      saletype_active )
+  VALUES
+    ( UPPER(<? value("saletype_code") ?>),
+      <? value("saletype_descr") ?>,
+      <? value("saletype_active") ?> )
+  RETURNING saletype_id;
+
+<? elseif exists("EditMode") ?>
+  UPDATE saletype
+    SET saletype_code=UPPER(<? value("saletype_code") ?>),
+        saletype_descr=<? value("saletype_descr") ?>,
+        saletype_active=<? value("saletype_active") ?>
+  WHERE (saletype_id=<? value("saletype_id") ?>);
+
+<? elseif exists("DeleteMode") ?>
+  DELETE FROM saletype WHERE saletype_id=<? value("saletype_id") ?>;
+
+<? elseif exists("DeleteUnusedMode") ?>
+  SELECT deleteUnusedSaleTypes() AS result;
+
+<? else ?>
+  RAISE EXCEPTION 'saletype invalid mode';
+<? endif ?>

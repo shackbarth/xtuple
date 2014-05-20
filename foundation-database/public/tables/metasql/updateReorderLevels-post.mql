@@ -1,0 +1,13 @@
+-- Group: updateReorderLevels
+-- Name:  post
+-- Notes: itemsite with new reorder level
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+UPDATE itemsite SET
+  itemsite_reorderlevel=<? value("itemsite_reorderlevel") ?>,
+  itemsite_stocked=CASE WHEN (<? value("itemsite_reorderlevel") ?> = 0) THEN false
+                        ELSE itemsite_stocked END,
+  itemsite_useparams=CASE WHEN (<? value("itemsite_reorderlevel") ?> = 0) THEN false
+                          ELSE itemsite_useparams END
+WHERE (itemsite_id=<? value("itemsite_id") ?>)

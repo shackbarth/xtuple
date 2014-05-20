@@ -1,0 +1,81 @@
+-- Group: summarizedGLTransactions
+-- Name: detail
+-- Notes: used by dspSummarizedGLTransactions
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT accnt_id, gltrans_id,
+       account, accnt_descrip,
+       gltrans_date, gltrans_source, gltrans_doctype, gltrans_docnumber,
+       f_notes,
+       debit, credit,
+       gltrans_username, gltrans_created,
+       CASE WHEN (level=0) THEN accnt_descrip
+            ELSE f_notes 
+       END AS descrip_notes, 
+       'curr' AS debit_xtnumericrole,
+       'curr' AS credit_xtnumericrole,
+       0 AS debit_xtnumericrole,
+       0 AS credit_xtnumericrole,
+       CASE WHEN (debit=0) THEN '' END AS debit_qtdisplayrole,
+       CASE WHEN (credit=0) THEN '' END AS credit_qtdisplayrole,
+       level AS xtindentrole 
+FROM ( 
+SELECT DISTINCT accnt_id, -1 AS gltrans_id, 0 AS level,
+       accnt_number, accnt_profit, accnt_sub, 
+      formatGLAccount(accnt_id) AS account, accnt_descrip,
+       CAST(NULL AS DATE) AS gltrans_date, '' AS gltrans_source, '' AS gltrans_doctype, '' AS gltrans_docnumber,
+         '' AS f_notes,
+       SUM( CASE WHEN (gltrans_amount < 0) THEN (gltrans_amount * -1) 
+                        ELSE 0 
+                   END ) AS debit, 
+       SUM( CASE WHEN (gltrans_amount > 0) THEN gltrans_amount 
+                       ELSE 0 
+                  END ) AS credit, 
+       '' AS gltrans_username, CAST(NULL AS TIMESTAMP) AS gltrans_created 
+FROM gltrans, accnt 
+WHERE ( (gltrans_accnt_id=accnt_id)
+ AND (NOT gltrans_deleted) 
+ AND (gltrans_date BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>) 
+
+  
+<? if exists("source") ?>
+     AND (gltrans_source=<? value("source") ?>)
+<? endif ?>
+  
+<? if exists("unpostedTransactions") ?>
+     AND (NOT gltrans_posted)
+<? elseif exists("postedTransactions") ?>
+       AND (gltrans_posted)
+<? endif ?>
+  ) GROUP BY accnt_id, accnt_number, accnt_profit, accnt_sub, accnt_descrip 
+               UNION 
+               SELECT accnt_id, gltrans_id, 1 AS level,
+                      accnt_number, accnt_profit, accnt_sub, 
+                      '' AS account, '' AS accnt_descrip,
+                      gltrans_date, gltrans_source, gltrans_doctype, gltrans_docnumber,
+                      firstLine(gltrans_notes) AS f_notes,
+                      CASE WHEN (gltrans_amount < 0) THEN (gltrans_amount * -1)
+                           ELSE 0
+                      END AS debit,
+                      CASE WHEN (gltrans_amount > 0) THEN gltrans_amount
+                           ELSE 0
+                      END AS credit,
+                      gltrans_username, gltrans_created 
+               FROM gltrans, accnt 
+               WHERE ((gltrans_accnt_id=accnt_id)
+                AND (NOT gltrans_deleted) 
+                AND (gltrans_date BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>) 
+
+<? if exists("source") ?>
+     AND (gltrans_source=<? value("source") ?>)
+<? endif ?>
+
+<? if exists("unpostedTransactions") ?>
+     AND (NOT gltrans_posted)
+<? elseif exists("postedTransactions") ?>
+       AND (gltrans_posted)
+<? endif ?>
+
+)) AS data 
+ ORDER BY accnt_number, accnt_profit, accnt_sub, level, gltrans_date DESC, gltrans_created;

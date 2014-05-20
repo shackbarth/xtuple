@@ -1,0 +1,62 @@
+-- Group: bomItems
+-- Name: detail
+-- Notes: used by bom, booItem
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT bomitem_id, item_id, *,
+       (item_descrip1 || ' ' || item_descrip2) AS item_description,
+       CASE WHEN (item_type='P') THEN text(<? value("purchased") ?>)
+            WHEN (item_type='M') THEN text(<? value("manufactured") ?>)
+            WHEN (item_type='J') THEN text(<? value("job") ?>)
+            WHEN (item_type='F') THEN text(<? value("phantom") ?>)
+            WHEN (item_type='B') THEN text(<? value("breeder") ?>)
+            WHEN (item_type='C') THEN text(<? value("coProduct") ?>)
+            WHEN (item_type='Y') THEN text(<? value("byProduct") ?>)
+            WHEN (item_type='R') THEN text(<? value("reference") ?>)
+            WHEN (item_type='S') THEN text(<? value("costing") ?>)
+            WHEN (item_type='T') THEN text(<? value("tooling") ?>)
+            WHEN (item_type='A') THEN text(<? value("assortment") ?>)
+            WHEN (item_type='O') THEN text(<? value("outside") ?>)
+            WHEN (item_type='L') THEN text(<? value("planning") ?>)
+            WHEN (item_type='K') THEN text(<? value("kit") ?>)
+            ELSE text(<? value("error") ?>)
+       END AS itemtype,
+       uom_name AS issueuom,
+       CASE WHEN (bomitem_issuemethod = 'S') THEN <? value("push") ?>
+            WHEN (bomitem_issuemethod = 'L') THEN <? value("pull") ?>
+            WHEN (bomitem_issuemethod = 'M') THEN <? value("mixed") ?>
+            ELSE <? value("error") ?>
+       END AS issuemethod,
+       'qty' AS bomitem_qtyfxd_xtnumericrole,
+       'qtyper' AS bomitem_qtyper_xtnumericrole,
+       'percent' AS bomitem_scrap_xtnumericrole,
+       CASE WHEN (bomitem_effective = startOfTime()) THEN NULL
+            ELSE bomitem_effective END AS effective,
+       CASE WHEN (bomitem_expires = endOfTime()) THEN NULL
+            ELSE bomitem_expires END AS expires,
+       <? value("always") ?> AS effective_xtnullrole,
+       <? value("never") ?>  AS expires_xtnullrole,
+       CASE WHEN (bomitem_expires <= CURRENT_DATE) THEN 'expired'
+            WHEN (bomitem_effective > CURRENT_DATE) THEN 'future'
+            WHEN (item_type='M') THEN 'altemphasis'
+       END AS qtforegroundrole
+<? if exists("booitem_id") ?>
+FROM bomitem(<? value("item_id") ?>), item, uom, xtmfg.booitem
+<? else ?>
+FROM bomitem(<? value("item_id") ?>, <? value("revision_id") ?>), item, uom
+<? endif ?>
+WHERE ((bomitem_item_id=item_id)
+  AND (bomitem_uom_id=uom_id)
+<? if not exists("showExpired") ?>
+  AND (bomitem_expires > CURRENT_DATE)
+<? endif ?>
+<? if not exists("showFuture") ?>
+  AND (bomitem_effective <= CURRENT_DATE)
+<? endif ?>
+<? if exists("booitem_id") ?>
+  AND (booitem_id = <? value("booitem_id") ?>)
+  AND (bomitem_booitem_seq_id = booitem_seq_id)
+<? endif ?>
+  )
+ORDER BY bomitem_seqnumber, bomitem_effective;

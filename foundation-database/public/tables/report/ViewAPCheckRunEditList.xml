@@ -1,0 +1,736 @@
+<!DOCTYPE openRPTDef>
+<report>
+ <title>View Payment Run Edit List</title>
+ <name>ViewAPCheckRunEditList</name>
+ <description></description>
+ <size>Letter</size>
+ <portrait/>
+ <topmargin>50</topmargin>
+ <bottommargin>50</bottommargin>
+ <rightmargin>50</rightmargin>
+ <leftmargin>50</leftmargin>
+ <querysource>
+  <name>detail</name>
+  <sql>SELECT CASE WHEN checkhead_void THEN 0
+                   ELSE checkhead_amount END AS amt_check,
+              CASE WHEN checkhead_void THEN 0
+                   ELSE currToBase(checkhead_curr_id,checkhead_amount,
+                                   checkhead_checkdate)
+              END AS base_amt_check,
+       checkhead_id AS primaryid,
+       -1 AS secondaryid,
+       formatBoolYN(checkhead_void) AS f_void,
+       formatBoolYN(checkhead_printed) AS f_printed,
+       TEXT(checkhead_number) AS number,
+       (checkrecip_number || '-' || checkrecip_name) AS description,
+       formatDate(checkhead_checkdate) AS f_checkdate,
+       formatMoney(checkhead_amount) AS f_amount,
+       formatMoney(currtobase(checkhead_curr_id,checkhead_amount,checkhead_checkdate)) AS f_baseamount,
+       currconcat(checkhead_curr_id) AS currAbbr,
+       checkhead_number,
+       1 AS orderby
+  FROM checkhead LEFT OUTER JOIN
+       checkrecip ON ((checkrecip_id=checkhead_recip_id)
+		 AND  (checkrecip_type=checkhead_recip_type))
+ WHERE ((checkhead_bankaccnt_id=&lt;? value("bankaccnt_id") ?>)
+   AND  (NOT checkhead_posted)
+   AND  (NOT checkhead_replaced)
+   AND  (NOT checkhead_deleted)
+&lt;? if exists(&quot;vend_id&quot;) ?>
+   AND (checkrecip_type='V')
+   AND (checkrecip_id=&lt;? value(&quot;vend_id&quot;) ?>)
+&lt;? elseif exists(&quot;vendtype_id&quot;) ?>
+   AND (checkrecip_type='V')
+   AND (checkrecip_id IN (SELECT vend_id
+                          FROM vendinfo
+                          WHERE (vend_vendtype_id=&lt;? value(&quot;vendtype_id&quot;) ?>)))
+&lt;? elseif exists(&quot;vendtype_pattern&quot;) ?>
+   AND (checkrecip_type='V')
+   AND (checkrecip_id IN (SELECT vend_id
+                          FROM vendinfo, vendtype
+                          WHERE ((vend_vendtype_id=vendtype_id)
+                             AND (vendtype_code ~ &lt;? value(&quot;vendtype_pattern&quot;) ?>))))
+&lt;? endif ?>
+   )
+
+UNION SELECT 0 AS amt_check,
+             0 AS base_amt_check,
+             checkitem_checkhead_id AS primaryid,
+             checkitem_id AS secondaryid,
+             '' AS f_void,
+             '' AS f_printed,
+             CASE WHEN (checkitem_ranumber IS NOT NULL) THEN checkitem_ranumber::TEXT
+	          ELSE checkitem_vouchernumber
+	     END AS number,
+             CASE WHEN (checkitem_cmnumber IS NOT NULL) THEN checkitem_cmnumber::TEXT
+	          ELSE checkitem_invcnumber
+	     END AS description,
+             '' AS f_checkdate,
+             formatMoney(checkitem_amount) AS f_amount,
+             formatMoney(currtobase(checkitem_curr_id,checkitem_amount,checkhead_checkdate)) AS f_baseamount,
+             currconcat(checkitem_curr_id) AS currAbbr,
+             checkhead_number,
+             2 AS orderby
+        FROM checkitem, checkhead
+       WHERE ( (checkitem_checkhead_id=checkhead_id)
+         AND (checkhead_bankaccnt_id=&lt;? value("bankaccnt_id") ?>)
+         AND (NOT checkhead_posted)
+         AND (NOT checkhead_replaced)
+         AND (NOT checkhead_deleted)
+&lt;? if exists(&quot;vend_id&quot;) ?>
+         AND (checkhead_recip_type='V')
+         AND (checkhead_recip_id=&lt;? value(&quot;vend_id&quot;) ?>)
+&lt;? elseif exists(&quot;vendtype_id&quot;) ?>
+         AND (checkhead_recip_type='V')
+         AND (checkhead_recip_id IN (SELECT vend_id
+                                FROM vendinfo
+                                WHERE (vend_vendtype_id=&lt;? value(&quot;vendtype_id&quot;) ?>)))
+&lt;? elseif exists(&quot;vendtype_pattern&quot;) ?>
+         AND (checkhead_recip_type='V')
+         AND (checkhead_recip_id IN (SELECT vend_id
+                                FROM vendinfo, vendtype
+                                WHERE ((vend_vendtype_id=vendtype_id)
+                                   AND (vendtype_code ~ &lt;? value(&quot;vendtype_pattern&quot;) ?>))))
+&lt;? endif ?>
+              )
+ORDER BY checkhead_number, primaryid, orderby;</sql>
+ </querysource>
+ <querysource>
+  <name>head</name>
+  <sql>SELECT (bankaccnt_name || '-' || bankaccnt_descrip) AS bankaccnt
+  FROM bankaccnt
+ WHERE (bankaccnt_id=&lt;? value("bankaccnt_id") ?>);</sql>
+ </querysource>
+ <rpthead>
+  <height>127</height>
+  <label>
+   <rect>
+    <x>5</x>
+    <y>100</y>
+    <width>55</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Void</string>
+  </label>
+  <line>
+   <xstart>5</xstart>
+   <ystart>112</ystart>
+   <xend>745</xend>
+   <yend>112</yend>
+   <weight>2</weight>
+  </line>
+  <label>
+   <rect>
+    <x>65</x>
+    <y>100</y>
+    <width>55</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Printed</string>
+  </label>
+  <label>
+   <rect>
+    <x>265</x>
+    <y>85</y>
+    <width>125</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Recipient</string>
+  </label>
+  <label>
+   <rect>
+    <x>455</x>
+    <y>100</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Payment Date</string>
+  </label>
+  <field>
+   <rect>
+    <x>145</x>
+    <y>55</y>
+    <width>350</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>bankaccnt</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>130</x>
+    <y>83</y>
+    <width>125</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Payment #</string>
+  </label>
+  <label>
+   <rect>
+    <x>265</x>
+    <y>100</y>
+    <width>125</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Invoice/Credit Memo #</string>
+  </label>
+  <label>
+   <rect>
+    <x>20</x>
+    <y>55</y>
+    <width>120</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Bank Account:</string>
+  </label>
+  <label>
+   <rect>
+    <x>130</x>
+    <y>100</y>
+    <width>125</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Voucher/Return Auth. #</string>
+  </label>
+  <label>
+   <rect>
+    <x>280</x>
+    <y>5</y>
+    <width>465</width>
+    <height>37</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>18</size>
+    <weight>bold</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>A/P Payment Run Edit List</string>
+  </label>
+  <label>
+   <rect>
+    <x>645</x>
+    <y>100</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Amount</string>
+  </label>
+  <label>
+   <rect>
+    <x>590</x>
+    <y>100</y>
+    <width>45</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Currency</string>
+  </label>
+ </rpthead>
+ <pghead>
+  <firstpage/>
+  <height>11</height>
+ </pghead>
+ <pghead>
+  <height>28</height>
+  <label>
+   <rect>
+    <x>590</x>
+    <y>5</y>
+    <width>57</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Currency</string>
+  </label>
+  <label>
+   <rect>
+    <x>130</x>
+    <y>5</y>
+    <width>125</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Payment/Voucher #</string>
+  </label>
+  <line>
+   <xstart>5</xstart>
+   <ystart>20</ystart>
+   <xend>745</xend>
+   <yend>20</yend>
+   <weight>2</weight>
+  </line>
+  <label>
+   <rect>
+    <x>265</x>
+    <y>5</y>
+    <width>125</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Recipient/Invoice #</string>
+  </label>
+  <label>
+   <rect>
+    <x>645</x>
+    <y>5</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Amount</string>
+  </label>
+  <label>
+   <rect>
+    <x>460</x>
+    <y>5</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Payment Date</string>
+  </label>
+  <label>
+   <rect>
+    <x>65</x>
+    <y>5</y>
+    <width>55</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Printed</string>
+  </label>
+  <label>
+   <rect>
+    <x>5</x>
+    <y>5</y>
+    <width>55</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Void</string>
+  </label>
+ </pghead>
+ <section>
+  <name>detail</name>
+  <group>
+   <name>detail</name>
+   <column>orderid</column>
+  </group>
+  <detail>
+   <key>
+    <query>detail</query>
+   </key>
+   <height>21</height>
+   <field>
+    <rect>
+     <x>130</x>
+     <y>0</y>
+     <width>100</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>number</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>585</x>
+     <y>0</y>
+     <width>53</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <hcenter/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>currAbbr</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>5</x>
+     <y>0</y>
+     <width>55</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <hcenter/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_void</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>65</x>
+     <y>0</y>
+     <width>55</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <hcenter/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_printed</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>465</x>
+     <y>0</y>
+     <width>75</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <hcenter/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_checkdate</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>245</x>
+     <y>0</y>
+     <width>200</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>description</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>645</x>
+     <y>0</y>
+     <width>100</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_amount</column>
+    </data>
+   </field>
+  </detail>
+ </section>
+ <pgfoot>
+  <height>21</height>
+  <field>
+   <rect>
+    <x>90</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>Context Query</query>
+    <column>report_date</column>
+   </data>
+  </field>
+  <field>
+   <rect>
+    <x>705</x>
+    <y>0</y>
+    <width>40</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>Context Query</query>
+    <column>page_number</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>615</x>
+    <y>0</y>
+    <width>85</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Page:</string>
+  </label>
+  <label>
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>85</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Report Date:</string>
+  </label>
+ </pgfoot>
+ <rptfoot>
+  <height>61</height>
+  <field>
+   <rect>
+    <x>645</x>
+    <y>5</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <data>
+    <query>detail</query>
+    <column>amt_check</column>
+   </data>
+   <tracktotal builtin="true" >qty</tracktotal>
+  </field>
+  <field>
+   <rect>
+    <x>645</x>
+    <y>20</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <data>
+    <query>detail</query>
+    <column>base_amt_check</column>
+   </data>
+   <tracktotal builtin="true" >qty</tracktotal>
+  </field>
+  <label>
+   <rect>
+    <x>494</x>
+    <y>20</y>
+    <width>145</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Report Total (Base):</string>
+  </label>
+  <line>
+   <xstart>567</xstart>
+   <ystart>2</ystart>
+   <xend>745</xend>
+   <yend>2</yend>
+   <weight>2</weight>
+  </line>
+  <label>
+   <rect>
+    <x>494</x>
+    <y>5</y>
+    <width>145</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Report Total:</string>
+  </label>
+ </rptfoot>
+</report>

@@ -1,0 +1,315 @@
+-- Group: backlog
+-- Name: detail
+-- Notes:
+-- Notes:
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT
+       cohead_id, coitem_id, *, currconcat(cohead_curr_id) AS currAbbr,
+       CASE WHEN xtindentrole = 0 THEN cohead_number
+       END AS coitem_linenumber_qtdisplayrole,
+       CASE WHEN xtindentrole = 0 THEN cust_name
+       END AS item_number_qtdisplayrole,
+       CASE WHEN (coitem_scheddate <= current_date AND qtybalance > 0) THEN 'error' 
+            WHEN (qtybalance > 0) THEN 'emphasis' 
+       END AS coitem_scheddate_qtforegroundrole,
+       'qty' AS coitem_qtyord_xtnumericrole,
+       'qty' AS coitem_qtyshipped_xtnumericrole,
+       'qty' AS coitem_qtyreturned_xtnumericrole,
+       'qty' AS qtyatshipping_xtnumericrole,
+       'qty' AS qtybalance_xtnumericrole,
+       'qty' AS qtyavailable_xtnumericrole,
+       'salesprice' AS coitem_price_xtnumericrole,
+       'salesprice' AS baseunitprice_xtnumericrole,
+       'curr' AS extprice_xtnumericrole,
+       'curr' AS baseextprice_xtnumericrole,
+       'curr' AS extpricebalance_xtnumericrole,
+       'curr' AS baseextpricebalance_xtnumericrole,
+       0 AS coitem_qtyord_xttotalrole,
+       0 AS coitem_qtyshipped_xttotalrole,
+       0 AS coitem_qtyreturned_xttotalrole,
+       0 AS qtybalance_xttotalrole,
+       0 AS baseextprice_xttotalrole,
+       0 AS baseextpricebalance_xttotalrole
+FROM (
+  SELECT
+         0 AS xtindentrole,
+         -- dummy coitem record
+         -1            AS coitem_id,        NULL::INTEGER AS coitem_cohead_id,
+         -1            AS coitem_linenumber,NULL::INTEGER AS coitem_itemsite_id,
+         NULL::TEXT    AS coitem_status,    NULL::DATE    AS coitem_scheddate,
+         getSoSchedDate(cohead_id) AS sort_scheddate,
+         NULL::DATE    AS coitem_promdate,  NULL::NUMERIC AS coitem_qtyord,
+         NULL::NUMERIC AS coitem_unitcost,  NULL::NUMERIC AS coitem_price,
+         NULL::NUMERIC AS coitem_custprice, NULL::NUMERIC AS coitem_qtyshipped,
+         NULL::INTEGER AS coitem_order_id,  NULL::TEXT    AS coitem_memo,
+         NULL::BOOLEAN AS coitem_imported,  NULL::NUMERIC AS coitem_qtyreturned,
+         NULL::TIMESTAMP AS coitem_closedate, NULL::BOOLEAN AS coitem_firm,
+         NULL::TEXT    AS coitem_custpn,    NULL::TEXT    AS coitem_order_type,
+         NULL::TEXT    AS coitem_close_username,
+         NULL::TIMESTAMP AS coitem_lastupdated,
+         NULL::INTEGER AS coitem_substitute_item_id,
+         NULL::TIMESTAMP AS coitem_created, NULL::TEXT    AS coitem_creator,
+         NULL::NUMERIC AS coitem_prcost,
+         NULL::INTEGER AS coitem_qty_uom_id,
+         NULL::NUMERIC AS coitem_qty_invuomratio,
+         NULL::INTEGER AS coitem_price_uom_id,
+         NULL::NUMERIC AS coitem_price_invuomratio,
+         NULL::BOOLEAN AS coitem_warranty,
+         NULL::INTEGER AS coitem_cos_accnt_id,
+         NULL::NUMERIC AS coitem_qtyreserved,
+         NULL::INTEGER AS coitem_subnumber,
+         cohead.*,
+         cust_number, cust_name,
+         NULL::TEXT AS item_number, NULL::TEXT AS item_descrip1,
+         NULL::TEXT AS itemdescription,
+         NULL::TEXT AS uom_name,
+         NULL::TEXT AS warehous_code,
+         NULL::NUMERIC AS qtybalance,
+         NULL::NUMERIC AS baseunitprice,
+         NULL::NUMERIC AS extprice,
+         NULL::NUMERIC AS baseextprice,
+         NULL::NUMERIC AS extpricebalance,
+         NULL::NUMERIC AS baseextpricebalance
+
+  FROM coitem JOIN cohead ON (cohead_id=coitem_cohead_id)
+              JOIN custinfo ON (cust_id=cohead_cust_id)
+              JOIN itemsite ON (itemsite_id=coitem_itemsite_id)
+              JOIN site() ON (warehous_id=itemsite_warehous_id)
+              JOIN item ON (item_id=itemsite_item_id)
+              JOIN uom ON (uom_id=coitem_qty_uom_id)
+<? foreach("char_id_text_list") ?>
+     LEFT OUTER JOIN charass charass_alias<? literal("char_id_text_list") ?> 
+          ON ((charass_alias<? literal("char_id_text_list") ?>.charass_target_type='SO') 
+         AND  (charass_alias<? literal("char_id_text_list") ?>.charass_target_id=cohead_id)
+         AND  (charass_alias<? literal("char_id_text_list") ?>.charass_char_id=<? value("char_id_text_list") ?>))
+     LEFT OUTER JOIN char char_alias<? literal("char_id_text_list") ?> 
+          ON (charass_alias<? literal("char_id_text_list") ?>.charass_char_id=char_alias<? literal("char_id_text_list") ?>.char_id)
+<? endforeach ?>
+<? foreach("char_id_list_list") ?>
+     LEFT OUTER JOIN charass charass_alias<? literal("char_id_list_list") ?> 
+          ON ((charass_alias<? literal("char_id_list_list") ?>.charass_target_type='SO') 
+         AND  (charass_alias<? literal("char_id_list_list") ?>.charass_target_id=cohead_id)
+         AND  (charass_alias<? literal("char_id_list_list") ?>.charass_char_id=<? value("char_id_list_list") ?>))
+     LEFT OUTER JOIN char char_alias<? literal("char_id_list_list") ?> 
+          ON (charass_alias<? literal("char_id_list_list") ?>.charass_char_id=char_alias<? literal("char_id_list_list") ?>.char_id)
+<? endforeach ?>
+<? foreach("char_id_date_list") ?>
+     LEFT OUTER JOIN charass charass_alias<? literal("char_id_date_list") ?> 
+          ON ((charass_alias<? literal("char_id_date_list") ?>.charass_target_type='SO') 
+         AND  (charass_alias<? literal("char_id_date_list") ?>.charass_target_id=cohead_id)
+         AND  (charass_alias<? literal("char_id_date_list") ?>.charass_char_id=<? value("char_id_date_list") ?>))
+     LEFT OUTER JOIN char char_alias<? literal("char_id_date_list") ?> 
+          ON (charass_alias<? literal("char_id_date_list") ?>.charass_char_id=char_alias<? literal("char_id_date_list") ?>.char_id)
+<? endforeach ?>
+  WHERE ( (coitem_status='O')
+  <? if exists("cohead_id") ?>
+    AND  (coitem_cohead_id=<? value("cohead_id") ?>)
+  <? endif ?>
+  <? if exists("startDate") ?>
+    AND  (cohead_orderdate >= <? value("startDate") ?>)
+  <? endif ?>
+  <? if exists("endDate") ?>
+    AND  (cohead_orderdate <= <? value("endDate") ?>)
+  <? endif ?>
+  <? if exists("startDateSched") ?>
+    AND  (coitem_scheddate >= <? value("startDateSched") ?>)
+  <? endif ?>
+  <? if exists("endDateSched") ?>
+    AND  (coitem_scheddate <= <? value("endDateSched") ?>)
+  <? endif ?>
+  <? if exists("salesrep_id") ?>
+    AND  (cohead_salesrep_id=<? value("salesrep_id") ?>)
+  <? endif ?>
+  <? if exists("shipto_id") ?>
+    AND  (cohead_shipto_id=<? value("shipto_id") ?>)
+  <? endif ?>
+  <? if exists("cust_id") ?>
+    AND  (cohead_cust_id=<? value("cust_id") ?>)
+  <? endif ?>
+  <? if exists("custtype_id") ?>
+    AND  (cust_custtype_id=<? value("custtype_id") ?>)
+  <? endif ?>
+  <? if exists("custtype_pattern") ?>
+    AND  (cust_custtype_id IN (SELECT DISTINCT custtype_id
+                               FROM custtype
+                               WHERE (custtype_code ~ <? value("custtype_pattern") ?>)))
+  <? endif ?>
+  <? if exists("custgrp") ?>
+    AND (cust_id IN (SELECT DISTINCT custgrpitem_cust_id
+                     FROM custgrpitem))
+  <? endif ?>
+  <? if exists("custgrp_id") ?>
+    AND (cust_id IN (SELECT DISTINCT custgrpitem_cust_id
+                     FROM custgrpitem
+                     WHERE (custgrpitem_custgrp_id=<? value("custgrp_id") ?>)))
+  <? endif ?>
+  <? if exists("custgrp_pattern") ?>
+    AND (cust_id IN (SELECT DISTINCT custgrpitem_cust_id
+                     FROM custgrp, custgrpitem
+                     WHERE ( (custgrpitem_custgrp_id=custgrp_id)
+                       AND   (custgrp_name ~ <? value("custgrp_pattern") ?>) )) )
+  <? endif ?>
+
+  <? if exists("item_id") ?>
+    AND  (itemsite_item_id=<? value("item_id") ?>)
+  <? endif ?>
+  <? if exists("prodcat_id") ?>
+    AND (item_prodcat_id=<? value("prodcat_id") ?>)
+  <? endif ?>
+  <? if exists("prodcat_pattern") ?>
+    AND (item_prodcat_id IN (SELECT DISTINCT prodcat_id
+                             FROM prodcat
+                             WHERE (prodcat_code ~ <? value("prodcat_pattern") ?>)))
+  <? endif ?>
+
+  <? if exists("warehous_id") ?>
+    AND  (itemsite_warehous_id=<? value("warehous_id") ?>)
+  <? endif ?>
+  <? literal("charClause") ?>
+        )
+
+  UNION
+
+  SELECT 
+         1 AS xtindentrole,
+         coitem_id,        coitem_cohead_id,
+         coitem_linenumber,coitem_itemsite_id,
+         coitem_status,    coitem_scheddate,
+         getSoSchedDate(cohead_id) AS sort_scheddate,
+         coitem_promdate,  coitem_qtyord,
+         coitem_unitcost,  coitem_price,
+         coitem_custprice, coitem_qtyshipped,
+         coitem_order_id,  coitem_memo,
+         coitem_imported,  coitem_qtyreturned,
+         coitem_closedate, coitem_firm,
+         coitem_custpn,    coitem_order_type,
+         coitem_close_username,
+         coitem_lastupdated,
+         coitem_substitute_item_id,
+         coitem_created,   coitem_creator,
+         coitem_prcost,
+         coitem_qty_uom_id,
+         coitem_qty_invuomratio,
+         coitem_price_uom_id,
+         coitem_price_invuomratio,
+         coitem_warranty,
+         coitem_cos_accnt_id,
+         coitem_qtyreserved,
+         coitem_subnumber,
+         cohead.*,
+         cust_number, cust_name,
+         item_number, item_descrip1, (item_descrip1 || ' ' || item_descrip2) AS itemdescription,
+         uom_name,
+         warehous_code,
+         noNeg(coitem_qtyord - coitem_qtyshipped + coitem_qtyreturned) AS qtybalance,
+         currtobase(cohead_curr_id, coitem_price, cohead_orderdate) AS baseunitprice,
+         round((coitem_qtyord * coitem_qty_invuomratio) *
+                     (coitem_price / coitem_price_invuomratio), 2) AS extprice,
+         round((coitem_qtyord * coitem_qty_invuomratio) *
+                     (currtobase(cohead_curr_id, coitem_price, cohead_orderdate) / coitem_price_invuomratio), 2) AS baseextprice,
+         round((noNeg(coitem_qtyord - coitem_qtyshipped + coitem_qtyreturned) * coitem_qty_invuomratio) *
+                     (coitem_price / coitem_price_invuomratio), 2) AS extpricebalance,
+         round((noNeg(coitem_qtyord - coitem_qtyshipped + coitem_qtyreturned) * coitem_qty_invuomratio) *
+                     (currtobase(cohead_curr_id, coitem_price, cohead_orderdate) / coitem_price_invuomratio), 2) AS baseextpricebalance
+
+  FROM coitem JOIN cohead ON (cohead_id=coitem_cohead_id)
+              JOIN custinfo ON (cust_id=cohead_cust_id)
+              JOIN itemsite ON (itemsite_id=coitem_itemsite_id)
+              JOIN site() ON (warehous_id=itemsite_warehous_id)
+              JOIN item ON (item_id=itemsite_item_id)
+              JOIN uom ON (uom_id=coitem_qty_uom_id)
+<? foreach("char_id_text_list") ?>
+     LEFT OUTER JOIN charass charass_alias<? literal("char_id_text_list") ?> 
+          ON ((charass_alias<? literal("char_id_text_list") ?>.charass_target_type='SO') 
+         AND  (charass_alias<? literal("char_id_text_list") ?>.charass_target_id=cohead_id)
+         AND  (charass_alias<? literal("char_id_text_list") ?>.charass_char_id=<? value("char_id_text_list") ?>))
+     LEFT OUTER JOIN char char_alias<? literal("char_id_text_list") ?> 
+          ON (charass_alias<? literal("char_id_text_list") ?>.charass_char_id=char_alias<? literal("char_id_text_list") ?>.char_id)
+<? endforeach ?>
+<? foreach("char_id_list_list") ?>
+     LEFT OUTER JOIN charass charass_alias<? literal("char_id_list_list") ?> 
+          ON ((charass_alias<? literal("char_id_list_list") ?>.charass_target_type='SO') 
+         AND  (charass_alias<? literal("char_id_list_list") ?>.charass_target_id=cohead_id)
+         AND  (charass_alias<? literal("char_id_list_list") ?>.charass_char_id=<? value("char_id_list_list") ?>))
+     LEFT OUTER JOIN char char_alias<? literal("char_id_list_list") ?> 
+          ON (charass_alias<? literal("char_id_list_list") ?>.charass_char_id=char_alias<? literal("char_id_list_list") ?>.char_id)
+<? endforeach ?>
+<? foreach("char_id_date_list") ?>
+     LEFT OUTER JOIN charass charass_alias<? literal("char_id_date_list") ?> 
+          ON ((charass_alias<? literal("char_id_date_list") ?>.charass_target_type='SO') 
+         AND  (charass_alias<? literal("char_id_date_list") ?>.charass_target_id=cohead_id)
+         AND  (charass_alias<? literal("char_id_date_list") ?>.charass_char_id=<? value("char_id_date_list") ?>))
+     LEFT OUTER JOIN char char_alias<? literal("char_id_date_list") ?> 
+          ON (charass_alias<? literal("char_id_date_list") ?>.charass_char_id=char_alias<? literal("char_id_date_list") ?>.char_id)
+<? endforeach ?>
+  WHERE ( (coitem_status='O')
+  <? if exists("cohead_id") ?>
+    AND  (coitem_cohead_id=<? value("cohead_id") ?>)
+  <? endif ?>
+  <? if exists("startDate") ?>
+    AND  (cohead_orderdate >= <? value("startDate") ?>)
+  <? endif ?>
+  <? if exists("endDate") ?>
+    AND  (cohead_orderdate <= <? value("endDate") ?>)
+  <? endif ?>
+  <? if exists("startDateSched") ?>
+    AND  (coitem_scheddate >= <? value("startDateSched") ?>)
+  <? endif ?>
+  <? if exists("endDateSched") ?>
+    AND  (coitem_scheddate <= <? value("endDateSched") ?>)
+  <? endif ?>
+  <? if exists("salesrep_id") ?>
+    AND  (cohead_salesrep_id=<? value("salesrep_id") ?>)
+  <? endif ?>
+  <? if exists("shipto_id") ?>
+    AND  (cohead_shipto_id=<? value("shipto_id") ?>)
+  <? endif ?>
+  <? if exists("cust_id") ?>
+    AND  (cohead_cust_id=<? value("cust_id") ?>)
+  <? endif ?>
+  <? if exists("custtype_id") ?>
+    AND  (cust_custtype_id=<? value("custtype_id") ?>)
+  <? endif ?>
+  <? if exists("custtype_pattern") ?>
+    AND  (cust_custtype_id IN (SELECT DISTINCT custtype_id
+                               FROM custtype
+                               WHERE (custtype_code ~ <? value("custtype_pattern") ?>)))
+  <? endif ?>
+  <? if exists("custgrp") ?>
+    AND (cust_id IN (SELECT DISTINCT custgrpitem_cust_id
+                     FROM custgrpitem))
+  <? endif ?>
+  <? if exists("custgrp_id") ?>
+    AND (cust_id IN (SELECT DISTINCT custgrpitem_cust_id
+                     FROM custgrpitem
+                     WHERE (custgrpitem_custgrp_id=<? value("custgrp_id") ?>)))
+  <? endif ?>
+  <? if exists("custgrp_pattern") ?>
+    AND (cust_id IN (SELECT DISTINCT custgrpitem_cust_id
+                     FROM custgrp, custgrpitem
+                     WHERE ( (custgrpitem_custgrp_id=custgrp_id)
+                       AND   (custgrp_name ~ <? value("custgrp_pattern") ?>) )) )
+  <? endif ?>
+
+  <? if exists("item_id") ?>
+    AND  (itemsite_item_id=<? value("item_id") ?>)
+  <? endif ?>
+  <? if exists("prodcat_id") ?>
+    AND (item_prodcat_id=<? value("prodcat_id") ?>)
+  <? endif ?>
+  <? if exists("prodcat_pattern") ?>
+    AND (item_prodcat_id IN (SELECT DISTINCT prodcat_id
+                             FROM prodcat
+                             WHERE (prodcat_code ~ <? value("prodcat_pattern") ?>)))
+  <? endif ?>
+
+  <? if exists("warehous_id") ?>
+    AND  (itemsite_warehous_id=<? value("warehous_id") ?>)
+  <? endif ?>
+  <? literal("charClause") ?>
+        )
+
+) AS dummy
+ORDER BY cohead_number, xtindentrole, coitem_linenumber;

@@ -1,0 +1,276 @@
+-- Group: inventoryHistory
+-- Name: detail
+-- Notes: 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT invhist_id, invdetail_id, invhist_transdate AS sortdate,
+       formatDateTime(invhist_transdate) AS transdate,
+       CASE WHEN (level=0) THEN invhist_transdate END AS invhist_transdate,
+       CASE WHEN (level=0) THEN invhist_created END AS invhist_created,
+       CASE WHEN (level=0) THEN invhist_user END AS invhist_user,
+       CASE WHEN (level=0) THEN invhist_transtype END AS invhist_transtype,
+       CASE WHEN (level=0) THEN warehous_code END AS warehous_code,
+       CASE WHEN (level=0) THEN ordernumber
+            ELSE locationname
+       END AS orderlocation,
+       CASE WHEN (level=0) THEN item_number END AS item_number,
+       CASE WHEN (level=0) THEN invhist_invuom END AS invhist_invuom,
+       CASE WHEN (level=0 AND invhist_transtype IN ('EX','IM','SH','SI')) THEN (invhist_invqty * -1.0)
+            WHEN (level=0) THEN invhist_invqty
+            ELSE invdetail_qty
+       END AS transqty,
+       CASE WHEN (level=0) THEN invhist_value_after - invhist_value_before
+       END AS transvalue,
+       CASE WHEN (level=0) THEN locfrom END AS locfrom,
+       CASE WHEN (level=0) THEN invhist_qoh_before
+            ELSE invdetail_qty_before
+       END AS qohbefore,
+       CASE WHEN (level=0) THEN locto END AS locto,
+       CASE WHEN (level=0) THEN invhist_qoh_after
+            ELSE invdetail_qty_after
+       END AS qohafter,
+       CASE WHEN (level=0) THEN costmethod END AS costmethod,
+       CASE WHEN (level=0) THEN invhist_value_before END AS invhist_value_before,
+       CASE WHEN (level=0) THEN invhist_value_after END AS invhist_value_after,
+       'qty' AS transqty_xtnumericrole,
+       'curr' AS transvalue_xtnumericrole,
+       0 AS transvalue_xttotalrole,
+       'qty' AS qohbefore_xtnumericrole,
+       'qty' AS qohafter_xtnumericrole,
+       'curr' AS invhist_value_before_xtnumericrole,
+       'curr' AS invhist_value_after_xtnumericrole,
+       CASE WHEN (NOT invhist_posted) THEN NULL END AS qohbefore_qtdisplayrole,
+       CASE WHEN (NOT invhist_posted) THEN NULL END AS qohafter_qtdisplayrole,
+       CASE WHEN (NOT invhist_posted) THEN NULL END AS invhist_value_before_qtdisplayrole,
+       CASE WHEN (NOT invhist_posted) THEN NULL END AS invhist_value_after_qtdisplayrole,
+       CASE WHEN (NOT invhist_posted) THEN NULL END AS costmethod_qtdisplayrole,
+       CASE WHEN (NOT invhist_posted) THEN NULL END AS locto_qtdisplayrole,
+       CASE WHEN (NOT invhist_posted) THEN NULL END AS locfrom_qtdisplayrole,
+       CASE WHEN (NOT invhist_posted) THEN 'warning' END AS qtforegroundrole,
+       level AS xtindentrole
+FROM (
+SELECT invhist.*, 0 AS level,
+       whs1.warehous_code AS warehous_code, item_number,
+       CASE WHEN (invhist_ordtype NOT LIKE '') THEN (invhist_ordtype || '-' || invhist_ordnumber)
+            ELSE invhist_ordnumber
+       END AS ordernumber,
+       CASE WHEN (invhist_costmethod='A') THEN <? value("average") ?>
+            WHEN (invhist_costmethod='S') THEN <? value("standard") ?>
+            WHEN (invhist_costmethod='J') THEN <? value("job") ?>
+            WHEN (invhist_costmethod='N') THEN <? value("none") ?>
+            ELSE <? value("unknown") ?>
+       END AS costmethod,
+       0 AS invdetail_id, '' AS locationname,
+       0 AS invdetail_qty, 0 AS invdetail_qty_before, 0 AS invdetail_qty_after,
+       CASE WHEN (invhist_transtype='TW' AND invhist_invqty < 0) THEN whs1.warehous_code
+            WHEN (invhist_transtype='TW') THEN whs2.warehous_code
+            WHEN (invhist_transtype='AD' AND invhist_invqty < 0) THEN whs1.warehous_code
+            WHEN (invhist_transtype='AD') THEN 'ADJ'
+            WHEN (invhist_transtype='EX') THEN whs1.warehous_code
+            WHEN (invhist_transtype='IB') THEN whs1.warehous_code
+            WHEN (invhist_transtype='IM' AND invhist_invqty < 0) THEN 'WIP'
+            WHEN (invhist_transtype='IM') THEN whs1.warehous_code
+            WHEN (invhist_transtype='IT') THEN whs1.warehous_code
+            WHEN (invhist_transtype='RB') THEN 'WIP'
+            WHEN (invhist_transtype='RM') THEN 'WIP'
+            WHEN (invhist_transtype='RP') THEN whs1.warehous_code
+            WHEN (invhist_transtype='RR') THEN 'CUST'
+            WHEN (invhist_transtype='RS') THEN 'SHIP'
+            WHEN (invhist_transtype='SH') THEN whs1.warehous_code
+            WHEN (invhist_transtype='SI') THEN whs1.warehous_code
+            WHEN (invhist_transtype='SV') THEN whs1.warehous_code
+	 WHEN (invhist_transtype='TR') THEN whs2.warehous_code
+	 WHEN (invhist_transtype='TS') THEN whs1.warehous_code
+	 WHEN (invhist_transtype='RI') THEN whs1.warehous_code
+            ELSE ''
+       END AS locfrom,
+       CASE WHEN (invhist_transtype='TW' AND invhist_invqty < 0) THEN whs2.warehous_code
+            WHEN (invhist_transtype='TW') THEN whs1.warehous_code
+            WHEN (invhist_transtype='AD' AND invhist_invqty < 0) THEN 'ADJ'
+            WHEN (invhist_transtype='AD') THEN whs1.warehous_code
+            WHEN (invhist_transtype='CC') THEN whs1.warehous_code
+            WHEN (invhist_transtype='EX') THEN 'EXPENSE'
+            WHEN (invhist_transtype='IB') THEN 'WIP'
+            WHEN (invhist_transtype='IM' AND invhist_invqty < 0) THEN whs1.warehous_code
+            WHEN (invhist_transtype='IM') THEN 'WIP'
+            WHEN (invhist_transtype='NN') THEN whs1.warehous_code
+            WHEN (invhist_transtype='RB') THEN whs1.warehous_code
+            WHEN (invhist_transtype='RM') THEN whs1.warehous_code
+            WHEN (invhist_transtype='RP') THEN 'PURCH'
+            WHEN (invhist_transtype='RR') THEN whs1.warehous_code
+            WHEN (invhist_transtype='RS') THEN whs1.warehous_code
+            WHEN (invhist_transtype='RT') THEN whs1.warehous_code
+            WHEN (invhist_transtype='RX') THEN whs1.warehous_code
+            WHEN (invhist_transtype='SH') THEN 'SHIP'
+            WHEN (invhist_transtype='SI') THEN 'SCRAP'
+            WHEN (invhist_transtype='SV') THEN 'SHIP'
+            WHEN (invhist_transtype='TR') THEN whs1.warehous_code
+            WHEN (invhist_transtype='TS') THEN whs2.warehous_code
+            WHEN (invhist_transtype='RI') THEN 'WIP'
+            ELSE ''
+       END AS locto 
+FROM itemsite, item, whsinfo AS whs1, invhist
+  LEFT OUTER JOIN whsinfo AS whs2 ON (invhist_xfer_warehous_id=whs2.warehous_id)
+WHERE ( (invhist_itemsite_id=itemsite_id)
+  AND  (itemsite_item_id=item_id) 
+  AND  (itemsite_warehous_id=whs1.warehous_id)
+  AND  (DATE(invhist_transdate) BETWEEN <? value("startDate") ?> AND <? value("endDate") ?> )
+  AND  (transType(invhist_transtype, <? value("transType") ?>))
+<? if exists("orderNumber") ?>
+  AND  (invhist_ordnumber ~ <? value("orderNumber") ?>)
+<? endif ?>
+<? if exists("cohead_id") ?>
+  AND  (invhist_ordtype='SO')
+  AND  (invhist_ordnumber ~ (
+    SELECT cohead_number 
+    FROM cohead 
+    WHERE cohead_id=<? value("cohead_id") ?>))
+<? endif ?>
+<? if exists("pohead_id") ?>
+  AND  (invhist_ordtype='PO')
+  AND  (invhist_ordnumber ~ (
+    SELECT pohead_number 
+    FROM pohead 
+    WHERE pohead_id=<? value("pohead_id") ?>))
+<? endif ?>
+<? if exists("tohead_id") ?>
+  AND  (invhist_ordtype='TO')
+  AND  (invhist_ordnumber ~ (
+    SELECT tohead_number 
+    FROM tohead 
+    WHERE tohead_id=<? value("tohead_id") ?>))
+<? endif ?>
+<? if exists("wo_id") ?>
+  AND  (invhist_ordtype='WO')
+  AND  (invhist_ordnumber ~ formatWoNumber(<? value("wo_id") ?>))
+<? endif ?>
+<? if exists("warehous_id") ?>
+  AND  (itemsite_warehous_id=<? value("warehous_id") ?>)
+<? endif ?>
+<? if exists("item_id") ?>
+  AND  (itemsite_item_id=<? value("item_id") ?>)
+<? endif ?>
+<? if exists("classcode_id") ?>
+  AND  (item_classcode_id=<? value("classcode_id") ?>)
+<? endif ?>
+<? if exists("itemgrp_id") ?>
+  AND (item_id IN (SELECT itemgrpitem_item_id
+		   FROM itemgrpitem
+		   WHERE (itemgrpitem_itemgrp_id=<? value("itemgrp_id") ?>)))
+<? endif ?>
+<? if exists("plancode_id") ?>
+  AND  (itemsite_plancode_id=<? value("plancode_id") ?>)
+<? endif ?>
+<? if exists("classcode_pattern") ?>
+  AND  (item_classcode_id IN (SELECT classcode_id
+			      FROM classcode
+			      WHERE (classcode_code ~ <? value ("classcode_pattern") ?>)))
+<? endif ?>
+<? if exists("itemgrp_pattern") ?>
+  AND (item_id IN (SELECT itemgrpitem_item_id
+		   FROM itemgrpitem, itemgrp
+		   WHERE ( (itemgrpitem_itemgrp_id=itemgrp_id)
+		     AND  (itemgrp_name ~ <? value ("itemgrp_pattern") ?>))))
+<? endif ?>
+<? if exists("plancode_pattern") ?>
+  AND (itemsite_plancode_id IN (SELECT plancode_id
+				FROM plancode
+				WHERE (plancode_code ~ <? value("plancode_pattern") ?>)))
+<? endif ?>
+<? if exists("itemgrp") ?>
+  AND (item_id IN (SELECT DISTINCT itemgrpitem_item_id FROM itemgrpitem))
+<? endif ?>
+) 
+UNION SELECT invhist.*, 1 AS level,
+             '' AS warehous_code, '' AS item_number,
+             '' AS ordernumber,
+             '' AS costmethod,
+             invdetail_id,
+             CASE WHEN (invdetail_location_id=-1) THEN formatlotserialnumber(invdetail_ls_id)
+                  WHEN (invdetail_ls_id IS NULL) THEN formatLocationName(invdetail_location_id)
+                  ELSE (formatLocationName(invdetail_location_id) || '-' || formatlotserialnumber(invdetail_ls_id))
+             END AS locationname,
+             invdetail_qty, invdetail_qty_before, invdetail_qty_after,
+             '' AS locfrom,
+             '' AS locto 
+FROM itemsite, item, whsinfo AS whs1, invdetail, invhist LEFT OUTER JOIN
+     whsinfo AS whs2 ON (invhist_xfer_warehous_id=whs2.warehous_id)
+WHERE ((invhist_hasdetail)
+  AND (invhist_itemsite_id=itemsite_id)
+  AND (itemsite_item_id=item_id)
+  AND (itemsite_warehous_id=whs1.warehous_id)
+  AND (invdetail_invhist_id=invhist_id)
+  AND  (DATE(invhist_transdate) BETWEEN <? value("startDate") ?> AND <? value("endDate") ?> )
+  AND (transType(invhist_transtype, <? value("transType") ?>))
+<? if exists("orderType") ?>
+  AND  (invhist_ordtype=<? value("orderType") ?>)
+<? endif ?>
+<? if exists("orderNumber") ?>
+  AND  (invhist_ordnumber ~ <? value("orderNumber") ?>)
+<? endif ?>
+<? if exists("cohead_id") ?>
+  AND  (invhist_ordtype='SO')
+  AND  (invhist_ordnumber ~ (
+    SELECT cohead_number 
+    FROM cohead 
+    WHERE cohead_id=<? value("cohead_id") ?>))
+<? endif ?>
+<? if exists("pohead_id") ?>
+  AND  (invhist_ordtype='PO')
+  AND  (invhist_ordnumber ~ (
+    SELECT pohead_number 
+    FROM pohead 
+    WHERE pohead_id=<? value("pohead_id") ?>))
+<? endif ?>
+<? if exists("tohead_id") ?>
+  AND  (invhist_ordtype='TO')
+  AND  (invhist_ordnumber ~ (
+    SELECT tohead_number 
+    FROM tohead 
+    WHERE tohead_id=<? value("tohead_id") ?>))
+<? endif ?>
+<? if exists("wo_id") ?>
+  AND  (invhist_ordtype='WO')
+  AND  (invhist_ordnumber ~ formatWoNumber(<? value("wo_id") ?>))
+<? endif ?>
+<? if exists("warehous_id") ?>
+  AND  (itemsite_warehous_id=<? value("warehous_id") ?>)
+<? endif ?>
+<? if exists("item_id") ?>
+  AND  (itemsite_item_id=<? value("item_id") ?>)
+<? endif ?>
+<? if exists("classcode_id") ?>
+  AND  (item_classcode_id=<? value("classcode_id") ?>)
+<? endif ?>
+<? if exists("itemgrp_id") ?>
+  AND (item_id IN (SELECT itemgrpitem_item_id
+		   FROM itemgrpitem
+		   WHERE (itemgrpitem_itemgrp_id=<? value("itemgrp_id") ?>)))
+<? endif ?>
+<? if exists("plancode_id") ?>
+  AND  (itemsite_plancode_id=<? value("plancode_id") ?>)
+<? endif ?>
+<? if exists("classcode_pattern") ?>
+  AND  (item_classcode_id IN (SELECT classcode_id
+			      FROM classcode
+			      WHERE (classcode_code ~ <? value ("classcode_pattern") ?>)))
+<? endif ?>
+<? if exists("itemgrp_pattern") ?>
+  AND (item_id IN (SELECT itemgrpitem_item_id
+		   FROM itemgrpitem, itemgrp
+		   WHERE ( (itemgrpitem_itemgrp_id=itemgrp_id)
+		     AND  (itemgrp_name ~ <? value ("itemgrp_pattern") ?>))))
+<? endif ?>
+<? if exists("plancode_pattern") ?>
+  AND (itemsite_plancode_id IN (SELECT plancode_id
+				FROM plancode
+				WHERE (plancode_code ~ <? value("plancode_pattern") ?>)))
+<? endif ?>
+<? if exists("itemgrp") ?>
+  AND (item_id IN (SELECT DISTINCT itemgrpitem_item_id FROM itemgrpitem))
+<? endif ?>
+)
+
+   ) AS data
+ORDER BY sortdate DESC, invhist_id, level;

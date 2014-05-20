@@ -1,0 +1,109 @@
+-- Group: contacts
+-- Name: detail
+-- Notes: 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT DISTINCT ON (length(cntct_last_name)=0, length(cntct_first_name)=0, cntct_last_name, cntct_first_name, cntct_number) 
+  cntct_id AS id
+<? if not exists("idOnly") ?> 
+, addr_id AS altId, addr.*,
+  crmacct_id, crmacct_number, crmacct_name,
+  cntct.* 
+<? foreach("char_id_text_list") ?>
+  , charass_alias<? literal("char_id_text_list") ?>.charass_value AS char<? literal("char_id_text_list") ?>
+<? endforeach ?>
+<? foreach("char_id_list_list") ?>
+  , charass_alias<? literal("char_id_list_list") ?>.charass_value AS char<? literal("char_id_list_list") ?>
+<? endforeach ?>
+<? foreach("char_id_date_list") ?>
+  , charass_alias<? literal("char_id_date_list") ?>.charass_value::date AS char<? literal("char_id_date_list") ?>
+<? endforeach ?>
+<? endif ?>
+<? if exists("hasContext") ?>
+FROM cntct
+<? else ?>
+FROM cntct()
+<? endif ?>
+  LEFT OUTER JOIN crmacct ON (cntct_crmacct_id=crmacct_id) 
+  LEFT OUTER JOIN addr ON (cntct_addr_id=addr_id) 
+  LEFT OUTER JOIN cntcteml ON (cntcteml_cntct_id=cntct_id)
+<? foreach("char_id_text_list") ?>
+  LEFT OUTER JOIN charass charass_alias<? literal("char_id_text_list") ?> ON ((charass_alias<? literal("char_id_text_list") ?>.charass_target_type='CNTCT') 
+                                                                    AND  (charass_alias<? literal("char_id_text_list") ?>.charass_target_id=cntct_id)
+                                                                    AND  (charass_alias<? literal("char_id_text_list") ?>.charass_char_id=<? value("char_id_text_list") ?>))
+  LEFT OUTER JOIN char char_alias<? literal("char_id_text_list") ?> ON (charass_alias<? literal("char_id_text_list") ?>.charass_char_id=char_alias<? literal("char_id_text_list") ?>.char_id)
+<? endforeach ?>
+<? foreach("char_id_list_list") ?>
+  LEFT OUTER JOIN charass charass_alias<? literal("char_id_list_list") ?> ON ((charass_alias<? literal("char_id_list_list") ?>.charass_target_type='CNTCT') 
+                                                                    AND  (charass_alias<? literal("char_id_list_list") ?>.charass_target_id=cntct_id)
+                                                                    AND  (charass_alias<? literal("char_id_list_list") ?>.charass_char_id=<? value("char_id_list_list") ?>))
+  LEFT OUTER JOIN char char_alias<? literal("char_id_list_list") ?> ON (charass_alias<? literal("char_id_list_list") ?>.charass_char_id=char_alias<? literal("char_id_list_list") ?>.char_id)
+<? endforeach ?>
+<? foreach("char_id_date_list") ?>
+  LEFT OUTER JOIN charass charass_alias<? literal("char_id_date_list") ?> ON ((charass_alias<? literal("char_id_date_list") ?>.charass_target_type='CNTCT') 
+                                                                    AND  (charass_alias<? literal("char_id_date_list") ?>.charass_target_id=cntct_id)
+                                                                    AND  (charass_alias<? literal("char_id_date_list") ?>.charass_char_id=<? value("char_id_date_list") ?>))
+  LEFT OUTER JOIN char char_alias<? literal("char_id_date_list") ?> ON (charass_alias<? literal("char_id_date_list") ?>.charass_char_id=char_alias<? literal("char_id_date_list") ?>.char_id)
+<? endforeach ?>
+WHERE true
+<? if exists("owner_username") ?> 
+  AND (cntct_owner_username=<? value("owner_username") ?>) 
+<? elseif exists("owner_usr_pattern") ?>
+  AND (cntct_owner_username ~ <? value("owner_usr_pattern") ?>) 
+<? endif ?>
+<? if exists("activeOnly") ?> 
+  AND cntct_active
+<? endif ?>
+<? if exists("search_pattern") ?>
+  AND (
+ (crmacct_number ~* <? value("search_pattern") ?>)
+  OR (crmacct_name ~* <? value("search_pattern") ?>)
+  OR (COALESCE(cntct_first_name,'') || ' ' || COALESCE(cntct_last_name,'') ~* <? value("search_pattern") ?>)
+  OR (COALESCE(cntct_phone,'') || ' ' || COALESCE(cntct_phone2,'') || ' ' || COALESCE(cntct_fax,'') ~* <? value("search_pattern") ?>)
+  OR (COALESCE(cntcteml_email,'') ~* <? value("search_pattern") ?>)
+  OR (COALESCE(addr_line1,'') || ' ' || COALESCE(addr_line2,'') || ' ' || COALESCE(addr_line3,'') ~* <? value("search_pattern") ?>)
+  OR (COALESCE(addr_city,'') ~* <? value("search_pattern") ?>)
+  OR (COALESCE(addr_state,'') ~* <? value("search_pattern") ?>)
+  OR (COALESCE(addr_postalcode,'') ~* <? value("search_pattern") ?>)
+  OR (COALESCE(addr_country,'') ~* <? value("search_pattern") ?>)
+)
+<? endif ?>
+<? if exists("cntct_id") ?>
+  AND (cntct_id=<? value("cntct_id")?>)
+<? endif ?>
+<? if exists("crmacct_id") ?>
+  AND (crmacct_id=<? value("crmacct_id")?>)
+<? endif ?>
+<? if exists("cntct_name_pattern") ?>
+  AND (COALESCE(cntct_first_name,'') || ' ' || COALESCE(cntct_last_name,'') ~* <? value("cntct_name_pattern") ?>)
+<? endif ?>
+<? if exists("cntct_phone_pattern") ?>
+  AND (COALESCE(cntct_phone,'') || ' ' || COALESCE(cntct_phone2,'') || ' ' || COALESCE(cntct_fax,'') ~* <? value("cntct_phone_pattern") ?>)
+<? endif ?>
+<? if exists("cntct_email_pattern") ?>
+  AND (COALESCE(cntcteml_email,'') ~* <? value("cntct_email_pattern") ?>)
+<? endif ?>
+<? if exists("addr_street_pattern") ?>
+  AND (COALESCE(addr_line1,'') || ' ' || COALESCE(addr_line2,'') || ' ' || COALESCE(addr_line3,'') ~* <? value("addr_street_pattern") ?>)
+<? endif ?>
+<? if exists("addr_city_pattern") ?>
+  AND (COALESCE(addr_city,'') ~* <? value("addr_city_pattern") ?>)
+<? endif ?>
+<? if exists("addr_state_pattern") ?>
+  AND (COALESCE(addr_state,'') ~* <? value("addr_state_pattern") ?>)
+<? endif ?>
+<? if exists("addr_postalcode_pattern") ?>
+  AND (COALESCE(addr_postalcode,'') ~* <? value("addr_postalcode_pattern") ?>)
+<? endif ?>
+<? if exists("addr_country_pattern") ?>
+  AND (COALESCE(addr_country,'') ~* <? value("addr_country_pattern") ?>)
+<? endif ?>
+<? if exists("id") ?>
+  AND (cntct_id=<? literal("id") ?>)
+<? endif ?>
+<? if exists("addr_id") ?>
+  AND (addr_id=<? value("addr_id") ?>)
+<? endif ?>
+<? literal("charClause") ?>
+ORDER BY length(cntct_last_name)=0, length(cntct_first_name)=0, cntct_last_name, cntct_first_name, cntct_number, cntcteml_primary desc;
