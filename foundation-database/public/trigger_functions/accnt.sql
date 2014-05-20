@@ -18,7 +18,7 @@ BEGIN
     FROM metric
    WHERE(metric_name='GLFFProfitCenters')
    LIMIT 1;
-  ffProfit := COALESCE(ffSub, false);
+  ffProfit := COALESCE(ffProfit, false);
 
   IF (NEW.accnt_sub IS NOT NULL AND ffSub = false) THEN
     SELECT subaccnt_id
