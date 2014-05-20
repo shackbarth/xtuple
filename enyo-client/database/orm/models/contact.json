@@ -1137,6 +1137,13 @@
         }
       },
       {
+        "name": "honorific",
+        "attr": {
+          "type": "String",
+          "column": "cntct_honorific"
+        }
+      },
+      {
         "name": "firstName",
         "attr": {
           "type": "String",
@@ -1144,10 +1151,24 @@
         }
       },
       {
+        "name": "middleName",
+        "attr": {
+          "type": "String",
+          "column": "cntct_middle"
+        }
+      },
+      {
         "name": "lastName",
         "attr": {
           "type": "String",
           "column": "cntct_last_name"
+        }
+      },
+      {
+        "name": "suffix",
+        "attr": {
+          "type": "String",
+          "column": "cntct_suffix"
         }
       },
       {
