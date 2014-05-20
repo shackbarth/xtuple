@@ -26,8 +26,6 @@
     "public/indexes/invcitemtax.sql",
     "public/indexes/shipitem.sql",
     "public/indexes/taxhist.sql",
-    "public/indexes/toheadtax.sql",
-    "public/indexes/toitemtax.sql",
     "public/indexes/voheadtax.sql",
     "public/indexes/voitemtax.sql",
 
