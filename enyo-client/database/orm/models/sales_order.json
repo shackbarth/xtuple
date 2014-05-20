@@ -1765,6 +1765,15 @@
         "total": {
           "view": "MaintainSalesOrders ViewSalesOrders"
         }
+      },
+      "personal": {
+        "create": false,
+        "read": "ViewPersonalCRMAccounts",
+        "update": false,
+        "delete": false,
+        "properties": [
+          "crmaccountUsers"
+        ]
       }
     },
     "properties": [
@@ -1910,6 +1919,14 @@
         "attr": {
           "type": "String",
           "column": "cohead_shiptocountry"
+        }
+      },
+      {
+        "name": "crmaccountUsers",
+        "toMany": {
+          "type": "ShareUsers",
+          "column": "obj_uuid",
+          "inverse": "uuid"
         }
       }
     ],

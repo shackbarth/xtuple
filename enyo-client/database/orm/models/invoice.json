@@ -385,6 +385,15 @@
         "read": "MaintainMiscInvoices ViewMiscInvoices",
         "update": false,
         "delete": false
+      },
+      "personal": {
+        "create": false,
+        "read": "ViewPersonalCRMAccounts",
+        "update": false,
+        "delete": false,
+        "properties": [
+          "crmaccountUsers"
+        ]
       }
     },
     "properties": [
@@ -485,6 +494,14 @@
           "column": "invchead_cust_id",
           "isNested": true,
           "required": true
+        }
+      },
+      {
+        "name": "crmaccountUsers",
+        "toMany": {
+          "type": "ShareUsers",
+          "column": "obj_uuid",
+          "inverse": "uuid"
         }
       }
     ],
