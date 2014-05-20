@@ -1,0 +1,23 @@
+<package id        = "dist450Beta"
+         version   = "4.5.0Beta"
+         developer = "xTuple"
+         descrip   = "load PostBooks resources"
+         updater   = "2.2.4" >
+
+  <prerequisite type = "query"
+                name = "Checking xTuple Edition" >
+    <query>SELECT fetchMetricText('Application') = 'Standard';</query>
+    <message>This package must be applied to a Distribution database.</message>
+  </prerequisite>
+
+  <prerequisite type = "query"
+                name = "Checking xTuple ERP database version" >
+    <query>SELECT fetchMetricText('ServerVersion') ~ '^4.4.';</query>
+    <message>This package must be applied to a 4.4+ Distribution database.
+    </message>
+  </prerequisite>
+
+  <script file="updates.sql" />
+  <script file="inventory_upgrade.sql" />
+
+</package>

@@ -7,12 +7,23 @@ xTuple Enterprise Resource Planning Mobile-Web client
 
 ### Installing this project
 
-The install script for this project is Debian based and designed to run on a 64 bit Ubuntu 12.04 machine. *If you do not have 64 bit hardware the install script will not work for you* and you will have to do a manual build. It is best if you do not already have postgres installed on your machine.
+*We strongly recommend that you install this project in a virtual
+machine created with our automated VM creation script:*
+[Creating a Virtual Development Environment using Vagrant](https://github.com/xtuple/xtuple-vagrant/blob/master/README.md)
 
-#### 1. Fork this repo onto your own github account
-We recommend checking out the latest tagged release, but if you want to just
-checkout the lastest code you can skip this next step. Find and checkout the
-latest tag with the following:
+If you choose to install your own OS, whether on physical hardware or in a
+VM, we cannot support you. That said, the setup script in step 3 requires a
+64 bit Ubuntu machine.  We have only tested this with Ubuntu 12.04.  *If
+you do not have 64 bit hardware the install script will not work* and you
+will have to do a manual build.  It is best if you do not already have
+postgres installed on your machine.
+
+#### 0. Fork this repository onto your own github account
+Navigate to http://github.com/xtuple/xtuple and click the FORK button.
+
+#### 1. Check out the xtuple repository
+We recommend checking out the latest tagged release. If you want to just
+check out the latest code you can skip the last step below (the 'git checkout').
 
     git clone --recursive git://github.com/<username>/xtuple.git
     cd xtuple
