@@ -34,6 +34,7 @@
     "public/tables/docass.sql",
     "public/tables/grppriv.sql",
     "public/tables/incdt.sql",
+    "public/tables/invchead.sql",
     "public/tables/invcitem.sql",
     "public/tables/invcitemtax.sql",
     "public/tables/itemsite.sql",
