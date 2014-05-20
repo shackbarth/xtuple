@@ -639,7 +639,7 @@
         }
       },
       {
-        "name": "vendorContactSuffic",
+        "name": "vendorContactSuffix",
         "attr": {
           "type": "String",
           "column": "pohead_vend_cntct_suffix"
