@@ -726,6 +726,7 @@ TODO deferred to later sprint:
           "XV.InvoiceListItem", function () {
         XT.session.privileges.attributes.ViewMiscInvoices = false;
         XT.session.privileges.attributes.MaintainMiscInvoices = false;
+        XT.session.privileges.attributes.ViewPersonalCRMAccounts = false;
         assert.isFalse(XM.InvoiceListItem.canRead());
 
         XT.session.privileges.attributes.ViewMiscInvoices = true;
@@ -737,6 +738,7 @@ TODO deferred to later sprint:
         assert.isTrue(XM.InvoiceListItem.canRead());
 
         XT.session.privileges.attributes.ViewMiscInvoices = true;
+        XT.session.privileges.attributes.ViewPersonalCRMAccounts = true;
       });
       it("XM.InvoiceListItem is not editable", function () {
         assert.isFalse(XM.InvoiceListItem.canCreate());
