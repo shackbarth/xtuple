@@ -194,8 +194,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     var formatFullName = function (firstName, lastName, honorific, suffix) {
       var fullName = [];
       if (honorific) { fullName.push(honorific +  ' '); }
-      fullName.push(firstName + ' ');
-      fullName.push(lastName);
+      fullName.push(firstName + ' ' + lastName);
       if (suffix) { fullName.push(' ' + suffix); }
       return fullName;
     };
