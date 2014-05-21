@@ -39,7 +39,16 @@ select xt.add_report_definition('XM.PurchaseOrder', 0, $${
     },
     {
       "definition": [{"text": "_to", "label": true}],
-      "options": {"x": 100, "y": 140, "fontBold": true}
+      "options": {"x": 50, "y": 140, "fontBold": true}
+    },
+    {
+      "definition": [
+        {"attr": "vendorContactFirstName"},
+        {"attr": "vendorContactLastName"},
+        {"attr": "vendorContactHonorific"}
+      ],
+      "transform": "fullname",
+      "options": {"x": 50, "y": 160, "width": 250}
     },
     {
       "definition": [
@@ -54,11 +63,20 @@ select xt.add_report_definition('XM.PurchaseOrder', 0, $${
         {"attr": "vendorPhone"}
       ],
       "transform": "address",
-      "options": {"x": 100, "y": 160, "width": 250}
+      "options": {"x": 50, "y": 170, "width": 250}
     },
     {
       "definition": [{"text": "_shipTo", "label": true}],
       "options": {"x": 350, "y": 140, "fontBold": true}
+    },
+    {
+      "definition": [
+        {"attr": "shiptoContactFirstName"},
+        {"attr": "shiptoContactLastName"},
+        {"attr": "shiptoContactHonorific"}
+      ],
+      "transform": "fullname",
+      "options": {"x": 350, "y": 160, "width": 250}
     },
     {
       "definition": [
@@ -73,23 +91,23 @@ select xt.add_report_definition('XM.PurchaseOrder', 0, $${
         {"attr": "shiptoPhone"}
       ],
       "transform": "address",
-      "options": {"x": 350, "y": 160, "width": 250}
+      "options": {"x": 350, "y": 170, "width": 250}
     },
     {
       "definition": [{"text": "_fob", "label": true}],
-      "options": {"fontBold": true, "x": 0, "y": 230}
+      "options": {"fontBold": true, "x": 50, "y": 230}
     },
     {
       "definition": [{"attr": "fob"}],
-      "options": {"x": 0, "y": 245}
+      "options": {"x": 50, "y": 245}
     },
     {
       "definition": [{"text": "_shipVia", "label": true}],
-      "options": {"fontBold": true, "x": 150, "y": 230}
+      "options": {"fontBold": true, "x": 175, "y": 230}
     },
     {
       "definition": [{"attr": "shipVia"}],
-      "options": {"x": 150, "y": 245}
+      "options": {"x": 175, "y": 245}
     },
     {
       "definition": [{"text": "_terms", "label": true}],
@@ -132,6 +150,16 @@ select xt.add_report_definition('XM.PurchaseOrder', 0, $${
     }
   ],
   "footerElements": [
+    {"element": "bandLine", "size": 2},
+    {
+      "definition": [
+        {"attr": "subtotal", "label": true},
+        {"attr": "freight", "label": true},
+        {"attr": "taxTotal", "label": true},
+        {"attr": "total", "label": true}
+      ],
+      "options": {"fontBold": true, "fontSize": 14, "width": 550, "align": "right"}
+    }
   ],
   "pageFooterElements": [
     {

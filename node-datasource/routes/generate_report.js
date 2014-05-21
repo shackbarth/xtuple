@@ -167,9 +167,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     };
 
     var formatAddress = function (name, address1, address2, address3, city, state, code, country) {
-      if (!arguments[0]) { return; }
       var address = [];
-
       if (name) { address.push(name); }
       if (address1) {address.push(address1); }
       if (address2) {address.push(address2); }
@@ -193,7 +191,17 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       }).join("-")];
     };
 
+    var formatFullName = function (firstName, lastName, honorific, suffix) {
+      var fullName = [];
+      if (honorific) { fullName.push(honorific +  ' '); }
+      fullName.push(firstName + ' ');
+      fullName.push(lastName);
+      if (suffix) { fullName.push(' ' + suffix); }
+      return fullName;
+    };
+
     var transformFunctions = {
+      fullname: formatFullName,
       address: formatAddress,
       arbl: formatArbl
     };
