@@ -56,6 +56,7 @@ strict:true, trailing:true, white:true */
     "_UseEarliestAvailDateOnPOItem": "Use Earliest Date",
     "_vendorItem": "Vendor Item",
     "_vendorItemNumber": "VendorItemNumber",
+    "_vendorUnit": "Vendor Unit",
     "_viewPurchaseOrders": "View Purchase Orders",
     "_vouchered": "Vouchered",
     "_warnMaxCostExceeded": "The price is above the maximum desired cost of {maximumDesiredCost} for this Item."
