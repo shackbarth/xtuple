@@ -13,6 +13,10 @@
     submodels,
     smoke = require("../../lib/smoke"),
     assert = require("chai").assert,
+    gridRow,
+    gridBox,
+    workspace,
+    model,
     primeSubmodels = function (done) {
       var submodels = {};
       async.series([
@@ -58,11 +62,10 @@
     describe('User selects to create a sales order', function () {
       it('User navigates to Sales Order-New and selects to create a new Sales order', function (done) {
         smoke.navigateToNewWorkspace(XT.app, "XV.SalesOrderList", function (workspaceContainer) {
-          var workspace = workspaceContainer.$.workspace,
-            gridRow, gridBox, collect;
+          workspace = workspaceContainer.$.workspace;
+          model = workspace.value;
 
           assert.equal(workspace.value.recordType, "XM.SalesOrder");
-
           //
           // Set the customer from the appropriate workspace widget
           //
@@ -80,13 +83,18 @@
           // It's good practice to set this trigger *before* we change the line
           // item fields, so that we're 100% sure we're ready for the responses.
           workspace.value.on("change:total", function () {
-            smoke.saveWorkspace(workspace, function (err, model) {
+            workspaceContainer.saveAndClose();
+            setTimeout(function () {
+              assert.equal(XT.app.$.postbooks.getActive().kind, "XV.Navigator");
+              done();
+            }, 2000);
+            /*smoke.saveWorkspace(workspace, function (err, model) {
               assert.isNull(err);
               // TODO: sloppy
-              setTimeout(function () {
-                smoke.deleteFromList(XT.app, model, done);
-              }, 2000);
-            });
+              //setTimeout(function () {
+              //  smoke.deleteFromList(XT.app, model, done);
+              //}, 2000);
+            });*/
           });
 
           //
@@ -105,6 +113,68 @@
           // Verify that there is currently one row
           assert.equal(gridBox.liveModels().length, 1);
         });
+      });
+      it('The second line item should not copy item from first line', function (done) {
+        smoke.navigateToExistingWorkspace(XT.app, "XV.SalesOrderList", function (workspaceContainer) {
+          workspace = workspaceContainer.$.workspace;
+          assert.equal(workspace.value.recordType, "XM.SalesOrder");
+          /*
+          XT.app.$.postbooks.$.navigator.doWorkspace({
+            workspace: "XV.SalesOrderWorkspace",
+            id: id
+          });
+          */
+          var addLineItems = function () {
+            gridBox = workspace.$.salesOrderLineItemBox;
+            gridRow = gridBox.$.editableGridRow;
+            // Be sure that there is 1 row
+            assert.equal(gridBox.liveModels().length, 1);
+            // Put focus in itemSiteWidget
+            gridRow.$.itemSiteWidget.$.privateItemSiteWidget.$.input.focus();
+            // Add a new item and make sure the itemSiteWidget doesn't copy irrelevantly
+            gridBox.newItem();
+            assert.notEqual(submodels.itemModel.id, gridRow.$.itemSiteWidget.$.privateItemSiteWidget.$.input.value);
+            // Verify that there are 2 rows
+            assert.equal(gridBox.liveModels().length, 2);
+            // Delete the newly created row
+            workspace.value.get("lineItems").models[1].destroy();
+
+            // Confirm deletion and make sure there is only 1 row afterwards
+            //setTimeout(function () {
+              assert.isTrue(XT.app.$.postbooks.$.notifyPopup.showing);
+              XT.app.$.postbooks.notifyTap(null, { originator: { name: "notifyYes" }});  
+            //}, 3000)
+            
+            setTimeout(function () {
+              assert.equal(gridBox.liveModels().length, 1);
+              done();
+            }, 3000);
+            
+            // Save Order
+            /*workspaceContainer.saveAndClose();
+            setTimeout(function () {
+              done();
+            }, 4000);*/
+          };
+          workspace.value.once('status:READY_CLEAN', addLineItems);
+        }, {model: model});
+      });
+      it('delete the Sales Order from the list', function (done) {
+        smoke.saveWorkspace(workspace, function (err, model) {
+          assert.isNull(err);
+          // TODO: sloppy
+          console.log("here");
+          done();
+          //setTimeout(function () {
+          //  smoke.deleteFromList(XT.app, model, done);
+            //done();
+          //}, 2000);
+        }, true);
+        XT.app.$.postbooks.getActive().saveAndClose();
+        done();
+        //assert.equal(XT.app.$.postbooks.getActive().kind, "XV.Navigator");
+        //smoke.deleteFromList(XT.app, model, done);
+        //done();
       });
     });
   });
