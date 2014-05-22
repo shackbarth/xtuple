@@ -8,6 +8,8 @@ xTuple
 xTuple is open-source business management software. The code is managed by an eponymous
 company in Norfolk, VA, and our community stretches around the world. Our web application
 is implemented as an [HTML5 node.js app](https://github.com/xtuple/xtuple/wiki/Overview).
+The other client to our server is a [desktop app](https://github.com/xtuple/qt-client) written
+in the cross-platform Qt framework.
 
 Most of our commercial customers are inventory-based manufacturers or distributors, and we have a 
 fair amount of commercially-licensed code to specifically support these use-cases. That said,
