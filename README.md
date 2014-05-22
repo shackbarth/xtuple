@@ -1,8 +1,6 @@
 xTuple
 ======
 
-xTuple Enterprise Resource Planning Mobile-Web client
-
 [![Build Status](https://travis-ci.org/xtuple/xtuple.png)](https://travis-ci.org/xtuple/xtuple)
 
 ### What we're about
