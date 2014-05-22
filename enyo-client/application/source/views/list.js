@@ -2652,7 +2652,7 @@ trailing:true, white:true, strict: false*/
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
-          {kind: "XV.ListColumn", classes: "short",
+          {kind: "XV.ListColumn", classes: "first",
             components: [
             {kind: "XV.ListAttr", attr: "name", isKey: true}
           ]}
