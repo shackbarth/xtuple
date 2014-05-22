@@ -14,7 +14,7 @@
     "_applyBalanceAs": "Apply Balance As",
     "_applyBalanceToCreditMemo": "Credit Memo",
     "_applyBalanceToCustomerDeposit": "Customer Deposit",
-    "_autoCloseARIncident": "Auto Close Incidents when Invoid Paid",
+    "_autoCloseARIncident": "Auto Close Incidents when Invoice Paid",
     "_autoCreditWarnLateCustomers": "Credit warn Customers when Late",
     "_billing": "Billing",
     "_billingDescription": "Corporate Relationship Management",
