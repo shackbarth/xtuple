@@ -45,6 +45,11 @@
     autoRegex = XM.Document.AUTO_NUMBER + "|" + XM.Document.AUTO_OVERRIDE_NUMBER;
     if (model instanceof XM.Document && model.numberPolicy.match(autoRegex)) {
       // wait for the model to fetch its id if appropriate
+      if (model.id) {
+        // the id is already defined? No need to wait for it from the server, then.
+        done(workspaceContainer);
+        return;
+      }
       eventName = "change:" + model.idAttribute;
       idChanged = function () {
         if (model.id) {
