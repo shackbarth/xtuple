@@ -2106,6 +2106,12 @@ body {
 .xv-grid-box .xv-scroller {
   background: #f8f8f8;
 }
+.xv-grid-box .xv-grid-attr {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
 .xv-grid-box .xv-grid-attr.bold {
   font-weight: bold;
 }
@@ -2968,7 +2974,9 @@ body {
 }
 .xv-relationwidget-description {
   overflow: hidden;
-  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
   max-width: 250px;
   margin: 5px 5px 5px 80px;
 }

@@ -35,6 +35,12 @@
   }
 
   .xv-grid-attr {
+    // This limits the text to three lines
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+
     &.bold {
     font-weight: bold;
     }

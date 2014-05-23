@@ -28,7 +28,10 @@
 
  .xv-relationwidget-description {
    overflow: hidden;
-   text-overflow: ellipsis;
+   // This gives them 3 lines of description
+   display: -webkit-box;
+   -webkit-line-clamp: 3;
+   -webkit-box-orient: vertical;
    max-width: 250px;
    margin: 5px 5px 5px 80px;
    &.disabled {
