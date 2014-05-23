@@ -373,7 +373,7 @@ select xt.install_js('XM','ItemSite','xtuple', $$
 
     if (options) {
       /* Convert from rest_query to XM.Model.query structure. */
-      query = XM.Model.restQueryFormat(options);
+      query = XM.Model.restQueryFormat("XM.ItemSiteListItem", options);
 
       /* Perform the query. */
       return XM.ItemSitePrivate.fetch("XM.ItemSiteListItem", "public.itemsite", query);

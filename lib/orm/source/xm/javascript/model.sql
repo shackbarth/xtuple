@@ -325,12 +325,12 @@ select xt.install_js('XM','Model','xtuple', $$
    any REST API client queriers.
 
    Sample usage:
-    XM.Model.restQueryFormat({"query": [{"city":{"EQUALS":"Norfolk"}}], "orderby": [{"ASC": "line1"}, {"DESC": "line2"}]})
+    XM.Model.restQueryFormat("XM.Address", {"query": [{"city":{"EQUALS":"Norfolk"}}], "orderby": [{"ASC": "line1"}, {"DESC": "line2"}]})
 
    @param {Object} options: query
    @returns {Object} The formated query
   */
-  XM.Model.restQueryFormat = function (options) {
+  XM.Model.restQueryFormat = function (recordType, options) {
     options = options || {};
 
     var order = {},
@@ -371,6 +371,37 @@ select xt.install_js('XM','Model','xtuple', $$
           }
         }
       }
+
+      /* Convert free text query. */
+      if (recordType && options.q) {
+        /* Get schema and add string columns to search query. */
+        var data = Object.create(XT.Data),
+          nameSpace = recordType.beforeDot(),
+          type = recordType.afterDot(),
+          orm = data.fetchOrm(nameSpace, type),
+          schema = XT.Session.schema(nameSpace.decamelize(), type.decamelize()),
+          param = {
+            "attribute": []
+          };
+
+        for (var c = 0; c < schema[type].columns.length; c++) {
+          if (schema[type].columns[c].category === 'S') {
+            param.attribute.push(schema[type].columns[c].name);
+          }
+        }
+
+        if (param.attribute.length) {
+          /* Add all string columns to attribute query. */
+          query.parameters = query.parameters || [];
+
+          param.operator = 'MATCHES';
+
+          /* Replace any spaces with regex '.*' so multi-word search works on similar strings. */
+          param.value = options.q.replace(' ', '.*');
+          query.parameters.push(param);
+        }
+      }
+
       if (options.orderby || options.orderBy) {
         options.orderBy = options.orderby || options.orderBy;
         query.orderBy = [];
@@ -385,14 +416,17 @@ select xt.install_js('XM','Model','xtuple', $$
           }
         }
       }
+
       if (options.rowlimit || options.rowLimit) {
         options.rowLimit = options.rowlimit || options.rowLimit;
         query.rowLimit = options.rowLimit;
       }
+
       if (options.maxresults || options.maxResults) {
         options.maxResults = options.maxresults || options.maxResults;
         query.rowLimit = options.maxResults;
       }
+
       if (options.pagetoken || options.pageToken) {
         options.pageToken = options.pagetoken || options.pageToken;
         if (query.rowLimit) {
@@ -401,6 +435,7 @@ select xt.install_js('XM','Model','xtuple', $$
           query.rowOffset = (options.pageToken || 0);
         }
       }
+
       if (options.count) {
         query.count = options.count;
       }
@@ -438,7 +473,7 @@ select xt.install_js('XM','Model','xtuple', $$
     /* Convert from rest_query to XM.Model.query structure. */
     if (recordType && options) {
       formattedOptions = {
-        "query": XM.Model.restQueryFormat(options)
+        "query": XM.Model.restQueryFormat(recordType, options)
       };
     }
 

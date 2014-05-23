@@ -116,7 +116,7 @@ select xt.add_report_definition('XM.SalesOrder', 0, $${
       "options": {"fontBold": true, "x": 500, "y": 230}
     },
     {
-      "definition": [{"attr": ""}],
+      "definition": [{"attr": "fob"}],
       "options": {"x": 500, "y": 245}
     },
     {

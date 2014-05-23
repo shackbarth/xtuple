@@ -16,6 +16,8 @@
     "xt/views/receivable_invoice_return.sql",
     "xt/views/aropeninfo.sql",
     "xt/views/receivable_applications.sql",
-    "xt/views/cashrcpt.sql"
+    "xt/views/share_users_invchead.sql",
+    "xt/views/cashrcpt.sql",
+    "xt/tables/sharetype.sql"
   ]
 }

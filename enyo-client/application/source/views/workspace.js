@@ -2274,6 +2274,7 @@ strict: false*/
       onPaymentPosted: 'handlePaymentPosted',
     },
     model: "XM.SalesOrder",
+    printOnSaveSetting: "DefaultPrintPOOnSave",
     actions: [{
       name: "print",
       isViewMethod: true,
