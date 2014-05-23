@@ -16,10 +16,16 @@ CREATE OR REPLACE FUNCTION itemCost(pItemid INTEGER,
 DECLARE
   _cost NUMERIC := 0.0;
 BEGIN
-  SELECT itemcost(itemsite_id) INTO _cost
-  FROM itemsite
-  WHERE (itemsite_item_id=pItemid)
-    AND (itemsite_warehous_id=pSiteid);
+  IF (fetchMetricBool('WholesalePriceCosting')) THEN
+    SELECT item_listcost INTO _cost
+    FROM item
+    WHERE (item_id=pItemid);
+  ELSE
+    SELECT itemcost(itemsite_id) INTO _cost
+    FROM itemsite
+    WHERE (itemsite_item_id=pItemid)
+      AND (itemsite_warehous_id=pSiteid);
+  END IF;
 
   RETURN _cost;
 END;

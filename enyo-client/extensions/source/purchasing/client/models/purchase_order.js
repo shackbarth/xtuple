@@ -321,7 +321,7 @@ white:true*/
             shiptoContactHonorific: "",
             shiptoContactFirstName: "",
             shiptoContactLastName: "",
-            shiptoContactMiddle: "",
+            shiptoContactMiddleName: "",
             shiptoContactSuffix: "",
             shiptoContactTitle: "",
             shiptoContactPhone: "",
@@ -345,7 +345,7 @@ white:true*/
           attrs.shiptoContactHonorific = contact.get("honorific");
           attrs.shiptoContactFirstName = contact.get("firstName");
           attrs.shiptoContactLastName = contact.get("lastName");
-          attrs.shiptoContactMiddle = contact.get("middle");
+          attrs.shiptoContactMiddleName = contact.get("middleName");
           attrs.shiptoContactSuffix = contact.get("suffix");
           attrs.shiptoContactTitle = contact.get("title");
           attrs.shiptoContactPhone = contact.get("phone");
@@ -446,7 +446,7 @@ white:true*/
             vendorContactHonorific: "",
             vendorContactFirstName: "",
             vendorContactLastName: "",
-            vendorContactMiddle: "",
+            vendorContactMiddleName: "",
             vendorContactSuffix: "",
             vendorContactTitle: "",
             vendorContactPhone: "",
@@ -469,7 +469,7 @@ white:true*/
           attrs.vendorContactHonorific = contact.get("honorific");
           attrs.vendorContactFirstName = contact.get("firstName");
           attrs.vendorContactLastName = contact.get("lastName");
-          attrs.vendorContactMiddle = contact.get("middle");
+          attrs.vendorContactMiddleName = contact.get("middleName");
           attrs.vendorContactSuffix = contact.get("suffix");
           attrs.vendorContactTitle = contact.get("title");
           attrs.vendorContactPhone = contact.get("phone");
@@ -1293,4 +1293,3 @@ white:true*/
   };
 
 }());
-

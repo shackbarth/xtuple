@@ -197,14 +197,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       //
       // Step 2b:
       //
-      // XXX evilly-synchronous code
-      // Legacy build methodology: if we're making the Qt database build, add the safe
-      // toolkit.
-      if (options.useSafeFoundationToolkit) {
-        extraManifest = fs.readFileSync(path.join(dbSourceRoot, "safe_toolkit_manifest.js"));
-        databaseScripts.unshift(JSON.parse(extraManifest).databaseScripts);
-        databaseScripts = _.flatten(databaseScripts);
-      }
 
       // supported use cases:
 

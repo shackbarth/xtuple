@@ -205,13 +205,25 @@ trailing:true, white:true, strict: false*/
     // ..........................................................
     // PURCHASE ORDER
     //
-
     enyo.kind({
       name: "XV.PurchaseOrderWorkspace",
       kind: "XV.Workspace",
       title: "_purchaseOrder".loc(),
       model: "XM.PurchaseOrder",
       printOnSaveSetting: "DefaultPrintPOOnSave",
+      actions: [{
+        name: "print",
+        isViewMethod: true,
+        label: "_print".loc(),
+        privilege: "ViewPurchaseOrders",
+        prerequisite: "isReadyClean"
+      },
+      {name: "email",
+        isViewMethod: true,
+        label: "_email".loc(),
+        privilege: "ViewPurchaseOrders",
+        prerequisite: "isReadyClean"
+      }],
       headerAttrs: ["number", "-", "vendor.name"],
       components: [
         {kind: "Panels", arrangerKind: "CarouselArranger",

@@ -53,8 +53,8 @@ tar -zcvf pbtodist$MAJ$MIN$PAT.gz pbtodist$MAJ$MIN$PAT/
 cd ../../
 mkdir scripts/output/xtmfg$MAJ$MIN$PAT
 cp scripts/xml/xtmfg_package.xml scripts/output/xtmfg$MAJ$MIN$PAT/package.xml
-#cp scripts/output/updates.sql scripts/output/xtmfg$MAJ$MIN$PAT
-#cp scripts/output/inventory_upgrade.sql scripts/output/xtmfg$MAJ$MIN$PAT
+cp scripts/output/updates.sql scripts/output/xtmfg$MAJ$MIN$PAT
+cp scripts/output/inventory_upgrade.sql scripts/output/xtmfg$MAJ$MIN$PAT
 cp scripts/output/manufacturing_upgrade.sql scripts/output/xtmfg$MAJ$MIN$PAT
 cd scripts/output
 tar -zcvf xtmfg_upgrade-$MAJ$MIN$PAT.gz xtmfg$MAJ$MIN$PAT/

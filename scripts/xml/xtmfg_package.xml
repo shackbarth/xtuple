@@ -1,5 +1,5 @@
-<package id        = "xtmfg441"
-         version   = "4.4.1"
+<package id        = "xtmfg450Beta"
+         version   = "4.5.0Beta"
          developer = "xTuple"
          descrip   = "load PostBooks resources"
          updater   = "2.2.4" >

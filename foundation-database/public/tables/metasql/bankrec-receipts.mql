@@ -47,7 +47,7 @@ SELECT gltrans_id AS id, 1 AS altid,
        jrnluse_use AS use, gltrans_journalnumber AS jrnlnum,
        COALESCE(date(jrnluse_date), gltrans_date) AS f_jrnldate,
        COALESCE(bankrecitem_cleared, FALSE) AS cleared,
-       gltrans_date AS f_date,
+       COALESCE(bankrecitem_effdate, gltrans_date) AS f_date,
        gltrans_doctype AS doc_type,
        gltrans_docnumber AS docnumber,
        gltrans_notes AS notes,
@@ -84,13 +84,20 @@ SELECT gltrans_id AS id, 1 AS altid,
    AND (NOT COALESCE(checkhead_void, false))
    AND (gltrans_amount < 0)
    AND (gltrans_doctype != 'JP')
-   AND (bankaccnt_id=<? value("bankaccntid") ?>) )
+   AND (bankaccnt_id=<? value("bankaccntid") ?>)
+<? if exists("source") ?>
+   AND ('GL' = <? value("source") ?>)
+<? endif ?>
+<? if exists("sourceid") ?>
+   AND (gltrans_id = <? value("sourceid") ?>)
+<? endif ?>
+ )
  UNION ALL
 SELECT sltrans_id AS id, 2 AS altid,
        jrnluse_use AS use, sltrans_journalnumber AS jrnlnum,
        COALESCE(date(jrnluse_date), sltrans_date) AS f_jrnldate,
        COALESCE(bankrecitem_cleared, FALSE) AS cleared,
-       sltrans_date AS f_date,
+       COALESCE(bankrecitem_effdate, sltrans_date) AS f_date,
        sltrans_doctype AS doc_type,
        sltrans_docnumber AS docnumber,
        sltrans_notes AS notes,
@@ -125,12 +132,19 @@ SELECT sltrans_id AS id, 2 AS altid,
  WHERE ((NOT sltrans_rec)
    AND (NOT COALESCE(checkhead_void, false))
    AND (sltrans_amount < 0)
-   AND (bankaccnt_id=<? value("bankaccntid") ?>) )
+   AND (bankaccnt_id=<? value("bankaccntid") ?>)
+<? if exists("source") ?>
+   AND ('SL' = <? value("source") ?>)
+<? endif ?>
+<? if exists("sourceid") ?>
+   AND (sltrans_id = <? value("sourceid") ?>)
+<? endif ?>
+ )
  UNION ALL
 SELECT bankadj_id AS id, 3 AS altid,
        '' AS use, NULL AS jrnlnum, bankadj_date AS f_jrnldate,
        COALESCE(bankrecitem_cleared, FALSE) AS cleared,
-       bankadj_date AS f_date,
+       COALESCE(bankrecitem_effdate, bankadj_date) AS f_date,
        'ADJ' AS doc_type,
        bankadj_docnumber AS docnumber,
        bankadjtype_name AS notes,
@@ -150,6 +164,13 @@ SELECT bankadj_id AS id, 3 AS altid,
  WHERE ( (((bankadjtype_iscredit=false) AND (bankadj_amount > 0)) OR ((bankadjtype_iscredit=true) AND (bankadj_amount < 0)))
    AND (bankadj_bankadjtype_id=bankadjtype_id)
    AND (NOT bankadj_posted)
-   AND (bankadj_bankaccnt_id=<? value("bankaccntid") ?>) )
+   AND (bankadj_bankaccnt_id=<? value("bankaccntid") ?>)
+<? if exists("source") ?>
+   AND ('AD' = <? value("source") ?>)
+<? endif ?>
+<? if exists("sourceid") ?>
+   AND (bankadj_id = <? value("sourceid") ?>)
+<? endif ?>
+ )
 ORDER BY jrnldate, jrnlnum, sortdate;
 <? endif ?>

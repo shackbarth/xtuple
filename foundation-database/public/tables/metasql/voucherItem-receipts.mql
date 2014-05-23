@@ -7,7 +7,8 @@
 SELECT recv_id AS item_id, 1 AS item_type, 'REC' AS action,
        recv_date AS item_date,
        recv_qty AS qty, 'qty' AS qty_xtnumericrole,
-       recv_purchcost AS unitprice, 'curr' AS unitprice_xtnumericrole,
+       recv_purchcost AS unitprice,
+       'purchprice' AS unitprice_xtnumericrole,
        formatBoolYN(recv_vohead_id=<? value("vohead_id") ?>) AS f_tagged,
        <? value("receiving") ?> AS action_qtdisplayrole,
        0 AS qty_xttotalrole
@@ -22,7 +23,8 @@ UNION
 SELECT poreject_id AS item_id, 2 AS item_type, 'REJ' AS action,
        poreject_date AS item_date,
        poreject_qty * -1 AS qty, 'qty',
-       COALESCE(recv_purchcost, poitem_unitprice) AS unitprice, 'curr' AS unitprice_xtnumericrole,
+       COALESCE(recv_purchcost, poitem_unitprice) AS unitprice,
+       'purchprice' AS unitprice_xtnumericrole,
        formatBoolYN(poreject_vohead_id=<? value("vohead_id") ?>) AS f_tagged,
        <? value("reject") ?> AS action_qtdisplayrole,
        0 AS qty_xttotalrole

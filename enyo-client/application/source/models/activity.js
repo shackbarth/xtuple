@@ -16,7 +16,6 @@ white:true*/
     // ..........................................................
     // METHODS
     //
-
     /**
       Returns whether the current record could be created on the editableModel
       based on privilege settings.
@@ -97,6 +96,34 @@ white:true*/
         functionName = "get" + type + "StatusString",
         fn = Klass.prototype[functionName];
       return fn ? fn.call(this) : this.get("status");
+    },
+
+    canReassign: function (callback) {
+      var hasPriv,
+        privs = XT.session.privileges,
+        activityType = this.get("activityType"),
+        permissionsMap = {
+          Incident: 'MaintainAllIncidents',
+          Opportunity: 'MaintainAllOpportunities',
+          Project: 'MaintainAllProjects',
+          ProjectTask: "MaintainAllProjects",
+          ProjectWorkflow: "MaintainAllWorkflows",
+          PurchaseOrder: "MaintainPurchaseOrders",
+          PurchaseOrderWorkflow: "MaintainAllWorkflows",
+          SalesOrder: "MaintainSalesOrders",
+          SalesOrderWorkflow: "MaintainAllWorkflows",
+          ToDo: "ReassignToDoItems",
+          TransferOrder: "MaintainTransferOrders",
+          TransferOrderWorkflow: "MaintainAllWorkflows",
+          WorkOrder: "MaintainWorkOrders",
+          WorkOrderWorkflow: "MaintainAllWorkflows"
+        };
+ 
+      hasPriv = privs.get(permissionsMap[activityType]);
+      
+      if (callback) {
+        callback(hasPriv);
+      } else {return hasPriv; }
     }
 
   });

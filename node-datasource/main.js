@@ -10,13 +10,15 @@ _ = require("underscore");
 jsonpatch = require("json-patch");
 SYS = {};
 XT = { };
+var app;
 
 (function () {
   "use strict";
 
   var options = require("./lib/options"),
     authorizeNet,
-    sessionOptions = {};
+    schemaSessionOptions = {},
+    privSessionOptions = {};
 
   /**
    * Include the X framework.
@@ -76,11 +78,6 @@ XT = { };
     email: X.smtpTransport.sendMail
   });
 
-  if (typeof X.options.biServer !== 'undefined') {
-    require("./olapcatalog");
-    require("./lib/ext/olapsource");
-  }
-
   // load the encryption key, or create it if it doesn't exist
   // it should created just once, the very first time the datasoruce starts
   var encryptionKeyFilename = X.options.datasource.encryptionKeyFile || './lib/private/encryption_key.txt';
@@ -93,13 +90,80 @@ XT = { };
     }
   });
 
-  sessionOptions.username = X.options.databaseServer.user;
-  sessionOptions.database = X.options.datasource.databases[0];
 
   XT.session = Object.create(XT.Session);
   XT.session.schemas.SYS = false;
-  XT.session.loadSessionObjects(XT.session.SCHEMA, sessionOptions);
-  XT.session.loadSessionObjects(XT.session.PRIVILEGES, sessionOptions);
+
+
+//
+// Load all extension-defined routes. By convention the paths,
+// filenames, and functions to be used
+// for the routes should be described in a file called routes.js
+// in the routes directory.
+//
+/*
+if (X.options.extensionRoutes && X.options.extensionRoutes.length > 0) {
+  _.each(X.options.extensionRoutes, function (route) {
+    "use strict";
+    var routes = require(__dirname + "/" + route + "/routes");
+
+    _.each(routes, function (routeDetails) {
+      var verb = (routeDetails.verb || "all").toLowerCase();
+      if (_.contains(["all", "get", "post", "patch", "delete"], verb)) {
+        app[verb]('/:org/' + routeDetails.path, routeDetails.function);
+      } else {
+        console.log("Invalid verb for extension-defined route " + routeDetails.path);
+      }
+    });
+  });
+}
+*/
+
+  var loadExtensionRoutes = function (extension) {
+    if (!_.contains(["/private-extensions", "/xtuple-extensions"], extension.location)) {
+      return;
+    }
+    if (!app) {
+      // XXX time bomb: assuming app has been initialized, below, by now
+      XT.log("Could not load extension routes");
+      return;
+    }
+    var manifest = JSON.parse(X.fs.readFileSync(X.path.join(__dirname, "../..", extension.location, "source",
+        extension.name, "database/source/manifest.js")));
+    _.each(manifest.routes || [], function (routeDetails) {
+      var verb = (routeDetails.verb || "all").toLowerCase(),
+        func = require(X.path.join(__dirname, "../..", extension.location, "source",
+          extension.name, "node-datasource", routeDetails.filename))[routeDetails.functionName];
+
+      if (_.contains(["all", "get", "post", "patch", "delete"], verb)) {
+        app[verb]('/:org/' + routeDetails.path, func);
+      } else {
+        console.log("Invalid verb for extension-defined route " + routeDetails.path);
+      }
+    });
+  };
+
+  schemaSessionOptions.username = X.options.databaseServer.user;
+  schemaSessionOptions.database = X.options.datasource.databases[0];
+  // XXX note that I'm not addressing an underlying bug that we don't wait to
+  // listen on the port until all the setup is done
+  schemaSessionOptions.success = function () {
+    if (!SYS) {
+      return;
+    }
+    var extensions = new SYS.ExtensionCollection();
+    extensions.fetch({
+      database: X.options.datasource.databases[0],
+      success: function (coll, results, options) {
+        _.each(results, loadExtensionRoutes);
+      }
+    });
+  };
+  XT.session.loadSessionObjects(XT.session.SCHEMA, schemaSessionOptions);
+
+  privSessionOptions.username = X.options.databaseServer.user;
+  privSessionOptions.database = X.options.datasource.databases[0];
+  XT.session.loadSessionObjects(XT.session.PRIVILEGES, privSessionOptions);
 
 }());
 
@@ -209,8 +273,9 @@ sslOptions.cert = X.fs.readFileSync(X.options.datasource.certFile);
 /**
  * Express configuration.
  */
-var app = express(),
-  server = X.https.createServer(sslOptions, app),
+app = express();
+
+var server = X.https.createServer(sslOptions, app),
   parseSignedCookie = require('express/node_modules/connect').utils.parseSignedCookie,
   //MemoryStore = express.session.MemoryStore,
   XTPGStore = require('./oauth2/db/connect-xt-pg')(express),
@@ -382,30 +447,8 @@ app.get('/:org/generate-report', routes.generateReport);
 app.get('/:org/locale', routes.locale);
 app.get('/:org/reset-password', routes.resetPassword);
 app.post('/:org/oauth/revoke-token', routes.revokeOauthToken);
-app.get('/:org/queryOlap', routes.queryOlapCatalog);
 app.all('/:org/vcfExport', routes.vcfExport);
 
-//
-// Load all extension-defined routes. By convention the paths,
-// filenames, and functions to be used
-// for the routes should be described in a file called routes.js
-// in the routes directory.
-//
-if (X.options.extensionRoutes && X.options.extensionRoutes.length > 0) {
-  _.each(X.options.extensionRoutes, function (route) {
-    "use strict";
-    var routes = require(__dirname + "/" + route + "/routes");
-
-    _.each(routes, function (routeDetails) {
-      var verb = (routeDetails.verb || "all").toLowerCase();
-      if (_.contains(["all", "get", "post", "patch", "delete"], verb)) {
-        app[verb]('/:org/' + routeDetails.path, routeDetails.function);
-      } else {
-        console.log("Invalid verb for extension-defined route " + routeDetails.path);
-      }
-    });
-  });
-}
 
 // Set up the other servers we run on different ports.
 
