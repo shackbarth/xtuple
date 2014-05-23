@@ -99,6 +99,9 @@
     }
   }
 
+  /*  The chart-filters may not be need as we are using the class xv-pullout
+      for styles.  Delete when finished hacking the filter styles.
+
   .chart-filters {
   	  background-color: @white;
   	  
@@ -119,13 +122,25 @@
 	  border-bottom: 1px solid @smoke;
 	  background: @lightest-gray;
 	  color: @near-black;
-}
+  }
 
   .chart-filters.xv-parameter-panel .enyo-fittable-columns-layout {
-	  padding: 6px 10px;
 	  border-bottom: 1px solid @smoke;
 	  background: @white;
     color: @near-black;
-}
+    position: relative;
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  .chart-filters.xv-parameter-panel .enyo-fittable-columns-layout > * {
+    vertical-align: middle;
+  }
+
+  .chart-filters.xv-parameter-panel .xv-label {
+    text-align: right;
+  }
+  
+  */
 
 }
