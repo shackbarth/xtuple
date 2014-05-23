@@ -45,7 +45,8 @@ noarg:true, regexp:true, undef:true, strict:true, trailing:true, white:true */
           parameters : [{
             attribute: _.pluck(columns, 'name'),
             operator: 'MATCHES',
-            value: that.query.q
+            /* Replace any spaces with regex '.*' so multi-word search works on similar strings. */
+            value: that.query.q.replace(' ', '.*')
           }]
         }, _.omit(this.query, 'q'));
 
