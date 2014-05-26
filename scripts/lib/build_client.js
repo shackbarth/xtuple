@@ -35,7 +35,7 @@ var _ = require('underscore'),
       callback(null, "");
       return;
 
-    } else if (extPath.indexOf("extensions") < 0) {
+    } else if (extPath.indexOf("extensions") < 0 && extPath.indexOf("node_modules") < 0) {
       // this is the core app, which has a slightly different process.
       fs.readFile(path.join(__dirname, "build/core.js"), "utf8", function (err, jsCode) {
         if (err) {
@@ -114,7 +114,7 @@ var _ = require('underscore'),
         return;
       }
       // run the enyo deployment method asyncronously
-      var rootDir = path.join(extPath, "../..");
+      var rootDir = path.join(extPath, extPath.indexOf("node_modules") ? "../../enyo-client/extensions/" : "../..");
       // we run the command from /scripts/lib, so that is where build directories and other
       // temp files are going to go.
       console.log("building " + extName);
@@ -212,19 +212,21 @@ var _ = require('underscore'),
   };
 
   var build = function (extPath, callback) {
+    var isNodeModule = extPath.indexOf("node_modules") >= 0;
+
     if (extPath.indexOf("/lib/orm") >= 0 || extPath.indexOf("foundation-database") >= 0) {
       // There is nothing here to install on the client.
       callback();
       return;
     }
 
-    if (extPath.indexOf("extensions") < 0) {
+    if (extPath.indexOf("extensions") < 0 && !isNodeModule) {
       // this is the core app, which has a different deploy process.
       buildCore(callback);
       return;
     }
 
-    var enyoDir = path.join(extPath, "../../enyo");
+    var enyoDir = path.join(extPath, isNodeModule ? "../../enyo-client/extensions/enyo" : "../../enyo");
     fs.exists(path.join(extPath, "client"), function (exists) {
       if (!exists) {
         console.log(extPath + " has no client code. Not trying to build it.");

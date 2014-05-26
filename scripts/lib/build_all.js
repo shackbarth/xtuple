@@ -111,12 +111,8 @@ var _ = require('underscore'),
           }
           buildDatabase.buildDatabase(specs, creds, function (databaseErr, databaseRes) {
             var returnMessage;
-            if (databaseErr && (specs[0].wipeViews || specs[0].initialize)) {
+            if (databaseErr) {
               buildAllCallback(databaseErr);
-              return;
-
-            } else if (databaseErr) {
-              buildAllCallback("Build failed. Try wiping the views next time by running me without the -q flag.");
               return;
             }
             returnMessage = "\n";
