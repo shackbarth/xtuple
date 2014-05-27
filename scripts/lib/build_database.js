@@ -100,7 +100,6 @@ var  async = require('async'),
             isLibOrm ? path.join(extension, "source") :
             path.join(extension, "database/source"),
           manifestOptions = {
-            useSafeFoundationToolkit: isFoundation && !isFoundationExtension && extensions.length === 1,
             useFrozenScripts: spec.frozen,
             useFoundationScripts: baseName.indexOf('inventory') >= 0 ||
               baseName.indexOf('manufacturing') >= 0 ||
