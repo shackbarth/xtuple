@@ -16,7 +16,6 @@
     gridRow,
     gridBox,
     workspace,
-    model,
     primeSubmodels = function (done) {
       var submodels = {};
       async.series([
@@ -63,7 +62,6 @@
       it('User navigates to Sales Order-New and selects to create a new Sales order', function (done) {
         smoke.navigateToNewWorkspace(XT.app, "XV.SalesOrderList", function (workspaceContainer) {
           workspace = workspaceContainer.$.workspace;
-          model = workspace.value;
 
           assert.equal(workspace.value.recordType, "XM.SalesOrder");
           //
