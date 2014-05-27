@@ -55,9 +55,7 @@ var _ = require("underscore"),
     after(function (done) {
       // cleanup
       var sql = "delete from public.metric where metric_name = 'Test999';";
-      datasource.query(sql, creds, function (err, res) {
-        done();
-      });
+      datasource.query(sql, creds, done);
     });
 
   });
