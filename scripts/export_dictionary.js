@@ -80,7 +80,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     fs.readdir(path.join(__dirname, "../../xtuple-linguist/translations"), function (err, files) {
       async.mapSeries(files, function (file, next) {
         var fullFilename = path.join(__dirname, "../../xtuple-linguist/translations", file);
-        console.log(typeof next);
         dictionaryToolkit.importDictionary(program.database, fullFilename, next);
       }, done);
     });
@@ -109,16 +108,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   };
 
   async.series([
-    //buildPostbooks,
-    //buildExtensions,
+    buildPostbooks,
+    buildExtensions,
     importExistingDictionaries
-    //exportAllDictionaries
+    exportAllDictionaries
   ], function (err, results) {
     if (err) {
       console.log("Export failed: ", err);
       return;
     }
-    console.log("Success! Look in xtuple-linguist/translations for the updated files.");
+    console.log("Success! Don't forget to commit and push xtuple-linguist!");
   });
 
 }());
