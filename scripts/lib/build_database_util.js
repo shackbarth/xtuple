@@ -14,11 +14,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     dataSource = require('../../node-datasource/lib/ext/datasource').dataSource,
     winston = require('winston');
 
-  var convertFromMetasql = function (content, filename) {
+
+
+
+  var convertFromMetasql = function (content, filename, defaultSchema) {
     var lines = content.split("\n"),
-      schema = filename.indexOf('manufacturing') >= 0 ?
-        "'xtmfg'" :
-        "NULL",
+      schema = defaultSchema ? "'" + defaultSchema + "'" : "NULL",
       group,
       i = 2,
       name,
@@ -53,12 +54,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     return insertSql;
   };
 
-  var convertFromReport = function (content, filename) {
+  var convertFromReport = function (content, filename, defaultSchema) {
     var lines = content.split("\n"),
       name,
-      tableName = filename.indexOf('manufacturing') >= 0 ?
-        "xtmfg.pkgreport" :
-        "report",
+      tableName = defaultSchema ? defaultSchema + ".pkgreport" : "report",
       description,
       disableSql,
       deleteSql,
@@ -92,11 +91,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     return disableSql + deleteSql + insertSql + enableSql;
   };
 
-  var convertFromScript = function (content, filename) {
+  var convertFromScript = function (content, filename, defaultSchema) {
     var name = path.basename(filename, '.js'),
-      tableName = filename.indexOf('manufacturing') >= 0 ?
-        "xtmfg.pkgscript" :
-        "unknown",
+      tableName = defaultSchema ? defaultSchema + ".pkgscript" : "unknown",
       notes = "xtMfg package",
       disableSql,
       deleteSql,
@@ -120,11 +117,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     return disableSql + deleteSql + insertSql + enableSql;
   };
 
-  var convertFromUiform = function (content, filename) {
+  var convertFromUiform = function (content, filename, defaultSchema) {
     var name = path.basename(filename, '.ui'),
-      tableName = filename.indexOf('manufacturing') >= 0 ?
-        "xtmfg.pkguiform" :
-        "unknown",
+      tableName = defaultSchema ? defaultSchema + ".pkguiform" : "unknown",
       notes = "xtMfg package",
       disableSql,
       deleteSql,
@@ -174,6 +169,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       var manifest,
         databaseScripts,
         extraManifestPath,
+        defaultSchema,
         extraManifest,
         extraManifestScripts,
         alterPaths = dbSourceRoot.indexOf("foundation-database") < 0,
@@ -186,6 +182,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         extensionName = manifest.name;
         extensionComment = manifest.comment;
         databaseScripts = manifest.databaseScripts;
+        defaultSchema = manifest.defaultSchema;
         loadOrder = manifest.loadOrder || 999;
 
       } catch (error) {
@@ -267,7 +264,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             extname = path.extname(fullFilename).substring(1);
 
           // convert special files: metasql, uiforms, reports, uijs
-          scriptContents = conversionMap[extname](scriptContents, fullFilename);
+          scriptContents = conversionMap[extname](scriptContents, fullFilename, defaultSchema);
           //
           // Allow inclusion of js files in manifest. If it is a js file,
           // use plv8 to execute it.
