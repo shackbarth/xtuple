@@ -110,7 +110,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   async.series([
     buildPostbooks,
     buildExtensions,
-    importExistingDictionaries
+    importExistingDictionaries,
     exportAllDictionaries
   ], function (err, results) {
     if (err) {

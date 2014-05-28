@@ -225,6 +225,16 @@ if (typeof XT === 'undefined') {
       // group together english and foreign strings of the same extension
       var marriedRows = marryLists(res.rows);
       async.map(marriedRows, processExtension, function (err, extensions) {
+        // sort alpha so as to keep diffs under control
+        _.each(extensions, function (extension) {
+          extension.strings = _.sortBy(extension.strings, function (stringObj) {
+            return stringObj.key.toLowerCase();
+          });
+        });
+        extensions = _.sortBy(extensions, function (extObj) {
+          return extObj.extension;
+        });
+
         var output = {
           language: destinationLang || "",
           extensions: extensions
@@ -253,7 +263,11 @@ if (typeof XT === 'undefined') {
     if (filename.substring(0, 1) !== '/') {
       filename = path.join(process.cwd(), filename);
     }
-
+    if (path.extname(filename) !== '.js') {
+      console.log("Skipping non-dictionary file", filename);
+      masterCallback();
+      return;
+    }
     fs.readFile(filename, "utf8", function (err, contents) {
       if (err) {
         masterCallback(err);
