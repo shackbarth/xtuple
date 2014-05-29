@@ -17,7 +17,8 @@
     </message>
   </prerequisite>
 
-  <script file="updates.sql" />
+  <script file="postbooks_upgrade.sql" />
   <script file="inventory_upgrade.sql" />
+  <script file="distribution_upgrade.sql" />
 
 </package>

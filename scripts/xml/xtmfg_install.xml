@@ -17,6 +17,9 @@
     </message>
   </prerequisite>
 
+  <script file="postbooks_upgrade.sql" />
+  <script file="inventory_basic_install.sql" />
+  <script file="inventory_upgrade.sql" />
   <script file="manufacturing_basic_install.sql" />
   <script file="manufacturing_upgrade.sql" />
 

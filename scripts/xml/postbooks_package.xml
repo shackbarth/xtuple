@@ -17,6 +17,6 @@
     </message>
   </prerequisite>
 
-  <script file="updates.sql" />
+  <script file="postbooks_upgrade.sql" />
 
 </package>
