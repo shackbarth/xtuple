@@ -58,8 +58,7 @@
     }
   };
 
-  var navigateToExistingWorkspace = exports.navigateToExistingWorkspace = function (app, listKind, done, options) {
-    options = options || {};
+  var navigateToExistingWorkspace = exports.navigateToExistingWorkspace = function (app, listKind, done) {
     var workspaceContainer,
       workspace,
       navigator = navigateToList(app, listKind),
@@ -107,7 +106,7 @@
      * Navigate to workspace of first model in the list.
      */
     if (collection.getStatus() === XM.Model.READY_CLEAN) {
-      navigate(options.model || collection.at(0));
+      navigate(collection.at(0));
     } else {
       collection.once('status:READY_CLEAN', navigate);
     }
