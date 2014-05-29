@@ -57,6 +57,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   var convertFromReport = function (content, filename, defaultSchema) {
     var lines = content.split("\n"),
       name,
+      grade = "0",
       tableName = defaultSchema ? defaultSchema + ".pkgreport" : "report",
       description,
       disableSql,
@@ -71,20 +72,24 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     name = lines[3].substring(" <name>".length).trim();
     name = name.substring(0, name.indexOf("<"));
     description = lines[4].substring(" <description>".length).trim();
-    description = description.substring(0, name.indexOf("<"));
+    description = description.substring(0, description.indexOf("<"));
+    if (lines[5].indexOf("grade") >= 0) {
+      grade = lines[5].substring(" <grade>".length).trim();
+      grade = grade.substring(0, grade.indexOf("<"));
+    }
 
     disableSql = "ALTER TABLE " + tableName + " DISABLE TRIGGER ALL;";
 
     deleteSql = "delete from " + tableName + " " +
       "where report_name = '" + name +
-      "' and report_grade = 0;";
+      "' and report_grade = " + grade + ";";
 
     insertSql = "insert into " + tableName + " (report_name, report_descrip, " +
       "report_source, report_loaddate, report_grade) VALUES (" +
       "'" + name + "'," +
-      "'" + description + "'," +
+      "$$" + description + "$$," +
       "$$" + content + "$$," +
-      "now(), 0);";
+      "now(), " + grade + ");";
 
     enableSql = "ALTER TABLE " + tableName + " ENABLE TRIGGER ALL;";
 
@@ -94,7 +99,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   var convertFromScript = function (content, filename, defaultSchema) {
     var name = path.basename(filename, '.js'),
       tableName = defaultSchema ? defaultSchema + ".pkgscript" : "unknown",
-      notes = "xtMfg package",
+      notes = "", //"xtMfg package",
       disableSql,
       deleteSql,
       insertSql,
@@ -120,7 +125,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   var convertFromUiform = function (content, filename, defaultSchema) {
     var name = path.basename(filename, '.ui'),
       tableName = defaultSchema ? defaultSchema + ".pkguiform" : "unknown",
-      notes = "xtMfg package",
+      notes = "", //"xtMfg package",
       disableSql,
       deleteSql,
       insertSql,
