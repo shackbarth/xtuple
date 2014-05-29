@@ -52,7 +52,7 @@ cp scripts/xml/distribution_install.xml scripts/output/distribution-install-$MAJ
 cp scripts/output/postbooks_upgrade.sql scripts/output/distribution-install-$MAJ$MIN$PAT
 cp scripts/output/inventory_basic_install.sql scripts/output/distribution-install-$MAJ$MIN$PAT
 cp scripts/output/inventory_upgrade.sql scripts/output/distribution-install-$MAJ$MIN$PAT
-cp scripts/output/distribution_basic_install scripts/output/distribution-install-$MAJ$MIN$PAT
+cp scripts/output/distribution_basic_install.sql scripts/output/distribution-install-$MAJ$MIN$PAT
 cp scripts/output/distribution_upgrade.sql scripts/output/distribution-install-$MAJ$MIN$PAT
 cd scripts/output
 tar -zcvf distribution-install-$MAJ$MIN$PAT.gz distribution-install-$MAJ$MIN$PAT/
