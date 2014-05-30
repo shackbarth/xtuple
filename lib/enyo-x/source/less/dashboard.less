@@ -11,6 +11,7 @@
 @picker-label: 100px;
 @bottom-border: #444;
 @icon-height: 32px;
+@title-height: 48px;
 
 .dashboard {
   background-color: @gray;
@@ -57,8 +58,9 @@
   }
 
   .chart-title-bar {
-    height: @icon-height;
+    height: @title-height;
     background-color: @lightest-gray;
+    text-transform: none;
     .border-top-radius(10px);
 
     .chart-title {
@@ -66,7 +68,17 @@
       color: @black;
       text-align: center;
       /*font-size: 2em;*/
-      font-weight: normal
+      font-weight: normal;
+      font-family: Helvetica;
+    }
+    
+    .chart-sub-title {
+      /*padding-top: 8px;*/
+      color: @blue;
+      text-align: center;
+      font-size: small;
+      font-weight: normal;
+      font-family: Helvetica;
     }
 
     .remove-icon {
@@ -97,6 +109,10 @@
       width: 130px;
       padding: 10px 10px;
     }
+  }
+  
+  .chart-filterDrawer {
+    top: 0px;
   }
 
   /*  The chart-filters may not be need as we are using the class xv-pullout

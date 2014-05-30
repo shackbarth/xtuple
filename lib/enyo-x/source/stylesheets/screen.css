@@ -2706,8 +2706,9 @@ body {
   margin-left: 200px;
 }
 .selectable-chart .chart-title-bar {
-  height: 32px;
+  height: 48px;
   background-color: #efefef;
+  text-transform: none;
   -webkit-border-top-right-radius: 10px;
   -moz-border-radius-topright: 10px;
   border-top-right-radius: 10px;
@@ -2721,6 +2722,15 @@ body {
   text-align: center;
   /*font-size: 2em;*/
   font-weight: normal;
+  font-family: Helvetica;
+}
+.selectable-chart .chart-title-bar .chart-sub-title {
+  /*padding-top: 8px;*/
+  color: #0000ff;
+  text-align: center;
+  font-size: small;
+  font-weight: normal;
+  font-family: Helvetica;
 }
 .selectable-chart .chart-title-bar .remove-icon {
   position: absolute;
@@ -2750,6 +2760,9 @@ body {
 .selectable-chart .chart-bottom .onyx-button {
   width: 130px;
   padding: 10px 10px;
+}
+.selectable-chart .chart-filterDrawer {
+  top: 0px;
 }
 /**
   Styles relating to widgets in the pullout
