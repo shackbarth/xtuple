@@ -45,7 +45,7 @@ a convenient, well-documented starting point into our project.
 ### Installing this project
 
 The best way to start coding on our stack is to use our
-[Vagrant setup](https://github.com/xtuple/xtuple-vagrant/blob/master/README.md).
+[Vagrant setup](https://github.com/xtuple/xtuple/wiki/Become-an-xTuple-Developer!).
 
 ### Release Notes
 
