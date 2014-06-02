@@ -1,5 +1,5 @@
-<package id        = "pb450Beta"
-         version   = "4.5.0Beta"
+<package id        = "postbooks-upgrade-450"
+         version   = "4.5.0"
          developer = "xTuple"
          descrip   = "load PostBooks resources"
          updater   = "2.2.4" >
