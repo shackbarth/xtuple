@@ -14,11 +14,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     dataSource = require('../../node-datasource/lib/ext/datasource').dataSource,
     winston = require('winston');
 
-  var convertFromMetasql = function (content, filename) {
+
+
+
+  var convertFromMetasql = function (content, filename, defaultSchema) {
     var lines = content.split("\n"),
-      schema = filename.indexOf('manufacturing') >= 0 ?
-        "'xtmfg'" :
-        "NULL",
+      schema = defaultSchema ? "'" + defaultSchema + "'" : "NULL",
       group,
       i = 2,
       name,
@@ -53,12 +54,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     return insertSql;
   };
 
-  var convertFromReport = function (content, filename) {
+  var convertFromReport = function (content, filename, defaultSchema) {
     var lines = content.split("\n"),
       name,
-      tableName = filename.indexOf('manufacturing') >= 0 ?
-        "xtmfg.pkgreport" :
-        "report",
+      grade = "0",
+      tableName = defaultSchema ? defaultSchema + ".pkgreport" : "report",
       description,
       disableSql,
       deleteSql,
@@ -72,32 +72,34 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     name = lines[3].substring(" <name>".length).trim();
     name = name.substring(0, name.indexOf("<"));
     description = lines[4].substring(" <description>".length).trim();
-    description = description.substring(0, name.indexOf("<"));
+    description = description.substring(0, description.indexOf("<"));
+    if (lines[5].indexOf("grade") >= 0) {
+      grade = lines[5].substring(" <grade>".length).trim();
+      grade = grade.substring(0, grade.indexOf("<"));
+    }
 
     disableSql = "ALTER TABLE " + tableName + " DISABLE TRIGGER ALL;";
 
     deleteSql = "delete from " + tableName + " " +
       "where report_name = '" + name +
-      "' and report_grade = 0;";
+      "' and report_grade = " + grade + ";";
 
     insertSql = "insert into " + tableName + " (report_name, report_descrip, " +
       "report_source, report_loaddate, report_grade) VALUES (" +
       "'" + name + "'," +
-      "'" + description + "'," +
+      "$$" + description + "$$," +
       "$$" + content + "$$," +
-      "now(), 0);";
+      "now(), " + grade + ");";
 
     enableSql = "ALTER TABLE " + tableName + " ENABLE TRIGGER ALL;";
 
     return disableSql + deleteSql + insertSql + enableSql;
   };
 
-  var convertFromScript = function (content, filename) {
+  var convertFromScript = function (content, filename, defaultSchema) {
     var name = path.basename(filename, '.js'),
-      tableName = filename.indexOf('manufacturing') >= 0 ?
-        "xtmfg.pkgscript" :
-        "unknown",
-      notes = "xtMfg package",
+      tableName = defaultSchema ? defaultSchema + ".pkgscript" : "unknown",
+      notes = "", //"xtMfg package",
       disableSql,
       deleteSql,
       insertSql,
@@ -120,12 +122,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     return disableSql + deleteSql + insertSql + enableSql;
   };
 
-  var convertFromUiform = function (content, filename) {
+  var convertFromUiform = function (content, filename, defaultSchema) {
     var name = path.basename(filename, '.ui'),
-      tableName = filename.indexOf('manufacturing') >= 0 ?
-        "xtmfg.pkguiform" :
-        "unknown",
-      notes = "xtMfg package",
+      tableName = defaultSchema ? defaultSchema + ".pkguiform" : "unknown",
+      notes = "", //"xtMfg package",
       disableSql,
       deleteSql,
       insertSql,
@@ -174,6 +174,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       var manifest,
         databaseScripts,
         extraManifestPath,
+        defaultSchema,
         extraManifest,
         extraManifestScripts,
         alterPaths = dbSourceRoot.indexOf("foundation-database") < 0,
@@ -186,6 +187,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         extensionName = manifest.name;
         extensionComment = manifest.comment;
         databaseScripts = manifest.databaseScripts;
+        defaultSchema = manifest.defaultSchema;
         loadOrder = manifest.loadOrder || 999;
 
       } catch (error) {
@@ -267,7 +269,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             extname = path.extname(fullFilename).substring(1);
 
           // convert special files: metasql, uiforms, reports, uijs
-          scriptContents = conversionMap[extname](scriptContents, fullFilename);
+          scriptContents = conversionMap[extname](scriptContents, fullFilename, defaultSchema);
           //
           // Allow inclusion of js files in manifest. If it is a js file,
           // use plv8 to execute it.
