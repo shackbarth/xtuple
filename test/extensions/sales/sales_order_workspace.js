@@ -110,15 +110,7 @@
         });
       });
       it('adding a second line item should not copy the item', function (done) {
-        workspace.value.once("change:total", function () {
-          smoke.saveWorkspace(workspace, function (err, model) {
-            assert.isNull(err);
-            // TODO: sloppy
-            setTimeout(function () {
-              smoke.deleteFromList(XT.app, model, done);
-            }, 4000);
-          }, true);
-        });
+        workspace.value.once("change:total", done());
 
         gridRow.$.itemSiteWidget.$.privateItemSiteWidget.$.input.focus();
         // Add a new item, check that row exists, and make sure the itemSiteWidget doesn't copy irrelevantly
@@ -140,6 +132,41 @@
               }
             });
         */
+      });
+      it('changing the Schedule Date updates the line item\'s schedule date', function (done) {
+        var getDowDate = function (dow) {
+            var date = new Date(),
+              currentDow = date.getDay(),
+              distance = dow - currentDow;
+            date.setDate(date.getDate() + distance);
+            return date;
+          },
+          newScheduleDate = getDowDate(0); // Sunday from current week
+
+        var handlePopup = function () {
+          assert.equal(workspace.value.get("scheduleDate"), newScheduleDate);
+          // Confirm to update all line items
+          XT.app.$.postbooks.notifyTap(null, {originator: {name: "notifyYes"}});
+
+          setTimeout(function () {
+            _.each(workspace.value.get("lineItems").models, function (model) {
+              assert.equal(newScheduleDate, model.get("scheduleDate"));
+            });
+            done();
+          }, 3000);
+        };
+
+        workspace.value.once("change:scheduleDate", handlePopup);
+        workspace.value.set("scheduleDate", newScheduleDate);
+      });
+      it('save, then delete order', function (done) {
+        smoke.saveWorkspace(workspace, function (err, model) {
+          assert.isNull(err);
+          // TODO: sloppy
+          setTimeout(function () {
+            smoke.deleteFromList(XT.app, model, done);
+          }, 4000);
+        }, true);
       });
     });
   });
