@@ -2528,6 +2528,8 @@ trailing:true, white:true, strict: false*/
       ]}
     ]
   });
+  
+  XV.registerModelList("XM.UserAccountRelation", "XV.UserAccountList");
 
   // ..........................................................
   // STATES AND COUNTRIES
