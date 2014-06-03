@@ -222,8 +222,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       // -e ../private-extensions/source/inventory/foundation-database
 
       if (options.useFoundationScripts) {
-        extraManifest = fs.readFileSync(path.join(dbSourceRoot, "../../foundation-database/manifest.js"));
-        extraManifestScripts = JSON.parse(extraManifest).databaseScripts;
+        extraManifest = JSON.parse(fs.readFileSync(path.join(dbSourceRoot, "../../foundation-database/manifest.js")));
+        defaultSchema = defaultSchema || extraManifest.defaultSchema;
+        extraManifestScripts = extraManifest.databaseScripts;
         extraManifestScripts = _.map(extraManifestScripts, function (path) {
           return "../../foundation-database/" + path;
         });
@@ -236,8 +237,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
          path.join(dbSourceRoot, "../../foundation-database/frozen_manifest.js") :
          path.join(dbSourceRoot, "frozen_manifest.js");
 
-        extraManifest = fs.readFileSync(extraManifestPath);
-        extraManifestScripts = JSON.parse(extraManifest).databaseScripts;
+        extraManifest = JSON.parse(fs.readFileSync(extraManifestPath));
+        defaultSchema = defaultSchema || extraManifest.defaultSchema;
+        extraManifestScripts = extraManifest.databaseScripts;
         if (alterPaths) {
           extraManifestScripts = _.map(extraManifestScripts, function (path) {
             return "../../foundation-database/" + path;
