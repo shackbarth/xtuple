@@ -16,6 +16,7 @@
     gridRow,
     gridBox,
     workspace,
+    skipIfSiteCal,
     primeSubmodels = function (done) {
       var submodels = {};
       async.series([
@@ -55,6 +56,7 @@
           submodels = submods;
           done();
         });
+        if (XT.extensions.manufacturing && XT.session.settings.get("UseSiteCalendar")) {skipIfSiteCal = true; }
       });
     });
 
@@ -65,7 +67,7 @@
 
           assert.equal(workspace.value.recordType, "XM.SalesOrder");
           //
-          // Set the customer from the appropriate workspace widget
+          // Set the customer from the appropriate workspace quantityWidget
           //
           var createHash = {
             customer: submodels.customerModel
@@ -122,10 +124,10 @@
         // many issues so just populating with same data and saving it with 2 line items.
         gridRow.$.itemSiteWidget.doValueChange({value: {item: submodels.itemModel, site: submodels.siteModel}});
         gridRow.$.quantityWidget.doValueChange({value: 5});
+
         /* Delete the line item
         workspace.value.get("lineItems").models[1].destroy({
               success: function () {
-                console.log("success");
                 gridBox.setEditableIndex(null);
                 gridBox.$.editableGridRow.hide();
                 gridBox.valueChanged();
@@ -133,7 +135,12 @@
             });
         */
       });
-      it('changing the Schedule Date updates the line item\'s schedule date', function (done) {
+      // XXX - skip test if site calendar is enabled -
+      // temporary until second notifyPopup (_nextWorkingDate) is handled in test (TODO).
+
+      //it('changing the Schedule Date updates the line item\'s schedule date', function (done) {
+      (skipIfSiteCal ? it.skip : it)(
+        'changing the Schedule Date updates the line item\'s schedule date', function (done) {
         var getDowDate = function (dow) {
             var date = new Date(),
               currentDow = date.getDay(),
@@ -157,14 +164,10 @@
         };
 
         workspace.value.once("change:scheduleDate", handlePopup);
-
-        // XXX - exit test if site calendar is enabled. Temporary while UseSiteCalendar metric
-        // is being investigated for issues.
-        if (XT.extensions.manufacturing && XT.session.settings.get("UseSiteCalendar")) {
-          done();
-        } else {workspace.value.set("scheduleDate", newScheduleDate); }
+        workspace.value.set("scheduleDate", newScheduleDate);
       });
       it('save, then delete order', function (done) {
+        assert.equal(workspace.value.status, XM.Model.READY_NEW);
         smoke.saveWorkspace(workspace, function (err, model) {
           assert.isNull(err);
           // TODO: sloppy

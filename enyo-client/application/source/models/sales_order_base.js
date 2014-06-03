@@ -1900,7 +1900,9 @@ white:true*/
         }
         parent.calculateScheduleDate();
 
-        this.set("site", parent.get("site") || XT.defaultSite());
+        if (!this.get("site")) {
+          this.set("site", parent.get("site") || XT.defaultSite());
+        }
       }
     },
 
