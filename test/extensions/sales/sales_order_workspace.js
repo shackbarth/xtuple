@@ -13,6 +13,9 @@
     submodels,
     smoke = require("../../lib/smoke"),
     assert = require("chai").assert,
+    gridRow,
+    gridBox,
+    workspace,
     primeSubmodels = function (done) {
       var submodels = {};
       async.series([
@@ -58,11 +61,9 @@
     describe('User selects to create a sales order', function () {
       it('User navigates to Sales Order-New and selects to create a new Sales order', function (done) {
         smoke.navigateToNewWorkspace(XT.app, "XV.SalesOrderList", function (workspaceContainer) {
-          var workspace = workspaceContainer.$.workspace,
-            gridRow, gridBox, collect;
+          workspace = workspaceContainer.$.workspace;
 
           assert.equal(workspace.value.recordType, "XM.SalesOrder");
-
           //
           // Set the customer from the appropriate workspace widget
           //
@@ -79,14 +80,16 @@
           // know that the workspace is ready to save.
           // It's good practice to set this trigger *before* we change the line
           // item fields, so that we're 100% sure we're ready for the responses.
-          workspace.value.on("change:total", function () {
+          workspace.value.once("change:total", function () {
+            done();
+            /* The following save was moved to the second test
             smoke.saveWorkspace(workspace, function (err, model) {
               assert.isNull(err);
               // TODO: sloppy
               setTimeout(function () {
                 smoke.deleteFromList(XT.app, model, done);
               }, 2000);
-            });
+            });*/
           });
 
           //
@@ -105,6 +108,38 @@
           // Verify that there is currently one row
           assert.equal(gridBox.liveModels().length, 1);
         });
+      });
+      it('adding a second line item should not copy the item', function (done) {
+        workspace.value.once("change:total", function () {
+          smoke.saveWorkspace(workspace, function (err, model) {
+            assert.isNull(err);
+            // TODO: sloppy
+            setTimeout(function () {
+              smoke.deleteFromList(XT.app, model, done);
+            }, 4000);
+          }, true);
+        });
+
+        gridRow.$.itemSiteWidget.$.privateItemSiteWidget.$.input.focus();
+        // Add a new item, check that row exists, and make sure the itemSiteWidget doesn't copy irrelevantly
+        gridBox.newItem();
+        assert.equal(gridBox.liveModels().length, 2);
+        assert.notEqual(submodels.itemModel.id, gridRow.$.itemSiteWidget.$.privateItemSiteWidget.$.input.value);
+
+        // The intention was to delete the above line after verifying that the item doesn't copy but ran into 
+        // many issues so just populating with same data and saving it with 2 line items.
+        gridRow.$.itemSiteWidget.doValueChange({value: {item: submodels.itemModel, site: submodels.siteModel}});
+        gridRow.$.quantityWidget.doValueChange({value: 5});
+        /* Delete the line item
+        workspace.value.get("lineItems").models[1].destroy({
+              success: function () {
+                console.log("success");
+                gridBox.setEditableIndex(null);
+                gridBox.$.editableGridRow.hide();
+                gridBox.valueChanged();
+              }
+            });
+        */
       });
     });
   });

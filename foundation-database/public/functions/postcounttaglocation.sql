@@ -29,7 +29,7 @@ BEGIN
          itemsite_loccntrl, COALESCE(invcnt_location_id, -1) AS itemsite_location_id,
          CASE WHEN (itemsite_costmethod = 'N') THEN 0
               WHEN ( (itemsite_costmethod = 'A') AND
-                     (itemsite_qtyonhand = 0) AND
+                     ((itemsite_qtyonhand + itemsite_nnqoh) = 0) AND
                      (_avgCostingMethod = 'ACT') ) THEN actcost(itemsite_item_id)
               WHEN ( (itemsite_costmethod = 'A') AND
                      (_avgCostingMethod IN ('ACT', 'AVG')) ) THEN avgcost(itemsite_id)
@@ -241,11 +241,16 @@ BEGIN
     SET itemsite_qtyonhand= itemsite_qtyonhand + (_p.invcnt_qoh_after - _origLocQty),
         itemsite_datelastcount=_postDate
     WHERE (itemsite_id=_p.itemsite_id);
+    UPDATE itemsite
+    SET itemsite_value =  (itemsite_qtyonhand + itemsite_nnqoh) * _p.cost
+    WHERE (itemsite_id=_p.itemsite_id);
   ELSE
     UPDATE itemsite
-    SET itemsite_nnqoh =  itemsite_nnqoh - _origLocQty,
-	itemsite_qtyonhand = itemsite_qtyonhand + _p.invcnt_qoh_after,
+    SET itemsite_nnqoh =  itemsite_nnqoh + (_p.invcnt_qoh_after - _origLocQty),
         itemsite_datelastcount=_postDate
+    WHERE (itemsite_id=_p.itemsite_id);
+    UPDATE itemsite
+    SET itemsite_value =  (itemsite_qtyonhand + itemsite_nnqoh) * _p.cost
     WHERE (itemsite_id=_p.itemsite_id);
   END IF;
  
