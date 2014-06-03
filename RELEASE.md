@@ -1,5 +1,18 @@
-4.5.0 (Beta 2014/05/22)
+4.5.0 (Beta 2014/05/22, Final 2014/06/06)
 ==================
+
+Critical deployment changes
+---------------------------
+- If you installed 4.5.0 beta on your database, and want to upgrade it from the beta
+  to 4.5.0 final, you'll need to update the column type of the `taxpay.taxpay_id`
+  column from `integer` to `serial`.
+
+  If you're going straight to 4.5 final, you don't have to worry about this.
+
+  In general, of course, it's best not to put your production database through a beta.
+  You can pilot on a beta, but then to get to the final, you should pilot straight
+  from your production version to the final.
+
 
 Features and bugfixes
 ---------------------
