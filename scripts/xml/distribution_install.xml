@@ -1,5 +1,5 @@
-<package id        = "pbtodist450Beta"
-         version   = "4.5.0Beta"
+<package id        = "distribution-install-450"
+         version   = "4.5.0"
          developer = "xTuple"
          descrip   = "load PostBooks resources"
          updater   = "2.2.4" >
@@ -24,7 +24,10 @@
     </message>
   </prerequisite>
 
+  <script file="postbooks_upgrade.sql" />
   <script file="inventory_basic_install.sql" />
   <script file="inventory_upgrade.sql" />
+  <script file="distribution_basic_install.sql" />
+  <script file="distribution_upgrade.sql" />
 
 </package>

@@ -62,7 +62,7 @@
   },
   "main": "node-datasource/main.js",
   "scripts": {
-    "build-basic-postbooks-package-sql": "./scripts/explode_manifest.js -m foundation-database/manifest.js -n updates.sql",
+    "build-basic-postbooks-package-sql": "./scripts/explode_manifest.js -m foundation-database/manifest.js -n postbooks_upgrade.sql",
     "build-basic-empty": "./scripts/build_app.js -d empty --databaseonly -e foundation-database -i -s foundation-database/empty_data.sql",
     "build-basic-postbooks-demo": "./scripts/build_app.js -d postbooks_demo --databaseonly -e foundation-database -i -s foundation-database/postbooks_demo_data.sql",
     "build-basic-quickstart": "./scripts/build_app.js -d quickstart --databaseonly -e foundation-database -i -s foundation-database/quickstart_data.sql",
