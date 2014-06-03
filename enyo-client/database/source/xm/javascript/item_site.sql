@@ -77,10 +77,6 @@ select xt.install_js('XM','ItemSite','xtuple', $$
              'from ( ' +
              'select t1.%3$I as id {groupColumns} ' +
              'from %1$I.%2$I t1 {joins} ' +
-             /* Add dummy/blank itemalias join to satisfy unions below. */
-             'left join (' +
-             '  select * from itemalias where true = false ' +
-             ') as itemalias on t1.%4$I=itemalias_item_id ' +
              'where {conditions} {extra}',
       sql2 = 'select * from %1$I.%2$I where id in ({ids}) {orderBy}';
 
