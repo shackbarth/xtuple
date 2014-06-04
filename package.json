@@ -34,6 +34,7 @@
     "passport-oauth2-jwt-bearer": "0.1.x",
     "paynode": "0.3.6",
     "pg": "0.14.x",
+    "qr-image": "1.1.x",
     "request": "2.14.x",
     "rimraf": "2.2.x",
     "rjson": "~0.2.4",

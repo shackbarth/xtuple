@@ -137,6 +137,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
      */
     var transformElementData = function (def, data) {
       var textOnly,
+        mapSource,
         params;
 
       if (def.transform) {
@@ -146,12 +147,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
       if (def.element === 'image') {
         // if the image is not found, we don't want to print it
-        if (!imageFilenameMap[def.definition]) {
+        mapSource = _.isString(def.definition) ? def.definition : (def.definition[0].attr || def.definition[0].text);
+        if (!imageFilenameMap[mapSource]) {
           return "";
         }
 
-        // we save the images under a different name then they're described in the definition
-        return path.join(workingDir, imageFilenameMap[def.definition]);
+        // we save the images under a different name than they're described in the definition
+        return path.join(workingDir, imageFilenameMap[mapSource]);
       }
 
       // these elements are expecting a parameter that is a number, not
@@ -451,7 +453,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       //
       var allElements = _.flatten(_.union(reportDefinition.headerElements,
           reportDefinition.detailElements, reportDefinition.footerElements)),
-        allImages = _.unique(_.pluck(_.where(allElements, {element: "image"}), "definition"));
+        allImages = _.unique(_.pluck(_.filter(allElements, function (el) {
+          return el.element === "image" && el.imageType !== "qr";
+        }), "definition"));
         // thanks Jeremy
 
       if (allImages.length === 0) {
@@ -507,6 +511,64 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         done();
       };
       queryForData(req.session, requestDetails, callback);
+    };
+
+
+    /*
+     Elements can be defined by attr or text
+     {
+       "element": "image",
+       "imageType": "qr",
+       "definition": [{"attr": "billtoName"}],
+       "options": {"x": 200, "y": 180}
+    },
+    {
+       "element": "image",
+       "imageType": "qr",
+       "definition": [{"text": "_invoiceNumber"}],
+       "options": {"x": 0, "y": 195}
+     },
+    */
+    var createQrCodes = function (done) {
+      //
+      // Figure out what images we need to fetch, if any
+      //
+      var allElements = _.flatten(_.union(reportDefinition.headerElements,
+          reportDefinition.detailElements, reportDefinition.footerElements)),
+        allQrElements = _.unique(_.pluck(_.where(allElements, {element: "image", imageType: "qr"}), "definition")),
+        marriedQrElements = _.map(allQrElements, function (el) {
+          return {
+            source: el[0].attr || el[0].text,
+            target: marryData(el, reportData[0])[0].data
+          };
+        });
+        // thanks Jeremy
+
+      if (allQrElements.length === 0) {
+        // no need to try to fetch no images
+        done();
+        return;
+      }
+
+      async.each(marriedQrElements, function (element, next) {
+        var target = element.target.substring(0, 5);
+        imageFilenameMap[element.source] = target + ".png";
+
+        // here's the actual qr code code, which requires node 10
+        //var qr = require('qr-image');
+        //var qr_svg = qr.image('I love QR!', { type: 'png' });
+        //qr_svg.pipe(require('fs').createWriteStream('i_love_qr.png'));
+
+        // here's the placeholder code that serves as a proof of concept
+        var sourceFile = path.join(__dirname, "../../i_love_qr.png");
+        fs.readFile(sourceFile, function (err, contents) {
+          fs.writeFile(path.join(workingDir, target + ".png"), contents, function (err) {
+            next();
+          });
+        });
+        // end placeholder code
+
+      }, done);
     };
 
     /**
@@ -645,6 +707,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       fetchTranslations,
       fetchData,
       fetchImages,
+      createQrCodes,
       printReport,
       sendReport,
       cleanUpFiles
