@@ -1458,6 +1458,9 @@ WHERE (true)
   AND project IN (SELECT poitem_prj_id FROM pohead JOIN poitem ON (pohead_id=poitem_pohead_id) 
 			WHERE pohead_id=<? value("pohead_id") ?>)
 <? endif ?>
+<? if exists("prjtype_id") ?>
+  AND project IN (SELECT prj_id FROM prj WHERE prj_prjtype_id = <? value("prjtype_id") ?>)
+<? endif ?>
 
 
 ORDER BY project, section, subtype, type, id;
