@@ -1795,10 +1795,12 @@ body {
 }
 .onyx-toolbar .xv-toolbar-label,
 .onyx-toolbar .xv-search {
-  color: #fdfdfd;
   width: 185px;
   margin: 0;
   margin-left: 6px;
+}
+.onyx-toolbar .xv-search {
+  color: #939393;
 }
 .xv-navigator .xv-header {
   background-color: #fdfdfd;
