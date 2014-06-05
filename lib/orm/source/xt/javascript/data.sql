@@ -114,28 +114,30 @@ select xt.install_js('XT','Data','xtuple', $$
                 subChildOrm,
                 naturalKey;
 
-              if (currentProp.toOne && currentProp.toOne.type) {
-                subChildOrm = that.fetchOrm(nameSpace, currentProp.toOne.type);
-              } else if (currentProp.toMany && currentProp.toMany.type) {
-                subChildOrm = that.fetchOrm(nameSpace, currentProp.toMany.type);
-              } else {
-                plv8.elog(ERROR, "toOne or toMany property is missing it's 'type': " + currentProp.name);
-              }
-
-              if (pathIndex < pathParts.length - 1) {
-                /* Recurse. */
-                walkPath(pathParts, subChildOrm, pathIndex + 1);
-              } else {
-                /* This is the end of the path. */
-                naturalKey = XT.Orm.naturalKey(subChildOrm);
-                if (currentAttributeIsString) {
-                  /* add the natural key to the end of the requested attribute */
-                  parameter.attribute = attribute + "." + naturalKey;
+              if ((currentProp.toOne || currentProp.toMany)) {
+                if (currentProp.toOne && currentProp.toOne.type) {
+                  subChildOrm = that.fetchOrm(nameSpace, currentProp.toOne.type);
+                } else if (currentProp.toMany && currentProp.toMany.type) {
+                  subChildOrm = that.fetchOrm(nameSpace, currentProp.toMany.type);
                 } else {
-                  /* swap out the attribute in the array for the one with the prepended natural key */
-                  index = parameter.attribute.indexOf(attribute);
-                  parameter.attribute.splice(index, 1);
-                  parameter.attribute.splice(index, 0, attribute + "."  + naturalKey);
+                  plv8.elog(ERROR, "toOne or toMany property is missing it's 'type': " + currentProp.name);
+                }
+
+                if (pathIndex < pathParts.length - 1) {
+                  /* Recurse. */
+                  walkPath(pathParts, subChildOrm, pathIndex + 1);
+                } else {
+                  /* This is the end of the path. */
+                  naturalKey = XT.Orm.naturalKey(subChildOrm);
+                  if (currentAttributeIsString) {
+                    /* add the natural key to the end of the requested attribute */
+                    parameter.attribute = attribute + "." + naturalKey;
+                  } else {
+                    /* swap out the attribute in the array for the one with the prepended natural key */
+                    index = parameter.attribute.indexOf(attribute);
+                    parameter.attribute.splice(index, 1);
+                    parameter.attribute.splice(index, 0, attribute + "."  + naturalKey);
+                  }
                 }
               }
             }
