@@ -235,11 +235,15 @@ select xt.install_js('XM','ItemSite','xtuple', $$
     /* Change table reference in group by and order by to pt1. */
     if (clause.groupByColumns && clause.groupByColumns.length) {
       clause.groupByColumns = clause.groupByColumns.replace(/ t1./g, ' pt1.');
+      clause.groupByColumns = clause.groupByColumns.replace(/,t1./g, ',pt1.');
       clause.groupByColumns = clause.groupByColumns.replace(/ jt\d+./g, ' pt1.');
+      clause.groupByColumns = clause.groupByColumns.replace(/,jt\d+./g, ',pt1.');
     }
     if (clause.orderByColumns && clause.orderByColumns.length) {
       clause.orderByColumns = clause.orderByColumns.replace(/ t1./g, ' pt1.');
+      clause.orderByColumns = clause.orderByColumns.replace(/,t1./g, ',pt1.');
       clause.orderByColumns = clause.orderByColumns.replace(/ jt\d+./g, ' pt1.');
+      clause.orderByColumns = clause.orderByColumns.replace(/,jt\d+./g, ',pt1.');
     }
     if (joinTables.length) {
       for (var j=0; j < joinTables.length; j++) {
