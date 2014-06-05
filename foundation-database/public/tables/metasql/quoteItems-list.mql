@@ -22,9 +22,11 @@ SELECT quitem_id,
             ELSE ((1.0 - (quitem_price / quitem_custprice)) * 100.0)
        END AS discountfromcust,
        quitem_unitcost AS coitem_unitcost,
-       ROUND((quitem_qtyord * quitem_qty_invuomratio) *
-             ((quitem_price / quitem_price_invuomratio) - (quitem_unitcost / quitem_price_invuomratio)),2) AS margin,
-       CASE WHEN (quitem_price = 0.0) THEN 100.0
+       CASE WHEN (quitem_price = 0.0) THEN 0.0
+            ELSE ROUND((quitem_qtyord * quitem_qty_invuomratio) *
+                 ((quitem_price / quitem_price_invuomratio) - (quitem_unitcost / quitem_price_invuomratio)),2)
+       END AS margin,
+       CASE WHEN (quitem_price = 0.0) THEN 0.0
             ELSE ((quitem_price - quitem_unitcost) / quitem_price)
        END AS marginpercent,
        CASE WHEN (quitem_custpn != '') THEN quitem_custpn

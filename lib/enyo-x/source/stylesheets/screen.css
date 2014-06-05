@@ -2108,6 +2108,12 @@ body {
 .xv-grid-box .xv-scroller {
   background: #f8f8f8;
 }
+.xv-grid-box .xv-grid-attr {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
 .xv-grid-box .xv-grid-attr.bold {
   font-weight: bold;
 }
@@ -2310,9 +2316,8 @@ body {
   display: none;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget-description {
-  text-indent: 0;
-  padding-bottom: 0;
-  padding-top: 8px;
+  margin: 0;
+  margin-top: 5px;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-private-item-site-widget {
   border-bottom: 0;
@@ -2377,6 +2382,49 @@ body {
   margin: 10px;
   color: #357ec7;
   overflow: hidden;
+  /*  The chart-filters may not be need as we are using the class xv-pullout
+      for styles.  Delete when finished hacking the filter styles.
+
+  .chart-filters {
+  	  background-color: @white;
+  	  
+  	  -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+	  -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+	  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .chart-filters .xv-parameter-panel {
+  	  background-color: @ghost;
+  	  border: 1px solid @smoke;
+  	  margin: 0 4px 6px 0;
+  	  width: 100%;
+  }
+  
+  .chart-filters.xv-parameter-panel .onyx-groupbox-header {
+	  padding: 6px 10px;
+	  border-bottom: 1px solid @smoke;
+	  background: @lightest-gray;
+	  color: @near-black;
+  }
+
+  .chart-filters.xv-parameter-panel .enyo-fittable-columns-layout {
+	  border-bottom: 1px solid @smoke;
+	  background: @white;
+    color: @near-black;
+    position: relative;
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  .chart-filters.xv-parameter-panel .enyo-fittable-columns-layout > * {
+    vertical-align: middle;
+  }
+
+  .chart-filters.xv-parameter-panel .xv-label {
+    text-align: right;
+  }
+  
+  */
 }
 .selectable-chart .xv-list-item {
   border-bottom: 1px solid grey;
@@ -2391,8 +2439,9 @@ body {
   margin-left: 200px;
 }
 .selectable-chart .chart-title-bar {
-  height: 32px;
+  height: 48px;
   background-color: #efefef;
+  text-transform: none;
   -webkit-border-top-right-radius: 10px;
   -moz-border-radius-topright: 10px;
   border-top-right-radius: 10px;
@@ -2406,6 +2455,15 @@ body {
   text-align: center;
   /*font-size: 2em;*/
   font-weight: normal;
+  font-family: Helvetica;
+}
+.selectable-chart .chart-title-bar .chart-sub-title {
+  /*padding-top: 8px;*/
+  color: #0000ff;
+  text-align: center;
+  font-size: small;
+  font-weight: normal;
+  font-family: Helvetica;
 }
 .selectable-chart .chart-title-bar .remove-icon {
   position: absolute;
@@ -2436,29 +2494,8 @@ body {
   width: 130px;
   padding: 10px 10px;
 }
-.selectable-chart .chart-filters {
-  background-color: #fdfdfd;
-  -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
-  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
-}
-.selectable-chart .chart-filters .xv-parameter-panel {
-  background-color: #f8f8f8;
-  border: 1px solid #d7d7d7;
-  margin: 0 4px 6px 0;
-  width: 100%;
-}
-.selectable-chart .chart-filters.xv-parameter-panel .onyx-groupbox-header {
-  padding: 6px 10px;
-  border-bottom: 1px solid #d7d7d7;
-  background: #efefef;
-  color: #0e0e0e;
-}
-.selectable-chart .chart-filters.xv-parameter-panel .enyo-fittable-columns-layout {
-  padding: 6px 10px;
-  border-bottom: 1px solid #d7d7d7;
-  background: #fdfdfd;
-  color: #0e0e0e;
+.selectable-chart .chart-filterDrawer {
+  top: 0px;
 }
 /**
   Styles relating to Lists
@@ -2970,14 +3007,12 @@ body {
   position: relative;
 }
 .xv-relationwidget-description {
-  white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
-  text-indent: 140px;
-  font-size: small;
-  padding-bottom: 4px;
-  max-width: 325px;
-  color: black;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  max-width: 250px;
+  margin: 5px 5px 5px 80px;
 }
 .xv-relationwidget-description.disabled {
   color: #777777;
