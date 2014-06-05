@@ -16,6 +16,7 @@
     gridRow,
     gridBox,
     workspace,
+    skipIfSiteCal,
     primeSubmodels = function (done) {
       var submodels = {};
       async.series([
@@ -55,6 +56,7 @@
           submodels = submods;
           done();
         });
+        if (XT.extensions.manufacturing && XT.session.settings.get("UseSiteCalendar")) {skipIfSiteCal = true; }
       });
     });
 
@@ -65,7 +67,7 @@
 
           assert.equal(workspace.value.recordType, "XM.SalesOrder");
           //
-          // Set the customer from the appropriate workspace widget
+          // Set the customer from the appropriate workspace quantityWidget
           //
           var createHash = {
             customer: submodels.customerModel
@@ -110,15 +112,7 @@
         });
       });
       it('adding a second line item should not copy the item', function (done) {
-        workspace.value.once("change:total", function () {
-          smoke.saveWorkspace(workspace, function (err, model) {
-            assert.isNull(err);
-            // TODO: sloppy
-            setTimeout(function () {
-              smoke.deleteFromList(XT.app, model, done);
-            }, 4000);
-          }, true);
-        });
+        workspace.value.once("change:total", done());
 
         gridRow.$.itemSiteWidget.$.privateItemSiteWidget.$.input.focus();
         // Add a new item, check that row exists, and make sure the itemSiteWidget doesn't copy irrelevantly
@@ -130,16 +124,57 @@
         // many issues so just populating with same data and saving it with 2 line items.
         gridRow.$.itemSiteWidget.doValueChange({value: {item: submodels.itemModel, site: submodels.siteModel}});
         gridRow.$.quantityWidget.doValueChange({value: 5});
+
         /* Delete the line item
         workspace.value.get("lineItems").models[1].destroy({
               success: function () {
-                console.log("success");
                 gridBox.setEditableIndex(null);
                 gridBox.$.editableGridRow.hide();
                 gridBox.valueChanged();
               }
             });
         */
+      });
+      // XXX - skip test if site calendar is enabled -
+      // temporary until second notifyPopup (_nextWorkingDate) is handled in test (TODO).
+
+      //it('changing the Schedule Date updates the line item\'s schedule date', function (done) {
+      (skipIfSiteCal ? it.skip : it)(
+        'changing the Schedule Date updates the line item\'s schedule date', function (done) {
+        var getDowDate = function (dow) {
+            var date = new Date(),
+              currentDow = date.getDay(),
+              distance = dow - currentDow;
+            date.setDate(date.getDate() + distance);
+            return date;
+          },
+          newScheduleDate = getDowDate(0); // Sunday from current week
+
+        var handlePopup = function () {
+          assert.equal(workspace.value.get("scheduleDate"), newScheduleDate);
+          // Confirm to update all line items
+          XT.app.$.postbooks.notifyTap(null, {originator: {name: "notifyYes"}});
+          // And verify that they were all updated with the new date
+          setTimeout(function () {
+            _.each(workspace.value.get("lineItems").models, function (model) {
+              assert.equal(newScheduleDate, model.get("scheduleDate"));
+            });
+            done();
+          }, 3000);
+        };
+
+        workspace.value.once("change:scheduleDate", handlePopup);
+        workspace.value.set("scheduleDate", newScheduleDate);
+      });
+      it('save, then delete order', function (done) {
+        assert.equal(workspace.value.status, XM.Model.READY_NEW);
+        smoke.saveWorkspace(workspace, function (err, model) {
+          assert.isNull(err);
+          // TODO: sloppy
+          setTimeout(function () {
+            smoke.deleteFromList(XT.app, model, done);
+          }, 4000);
+        }, true);
       });
     });
   });

@@ -18,9 +18,16 @@
   </prerequisite>
 
  <prerequisite type = "query"
-                name = "Checking for bad xTuple ERP database version" >
+               name = "Checking for bad xTuple ERP database version" >
     <query>SELECT fetchMetricText('ServerVersion')='4.5.0Beta';</query>
     <message>This package may not be applied to a 4.5.0Beta Distribution database.
+    </message>
+  </prerequisite>
+
+ <prerequisite type = "query"
+               name = "Checking for mobile-enabled schemas" >
+    <query>SELECT TRUE FROM pg_namespace WHERE nspname = 'xm';</query>
+    <message>This package may not be applied to a mobile-enabled database. Please see your system administrator or contact xTuple.
     </message>
   </prerequisite>
 
