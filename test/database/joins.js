@@ -138,7 +138,7 @@ var _ = require("underscore"),
     });
 
     it('should execute a query with an x.y join path when x.y.naturalKeyOfY is needed', function (done) {
-      var sql = 'select xt.js_init(true);xt.post($${"nameSpace":"XM","type":"ItemSiteListItem","dispatch":{"functionName":"fetch","parameters":{"orderBy":[{"attribute":"item.number"}],"rowOffset":0,"rowLimit":50,"parameters":[{"attribute":"isActive","operator":"=","value":true},{"attribute":"item.classCode","operator":"","isCharacteristic":false,"value":"TOYS-CARS"}]}},"encoding":"rjson","username":"admin","encryptionKey":"foo"}$$);';
+      var sql = 'select xt.js_init(true);select xt.post($${"nameSpace":"XM","type":"ItemSiteListItem","dispatch":{"functionName":"fetch","parameters":{"orderBy":[{"attribute":"item.number"}],"rowOffset":0,"rowLimit":50,"parameters":[{"attribute":"isActive","operator":"=","value":true},{"attribute":"item.classCode","operator":"","isCharacteristic":false,"value":"TOYS-CARS"}]}},"encoding":"rjson","username":"admin","encryptionKey":"foo"}$$);';
 
       datasource.query(sql, creds, function (err, res) {
         var results;
