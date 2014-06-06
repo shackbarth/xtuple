@@ -35,6 +35,12 @@
   }
 
   .xv-grid-attr {
+    // This limits the text to three lines
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+
     &.bold {
     font-weight: bold;
     }
@@ -233,9 +239,8 @@
           display: none;
         }
         .xv-relationwidget-description {
-          text-indent: 0;
-          padding-bottom: 0;
-          padding-top: 8px;
+          margin: 0;
+          margin-top: 5px;
         }
         .xv-private-item-site-widget {
           border-bottom: 0;

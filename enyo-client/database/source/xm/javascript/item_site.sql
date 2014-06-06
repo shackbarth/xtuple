@@ -64,6 +64,7 @@ select xt.install_js('XM','ItemSite','xtuple', $$
       },
       itemJoinMatches,
       itemJoinTable,
+      joinTables = [],
       keySearch = false,
       extra = "",
       qry,
@@ -72,9 +73,9 @@ select xt.install_js('XM','ItemSite','xtuple', $$
       idParams = [],
       etags,
       sqlCount,
-      sql1 = 'select pt1.%3$I as id ' +
+      sql1 = 'select pt1.id ' +
              'from ( ' +
-             'select t1.* as id ' +
+             'select t1.%3$I as id{groupColumns} ' +
              'from %1$I.%2$I t1 {joins} ' +
              'where {conditions} {extra}',
       sql2 = 'select * from %1$I.%2$I where id in ({ids}) {orderBy}';
@@ -89,14 +90,14 @@ select xt.install_js('XM','ItemSite','xtuple', $$
           keySearch = param.value;
           sql1 += ' and t1.%4$I in (select item_id from item where item_number ~^ ${p1} or item_upccode ~^ ${p1}) ' +
             'union ' +
-            'select t1.* ' +
+            'select t1.%3$I as id{groupColumns} ' +
             'from %1$I.%2$I t1 {joins} ' +
             ' join itemalias on t1.%4$I=itemalias_item_id ' +
             '   and itemalias_crmacct_id is null ' +
             'where {conditions} {extra} ' +
             ' and (itemalias_number ~^ ${p1}) ' +
             'union ' +
-            'select t1.* ' +
+            'select t1.%3$I as id{groupColumns}  ' +
             'from %1$I.%2$I t1 {joins} ' +
             ' join itemalias on t1.%4$I=itemalias_item_id ' +
             '   and itemalias_crmacct_id={accountId} ' +
@@ -137,6 +138,9 @@ select xt.install_js('XM','ItemSite','xtuple', $$
       if (itemJoinMatches && itemJoinMatches.length) {
         itemJoinTable = itemJoinMatches[0].match(/(jt\d+)/g);
       }
+
+      /* Get all join table names. */
+      joinTables = clause.joins.match(/(jt\d+)/g).unique();
     }
 
     if (!itemJoinTable) {
@@ -214,7 +218,7 @@ select xt.install_js('XM','ItemSite','xtuple', $$
     }
 
     sql1 = XT.format(
-      sql1 += ') pt1 group by pt1.%3$I{groupBy} {orderBy} %5$s %6$s;',
+      sql1 += ') pt1 group by pt1.id{groupBy} {orderBy} %5$s %6$s;',
       [tableNamespace, table, idColumn, backingTypeJoinColumn, limit, offset]
     );
 
@@ -225,12 +229,28 @@ select xt.install_js('XM','ItemSite','xtuple', $$
       clause.orderByColumns = XT.format('order by t1.%1$I', [idColumn]);
     }
 
+    /* Set columns to include in sub query unions before replacing table alias. */
+    clause.joinGroupColumns = clause.groupByColumns || '';
+
     /* Change table reference in group by and order by to pt1. */
     if (clause.groupByColumns && clause.groupByColumns.length) {
-      clause.groupByColumns = clause.groupByColumns.replace(/t1./g, 'pt1.');
+      clause.groupByColumns = clause.groupByColumns.replace(/ t1./g, ' pt1.');
+      clause.groupByColumns = clause.groupByColumns.replace(/,t1./g, ',pt1.');
+      clause.groupByColumns = clause.groupByColumns.replace(/ jt\d+./g, ' pt1.');
+      clause.groupByColumns = clause.groupByColumns.replace(/,jt\d+./g, ',pt1.');
     }
     if (clause.orderByColumns && clause.orderByColumns.length) {
-      clause.orderByColumns = clause.orderByColumns.replace(/t1./g, 'pt1.');
+      clause.orderByColumns = clause.orderByColumns.replace(/ t1./g, ' pt1.');
+      clause.orderByColumns = clause.orderByColumns.replace(/,t1./g, ',pt1.');
+      clause.orderByColumns = clause.orderByColumns.replace(/ jt\d+./g, ' pt1.');
+      clause.orderByColumns = clause.orderByColumns.replace(/,jt\d+./g, ',pt1.');
+    }
+    if (joinTables.length) {
+      for (var j=0; j < joinTables.length; j++) {
+        var regex = new RegExp(joinTables + '.', 'g');
+        clause.groupByColumns = clause.groupByColumns.replace(regex, 'pt1.');
+        clause.orderByColumns = clause.orderByColumns.replace(regex, 'pt1.');
+      }
     }
 
     /* Query the model */
@@ -238,6 +258,7 @@ select xt.install_js('XM','ItemSite','xtuple', $$
              .replace(/{extra}/g, extra)
              .replace(/{joins}/g, clause.joins)
              .replace(/{groupBy}/g, clause.groupByColumns)
+             .replace(/{groupColumns}/g, clause.joinGroupColumns)
              .replace('{orderBy}', clause.orderByColumns)
              .replace('{accountId}', accountId)
              .replace(/{p1}/g, clause.parameters.length + 1)
@@ -257,6 +278,10 @@ select xt.install_js('XM','ItemSite','xtuple', $$
       XT.debug(sql1.slice(1000, 1500));
       XT.debug(sql1.slice(1500, 2000));
       XT.debug(sql1.slice(2000, 2500));
+      XT.debug(sql1.slice(2500, 3000));
+      XT.debug(sql1.slice(3000, 3500));
+      XT.debug(sql1.slice(3500, 4000));
+      XT.debug(sql1.slice(4000, 4500));
       XT.debug('ItemSiteListItem parameters = ', clause.parameters);
     }
     qry = plv8.execute(sql1, clause.parameters);

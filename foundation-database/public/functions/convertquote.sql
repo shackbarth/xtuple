@@ -143,6 +143,7 @@ BEGIN
   FROM quhead JOIN custinfo ON (cust_id=quhead_cust_id)
   WHERE (quhead_id=pQuheadid);
 
+  -- Move Documents
   UPDATE url SET url_source_id = _soheadid,
                  url_source = 'S'
   WHERE ((url_source='Q') AND (url_source_id = pQuheadid));
@@ -154,6 +155,21 @@ BEGIN
   UPDATE docass SET docass_source_id = _soheadid,
                     docass_source_type = 'S'
   WHERE ((docass_source_type='Q') AND (docass_source_id = pQuheadid));
+
+  -- Move Email
+  IF (fetchMetricBool('EnableBatchManager')) THEN
+    UPDATE xtbatch.emlassc SET emlassc_type='S',
+                               emlassc_assc_id=_soheadid
+    WHERE ((emlassc_type='Q') AND (emlassc_assc_id=pQuheadid));
+  END IF;
+
+  -- Copy Characteristics
+  INSERT INTO charass
+        (charass_target_type, charass_target_id, charass_char_id, charass_value, charass_default, charass_price)
+  SELECT 'SO', _soheadid, charass_char_id, charass_value, charass_default, charass_price
+    FROM charass
+   WHERE ((charass_target_type='QU')
+     AND  (charass_target_id=pQuheadid));
 
   -- Copy Comments
   INSERT INTO comment
@@ -205,6 +221,7 @@ BEGIN
       WHERE (quhead_id=pQuheadid);
     END IF;
 
+    -- Copy Characteristics
     INSERT INTO charass
           (charass_target_type, charass_target_id, charass_char_id, charass_value, charass_default, charass_price)
     SELECT 'SI', _soitemid, charass_char_id, charass_value, charass_default, charass_price
