@@ -144,7 +144,7 @@ var _ = require("underscore"),
         var results;
         assert.isNull(err);
         assert.equal(1, res.rowCount, JSON.stringify(res.rows));
-        results = JSON.parse(res.rows[1].get);
+        results = JSON.parse(res.rows[1].post);
         assert.isNumber(results.length);
         done();
       });
