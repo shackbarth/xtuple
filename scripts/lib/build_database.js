@@ -82,7 +82,7 @@ var  async = require('async'),
           extensionCallback(null, "");
           return;
         }
-        //winston.info("Installing extension", databaseName, extension);
+        //console.log("Installing extension", databaseName, extension);
         // deal with directory structure quirks
         var baseName = path.basename(extension),
           isFoundation = extension.indexOf("foundation-database") >= 0,
@@ -96,6 +96,7 @@ var  async = require('async'),
             extension.indexOf("extension") >= 0,
           isPublicExtension = extension.indexOf("xtuple-extensions") >= 0,
           isPrivateExtension = extension.indexOf("private-extensions") >= 0,
+          isNpmExtension = baseName.indexOf("xtuple-") >= 0,
           dbSourceRoot = (isFoundation || isFoundationExtension) ? extension :
             isLibOrm ? path.join(extension, "source") :
             path.join(extension, "database/source"),
@@ -110,7 +111,8 @@ var  async = require('async'),
             wipeViews: isApplicationCore && spec.wipeViews,
             extensionLocation: isCoreExtension ? "/core-extensions" :
               isPublicExtension ? "/xtuple-extensions" :
-              isPrivateExtension ? "/private-extensions" : "not-applicable"
+              isPrivateExtension ? "/private-extensions" :
+              isNpmExtension ? "npm " + baseName : "not-applicable"
           };
 
         buildDatabaseUtil.explodeManifest(path.join(dbSourceRoot, "manifest.js"),

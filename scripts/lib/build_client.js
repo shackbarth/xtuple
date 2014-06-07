@@ -114,7 +114,7 @@ var _ = require('underscore'),
         return;
       }
       // run the enyo deployment method asyncronously
-      var rootDir = path.join(extPath, extPath.indexOf("node_modules") ? "../../enyo-client/extensions/" : "../..");
+      var rootDir = path.join(extPath, extPath.indexOf("node_modules") >= 0 ? "../../enyo-client/extensions/" : "../..");
       // we run the command from /scripts/lib, so that is where build directories and other
       // temp files are going to go.
       console.log("building " + extName);
