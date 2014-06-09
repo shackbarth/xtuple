@@ -28,7 +28,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         res.send({isError: true, error: err});
       },
       convertToP12 = function (publicKey, privateKey) {
-        var filenamePrefix = path.join(process.cwd(), "lib/private/temp_" + id),
+        var filenamePrefix = path.join("/tmp/temp_" + id),
           publicKeyFilename = filenamePrefix + "_public_key.pem",
           csrFilename = filenamePrefix + "_csr.pem",
           certFilename = filenamePrefix + "_cert.pem",
