@@ -65,35 +65,7 @@ white:true*/
         options.success = function (model, resp, options) {
           if (status === XM.Model.READY_NEW && that.get("clientType") === 'jwt bearer') {
             // Download the private key.
-
-            // The javascript download method avoids target = "_blank" and the need to
-            // reload the app to see the new client. Pop up blockers should not be an issue.
-            // @See: http://stackoverflow.com/questions/3749231/download-file-using-javascript-jquery/3749395#3749395
-            var downloadURL = function downloadURL(url) {
-              var hiddenIFrameID = 'hiddenDownloader',
-                iframe = document.getElementById(hiddenIFrameID);
-
-              if (iframe === null) {
-                iframe = document.createElement('iframe');
-                iframe.id = hiddenIFrameID;
-                iframe.style.display = 'none';
-                document.body.appendChild(iframe);
-              }
-
-              iframe.src = url;
-            };
-
-            downloadURL(XT.getOrganizationPath() + '/oauth/generate-key?id=' + that.id);
-
-            // This prompts for the download without using target = "_blank" and a new tab.
-            // It should avoid pop up blockers from preventing the download. It does warn about
-            // leaving the page, but it returns right back to the original path without needing to
-            // reload the app. Downside... it requires reloading the app to see the client just added.
-            //window.location.assign(XT.getOrganizationPath() + '/oauth/generate-key?id=' + that.id);
-
-            // This opens the download in a new tab and causes pop up blockers to block this action.
-            //window.open(XT.getOrganizationPath() + '/oauth/generate-key?id=' + that.id,
-            //  '_newtab');
+            XV.downloadURL(XT.getOrganizationPath() + '/oauth/generate-key?id=' + that.id);
           }
 
           if (success) { success(model, resp, options); }
