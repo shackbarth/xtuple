@@ -50,8 +50,8 @@ JavaScript extensions or REST clients will get prizes. More details to follow.
 
 Also, don't miss the xTuple event of the year! 
 [xTupleCon 2014](http://www.xtuple.com/xtuple-conference-2014)
-is going to be held October 13-18 in Norfolk, VA. It promises to the be the biggest 
-xTupleCon yet.
+is going to be held October 13-18 in Norfolk, VA. With six days of events and a kickoff
+speech by Steve Wozniak, it promises to the be the biggest xTupleCon yet.
 
 ### Installing this project
 
