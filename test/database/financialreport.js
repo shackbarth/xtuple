@@ -12,7 +12,7 @@ var _ = require("underscore"),
 
   describe('The financialReport function', function () {
 
-    var loginData = require(path.join(__dirname, "../lib/login_data.js")).data,
+    var loginData = require("../lib/login_data.js").data,
       datasource = require('../../../xtuple/node-datasource/lib/ext/datasource').dataSource,
       config = require(path.join(__dirname, "../../node-datasource/config.js")),
       creds = _.extend({}, config.databaseServer, {database: loginData.org}),
@@ -77,10 +77,6 @@ var _ = require("underscore"),
         assert.closeTo(oldval - newval, changeval, 0.001);
         done();
       });
-    });
-
-    after(function (done) {
-      done();   // is there anything to clean up?
     });
 
   });
