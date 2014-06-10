@@ -102,16 +102,48 @@ select xt.install_js('XT','Data','xtuple', $$
           attributes = attributeIsString ? [parameter.attribute] : parameter.attribute;
 
         attributes.map(function (attribute) {
-          var prop = XT.Orm.getProperty(orm, attribute),
+          var rootAttribute = (attribute.indexOf('.') < 0) ? attribute : attribute.split(".")[0],
+            prop = XT.Orm.getProperty(orm, rootAttribute),
             propName = prop.name,
             childOrm,
             naturalKey,
-            index;
+            index,
+            walkPath = function (pathParts, currentOrm, pathIndex) {
+              var currentAttributeIsString = typeof pathParts[pathIndex] === 'string',
+                currentProp = XT.Orm.getProperty(currentOrm, pathParts[pathIndex]),
+                subChildOrm,
+                naturalKey;
 
-          if ((prop.toOne || prop.toMany) && attribute.indexOf('.') < 0) {
+              if ((currentProp.toOne || currentProp.toMany)) {
+                if (currentProp.toOne && currentProp.toOne.type) {
+                  subChildOrm = that.fetchOrm(nameSpace, currentProp.toOne.type);
+                } else if (currentProp.toMany && currentProp.toMany.type) {
+                  subChildOrm = that.fetchOrm(nameSpace, currentProp.toMany.type);
+                } else {
+                  plv8.elog(ERROR, "toOne or toMany property is missing it's 'type': " + currentProp.name);
+                }
+
+                if (pathIndex < pathParts.length - 1) {
+                  /* Recurse. */
+                  walkPath(pathParts, subChildOrm, pathIndex + 1);
+                } else {
+                  /* This is the end of the path. */
+                  naturalKey = XT.Orm.naturalKey(subChildOrm);
+                  if (currentAttributeIsString) {
+                    /* add the natural key to the end of the requested attribute */
+                    parameter.attribute = attribute + "." + naturalKey;
+                  } else {
+                    /* swap out the attribute in the array for the one with the prepended natural key */
+                    index = parameter.attribute.indexOf(attribute);
+                    parameter.attribute.splice(index, 1);
+                    parameter.attribute.splice(index, 0, attribute + "."  + naturalKey);
+                  }
+                }
+              }
+            }
+
+          if ((prop.toOne || prop.toMany)) {
             /* Someone is querying on a toOne without using a path */
-            /* TODO: even if there's a path x.y, it's possible that it's still not
-              correct because the correct path maybe is x.y.naturalKeyOfY */
             if (prop.toOne && prop.toOne.type) {
               childOrm = that.fetchOrm(nameSpace, prop.toOne.type);
             } else if (prop.toMany && prop.toMany.type) {
@@ -119,15 +151,22 @@ select xt.install_js('XT','Data','xtuple', $$
             } else {
               plv8.elog(ERROR, "toOne or toMany property is missing it's 'type': " + prop.name);
             }
-            naturalKey = XT.Orm.naturalKey(childOrm);
-            if (attributeIsString) {
-              /* add the natural key to the end of the requested attribute */
-              parameter.attribute = attribute + "." + naturalKey;
+
+            if (attribute.indexOf('.') < 0) {
+              naturalKey = XT.Orm.naturalKey(childOrm);
+              if (attributeIsString) {
+                /* add the natural key to the end of the requested attribute */
+                parameter.attribute = attribute + "." + naturalKey;
+              } else {
+                /* swap out the attribute in the array for the one with the prepended natural key */
+                index = parameter.attribute.indexOf(attribute);
+                parameter.attribute.splice(index, 1);
+                parameter.attribute.splice(index, 0, attribute + "."  + naturalKey);
+              }
             } else {
-              /* swap out the attribute in the array for the one with the prepended natural key */
-              index = parameter.attribute.indexOf(attribute);
-              parameter.attribute.splice(index, 1);
-              parameter.attribute.splice(index, 0, attribute + "."  + naturalKey);
+              /* Even if there's a path x.y, it's possible that it's still not
+                correct because the correct path maybe is x.y.naturalKeyOfY */
+              walkPath(attribute.split("."), orm, 0);
             }
           }
         });

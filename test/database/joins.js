@@ -137,6 +137,19 @@ var _ = require("underscore"),
       });
     });
 
+    it('should execute a query with an x.y join path when x.y.naturalKeyOfY is needed', function (done) {
+      var sql = 'select xt.js_init(true);select xt.post($${"nameSpace":"XM","type":"ItemSiteListItem","dispatch":{"functionName":"fetch","parameters":{"orderBy":[{"attribute":"item.number"}],"rowOffset":0,"rowLimit":50,"parameters":[{"attribute":"isActive","operator":"=","value":true},{"attribute":"item.classCode","operator":"","isCharacteristic":false,"value":"TOYS-CARS"}]}},"encoding":"rjson","username":"admin","encryptionKey":"this is any content"}$$);';
+
+      datasource.query(sql, creds, function (err, res) {
+        var results;
+        assert.isNull(err);
+        assert.equal(1, res.rowCount, JSON.stringify(res.rows));
+        results = JSON.parse(res.rows[1].post);
+        assert.isNumber(results.length);
+        done();
+      });
+    });
+
     it('should execute a query with ambiguous column filters', function (done) {
       var sql = 'select xt.js_init(true);select xt.get($${"nameSpace":"XM","type":"ToDoListItem","query":{"orderBy":[{"attribute":"priorityOrder"},{"attribute":"dueDate"},{"attribute":"name"}],"parameters":[{"attribute":"isActive","operator":"=","value":true},{"attribute":["owner.username","assignedTo.username"],"operator":"","isCharacteristic":false,"value":"admin"},{"attribute":"uuid","operator":"=","value":"23eef809-2f7c-4289-9eab-a72d621a6adb"}],"rowOffset":0,"rowLimit":50},"username":"admin","encryptionKey":"this is any content"}$$);';
 
@@ -197,6 +210,19 @@ var _ = require("underscore"),
         assert.equal(1, res.rowCount, JSON.stringify(res.rows));
         results = JSON.parse(res.rows[1].post);
         assert.equal(results.length, 1);
+        done();
+      });
+    });
+
+    it('should be able to search item-site by number', function (done) {
+      var sql = 'select xt.js_init(true);select xt.post($${"nameSpace":"XM","type":"ItemSiteListItem","dispatch":{"functionName":"fetch","parameters":{"orderBy":[{"attribute":"item.number"}],"rowOffset":0,"rowLimit":50,"parameters":[{"attribute":"isActive","operator":"=","value":true},{"attribute":"item.number","operator":"MATCHES","isCharacteristic":false,"value":"yt"}]}},"encoding":"rjson","username":"admin","encryptionKey":"foo"}$$);';
+
+      datasource.query(sql, creds, function (err, res) {
+        var results;
+        assert.isNull(err);
+        assert.equal(1, res.rowCount, JSON.stringify(res.rows));
+        results = JSON.parse(res.rows[1].post);
+        assert.isNumber(results.length);
         done();
       });
     });
@@ -312,7 +338,7 @@ var _ = require("underscore"),
     });
 
     it('should facilitate the count query', function (done) {
-      var sql = 'select xt.js_init(true);select xt.get($${"nameSpace":"XM","type":"ContactListItem","query":{"count":true,"orderBy":[{"attribute":"lastName"}],"rowOffset":0,"rowLimit":50,"parameters":[{"attribute":"isActive","operator":"=","value":true},{"attribute":"owner.username","operator":"","isCharacteristic":false,"value":"admin"}]},"username":"admin","encryptionKey":"foo"}$$);';
+      var sql = 'select xt.js_init(true);select xt.get($${"nameSpace":"XM","type":"ContactListItem","query":{"count":true,"orderBy":[{"attribute":"lastName"}],"rowOffset":0,"rowLimit":50,"parameters":[{"attribute":"isActive","operator":"=","value":true},{"attribute":"owner.username","operator":"","isCharacteristic":false,"value":"admin"}]},"username":"admin","encryptionKey":"this is any content"}$$);';
       datasource.query(sql, creds, function (err, res) {
         var results;
         assert.isNull(err);
