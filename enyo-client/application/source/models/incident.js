@@ -161,7 +161,9 @@ white:true*/
     },
 
     assignedToDidChange: function (model, value, options) {
-      if (value) { this.set('status', XM.Incident.ASSIGNED); }
+      if (value) {
+        this.set('status', XM.Incident.ASSIGNED);
+      }
     },
 
     validate: function () {
