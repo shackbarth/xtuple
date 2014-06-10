@@ -122,16 +122,17 @@
 
         gridBox.$.supplyList.value.models[0][prereq](function (hasPriv) {
           assert.isTrue(hasPriv);
+          if (hasPriv) {
+            gridBox.$.supplyList.actionSelected(null, {action: {method: "openItemWorkbench"}, index: 0});
+
+            setTimeout(function () {
+              assert.equal(XT.app.$.postbooks.getActive().$.workspace.kind, "XV.ItemWorkbenchWorkspace");
+              XT.app.$.postbooks.getActive().doPrevious();
+              assert.equal(XT.app.$.postbooks.getActive().$.workspace.kind, "XV.SalesOrderWorkspace");
+              done();
+            }, 3000);
+          } else {done(); }
         });
-
-        gridBox.$.supplyList.actionSelected(null, {action: {method: "openItemWorkbench"}, index: 0});
-
-        setTimeout(function () {
-          assert.equal(XT.app.$.postbooks.getActive().$.workspace.kind, "XV.ItemWorkbenchWorkspace");
-          XT.app.$.postbooks.getActive().doPrevious();
-          assert.equal(XT.app.$.postbooks.getActive().$.workspace.kind, "XV.SalesOrderWorkspace");
-          done();
-        }, 3000);
       });
       it('adding a second line item should not copy the item', function (done) {
         workspace.value.once("change:total", done());
