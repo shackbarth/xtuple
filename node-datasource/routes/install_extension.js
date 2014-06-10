@@ -15,6 +15,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       extensionName = req.query.extensionName,
       username = req.session.passport.user.id,
       user = new SYS.User(),
+      validateInput = function (callback) {
+        if (!extensionName) {
+          callback("Error: empty extension name");
+          return;
+        }
+        callback();
+      },
       validateUser = function (callback) {
         user.fetch({
           id: username,
@@ -56,6 +63,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       };
 
       async.series([
+        validateInput,
         validateUser,
         npmLoad,
         npmInstall,

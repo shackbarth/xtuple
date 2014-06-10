@@ -472,9 +472,17 @@ strict: false*/
           );
         };
 
+      if (!this.$.extensionName.getValue()) {
+        this.doNotify({
+          type: XM.Model.WARNING,
+          message: "_attributeIsRequired".loc().replace("{attr}", "_extensionName".loc())
+        });
+        return;
+      }
+
       this.doNotify({
         type: XM.Model.QUESTION,
-        message: "_confirmAction".loc(),
+        message: "_installExtensionWarning".loc() + "_confirmAction".loc(),
         callback: callback
       });
     }
