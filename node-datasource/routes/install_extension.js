@@ -42,8 +42,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           }
         });
       },
-      // TODO: we should re-npm install on every build_app, or possibly just on
-      // an npm install
       npmLoad = function (callback) {
         npm.load(callback);
       },
@@ -62,24 +60,22 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         }, callback);
       };
 
-      async.series([
-        validateInput,
-        validateUser,
-        npmLoad,
-        npmInstall,
-        buildExtension
-      ], function (err, results) {
-        if (err) {
-          console.log(err);
-          err.isError = true;
-          res.send(err);
-          return;
-        }
-        console.log("all done");
-        res.send({data: "_success"});
-      });
-
-
+    async.series([
+      validateInput,
+      validateUser,
+      npmLoad,
+      npmInstall,
+      buildExtension
+    ], function (err, results) {
+      if (err) {
+        console.log(err);
+        err.isError = true;
+        res.send(err);
+        return;
+      }
+      console.log("all done");
+      res.send({data: "_success"});
+    });
   };
 }());
 
