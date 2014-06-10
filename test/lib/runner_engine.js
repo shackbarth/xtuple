@@ -26,7 +26,7 @@ require:true, __dirname:true, console:true */
 
     var spec = specContents.spec;
 
-    (spec.skipAll ? describe.skip : describe)(spec.recordType, function () {
+    (spec.skipAll ? describe.skip : describe)(spec.recordType + " test", function () {
       if (_.isString(spec.updatableField)) {
         spec.updateHash = {};
         spec.updateHash[spec.updatableField] = "Test" + Math.random();
