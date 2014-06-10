@@ -90,7 +90,10 @@ var async = require("async"),
           });
           uuids = _.compact(uuids); // eliminate any null values
           var extensionPaths = _.compact(_.map(extensions, function (ext) {
-            return path.join(ext.location, "source", ext.name);
+            var locationName = ext.location.indexOf("/") === 0 ?
+              path.join(ext.location, "source") :
+              "/" + ext.location;
+            return path.join(locationName, ext.name);
           }));
           getCoreUuid('js', req.session.passport.user.organization, function (err, jsUuid) {
             if (err) {

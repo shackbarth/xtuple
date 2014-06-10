@@ -398,13 +398,16 @@ require('./oauth2/passport');
 var that = this;
 
 app.use(express.favicon(__dirname + '/views/login/assets/favicon.ico'));
-_.each(X.options.datasource.databases, function (orgValue, orgKey, orgList) {
-  "use strict";
-  app.use("/" + orgValue + '/client', express.static('../enyo-client/application', { maxAge: 86400000 }));
-  app.use("/" + orgValue + '/core-extensions', express.static('../enyo-client/extensions', { maxAge: 86400000 }));
-  app.use("/" + orgValue + '/private-extensions', express.static('../../private-extensions', { maxAge: 86400000 }));
-  app.use("/" + orgValue + '/xtuple-extensions', express.static('../../xtuple-extensions', { maxAge: 86400000 }));
-});
+if (X.options.datasource.debugging) {
+  _.each(X.options.datasource.databases, function (orgValue, orgKey, orgList) {
+    "use strict";
+    app.use("/" + orgValue + '/client', express.static('../enyo-client/application', { maxAge: 86400000 }));
+    app.use("/" + orgValue + '/core-extensions', express.static('../enyo-client/extensions', { maxAge: 86400000 }));
+    app.use("/" + orgValue + '/private-extensions', express.static('../../private-extensions', { maxAge: 86400000 }));
+    app.use("/" + orgValue + '/xtuple-extensions', express.static('../../xtuple-extensions', { maxAge: 86400000 }));
+    app.use("/" + orgValue + '/npm', express.static('../node_modules', { maxAge: 86400000 }));
+  });
+}
 app.use('/assets', express.static('views/login/assets', { maxAge: 86400000 }));
 
 app.get('/:org/dialog/authorize', oauth2.authorization);

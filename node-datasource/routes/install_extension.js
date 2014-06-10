@@ -48,10 +48,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         });
       },
       buildExtension = function (callback) {
-        console.log("extension is", path.join(__dirname, "../../../../../xtuple/node_modules", extensionName));
+        console.log("extension is", path.join(__dirname, "../../node_modules", extensionName));
         buildAll.build({
           database: database,
-          extension: path.join(__dirname, "../../../../../xtuple/node_modules", extensionName)
+          extension: path.join(__dirname, "../../node_modules", extensionName)
         }, callback);
       };
 
