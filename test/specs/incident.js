@@ -111,11 +111,8 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     describe("Incident status behavior", function () {
       var incidentModel;
 
-      beforeEach(function (done) {
+      beforeEach(function () {
         incidentModel = new XM.Incident();
-        incidentModel.once("status:READY_NEW", function () {
-          done();
-        });
         incidentModel.initialize(null, {isNew: true});
       });
       it("Incident status starts out as new", function () {
