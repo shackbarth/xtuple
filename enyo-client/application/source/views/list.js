@@ -656,6 +656,9 @@ trailing:true, white:true, strict: false*/
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
             {kind: "XV.ListAttr", attr: "name"}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "isBase"}
           ]}
         ]}
       ]}
@@ -2528,6 +2531,8 @@ trailing:true, white:true, strict: false*/
       ]}
     ]
   });
+  
+  XV.registerModelList("XM.UserAccountRelation", "XV.UserAccountList");
 
   // ..........................................................
   // STATES AND COUNTRIES
@@ -2652,7 +2657,7 @@ trailing:true, white:true, strict: false*/
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
-          {kind: "XV.ListColumn", classes: "short",
+          {kind: "XV.ListColumn", classes: "first",
             components: [
             {kind: "XV.ListAttr", attr: "name", isKey: true}
           ]}

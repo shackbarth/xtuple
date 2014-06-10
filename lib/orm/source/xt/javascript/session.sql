@@ -196,7 +196,7 @@ select xt.install_js('XT','Session','xtuple', $$
     @param {String} Schema name
     @returns {Hash}
   */
-  XT.Session.schema = function(schema) {
+  XT.Session.schema = function(schema, table) {
     var sql = 'select c.relname as "type", ' +
               '  attname as "column", ' +
               '  typcategory as "category", ' +
@@ -207,6 +207,7 @@ select xt.install_js('XT','Session','xtuple', $$
               '  join pg_type t on a.atttypid = t.oid ' +
               ' join xt.orm on lower(orm_namespace) = n.nspname and xt.decamelize(orm_type) = c.relname and not orm_ext ' +
               'where n.nspname = $1 ' +
+              (table ? ' and c.relname = $2 ' : '') +
               'and relkind = \'v\' ' +
               'and orm_context = \'xtuple\' ' +
               'union all ' +
@@ -224,12 +225,13 @@ select xt.install_js('XT','Session','xtuple', $$
               '  left join xt.grpext on ext_id=grpext_ext_id ' +
               '  left join usrgrp on usrgrp_grp_id=grpext_grp_id ' +
               'where n.nspname = $1 ' +
+              (table ? ' and c.relname = $2 ' : '') +
               ' and relkind = \'v\' ' +
               ' and orm_context != \'xtuple\' ' +
-              ' and (usrext_usr_username = $2 or usrgrp_username = $2) ' +
+              ' and (usrext_usr_username = $3 or usrgrp_username = $3) ' +
               ' group by c.relname, attname, typcategory, n.nspname, attnum ' +
               'order by type, attnum',
-      recs = plv8.execute(sql, [schema, XT.username]),
+      recs = plv8.execute(sql, [schema, table, XT.username]),
       type,
       prev = '',
       name,

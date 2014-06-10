@@ -122,7 +122,7 @@ white:true*/
           return XT.Error.clone('xt1013', { params: params });
         }
         if (!_.isNumber(cutOffDay) || cutOffDay % 1 !== 0 || cutOffDay < 0 || cutOffDay > 31) {
-          params = {attr: "_cutOffDate".loc(), value: cutOffDay};
+          params = {attr: "_cutOffDay".loc(), value: cutOffDay};
           return XT.Error.clone('xt1013', { params: params });
         }
       }
