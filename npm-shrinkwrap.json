@@ -308,6 +308,10 @@
         }
       }
     },
+    "node-forge": {
+      "version": "0.6.2",
+      "from": "node-forge@0.6.x"
+    },
     "oauth2orize": {
       "version": "0.1.0",
       "from": "oauth2orize@0.1.x",
