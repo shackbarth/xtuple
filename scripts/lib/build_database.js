@@ -112,7 +112,7 @@ var  async = require('async'),
             extensionLocation: isCoreExtension ? "/core-extensions" :
               isPublicExtension ? "/xtuple-extensions" :
               isPrivateExtension ? "/private-extensions" :
-              isNpmExtension ? "npm " + baseName : "not-applicable"
+              isNpmExtension ? "npm" : "not-applicable"
           };
 
         buildDatabaseUtil.explodeManifest(path.join(dbSourceRoot, "manifest.js"),

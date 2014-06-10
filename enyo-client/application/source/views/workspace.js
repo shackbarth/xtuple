@@ -430,9 +430,48 @@ strict: false*/
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "DatabaseComments"}
           ]}
+        ]},
+        {kind: "XV.Groupbox",
+          title: "_commandCenter".loc(), name: "commandPanel", components: [
+          {kind: "XV.ScrollableGroupbox",
+            classes: "in-panel", components: [
+            {kind: "onyx.GroupboxHeader", content: "_installExtension".loc()},
+            {kind: "XV.InputWidget", name: "extensionName", label: "_extensionName".loc()},
+            {kind: "FittableColumns", classes: "xv-buttons center", components: [
+              {kind: "onyx.Button", classes: "icon-ok", ontap: "installExtension"},
+            ]},
+          ]}
         ]}
       ]}
-    ]
+    ],
+    installExtension: function () {
+      var that = this,
+        callback = function (response) {
+          if (!response.answer) {
+            return;
+          }
+
+          XT.dataSource.callRoute("install-extension",
+            {
+              extensionName: that.$.extensionName.getValue()
+            },
+            {
+              success: function (message) {
+                that.doNotify({message: message});
+              },
+              error: function (error) {
+                that.doNotify({message: error.message ? error.message() : error});
+              }
+            }
+          );
+        };
+
+      this.doNotify({
+        type: XM.Model.QUESTION,
+        message: "_confirmAction".loc(),
+        callback: callback
+      });
+    }
   });
 
   enyo.kind({

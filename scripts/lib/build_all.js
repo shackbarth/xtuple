@@ -71,7 +71,7 @@ var _ = require('underscore'),
                 extPath = path.join(__dirname, "../../../xtuple-extensions/source", name);
               } else if (location === '/private-extensions') {
                 extPath = path.join(__dirname, "../../../private-extensions/source", name);
-              } else if (location && location.indexOf('npm ') === 0) {
+              } else if (location === 'npm') {
                 extPath = path.join(__dirname, "../../node_modules", name);
               }
               return extPath;
