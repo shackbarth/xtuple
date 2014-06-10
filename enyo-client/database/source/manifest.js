@@ -43,6 +43,7 @@
     "public/tables/poitem.sql",
     "public/tables/ophead.sql",
     "public/tables/pr.sql",
+    "public/tables/priv.sql",
     "public/tables/prj.sql",
     "public/tables/prjtask.sql",
     "public/tables/quitem.sql",

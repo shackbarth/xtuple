@@ -438,12 +438,18 @@ strict: false*/
             {kind: "onyx.GroupboxHeader", content: "_installExtension".loc()},
             {kind: "XV.InputWidget", name: "extensionName", label: "_extensionName".loc()},
             {kind: "FittableColumns", classes: "xv-buttons center", components: [
-              {kind: "onyx.Button", classes: "icon-ok", ontap: "installExtension"},
+              {kind: "onyx.Button", name: "extensionButton", classes: "icon-ok", ontap: "installExtension"},
             ]},
           ]}
         ]}
       ]}
     ],
+    create: function () {
+      this.inherited(arguments);
+      var hasPriv = XT.session.privileges.get("InstallExtension");
+      this.$.extensionName.setDisabled(!hasPriv);
+      this.$.extensionButton.setDisabled(!hasPriv);
+    },
     installExtension: function () {
       var that = this,
         callback = function (response) {
