@@ -29,6 +29,8 @@ SELECT coitem_id, coitem_altid, groupby,
        coitem_qtyord, qtyshipped, balance, qtyatshipping,
        extprice, extprice_shipped,
        CASE WHEN (discountfromcust=100.0) THEN 'N/A' END AS discountfromcust_qtdisplayrole,
+       CASE WHEN (margin=0.0) THEN 'N/A' END AS margin_qtdisplayrole,
+       CASE WHEN (marginpercent=0.0) THEN 'N/A' END AS marginpercent_qtdisplayrole,
        'qty' AS coitem_qtyord_xtnumericrole,
        'qty' AS qtyshipped_xtnumericrole,
        'qty' AS balance_xtnumericrole,
@@ -98,9 +100,11 @@ SELECT coitem_id,
             ELSE ((1.0 - (coitem_price / coitem_custprice)) * 100.0)
        END AS discountfromcust,
        coitem_unitcost,
-       ROUND((coitem_qtyord * coitem_qty_invuomratio) *
-             ((coitem_price / coitem_price_invuomratio) - (coitem_unitcost / coitem_price_invuomratio)),2) AS margin,
-       CASE WHEN (coitem_price = 0.0) THEN 100.0
+       CASE WHEN (coitem_price = 0.0) THEN 0.0
+            ELSE ROUND((coitem_qtyord * coitem_qty_invuomratio) *
+                 ((coitem_price / coitem_price_invuomratio) - (coitem_unitcost / coitem_price_invuomratio)),2)
+       END AS margin,
+       CASE WHEN (coitem_price = 0.0) THEN 0.0
             ELSE ((coitem_price - coitem_unitcost) / coitem_price)
        END AS marginpercent,
        noNeg(coitem_qtyshipped - coitem_qtyreturned) AS qtyshipped,

@@ -77,7 +77,7 @@ trailing:true, white:true*/
               },
               callback: wsCallback,
               success: function () {
-                this.$.isBase.setValue("true");
+                this.$.isBase.setValue(true);
               }
             });
           }

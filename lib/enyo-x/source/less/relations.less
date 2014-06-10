@@ -27,14 +27,13 @@
  }
 
  .xv-relationwidget-description {
-   white-space: nowrap;
    overflow: hidden;
-   text-overflow: ellipsis;
-   text-indent: 140px;
-   font-size: small;
-   padding-bottom: 4px;
-   max-width: 325px;
-   color: black;
+   // This gives them 3 lines of description
+   display: -webkit-box;
+   -webkit-line-clamp: 3;
+   -webkit-box-orient: vertical;
+   max-width: 250px;
+   margin: 5px 5px 5px 80px;
    &.disabled {
      color: @dim-gray;
    }
