@@ -38,7 +38,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             return;
           }
 
-          console.log("1.2: ", new Date().getTime());
           fetchSuccess(model, result, keypair);
         });
         */
