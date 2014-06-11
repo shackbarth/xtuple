@@ -31,8 +31,8 @@
         _.each(XV, function (value, key) {
           var list,
             kinds = ['SalesOrderList', 'QuoteList', 'InvoiceList', 'ReturnList', 'ProjectList'];
-          // loop through lists with grid boxes
-          if (XV.inheritsFrom(value.prototype, "XV.List") && _.contains(kinds, key)) {
+          // lists with grid boxes; TODO: find candidates automatically
+          if (_.contains(kinds, key)) {
 
             describe('Create Workspace for XV.' + key, function () {
               it('Create a Workspace', function () {
@@ -40,7 +40,7 @@
                 smoke.navigateToNewWorkspace(XT.app, list, function (workspaceContainer) {
                   var workspace = workspaceContainer.$.workspace;
                   _.each(workspace.$, function (component) {
-                    if (XV.inheritsFrom(component, 'XV.GridBox') && XV.inheritsFrom(component, 'XV.WorkflowGridBox')) {
+                    if (XV.inheritsFrom(component, 'XV.GridBox')) {
 
                       describe('Test creating line items for ' + component, function () {
                         it('Create line items', function () {
@@ -56,6 +56,24 @@
                           gridRow.bubble("onkeyup", {keyCode: 13});
                           // verify again that a row has been added
                           assert.equal(gridBox.liveModels().length, startingRows += 1);
+                        });
+
+                        it('Check export', function() {
+                          function getExportButton(obj) {
+                            var result = null;
+                            if ("$" in obj) {
+                              result = obj.$.exportButton
+                                    || _.find(obj.$, getExportButton);
+                            }
+                            return result;
+                          }
+
+                          var gridBox = component
+                            , exportButton = getExportButton(gridBox);
+                          assert.ok(exportButton);
+                          // TODO: need to populate before we can export
+                          // assert.doesNotThrow(exportButton.doTap());
+                          // TODO: find the generated file & check contents
                         });
                       });
                     }
