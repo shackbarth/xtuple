@@ -112,6 +112,10 @@
         });
       });
       it('Supply list should have action to open Item Workbench', function (done) {
+        if (!XT.extensions.inventory) {
+          done();
+          return;
+        }
         var verify,
           action = _.find(gridBox.$.supplyList.actions, function (action) {
             return action.name === "openItemWorkbench";
