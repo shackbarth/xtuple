@@ -151,17 +151,17 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         var resultAsCsv,
           filename = "export",
           type,
-          number = result.data && result.data.data && result.data.data[0]
-                && (result.data.data[0].number || result.data.data[0].name),
-          attr = requestDetails.query
-              && requestDetails.query.details
-              && requestDetails.query.details.attr
+          number = result.data && result.data.data && result.data.data[0] &&
+                   (result.data.data[0].number || result.data.data[0].name),
+          attr = requestDetails.query &&
+                 requestDetails.query.details &&
+                 requestDetails.query.details.attr
           ;
         try {
           type = requestDetails.type;
-          filename = type.replace("ListItem", "Export")
-                   + (attr && number ? "-" + number : "")
-                   + (attr           ? "-" + attr   : "")
+          filename = type.replace("ListItem", "Export") +
+                     (attr && number ? "-" + number : "") +
+                     (attr           ? "-" + attr   : "")
                    ;
 
         } catch (error) {
