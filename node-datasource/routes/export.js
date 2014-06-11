@@ -150,21 +150,25 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       } else {
         var resultAsCsv,
           filename = "export",
-          type;
+          type,
+          number = result.data && result.data.data && result.data.data[0]
+                && (result.data.data[0].number || result.data.data[0].name),
+          attr = requestDetails.query
+              && requestDetails.query.details
+              && requestDetails.query.details.attr
+          ;
         try {
-          // try to name the file after the record type
           type = requestDetails.type;
-          // suffix() would be better than substring() but doesn't exist here yet
-          filename = type.replace("ListItem", "Export");
+          filename = type.replace("ListItem", "Export")
+                   + (attr && number ? "-" + number : "")
+                   + (attr           ? "-" + attr   : "")
+                   ;
 
         } catch (error) {
           // "export" will have to do.
         }
 
         try {
-          var attr = requestDetails.query
-                   && requestDetails.query.details
-                   && requestDetails.query.details.attr;
           if (attr) {
             resultAsCsv = jsonToCsv(result.data.data[0][attr]);
           } else {
