@@ -161,8 +161,19 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           // "export" will have to do.
         }
 
-        resultAsCsv = jsonToCsv(result.data.data);
-        res.attachment(filename + ".csv");
+        try {
+          var attr = requestDetails.query
+                   && requestDetails.query.details
+                   && requestDetails.query.details.attr;
+          if (attr) {
+            resultAsCsv = jsonToCsv(result.data.data[0][attr]);
+          } else {
+            resultAsCsv = jsonToCsv(result.data.data);
+          }
+          res.attachment(filename + ".csv");
+        } catch (error) {
+          resultAsCsv = jsonToCsv(error);
+        }
         res.send(resultAsCsv);
       }
     });
