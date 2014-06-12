@@ -55,7 +55,10 @@
     "nopt": "2.0.0",
     "require-uncache": "0.0.x",
     "shelljs": "0.0.8",
-    "zombie": "1.4.x"
+    "html5": "0.3.13",
+    "zombie": "2.x",
+    "csslint": "~0.10.0",
+    "nodemon": "~1.0.15"
   },
   "bundledDependencies": [
     "nopt",
@@ -66,7 +69,7 @@
     "googleapis": "~0.4.6"
   },
   "engines": {
-    "node": "0.8.x"
+    "node": ">= 0.10.28"
   },
   "main": "node-datasource/main.js",
   "scripts": {
@@ -77,8 +80,8 @@
     "jshint": "./node_modules/.bin/jshint --exclude node-datasource/lib/query/node_modules lib/backbone-x/source lib/enyo-x/source lib/tools/source enyo-client/application/source/ enyo-client/extensions node-datasource",
     "preinstall": "cd node-datasource/lib/query ; npm install",
     "start": "node_modules/.bin/nodemon --debug --watch node-datasource",
-    "test-build": "./node_modules/.bin/mocha -R spec test/build/build_app.js",
     "test": "./node_modules/.bin/mocha -R spec test/lib/login.js test/models/* test/database/* test/extensions/* test/lib/test_runner.js",
+    "test-build": "./node_modules/.bin/mocha -R spec test/build/build_app.js",
     "test-datasource": "./node_modules/.bin/mocha -R spec test/routes/*",
     "setup": "./node_modules/.bin/xtuple-server install --xt-demo --xt-quickstart"
   }

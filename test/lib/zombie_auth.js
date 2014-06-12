@@ -100,15 +100,17 @@ Simplest possible usage:
       return;
     }
 
+    /*
     var parse = URL.parse;
     URL.parse = function (url) {
-      if (_.isObject(url) && _.isString(url.href)) {
-        return parse(url.href);
+      if (_.isObject(url)) {
+        return parse(url.href.toString());
       }
       else {
-        return parse(url);
+        return parse(url.toString());
       }
     };
+    */
 
     zombie.visit(host, {debug: verboseMode}, function (e, browser) {
       if (e) {
