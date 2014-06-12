@@ -2,7 +2,7 @@
   "author": "xTuple <dev@xtuple.com>",
   "name": "xtuple",
   "description": "xTuple Enterprise Resource Planning Mobile-Web client",
-  "version": "4.5.0-dev3",
+  "version": "4.5.0-dev4",
   "repository": {
     "type": "git",
     "url": "https://github.com/xtuple/xtuple.git"
@@ -55,10 +55,7 @@
     "nopt": "2.0.0",
     "require-uncache": "0.0.x",
     "shelljs": "0.0.8",
-    "html5": "0.3.13",
-    "zombie": "2.x",
-    "csslint": "~0.10.0",
-    "nodemon": "~1.0.15"
+    "zombie": "2.x"
   },
   "bundledDependencies": [
     "nopt",
