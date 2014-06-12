@@ -1,17 +1,16 @@
 language: node_js
 node_js:
   - "0.8"
+  - "0.10"
 
-install:
-  - "bash scripts/install_xtuple.sh -ipn"
+before_install:
+  - wget git.io/hikK5g | sudo bash
 
 before_script:
-  - "cd node-datasource"
-  - "node main.js &"
-  - "sleep 10"
-  - "cd .."
+  - npm start &
+  - sleep 5
 
 script:
-  - "npm run-script test"
-  - "npm run-script test-datasource"
-  - "npm run-script jshint"
+  - npm test
+  - npm run test-datasource
+  - npm run jshint

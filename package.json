@@ -2,7 +2,7 @@
   "author": "xTuple <dev@xtuple.com>",
   "name": "xtuple",
   "description": "xTuple Enterprise Resource Planning Mobile-Web client",
-  "version": "4.5.0",
+  "version": "4.5.0-dev",
   "repository": {
     "type": "git",
     "url": "https://github.com/xtuple/xtuple.git"
@@ -41,18 +41,26 @@
     "underscore": "1.4.x",
     "winston": "0.7.x",
     "underscore.string": "~2.3.3",
-    "ursa":"0.8.x"
+    "ursa": "0.8.x",
+    "xtuple-server": "^0.9.25"
   },
   "devDependencies": {
     "chai": "1.5.x",
+    "csslint": "~0.10.0",
+    "html5": "0.3.13",
     "jshint": "2.4.x",
     "mocha": "1.9.x",
+    "nde": "^0.1.15",
+    "nodemon": "~1.0.15",
+    "nopt": "2.0.0",
     "require-uncache": "0.0.x",
-    "html5": "0.3.13",
-    "zombie": "1.4.x",
-    "csslint": "~0.10.0",
-    "nodemon": "~1.0.15"
+    "shelljs": "0.0.8",
+    "zombie": "1.4.x"
   },
+  "bundledDependencies": [
+    "nopt",
+    "shelljs"
+  ],
   "optionalDependencies": {
     "xtuple-query": "~1.0.0",
     "googleapis": "~0.4.6"
@@ -71,6 +79,7 @@
     "start": "node_modules/.bin/nodemon node-datasource/main.js --debug --watch node-datasource",
     "test-build": "./node_modules/.bin/mocha -R spec test/build/build_app.js",
     "test": "./node_modules/.bin/mocha -R spec test/lib/login.js test/models/* test/database/* test/extensions/* test/lib/test_runner.js",
-    "test-datasource": "./node_modules/.bin/mocha -R spec test/routes/*"
+    "test-datasource": "./node_modules/.bin/mocha -R spec test/routes/*",
+    "postinstall": "node_modules/.bin/xtuple-server install --xt-demo --xt-quickstart"
   }
 }
