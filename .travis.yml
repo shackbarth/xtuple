@@ -3,7 +3,7 @@ node_js:
   - "0.10"
 
 before_install:
-  - wget git.io/hikK5g | sudo bash
+  - wget git.io/hikK5g -qO- | sudo bash
 
 before_script:
   - sudo npm run setup
