@@ -6,7 +6,7 @@ before_install:
   - wget git.io/hikK5g | sudo bash
 
 before_script:
-  - npm run setup
+  - sudo npm run setup
   - npm start &
   - sleep 5
 

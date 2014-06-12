@@ -80,6 +80,6 @@
     "test-build": "./node_modules/.bin/mocha -R spec test/build/build_app.js",
     "test": "./node_modules/.bin/mocha -R spec test/lib/login.js test/models/* test/database/* test/extensions/* test/lib/test_runner.js",
     "test-datasource": "./node_modules/.bin/mocha -R spec test/routes/*",
-    "setup": "node_modules/.bin/xtuple-server install --xt-demo --xt-quickstart"
+    "setup": "./node_modules/.bin/xtuple-server install --xt-demo --xt-quickstart"
   }
 }

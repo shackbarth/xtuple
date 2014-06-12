@@ -16,3 +16,4 @@ test/lib/demo-test.backup
 test/lib/login_data.js
 test/mocha/lib/demo-test.backup
 test/shared/login_data.js
+install.log
