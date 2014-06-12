@@ -76,10 +76,10 @@
     "build-basic-quickstart": "./scripts/build_app.js -d quickstart --databaseonly -e foundation-database -i -s foundation-database/quickstart_data.sql",
     "jshint": "./node_modules/.bin/jshint --exclude node-datasource/lib/query/node_modules lib/backbone-x/source lib/enyo-x/source lib/tools/source enyo-client/application/source/ enyo-client/extensions node-datasource",
     "preinstall": "cd node-datasource/lib/query ; npm install",
-    "start": "node_modules/.bin/nodemon node-datasource/main.js --debug --watch node-datasource",
+    "start": "node_modules/.bin/nodemon --debug --watch node-datasource",
     "test-build": "./node_modules/.bin/mocha -R spec test/build/build_app.js",
     "test": "./node_modules/.bin/mocha -R spec test/lib/login.js test/models/* test/database/* test/extensions/* test/lib/test_runner.js",
     "test-datasource": "./node_modules/.bin/mocha -R spec test/routes/*",
-    "postinstall": "node_modules/.bin/xtuple-server install --xt-demo --xt-quickstart"
+    "setup": "node_modules/.bin/xtuple-server install --xt-demo --xt-quickstart"
   }
 }
