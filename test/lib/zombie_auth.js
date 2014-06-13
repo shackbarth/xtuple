@@ -114,7 +114,7 @@ Simplest possible usage:
 
     zombie.visit(host, {debug: verboseMode}, function (e, browser) {
       if (e) {
-        console.log("Zombie visit error: ", e);
+        //console.log("Zombie visit error: ", e);
       }
       //
       // This is the login screen

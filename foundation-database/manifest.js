@@ -1276,6 +1276,7 @@
     "public/tables/metasql/prices-detail.mql",
     "public/tables/metasql/pricingFreight-detail.mql",
     "public/tables/metasql/projectTasks-detail.mql",
+    "public/tables/metasql/projects-detail_nohierarchy.mql",
     "public/tables/metasql/projects-detail.mql",
     "public/tables/metasql/prospects-detail.mql",
     "public/tables/metasql/purchase-purchaserequests.mql",
