@@ -54,7 +54,7 @@
     "nopt": "2.0.0",
     "require-uncache": "0.0.x",
     "shelljs": "0.0.8",
-    "uglify-js": "^2.4.14",
+    "uglify-js": "1.3.2",
     "walker": "https://github.com/xtuple/enyo-tools-walker-npm/tarball/master",
     "xtuple-server": "^0.9.0",
     "zombie": "2.x"
