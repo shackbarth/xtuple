@@ -55,7 +55,7 @@
     "require-uncache": "0.0.x",
     "shelljs": "0.0.8",
     "uglify-js": "^2.4.14",
-    "walker": "^1.0.6",
+    "walker": "https://github.com/xtuple/enyo-tools-walker-npm/tarball/master",
     "xtuple-server": "^0.9.0",
     "zombie": "2.x"
   },
