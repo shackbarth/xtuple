@@ -1,7 +1,8 @@
 language: c
 
 before_install:
-  - wget git.io/hikK5g -qO- | sudo bash
+#- wget git.io/hikK5g -qO- | sudo bash
+  - sudo bash node_modules/xtuple-server/bootstrap.sh
   - n stable
 
 install:
