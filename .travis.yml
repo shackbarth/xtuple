@@ -1,9 +1,11 @@
-language: node_js
-node_js:
-  - "0.10"
+language: c
 
 before_install:
   - wget git.io/hikK5g -qO- | sudo bash
+  - n stable
+
+install:
+  - npm install
 
 before_script:
   - sudo npm run setup
@@ -14,3 +16,8 @@ script:
   - npm test
   - npm run test-datasource
   - npm run jshint
+
+after_failure:
+  - env
+  - sudo cat npm-debug.log
+  - sudo cat bootstrap.log
