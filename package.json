@@ -27,6 +27,7 @@
     "ejs": "0.8.x",
     "express": "3.1.x",
     "fluentreports": "git://github.com/xtuple/fluentreports.git",
+    "globalize": "^0.1.1",
     "ipp": "0.0.5",
     "json-patch": "git://github.com/xtuple/JSON-Patch.git",
     "less": "1.5.0",
@@ -47,9 +48,9 @@
     "rjson": "~0.2.4",
     "socket.io": "0.9.x",
     "underscore": "1.4.x",
-    "winston": "0.7.x",
     "underscore.string": "~2.3.3",
-    "ursa": "0.8.x"
+    "ursa": "0.8.x",
+    "winston": "0.7.x"
   },
   "devDependencies": {
     "chai": "1.5.x",
