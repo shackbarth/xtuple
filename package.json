@@ -64,7 +64,7 @@
     "json-patch",
     "nopt",
     "shelljs",
-    "uglify-js": "^2.4.14",
+    "uglify-js",
     "walker"
   ],
   "optionalDependencies": {
