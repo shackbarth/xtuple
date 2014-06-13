@@ -54,16 +54,18 @@
     "nopt": "2.0.0",
     "require-uncache": "0.0.x",
     "shelljs": "0.0.8",
+    "uglify-js": "^2.4.14",
     "walker": "^1.0.6",
     "xtuple-server": "^0.9.0",
     "zombie": "2.x"
   },
   "bundledDependencies": [
+    "fluentreports",
+    "json-patch",
     "nopt",
     "shelljs",
-    "walker",
-    "fluentreports",
-    "json-patch"
+    "uglify-js": "^2.4.14",
+    "walker"
   ],
   "optionalDependencies": {
     "xtuple-query": "~1.0.0",
