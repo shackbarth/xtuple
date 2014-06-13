@@ -1,11 +1,13 @@
 #!/bin/bash
 
 cd `dirname $0`
+PWD=$(pwd)
 
 # build enyo
-pushd ../enyo/minify > /dev/null
-./minify.sh
-popd > /dev/null
+pushd ../../../lib/enyo-x/enyo
+./tools/deploy.js -p source/package.js
+cp build/enyo.* ../../../enyo-client/application/build/
+popd
 
 # build app
-../enyo/tools/minify.sh package.js -output ../build/app
+../../../lib/enyo-x/enyo/tools/minify.sh package.js -output ../build/app

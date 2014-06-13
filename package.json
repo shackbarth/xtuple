@@ -7,6 +7,14 @@
     "type": "git",
     "url": "https://github.com/xtuple/xtuple.git"
   },
+  "files": [
+    "enyo-client",
+    "foundation-database",
+    "lib",
+    "node-datasource",
+    "scripts",
+    "test"
+  ],
   "dependencies": {
     "async": "0.2.x",
     "backbone": "0.9.10",

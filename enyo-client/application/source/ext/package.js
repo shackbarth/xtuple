@@ -1,5 +1,5 @@
 enyo.depends(
-  "../../lib/module/rjson/rjson.js",
+  "../../../../node_modules/rjson/rjson.js",
   "core.js",
   "datasource.js",
   "session.js"

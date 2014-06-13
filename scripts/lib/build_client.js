@@ -236,7 +236,7 @@ var _ = require('underscore'),
       //
       fs.exists(enyoDir, function (exists) {
         if (!exists) {
-          fs.symlink(path.join(__dirname, "../../enyo-client/application/enyo"), enyoDir, function (err) {
+          fs.symlink(path.join(__dirname, "../../lib/enyo-x/enyo"), enyoDir, function (err) {
             if (err) {
               callback(err);
               return;
