@@ -94,6 +94,6 @@
     "test": "./node_modules/.bin/mocha -R spec test/lib/login.js test/models/* test/database/* test/extensions/* test/lib/test_runner.js",
     "test-build": "./node_modules/.bin/mocha -R spec test/build/build_app.js",
     "test-datasource": "./node_modules/.bin/mocha -R spec test/routes/*",
-    "setup": "./node_modules/.bin/xtuple-server install-pilot --xt-demo --xt-quickstart"
+    "install-pilot": "./node_modules/.bin/xtuple-server install-pilot --xt-demo --xt-quickstart"
   }
 }

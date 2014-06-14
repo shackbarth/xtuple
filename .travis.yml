@@ -8,7 +8,7 @@ install:
   - npm install
 
 before_script:
-  - sudo npm run setup
+  - sudo npm run install-pilot
   - npm start &
   - sleep 5
 
