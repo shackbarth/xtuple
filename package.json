@@ -78,7 +78,7 @@
     "walker"
   ],
   "optionalDependencies": {
-    "xtuple-server": "^0.9",
+    "xtuple-server": "^0.9"
   },
   "engines": {
     "node": ">= 0.10.28"
