@@ -2,7 +2,7 @@
   "author": "xTuple <dev@xtuple.com>",
   "name": "xtuple",
   "description": "xTuple Enterprise Resource Planning Mobile-Web client",
-  "version": "4.5.0-beta",
+  "version": "4.5.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/xtuple/xtuple.git"
@@ -24,6 +24,7 @@
     "less": "1.5.0",
     "moment": "2.4.x",
     "nodemailer": "0.3.x",
+    "node-forge": "0.6.x",
     "oauth2orize": "0.1.x",
     "oauth2orize-jwt-bearer": "0.1.x",
     "passport": "0.1.x",
