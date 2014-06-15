@@ -8,11 +8,12 @@ install:
   - npm install
 
 before_script:
-  - sudo npm run install-pilot
+  - sudo npm run server-setup
   - npm start &
   - sleep 5
 
 script:
+  - npm test-build
   - npm test
   - npm run test-datasource
   - npm run jshint
