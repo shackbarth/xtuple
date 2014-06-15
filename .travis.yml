@@ -19,5 +19,6 @@ script:
 
 after_failure:
   - env
+  - cat test/lib/login_data.json
+  - cat node-datasource/config.js
   - sudo cat npm-debug.log
-  - sudo cat bootstrap.log
