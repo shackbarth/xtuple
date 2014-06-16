@@ -210,16 +210,6 @@
             .tightened-input-decorator;
           }
         }
-        .xv-relationwidget {
-          .onyx-input-decorator {
-            width: 100%;
-            padding-top: 6px;
-          }
-          .onyx-input {
-            width: 85%;
-            padding-right: 4px;
-          }
-        }
         .xv-useraccount-widget {
           // Hack: we shouldn't have to force this.
           .xv-subinput {
@@ -235,12 +225,22 @@
           width: 100%;
           border: none;
         }
-        .xv-label, .xv-flexible-label, .xv-relationwidget-secondarydescription {
+        .xv-label, .xv-flexible-label {
           display: none;
         }
-        .xv-relationwidget-description {
-          margin: 0;
-          margin-top: 5px;
+        .xv-relationwidget {
+          .xv-description {
+            margin: 0;
+            margin-top: 5px;
+          }
+          .onyx-input-decorator {
+            width: 100%;
+            padding-top: 6px;
+          }
+          .onyx-input {
+            width: 85%;
+            padding-right: 4px;
+          }
         }
         .xv-private-item-site-widget {
           border-bottom: 0;

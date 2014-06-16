@@ -106,6 +106,25 @@
         margin: 0px;
       }
 
+      .xv-relationwidget {
+        .xv-description {
+          overflow: hidden;
+
+          // This gives them 4 lines of description
+          display: -webkit-box;
+          -webkit-line-clamp: 4;
+          -webkit-box-orient: vertical;
+
+          max-width: 250px;
+          margin: 5px 5px 5px 80px;
+          font-size: 0.9em;
+
+          &.disabled {
+            color: @dim-gray;
+          }
+        }
+      }
+
       .enyo-fittable-columns-layout > * {
         vertical-align: middle;
       }
