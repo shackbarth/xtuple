@@ -2,6 +2,8 @@
 regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global XT:true, XM:true, XV:true, XZ:true, enyo:true, XG:true */
 
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
+
 // global objects
 enyo = {};
 XT = {};
@@ -10,18 +12,12 @@ XM = {};
 XV = {};
 XZ = {}; // xTuple Zombie. Used to help zombie within the context of these tests.
 
+global.URL = require('url');
+
 var assert = require('assert'),
   zombie = require('zombie'),
-  URL = require('url'),
   _ = require('underscore');
 
-
-/**
-Simplest possible usage:
-
-  var zombieTest = require('./zombie_auth');
-  zombieTest.testLoad();
-*/
 (function () {
   "use strict";
 
@@ -100,21 +96,23 @@ Simplest possible usage:
       return;
     }
 
-    /*
-    var parse = URL.parse;
-    URL.parse = function (url) {
-      if (_.isObject(url)) {
-        return parse(url.href.toString());
+    /**
+     * XXX
+     * horrendous hackery to make zombie 1.4.1 work in node 0.10.x
+     */
+    var resolve = URL.resolve;
+    URL.resolve = function (base, path) {
+      if (_.isObject(base) && !_.isEmpty(base.href)) {
+        return resolve(base.href.toString(), path);
       }
       else {
-        return parse(url.toString());
+        return resolve(base, path);
       }
     };
-    */
 
     zombie.visit(host, {debug: verboseMode}, function (e, browser) {
       if (e) {
-        //console.log("Zombie visit error: ", e);
+        console.log("Zombie visit error: ", e);
       }
       //
       // This is the login screen
@@ -124,10 +122,6 @@ Simplest possible usage:
         .fill('password', password)
         .select('database', database)
         .pressButton('submit', function () {
-
-          // Note: make sure the app is built
-          // XXX this limitation should be fixed, to allow testing off of debug.html
-          // it's possible that Zombie 2.0 will get this right.
 
           //
           // Plan to give up after a set time
@@ -141,7 +135,6 @@ Simplest possible usage:
           // Check frequently to see if the app is loaded, and move forward when it is
           //
           var interval = setInterval(function () {
-
             if (browser.window.XT && browser.window.XT.app && browser.window.XT.app.state === 6) {
 
               // add the global objects to our global namespace
@@ -165,29 +158,6 @@ Simplest possible usage:
                 }
               };
 
-              /*
-              var oldNotify = XT.app.$.postbooks.notify;
-              XT.app.$.postbooks.notify = function (notifySender, notifyObj) {
-                if (notifyObj && notifyObj.type === XM.Model.CRITICAL) {
-                  assert.fail(JSON.stringify(notifyObj));
-                } else {
-                  oldNotify(notifySender, notifyObj);
-                }
-              };
-              */
-              // WIP. Not yet working. Probably need to move it up to earlier app start status.
-              /*
-              var oldLoc = XT.String.loc;
-              XT.String.loc = function (str) {
-                var localized = XT.localizeString(str);
-                if (localized === str) {
-                  assert.fail(str + " has no translation");
-                } else {
-                  oldLoc(str);
-                }
-              };
-              */
-
               // these are really annoying
               browser.window.Backbone.Relational.showWarnings = false;
 
@@ -199,21 +169,8 @@ Simplest possible usage:
               // give control back to whoever called us
               callback();
             }
-          }, 100); // 100 = check to see if the app is loaded every 0.1 seconds
+          }, 500); // 100 = check to see if the app is loaded every 0.1 seconds
         });
     });
   };
-
-  /**
-    More of a proof-of-concept than anything else.
-   */
-  var testLoad = exports.testLoad = function () {
-    console.log("Testing loadup of app.");
-
-    loadApp(function () {
-      console.log("App loaded successfully.");
-      process.exit(0);
-    });
-  };
-
 }());
