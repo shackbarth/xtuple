@@ -33,29 +33,25 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     maxlength: 12,
     components: [
-      {kind: "FittableColumns", components: [
+      {controlClasses: 'enyo-inline', components: [
         {name: "label", content: "", classes: "xv-label"},
-        {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
-          components: [
+        {kind: "onyx.InputDecorator", classes: "xv-icon-decorator", components: [
           {name: "input", kind: "onyx.Input",
             onchange: "inputChanged", onkeydown: "keyDown"}
         ]},
         {name: "picker", kind: "XV.CurrencyPicker", showLabel: false}
       ]},
-      {kind: "FittableColumns", name: "basePanel", showing: false,
-        components: [
+      {controlClasses: 'enyo-inline', name: "basePanel", showing: false, components: [
         {name: "spacer", content: "", classes: "xv-label"},
-        {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
-          components: [
+        {kind: "onyx.InputDecorator", classes: "xv-icon-decorator", components: [
           {name: "baseAmountLabel", classes: "xv-money-label"}
         ]},
-        {kind: "onyx.InputDecorator", classes: "xv-input-decorator, xv-currency-label",
+        {kind: "onyx.InputDecorator", classes: "xv-currency-label",
           components: [
           {name: "baseCurrencyLabel"}
         ]}
       ]}
     ],
-
     /**
       Set the base price into the base amount label
     */

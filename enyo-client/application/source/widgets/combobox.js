@@ -73,6 +73,7 @@ regexp:true, undef:true, trailing:true, white:true */
         container: this.$.fittableColumns,
         classes: "xv-combobox-note"
       });
+      // TODO: git rid of this
       this.$.input.applyStyle("padding-top", "8px");
       this.$.input.applyStyle("padding-left", "8px");
     },
