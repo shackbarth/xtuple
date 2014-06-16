@@ -13,7 +13,7 @@ var _ = require("underscore"),
   describe('The database', function () {
     this.timeout(10 * 1000);
 
-    var loginData = require(path.join(__dirname, "../lib/login_data.js")).data,
+    var loginData = require(path.join(__dirname, "../lib/login_data")).data,
       datasource = require('../../../xtuple/node-datasource/lib/ext/datasource').dataSource,
       config = require(path.join(__dirname, "../../node-datasource/config.js")),
       creds = config.databaseServer,
