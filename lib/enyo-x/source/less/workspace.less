@@ -145,73 +145,82 @@
         .onyx-picker-decorator {
           padding: 0;   // @overrides the input-decorator padding above ^^
         }
+      }
 
-        &.xv-relationwidget {
-          .xv-description {
-            overflow: hidden;
+      .xv-relationwidget {
+        .xv-description {
+          overflow: hidden;
 
-            // This gives them 4 lines of description
-            display: -webkit-box;
-            -webkit-line-clamp: 4;
-            -webkit-box-orient: vertical;
+          // This gives them 4 lines of description
+          display: -webkit-box;
+          -webkit-line-clamp: 4;
+          -webkit-box-orient: vertical;
 
-            max-width: 250px;
-            margin: 5px 5px 5px 80px;
-            font-size: 0.9em;
+          max-width: 250px;
+          margin: 5px 5px 5px 80px;
+          font-size: 0.9em;
 
-            &.disabled {
-              color: @dim-gray;
-            }
+          &.disabled {
+            color: @dim-gray;
           }
         }
+      }
 
-        &.xv-spinnerwidget {
-          .buttons {
-            display: block;
-            padding: 0;
-            margin: 1px 0 1px 10px;
-            width: 20px;
-            height: 20px;
-            background: transparent;
-            color: @slate-blue;
-            font-size: 20px;
-            border: none;
-          }
-          .slider {
-            margin: 15px 10px;
-          }
-          &.xv-numberwidget {
-            input {
-              width: 120px;
-            }
-          }
+      .xv-spinnerwidget {
+        .buttons {
+          display: block;
+          padding: 0;
+          margin: 1px 0 1px 10px;
+          width: 20px;
+          height: 20px;
+          background: transparent;
+          color: @slate-blue;
+          font-size: 20px;
+          border: none;
         }
-
-        &.xv-combobox {
-          .icon-sort {
-            color: @slate-blue;
-            vertical-align: middle;
-          }
+        .slider {
+          margin: 15px 10px;
         }
-
         &.xv-numberwidget {
           input {
-            text-align: right;
+            width: 120px;
           }
         }
+      }
 
-        &.xv-moneywidget {
-          .onyx-input-decorator {
-            font-family: @groupboxFont;
+      .xv-combobox {
+        .icon-sort {
+          color: @slate-blue;
+          vertical-align: middle;
+        }
+      }
 
-            input, .xv-money-label {
-              width: 80px;
-              text-align: right;
-            }
+      .xv-numberwidget {
+        input {
+          text-align: right;
+        }
+      }
+
+      .xv-moneywidget {
+        .enyo-tool-decorator {
+          // reset min/max-width
+          min-width: 90px;
+          max-width: 90px;
+          input {
+            width: 90px;
           }
-          .xv-picker-button {
-            width: 65px;
-            padding: 10px 4px;
+        }
+      }
+
+      .xv-currency-picker {
+        display: inline-block;
+        .enyo-tool-decorator {
+          // reset min/max-width
+          min-width: 65px;
+          max-width: 65px;
+          padding: 10px 4px;
+          .xv-button-text {
+            width: 45px;
           }
         }
       }

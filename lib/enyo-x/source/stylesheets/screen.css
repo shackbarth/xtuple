@@ -1698,7 +1698,7 @@ a,
 .xv-popup.xv-groupbox-popup .xv-input .onyx-picker-decorator {
   padding: 0;
 }
-.xv-popup.xv-groupbox-popup .xv-input.xv-relationwidget .xv-description {
+.xv-popup.xv-groupbox-popup .xv-relationwidget .xv-description {
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 4;
@@ -1707,10 +1707,10 @@ a,
   margin: 5px 5px 5px 80px;
   font-size: 0.9em;
 }
-.xv-popup.xv-groupbox-popup .xv-input.xv-relationwidget .xv-description.disabled {
+.xv-popup.xv-groupbox-popup .xv-relationwidget .xv-description.disabled {
   color: #777777;
 }
-.xv-popup.xv-groupbox-popup .xv-input.xv-spinnerwidget .buttons {
+.xv-popup.xv-groupbox-popup .xv-spinnerwidget .buttons {
   display: block;
   padding: 0;
   margin: 1px 0 1px 10px;
@@ -1721,30 +1721,36 @@ a,
   font-size: 20px;
   border: none;
 }
-.xv-popup.xv-groupbox-popup .xv-input.xv-spinnerwidget .slider {
+.xv-popup.xv-groupbox-popup .xv-spinnerwidget .slider {
   margin: 15px 10px;
 }
-.xv-popup.xv-groupbox-popup .xv-input.xv-spinnerwidget.xv-numberwidget input {
+.xv-popup.xv-groupbox-popup .xv-spinnerwidget.xv-numberwidget input {
   width: 120px;
 }
-.xv-popup.xv-groupbox-popup .xv-input.xv-combobox .icon-sort {
+.xv-popup.xv-groupbox-popup .xv-combobox .icon-sort {
   color: #357ec7;
   vertical-align: middle;
 }
-.xv-popup.xv-groupbox-popup .xv-input.xv-numberwidget input {
+.xv-popup.xv-groupbox-popup .xv-numberwidget input {
   text-align: right;
 }
-.xv-popup.xv-groupbox-popup .xv-input.xv-moneywidget .onyx-input-decorator {
-  font-family: "Lucida Sans Unicode", "Lucida Grande", arial, sans-serif;
+.xv-popup.xv-groupbox-popup .xv-moneywidget .enyo-tool-decorator {
+  min-width: 90px;
+  max-width: 90px;
 }
-.xv-popup.xv-groupbox-popup .xv-input.xv-moneywidget .onyx-input-decorator input,
-.xv-popup.xv-groupbox-popup .xv-input.xv-moneywidget .onyx-input-decorator .xv-money-label {
-  width: 80px;
-  text-align: right;
+.xv-popup.xv-groupbox-popup .xv-moneywidget .enyo-tool-decorator input {
+  width: 90px;
 }
-.xv-popup.xv-groupbox-popup .xv-input.xv-moneywidget .xv-picker-button {
-  width: 65px;
+.xv-popup.xv-groupbox-popup .xv-currency-picker {
+  display: inline-block;
+}
+.xv-popup.xv-groupbox-popup .xv-currency-picker .enyo-tool-decorator {
+  min-width: 65px;
+  max-width: 65px;
   padding: 10px 4px;
+}
+.xv-popup.xv-groupbox-popup .xv-currency-picker .enyo-tool-decorator .xv-button-text {
+  width: 45px;
 }
 .xv-popup.xv-groupbox-popup .enyo-fittable-columns-layout > * {
   vertical-align: middle;
@@ -2099,7 +2105,7 @@ a,
 .xv-workspace-container .xv-workspace .xv-workspace-panel .xv-input .onyx-picker-decorator {
   padding: 0;
 }
-.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-input.xv-relationwidget .xv-description {
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-relationwidget .xv-description {
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 4;
@@ -2108,10 +2114,10 @@ a,
   margin: 5px 5px 5px 80px;
   font-size: 0.9em;
 }
-.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-input.xv-relationwidget .xv-description.disabled {
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-relationwidget .xv-description.disabled {
   color: #777777;
 }
-.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-input.xv-spinnerwidget .buttons {
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-spinnerwidget .buttons {
   display: block;
   padding: 0;
   margin: 1px 0 1px 10px;
@@ -2122,30 +2128,36 @@ a,
   font-size: 20px;
   border: none;
 }
-.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-input.xv-spinnerwidget .slider {
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-spinnerwidget .slider {
   margin: 15px 10px;
 }
-.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-input.xv-spinnerwidget.xv-numberwidget input {
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-spinnerwidget.xv-numberwidget input {
   width: 120px;
 }
-.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-input.xv-combobox .icon-sort {
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-combobox .icon-sort {
   color: #357ec7;
   vertical-align: middle;
 }
-.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-input.xv-numberwidget input {
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-numberwidget input {
   text-align: right;
 }
-.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-input.xv-moneywidget .onyx-input-decorator {
-  font-family: "Lucida Sans Unicode", "Lucida Grande", arial, sans-serif;
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-moneywidget .enyo-tool-decorator {
+  min-width: 90px;
+  max-width: 90px;
 }
-.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-input.xv-moneywidget .onyx-input-decorator input,
-.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-input.xv-moneywidget .onyx-input-decorator .xv-money-label {
-  width: 80px;
-  text-align: right;
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-moneywidget .enyo-tool-decorator input {
+  width: 90px;
 }
-.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-input.xv-moneywidget .xv-picker-button {
-  width: 65px;
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-currency-picker {
+  display: inline-block;
+}
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-currency-picker .enyo-tool-decorator {
+  min-width: 65px;
+  max-width: 65px;
   padding: 10px 4px;
+}
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-currency-picker .enyo-tool-decorator .xv-button-text {
+  width: 45px;
 }
 .xv-workspace-container .xv-workspace .xv-workspace-panel .enyo-fittable-columns-layout > * {
   vertical-align: middle;
@@ -3058,7 +3070,7 @@ a,
 .xv-pullout .xv-parameter-panel .xv-input .onyx-picker-decorator {
   padding: 0;
 }
-.xv-pullout .xv-parameter-panel .xv-input.xv-relationwidget .xv-description {
+.xv-pullout .xv-parameter-panel .xv-relationwidget .xv-description {
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 4;
@@ -3067,10 +3079,10 @@ a,
   margin: 5px 5px 5px 80px;
   font-size: 0.9em;
 }
-.xv-pullout .xv-parameter-panel .xv-input.xv-relationwidget .xv-description.disabled {
+.xv-pullout .xv-parameter-panel .xv-relationwidget .xv-description.disabled {
   color: #777777;
 }
-.xv-pullout .xv-parameter-panel .xv-input.xv-spinnerwidget .buttons {
+.xv-pullout .xv-parameter-panel .xv-spinnerwidget .buttons {
   display: block;
   padding: 0;
   margin: 1px 0 1px 10px;
@@ -3081,30 +3093,36 @@ a,
   font-size: 20px;
   border: none;
 }
-.xv-pullout .xv-parameter-panel .xv-input.xv-spinnerwidget .slider {
+.xv-pullout .xv-parameter-panel .xv-spinnerwidget .slider {
   margin: 15px 10px;
 }
-.xv-pullout .xv-parameter-panel .xv-input.xv-spinnerwidget.xv-numberwidget input {
+.xv-pullout .xv-parameter-panel .xv-spinnerwidget.xv-numberwidget input {
   width: 120px;
 }
-.xv-pullout .xv-parameter-panel .xv-input.xv-combobox .icon-sort {
+.xv-pullout .xv-parameter-panel .xv-combobox .icon-sort {
   color: #357ec7;
   vertical-align: middle;
 }
-.xv-pullout .xv-parameter-panel .xv-input.xv-numberwidget input {
+.xv-pullout .xv-parameter-panel .xv-numberwidget input {
   text-align: right;
 }
-.xv-pullout .xv-parameter-panel .xv-input.xv-moneywidget .onyx-input-decorator {
-  font-family: "Lucida Sans Unicode", "Lucida Grande", arial, sans-serif;
+.xv-pullout .xv-parameter-panel .xv-moneywidget .enyo-tool-decorator {
+  min-width: 90px;
+  max-width: 90px;
 }
-.xv-pullout .xv-parameter-panel .xv-input.xv-moneywidget .onyx-input-decorator input,
-.xv-pullout .xv-parameter-panel .xv-input.xv-moneywidget .onyx-input-decorator .xv-money-label {
-  width: 80px;
-  text-align: right;
+.xv-pullout .xv-parameter-panel .xv-moneywidget .enyo-tool-decorator input {
+  width: 90px;
 }
-.xv-pullout .xv-parameter-panel .xv-input.xv-moneywidget .xv-picker-button {
-  width: 65px;
+.xv-pullout .xv-parameter-panel .xv-currency-picker {
+  display: inline-block;
+}
+.xv-pullout .xv-parameter-panel .xv-currency-picker .enyo-tool-decorator {
+  min-width: 65px;
+  max-width: 65px;
   padding: 10px 4px;
+}
+.xv-pullout .xv-parameter-panel .xv-currency-picker .enyo-tool-decorator .xv-button-text {
+  width: 45px;
 }
 .xv-pullout .xv-parameter-panel .enyo-fittable-columns-layout > * {
   vertical-align: middle;
@@ -3370,7 +3388,7 @@ a,
 .xv-search .xv-search-container .xv-input .onyx-picker-decorator {
   padding: 0;
 }
-.xv-search .xv-search-container .xv-input.xv-relationwidget .xv-description {
+.xv-search .xv-search-container .xv-relationwidget .xv-description {
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 4;
@@ -3379,10 +3397,10 @@ a,
   margin: 5px 5px 5px 80px;
   font-size: 0.9em;
 }
-.xv-search .xv-search-container .xv-input.xv-relationwidget .xv-description.disabled {
+.xv-search .xv-search-container .xv-relationwidget .xv-description.disabled {
   color: #777777;
 }
-.xv-search .xv-search-container .xv-input.xv-spinnerwidget .buttons {
+.xv-search .xv-search-container .xv-spinnerwidget .buttons {
   display: block;
   padding: 0;
   margin: 1px 0 1px 10px;
@@ -3393,30 +3411,36 @@ a,
   font-size: 20px;
   border: none;
 }
-.xv-search .xv-search-container .xv-input.xv-spinnerwidget .slider {
+.xv-search .xv-search-container .xv-spinnerwidget .slider {
   margin: 15px 10px;
 }
-.xv-search .xv-search-container .xv-input.xv-spinnerwidget.xv-numberwidget input {
+.xv-search .xv-search-container .xv-spinnerwidget.xv-numberwidget input {
   width: 120px;
 }
-.xv-search .xv-search-container .xv-input.xv-combobox .icon-sort {
+.xv-search .xv-search-container .xv-combobox .icon-sort {
   color: #357ec7;
   vertical-align: middle;
 }
-.xv-search .xv-search-container .xv-input.xv-numberwidget input {
+.xv-search .xv-search-container .xv-numberwidget input {
   text-align: right;
 }
-.xv-search .xv-search-container .xv-input.xv-moneywidget .onyx-input-decorator {
-  font-family: "Lucida Sans Unicode", "Lucida Grande", arial, sans-serif;
+.xv-search .xv-search-container .xv-moneywidget .enyo-tool-decorator {
+  min-width: 90px;
+  max-width: 90px;
 }
-.xv-search .xv-search-container .xv-input.xv-moneywidget .onyx-input-decorator input,
-.xv-search .xv-search-container .xv-input.xv-moneywidget .onyx-input-decorator .xv-money-label {
-  width: 80px;
-  text-align: right;
+.xv-search .xv-search-container .xv-moneywidget .enyo-tool-decorator input {
+  width: 90px;
 }
-.xv-search .xv-search-container .xv-input.xv-moneywidget .xv-picker-button {
-  width: 65px;
+.xv-search .xv-search-container .xv-currency-picker {
+  display: inline-block;
+}
+.xv-search .xv-search-container .xv-currency-picker .enyo-tool-decorator {
+  min-width: 65px;
+  max-width: 65px;
   padding: 10px 4px;
+}
+.xv-search .xv-search-container .xv-currency-picker .enyo-tool-decorator .xv-button-text {
+  width: 45px;
 }
 .xv-search .xv-search-container .enyo-fittable-columns-layout > * {
   vertical-align: middle;

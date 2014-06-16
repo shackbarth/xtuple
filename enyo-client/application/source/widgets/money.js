@@ -35,20 +35,21 @@ regexp:true, undef:true, trailing:true, white:true */
     components: [
       {controlClasses: 'enyo-inline', components: [
         {name: "label", content: "", classes: "xv-label"},
-        {kind: "onyx.InputDecorator", classes: "xv-icon-decorator", components: [
+        {kind: "onyx.InputDecorator", components: [
           {name: "input", kind: "onyx.Input",
             onchange: "inputChanged", onkeydown: "keyDown"}
         ]},
-        {name: "picker", kind: "XV.CurrencyPicker", showLabel: false}
+        {name: "picker", kind: "XV.CurrencyPicker", classes: "xv-currency-picker", showLabel: false}
       ]},
       {controlClasses: 'enyo-inline', name: "basePanel", showing: false, components: [
-        {name: "spacer", content: "", classes: "xv-label"},
-        {kind: "onyx.InputDecorator", classes: "xv-icon-decorator", components: [
-          {name: "baseAmountLabel", classes: "xv-money-label"}
+        {classes: "xv-label"},
+        {kind: "onyx.InputDecorator", components: [
+          {name: "baseAmountLabel", classes: "xv-label"}
         ]},
-        {kind: "onyx.InputDecorator", classes: "xv-currency-label",
-          components: [
-          {name: "baseCurrencyLabel"}
+        {classes: "xv-currency-picker", components: [
+          {kind: 'onyx.InputDecorator', components: [
+            {name: 'baseCurrencyLabel'}
+          ]}
         ]}
       ]}
     ],
