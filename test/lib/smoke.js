@@ -251,7 +251,7 @@
     var workspaceContainer,
       workspace;
     it('can get to a new workspace', function (done) {
-      this.timeout(10 * 1000);
+      this.timeout(20 * 1000);
       navigateToNewWorkspace(XT.app, spec.listKind, function (_workspaceContainer) {
         workspaceContainer = _workspaceContainer;
         done();

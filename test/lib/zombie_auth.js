@@ -110,7 +110,7 @@ var assert = require('assert'),
       }
     };
 
-    zombie.visit(host, {debug: verboseMode}, function (e, browser) {
+    zombie.visit(host, {runScripts: false, debug: verboseMode}, function (e, browser) {
       if (e) {
         console.log("Zombie visit error: ", e);
       }
