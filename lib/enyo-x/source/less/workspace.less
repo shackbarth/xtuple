@@ -147,6 +147,9 @@
         }
       }
 
+      /**
+        Styles relating to workspace widgets
+      */
       .xv-relationwidget {
         .xv-description {
           overflow: hidden;
@@ -225,15 +228,51 @@
         }
       }
 
+      .xv-characteristics-widget {
+        .xv-characteristic-item {
+          border-bottom: 1px solid @smoke;
+          .xv-input {
+            border: none;
+            input {
+              width: 135px;
+            }
+          }
+        }
+        .xv-characteristic-button {
+          text-align: center;
+        }
+      }
+
       .enyo-fittable-columns-layout > * {
         vertical-align: middle;
       }
     }
 
     .onyx-input-decorator {
+      border: 0;
+      input {
+        width: 150px;
+      }
       &.onyx-disabled {
         .disabled;
       }
+    }
+
+    // Dependency picker in workflow
+    .xv-dependency-picker {
+      .onyx-picker-decorator {
+        .onyx-button {
+          width: 280px;
+          margin-left: 6px;
+        }
+      }
+    }
+
+    .xv-dependency-button {
+      color: @slate-blue;
+      font-size: 24px;
+      border: none;
+      background: transparent;
     }
 
     .xv-totals-panel {

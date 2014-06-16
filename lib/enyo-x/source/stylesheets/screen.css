@@ -1627,6 +1627,9 @@ a,
   background: #f8f8f8;
   text-overflow: ellipsis;
   border: 1px solid #d7d7d7;
+  /**
+        Styles relating to workspace widgets
+      */
   color: #070707;
   padding: 7px;
 }
@@ -1751,6 +1754,18 @@ a,
 }
 .xv-popup.xv-groupbox-popup .xv-currency-picker .enyo-tool-decorator .xv-button-text {
   width: 45px;
+}
+.xv-popup.xv-groupbox-popup .xv-characteristics-widget .xv-characteristic-item {
+  border-bottom: 1px solid #d7d7d7;
+}
+.xv-popup.xv-groupbox-popup .xv-characteristics-widget .xv-characteristic-item .xv-input {
+  border: none;
+}
+.xv-popup.xv-groupbox-popup .xv-characteristics-widget .xv-characteristic-item .xv-input input {
+  width: 135px;
+}
+.xv-popup.xv-groupbox-popup .xv-characteristics-widget .xv-characteristic-button {
+  text-align: center;
 }
 .xv-popup.xv-groupbox-popup .enyo-fittable-columns-layout > * {
   vertical-align: middle;
@@ -2036,6 +2051,9 @@ a,
   background: #f8f8f8;
   text-overflow: ellipsis;
   border: 1px solid #d7d7d7;
+  /**
+        Styles relating to workspace widgets
+      */
 }
 .xv-workspace-container .xv-workspace .xv-workspace-panel .onyx-groupbox-header {
   padding: 6px 10px;
@@ -2159,12 +2177,40 @@ a,
 .xv-workspace-container .xv-workspace .xv-workspace-panel .xv-currency-picker .enyo-tool-decorator .xv-button-text {
   width: 45px;
 }
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-characteristics-widget .xv-characteristic-item {
+  border-bottom: 1px solid #d7d7d7;
+}
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-characteristics-widget .xv-characteristic-item .xv-input {
+  border: none;
+}
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-characteristics-widget .xv-characteristic-item .xv-input input {
+  width: 135px;
+}
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-characteristics-widget .xv-characteristic-button {
+  text-align: center;
+}
 .xv-workspace-container .xv-workspace .xv-workspace-panel .enyo-fittable-columns-layout > * {
   vertical-align: middle;
+}
+.xv-workspace-container .xv-workspace .onyx-input-decorator {
+  border: 0;
+}
+.xv-workspace-container .xv-workspace .onyx-input-decorator input {
+  width: 150px;
 }
 .xv-workspace-container .xv-workspace .onyx-input-decorator.onyx-disabled {
   opacity: 0.8;
   cursor: default;
+}
+.xv-workspace-container .xv-workspace .xv-dependency-picker .onyx-picker-decorator .onyx-button {
+  width: 280px;
+  margin-left: 6px;
+}
+.xv-workspace-container .xv-workspace .xv-dependency-button {
+  color: #357ec7;
+  font-size: 24px;
+  border: none;
+  background: transparent;
 }
 .xv-workspace-container .xv-workspace .xv-totals-panel .onyx-input-decorator > input,
 .xv-workspace-container .xv-workspace .xv-totals-panel * {
@@ -2999,6 +3045,9 @@ a,
   background: #f8f8f8;
   text-overflow: ellipsis;
   border: 1px solid #d7d7d7;
+  /**
+        Styles relating to workspace widgets
+      */
   width: 100%;
   margin: 0 4px 6px 0;
 }
@@ -3124,6 +3173,18 @@ a,
 .xv-pullout .xv-parameter-panel .xv-currency-picker .enyo-tool-decorator .xv-button-text {
   width: 45px;
 }
+.xv-pullout .xv-parameter-panel .xv-characteristics-widget .xv-characteristic-item {
+  border-bottom: 1px solid #d7d7d7;
+}
+.xv-pullout .xv-parameter-panel .xv-characteristics-widget .xv-characteristic-item .xv-input {
+  border: none;
+}
+.xv-pullout .xv-parameter-panel .xv-characteristics-widget .xv-characteristic-item .xv-input input {
+  width: 135px;
+}
+.xv-pullout .xv-parameter-panel .xv-characteristics-widget .xv-characteristic-button {
+  text-align: center;
+}
 .xv-pullout .xv-parameter-panel .enyo-fittable-columns-layout > * {
   vertical-align: middle;
 }
@@ -3148,53 +3209,6 @@ a,
   background-color: #357ec7;
   color: #fdfdfd;
   border-bottom: 2px solid #d8d8d8;
-}
-/**
-  Styles relating to misc widgets
-*/
-.onyx-input-decorator {
-  border: 0;
-}
-.onyx-input-decorator input {
-  width: 150px;
-}
-.xv-dependency-picker .onyx-picker-decorator .onyx-button {
-  width: 280px;
-  margin-left: 6px;
-}
-.xv-dependency-button {
-  color: #357ec7;
-  font-size: 24px;
-  border: none;
-  background: transparent;
-}
-/**
-  Characteristics
-*/
-.xv-characteristic-picker {
-  border: none;
-}
-.xv-characteristic-picker .onyx-picker-decorator .onyx-button {
-  width: 130px;
-}
-.xv-characteristic-item {
-  border-bottom: 1px solid #d7d7d7;
-}
-.xv-characteristic-item .onyx-input-decorator > input {
-  width: 115px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-.xv-characteristic-item > .xv-input {
-  border: none;
-}
-.xv-characteristic-buttons {
-  margin: 8px;
-}
-.xv-characteristic-button {
-  margin-left: 4px;
-  color: #357ec7;
-  font-size: 24px;
 }
 /**
   Styles relating to RelationWidgets
@@ -3317,6 +3331,9 @@ a,
   background: #f8f8f8;
   text-overflow: ellipsis;
   border: 1px solid #d7d7d7;
+  /**
+        Styles relating to workspace widgets
+      */
   width: 100%;
   margin: 0 4px 6px 0;
 }
@@ -3441,6 +3458,18 @@ a,
 }
 .xv-search .xv-search-container .xv-currency-picker .enyo-tool-decorator .xv-button-text {
   width: 45px;
+}
+.xv-search .xv-search-container .xv-characteristics-widget .xv-characteristic-item {
+  border-bottom: 1px solid #d7d7d7;
+}
+.xv-search .xv-search-container .xv-characteristics-widget .xv-characteristic-item .xv-input {
+  border: none;
+}
+.xv-search .xv-search-container .xv-characteristics-widget .xv-characteristic-item .xv-input input {
+  width: 135px;
+}
+.xv-search .xv-search-container .xv-characteristics-widget .xv-characteristic-button {
+  text-align: center;
 }
 .xv-search .xv-search-container .enyo-fittable-columns-layout > * {
   vertical-align: middle;
