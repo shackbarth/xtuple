@@ -6,7 +6,7 @@ before_install:
 
 install:
   - npm install
-  - npm test-build
+  - npm run test-build
 
 before_script:
   - sudo npm run server-setup
