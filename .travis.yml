@@ -6,10 +6,10 @@ before_install:
 
 install:
   - npm install
-  - npm run test-build
 
 before_script:
   - sudo npm run server-setup
+  - npm run test-build
   - npm start &
   - sleep 5
 
