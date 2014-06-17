@@ -9,7 +9,8 @@ FOLDER=deploy
 SUFFIX=`date "+-%Y_%m_%d-%I_%M_%S%p"`
 
 # The grandparent folder for this script
-SOURCE=$(pwd)/..
+SOURCE=$(cd `dirname $0`/../; pwd)
+#ln -s $SOURCE/lib $SOURCE/../../../lib
 
 # extract project folder name
 NAME=${SOURCE##*/}
@@ -48,7 +49,7 @@ mkdir -p "$TARGET/lib"
 # copy assets and build
 cp -r "$SOURCE/../../node-datasource/views/login/assets" "$SOURCE/build" "$TARGET"
 
-for i in "$SOURCE/../../lib/"*; do
+for i in "$SOURCE/lib/"*; do
 	o=${i##*/}
 	if [ -x $i/deploy.sh ]; then
 		echo "Deploying $o"

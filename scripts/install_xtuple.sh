@@ -23,7 +23,7 @@ sudo apt-get -q -y install \
   python-software-properties \
   software-properties-common
 
-NODE_VERSION=0.10.26
+NODE_VERSION=0.8.26
 
 DEBDIST=`lsb_release -c -s`
 echo "Trying to install xTuple for platform ${DEBDIST}"
