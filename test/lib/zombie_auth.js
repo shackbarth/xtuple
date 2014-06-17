@@ -148,7 +148,7 @@ var assert = require('assert'),
             XZ.database = database;
 
             XT.log = function (message, obj) {
-              if (message && message.toLowerCase().indexOf("error") === 0) {
+              if (message && _.isFunction(message.toLowerCase) && message.toLowerCase().indexOf("error") === 0) {
                 // errors from the datasource should cause the test to fail
                 assert.fail(message + " " + JSON.stringify(obj));
               }
