@@ -124,9 +124,9 @@ var assert = require('assert'),
         //
         // This is the login screen
         //
-        browser.fill('id', 'admin');
-        browser.fill('password', 'VXalkO2g');
-        browser.select('database', 'xtuple_demo');
+        browser.fill('id', username);
+        browser.fill('password', password);
+        browser.select('database', database);
       })
       .then(function () {
         browser.runScripts = true;
