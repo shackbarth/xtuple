@@ -151,8 +151,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         var resultAsCsv,
           filename = "export",
           type,
-          number = result.data && result.data.data && result.data.data[0] &&
-                   (result.data.data[0].number || result.data.data[0].name),
+          number = requestDetails.query &&
+                   requestDetails.query.details &&
+                   requestDetails.query.details.id,
           attr = requestDetails.query &&
                  requestDetails.query.details &&
                  requestDetails.query.details.attr
@@ -169,6 +170,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         }
 
         try {
+          /* export requests have 2 flavors: export a list of records (data.data)
+             or export a list of children of the current record ([0][attr]) */
           if (attr) {
             resultAsCsv = jsonToCsv(result.data.data[0][attr]);
           } else {

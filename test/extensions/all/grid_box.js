@@ -58,18 +58,18 @@
                           assert.equal(gridBox.liveModels().length, startingRows += 1);
                         });
 
-                        it('Check export', function() {
-                          function getExportButton(obj) {
+                        it('Check export', function () {
+                          var getExportButton = function (obj) {
                             var result = null;
-                            if ("$" in obj) {
-                              result = obj.$.exportButton
-                                    || _.find(obj.$, getExportButton);
+                            if (_.isObject(obj.$)) {
+                              result = obj.$.exportButton ||
+                                       _.find(obj.$, getExportButton);
                             }
                             return result;
-                          }
+                          };
 
-                          var gridBox = component
-                            , exportButton = getExportButton(gridBox);
+                          var gridBox = component,
+                              exportButton = getExportButton(gridBox);
                           assert.ok(exportButton);
                           // TODO: need to populate before we can export
                           // assert.doesNotThrow(exportButton.doTap());
