@@ -111,6 +111,33 @@
           assert.equal(gridBox.liveModels().length, 1);
         });
       });
+      it('Supply list should have action to open Item Workbench', function (done) {
+        if (!XT.extensions.inventory) {
+          done();
+          return;
+        }
+        var verify,
+          action = _.find(gridBox.$.supplyList.actions, function (action) {
+            return action.name === "openItemWorkbench";
+          }),
+          prereq = action.prerequisite;
+        gridBox.$.supplyButton.bubble("ontap");
+        gridBox.$.supplyList.select(0);
+
+        gridBox.$.supplyList.value.models[0][prereq](function (hasPriv) {
+          assert.isTrue(hasPriv);
+          if (hasPriv) {
+            gridBox.$.supplyList.actionSelected(null, {action: {method: "openItemWorkbench"}, index: 0});
+
+            setTimeout(function () {
+              assert.equal(XT.app.$.postbooks.getActive().$.workspace.kind, "XV.ItemWorkbenchWorkspace");
+              XT.app.$.postbooks.getActive().doPrevious();
+              assert.equal(XT.app.$.postbooks.getActive().$.workspace.kind, "XV.SalesOrderWorkspace");
+              done();
+            }, 3000);
+          } else {done(); }
+        });
+      });
       it('adding a second line item should not copy the item', function (done) {
         workspace.value.once("change:total", done());
 
