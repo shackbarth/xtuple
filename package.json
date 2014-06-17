@@ -25,6 +25,7 @@
     "moment": "2.4.x",
     "nodemailer": "0.3.x",
     "npm":"1.4.x",
+    "node-forge": "0.6.x",
     "oauth2orize": "0.1.x",
     "oauth2orize-jwt-bearer": "0.1.x",
     "passport": "0.1.x",
