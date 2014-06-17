@@ -133,56 +133,42 @@ var assert = require('assert'),
         return browser.pressButton('Sign In');
       })
       .then(function () {
+        // Check frequently to see if the app is loaded, and move forward when it is
+        var interval = setInterval(function () {
+          if (browser.window.XT && browser.window.XT.app && browser.window.XT.app.state === 6) {
 
-          //
-          // Plan to give up after a set time
-          //
-          /*
-          var timeout = setTimeout(function () {
-              console.log("App did not fully load");
-              process.exit(1);
-            }, secondsToWait * 1000);
-            */
+            // add the global objects to our global namespace
+            enyo = browser.window.enyo;
+            XG = browser.window.XG;
+            XM = browser.window.XM;
+            XT = browser.window.XT;
+            XV = browser.window.XV;
+            XZ.browser = browser;
+            XZ.host = host;
+            XZ.database = database;
 
-          //
-          // Check frequently to see if the app is loaded, and move forward when it is
-          //
-          var interval = setInterval(function () {
-            //console.dir(browser.windows);
-            if (browser.window.XT && browser.window.XT.app && browser.window.XT.app.state === 6) {
+            XT.log = function (message, obj) {
+              if (message && message.toLowerCase().indexOf("error") === 0) {
+                // errors from the datasource should cause the test to fail
+                assert.fail(message + " " + JSON.stringify(obj));
+              }
+              // log if verbose mode or if the log is a warning
+              if (verboseMode || (message && message.code)) {
+                console.log(JSON.stringify(arguments));
+              }
+            };
 
-              // add the global objects to our global namespace
-              enyo = browser.window.enyo;
-              XG = browser.window.XG;
-              XM = browser.window.XM;
-              XT = browser.window.XT;
-              XV = browser.window.XV;
-              XZ.browser = browser;
-              XZ.host = host;
-              XZ.database = database;
+            // these are really annoying
+            browser.window.Backbone.Relational.showWarnings = false;
 
-              XT.log = function (message, obj) {
-                if (message && message.toLowerCase().indexOf("error") === 0) {
-                  // errors from the datasource should cause the test to fail
-                  assert.fail(message + " " + JSON.stringify(obj));
-                }
-                // log if verbose mode or if the log is a warning
-                if (verboseMode || (message && message.code)) {
-                  console.log(JSON.stringify(arguments));
-                }
-              };
+            // clear out both is interval and the I'm-giving-up timeout
+            // we really want neither to be run again.
+            clearInterval(interval);
 
-              // these are really annoying
-              browser.window.Backbone.Relational.showWarnings = false;
-
-              // clear out both is interval and the I'm-giving-up timeout
-              // we really want neither to be run again.
-              clearInterval(interval);
-
-              // give control back to whoever called us
-              callback();
-            }
-          }, 500); // 100 = check to see if the app is loaded every 0.1 seconds
-        });
+            // give control back to whoever called us
+            callback();
+          }
+        }, 500); // 100 = check to see if the app is loaded every 0.1 seconds
+      });
   };
 }());
