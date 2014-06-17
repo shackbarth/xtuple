@@ -232,7 +232,7 @@
     "table": "xt.salesemlprofile",
     "lockable": true,
     "isRest": true,
-    "idSequenceName": "emlprofile_emlprofile_id_seq",
+    "idSequenceName": "xt.emlprofile_emlprofile_id_seq",
     "comment": "Sales Email Profile Map",
     "privileges": {
       "all": {

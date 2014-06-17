@@ -5,7 +5,7 @@
     "type": "ProjectEmailProfile",
     "table": "xt.prjemlprofile",
     "isRest": true,
-    "idSequenceName": "emlprofile_emlprofile_id_seq",
+    "idSequenceName": "xt.emlprofile_emlprofile_id_seq",
     "comment": "Project Email Profile Map",
     "privileges": {
       "all": {
