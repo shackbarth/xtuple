@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION postCCcredit(INTEGER, TEXT, INTEGER) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pCCpay	ALIAS FOR $1;
@@ -35,9 +35,8 @@ BEGIN
 
   SELECT * INTO _c
      FROM ccpay
-     JOIN ccard  ON (ccpay_ccard_id = ccard_id)
-     JOIN ccbank ON (ccard_type=ccbank_ccard_type)
-    WHERE (ccpay_id = pCCpay);
+     LEFT JOIN ccard ON ccpay_ccard_id = ccard_id
+     WHERE (ccpay_id = pCCpay);
 
   IF (NOT FOUND) THEN
     RAISE EXCEPTION 'Cannot find the record for this Credit Card credit [xtuple: postCCcredit, -3, %, %, %]',
@@ -50,9 +49,16 @@ BEGIN
     _dglaccnt := findARAccount(_c.ccpay_cust_id);
   END IF;
 
+  IF (_c.ccard_type IS NULL) THEN
+    -- TODO: Add 'E' for External ccbank_ccard_type. Use 'P' for now.
+    --_c.ccard_type = 'E';
+    _c.ccard_type = 'P';
+  END IF;
+
   SELECT bankaccnt_accnt_id INTO _cglaccnt
-  FROM bankaccnt
-  WHERE (bankaccnt_id=_c.ccbank_bankaccnt_id);
+  FROM ccbank
+  JOIN bankaccnt ON (ccbank_bankaccnt_id=bankaccnt_id)
+  WHERE (ccbank_ccard_type=_c.ccard_type);
 
   IF (NOT FOUND) THEN
     RAISE EXCEPTION 'Cannot find the default Bank Account for this Credit Card [xtuple: postCCcredit, -1, %]',
@@ -117,23 +123,23 @@ BEGIN
 
   IF (FOUND) THEN
     SELECT createardebitmemo(
-            NULL, 
+            NULL,
             _r.aropen_cust_id, NULL, fetchARMemoNumber(),
             _r.aropen_ordernumber, current_date, _c.ccpay_amount,
             _notes,
-            -1, -1, -1, CURRENT_DATE, -1, NULL, 0, 
+            -1, -1, -1, CURRENT_DATE, -1, NULL, 0,
             _r.aropen_curr_id) INTO _dmaropenid;
 
     IF (_r.aropen_open) THEN
       PERFORM applyARCreditMemoToBalance(_r.aropen_id, _dmaropenid);
       PERFORM postARCreditMemoApplication(_r.aropen_id);
     END IF;
-    
+
   END IF;
 
   IF (preftype = 'cohead') THEN
     INSERT INTO payco (
-      payco_ccpay_id, payco_cohead_id, payco_amount, payco_curr_id 
+      payco_ccpay_id, payco_cohead_id, payco_amount, payco_curr_id
     ) VALUES (
       pCCpay, prefid, 0 - _c.ccpay_amount, _c.ccpay_curr_id
     );

@@ -3,7 +3,7 @@ CREATE OR REPLACE FUNCTION postCCcashReceipt(pCCpay   INTEGER,
                                              pdoctype TEXT    DEFAULT NULL,
                                              pamount  NUMERIC DEFAULT NULL) RETURNS INTEGER AS
 $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _aropenid     INTEGER;
@@ -16,9 +16,9 @@ DECLARE
 
 BEGIN
   SELECT * INTO _c
-     FROM ccpay, ccard, custinfo
+     FROM custinfo, ccpay
+     LEFT JOIN ccard ON ccpay_ccard_id = ccard_id
      WHERE ( (ccpay_id = pCCpay)
-       AND   (ccpay_ccard_id = ccard_id)
        AND   (ccpay_cust_id = cust_id) );
 
   IF (NOT FOUND) THEN
@@ -30,8 +30,15 @@ BEGIN
     _c.ccpay_amount = pamount;
   END IF;
 
+  IF (_c.ccard_type IS NULL) THEN
+    -- TODO: Add 'E' for External ccbank_ccard_type. Use 'P' for now.
+    --_c.ccard_type = 'E';
+    _c.ccard_type = 'P';
+  END IF;
+
   SELECT bankaccnt_id, bankaccnt_accnt_id INTO _bankaccnt_id, _realaccnt
-  FROM ccbank JOIN bankaccnt ON (ccbank_bankaccnt_id=bankaccnt_id)
+  FROM ccbank
+  JOIN bankaccnt ON (ccbank_bankaccnt_id=bankaccnt_id)
   WHERE (ccbank_ccard_type=_c.ccard_type);
 
   IF (_bankaccnt_id IS NULL) THEN
@@ -98,7 +105,7 @@ BEGIN
     _return := _aropenid;
   END IF;
 
-  PERFORM insertGLTransaction(_journal, 'A/R', 'CR', _ccOrderDesc, 
+  PERFORM insertGLTransaction(_journal, 'A/R', 'CR', _ccOrderDesc,
                               ('Cash Receipt from Credit Card ' || _c.cust_name),
                               findPrepaidAccount(_c.ccpay_cust_id),
                               _realaccnt,
