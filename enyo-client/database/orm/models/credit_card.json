@@ -194,6 +194,216 @@
   },
   {
     "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "SalesOrderPayment",
+    "table": "payco",
+    "idSequenceName": "payco_payco_id_seq",
+    "lockable": true,
+    "lockTable": "payco",
+    "isRest": true,
+    "comment": "Sales Order Payment Map",
+    "privileges": {
+      "all": {
+        "create": "ProcessCreditCards",
+        "read": "ProcessCreditCards",
+        "update": "ProcessCreditCards",
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "payco_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "payment",
+        "toOne": {
+          "isNested": true,
+          "type": "CreditCardPayment",
+          "column": "payco_ccpay_id"
+        }
+      },
+      {
+        "name": "salesOrder",
+        "toOne": {
+          "type": "SalesOrderRelation",
+          "column": "payco_cohead_id"
+        }
+      },
+      {
+        "name": "amount",
+        "attr": {
+          "type": "Number",
+          "column": "payco_amount"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "CreditCardPayment",
+    "table": "ccpay",
+    "idSequenceName": "ccpay_ccpay_id_seq",
+    "lockable": true,
+    "lockTable": "ccpay",
+    "isRest": true,
+    "comment": "Credit Card Payment Map",
+    "privileges": {
+      "all": {
+        "create": "ProcessCreditCards",
+        "read": "ProcessCreditCards",
+        "update": "ProcessCreditCards",
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "ccpay_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "creditCard",
+        "toOne": {
+          "type": "CreditCard",
+          "column": "ccpay_ccard_id"
+        }
+      },
+      {
+        "name": "customer",
+        "toOne": {
+          "type": "CustomerRelation",
+          "column": "ccpay_cust_id"
+        }
+      },
+      {
+        "name": "amount",
+        "attr": {
+          "type": "Number",
+          "column": "ccpay_amount"
+        }
+      },
+      {
+        "name": "wasPreauthorization",
+        "attr": {
+          "type": "Boolean",
+          "column": "ccpay_auth"
+        }
+      },
+      {
+        "name": "status",
+        "attr": {
+          "type": "String",
+          "column": "ccpay_status"
+        }
+      },
+      {
+        "name": "type",
+        "attr": {
+          "type": "String",
+          "column": "ccpay_type"
+        }
+      },
+      {
+        "name": "originalType",
+        "attr": {
+          "type": "String",
+          "column": "ccpay_auth_charge"
+        }
+      },
+      {
+        "name": "orderNumber",
+        "attr": {
+          "type": "String",
+          "column": "ccpay_order_number"
+        }
+      },
+      {
+        "name": "orderNumberSeq",
+        "attr": {
+          "type": "Number",
+          "column": "ccpay_order_number_seq"
+        }
+      },
+      {
+        "name": "gatewayTransId",
+        "attr": {
+          "type": "String",
+          "column": "ccpay_r_ordernum"
+        }
+      },
+      {
+        "name": "gatewayAuthCode",
+        "attr": {
+          "type": "String",
+          "column": "ccpay_r_code"
+        }
+      },
+      {
+        "name": "gatewayTransDate",
+        "attr": {
+          "type": "Date",
+          "column": "ccpay_yp_r_time"
+        }
+      },
+      {
+        "name": "gatewayAvsCode",
+        "attr": {
+          "type": "String",
+          "column": "ccpay_r_avs"
+        }
+      },
+      {
+        "name": "gatewayApproved",
+        "attr": {
+          "type": "String",
+          "column": "ccpay_r_approved"
+        }
+      },
+      {
+        "name": "gatewayMessage",
+        "attr": {
+          "type": "String",
+          "column": "ccpay_r_message"
+        }
+      },
+      {
+        "name": "gatewayError",
+        "attr": {
+          "type": "String",
+          "column": "ccpay_r_error"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
     "nameSpace": "SYS",
     "type": "CreditCard",
     "table": "ccard",
