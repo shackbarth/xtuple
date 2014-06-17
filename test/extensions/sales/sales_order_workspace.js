@@ -65,7 +65,9 @@
         smoke.navigateToNewWorkspace(XT.app, "XV.SalesOrderList", function (workspaceContainer) {
           workspace = workspaceContainer.$.workspace;
 
-          workspace.value.once("change:total", done);
+          workspace.value.once("change:total", function () {
+            done();
+          });
 
           assert.equal(workspace.value.recordType, "XM.SalesOrder");
           //
