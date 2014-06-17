@@ -10,7 +10,6 @@ SUFFIX=`date "+-%Y_%m_%d-%I_%M_%S%p"`
 
 # The grandparent folder for this script
 SOURCE=$(cd `dirname $0`/../; pwd)
-#ln -s $SOURCE/lib $SOURCE/../../../lib
 
 # extract project folder name
 NAME=${SOURCE##*/}

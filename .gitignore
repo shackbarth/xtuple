@@ -18,4 +18,6 @@ test/mocha/lib/demo-test.backup
 install.log
 enyo-client/application/lib
 enyo-client/application/enyo
+enyo-client/application/build
+enyo-client/application/deploy
 lib/module
