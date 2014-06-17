@@ -9,16 +9,14 @@
   var zombieAuth = require('../lib/zombie_auth'),
     prepDatabase = require('../lib/prep_database');
 
-  describe('xTuple Login', function () {
-    this.timeout(60 * 1000);
+  before(function (done) {
+    this.timeout(10 * 120 * 1000);
 
-    it('should login', function (done) {
-      zombieAuth.loadApp(done);
+    zombieAuth.loadApp({
+      refreshLogin: true,
+      callback: function () {
+        prepDatabase.prepDatabase(done);
+      }
     });
-
-    it('should prepare database', function (done) {
-      prepDatabase.prepDatabase(done);
-    });
-
   });
 }());
