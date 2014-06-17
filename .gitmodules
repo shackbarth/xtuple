@@ -1,6 +1,6 @@
 [submodule "enyo-client/application/enyo"]
-	path = enyo-client/application/enyo
-	url = https://github.com/xtuple/enyo.git
+  path = enyo-client/application/enyo
+  url = https://github.com/xtuple/enyo.git
 [submodule "lib/onyx"]
   path = lib/onyx
   url = https://github.com/enyojs/onyx.git
