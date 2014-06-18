@@ -379,6 +379,20 @@
         }
       },
       {
+        "name": "gatewayTruncPan",
+        "attr": {
+          "type": "String",
+          "column": "ccpay_card_pan_trunc"
+        }
+      },
+      {
+        "name": "gatewayCardType",
+        "attr": {
+          "type": "String",
+          "column": "ccpay_card_type"
+        }
+      },
+      {
         "name": "gatewayApproved",
         "attr": {
           "type": "String",
