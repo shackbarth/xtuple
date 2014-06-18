@@ -1,22 +1,39 @@
-<package id        = "xtmfg_install441"
-         version   = "4.4.1"
+<package id        = "manufacturing-install-450"
+         version   = "4.5.0"
          developer = "xTuple"
          descrip   = "load PostBooks resources"
          updater   = "2.2.4" >
 
   <prerequisite type = "query"
                 name = "Checking xTuple Edition" >
-    <query>SELECT fetchMetricText('Application') = 'Standard';</query>
+    <query>SELECT fetchMetricText('Application') = 'PostBooks';</query>
     <message>This package must be applied to a Distribution Edition database.</message>
   </prerequisite>
 
   <prerequisite type = "query"
                 name = "Checking xTuple ERP database version" >
-    <query>SELECT fetchMetricText('ServerVersion') ~ '^4.4.';</query>
-    <message>This package must be applied to a 4.4+ Manufacturing database.
+    <query>SELECT fetchMetricText('ServerVersion') > '4.4.';</query>
+    <message>This package must be applied to a 4.4+ Distribution database.
     </message>
   </prerequisite>
 
+ <prerequisite type = "query"
+               name = "Checking for bad xTuple ERP database version" >
+<query>SELECT NOT fetchMetricText('ServerVersion') > '4.5.0' AND fetchMetricText('ServerVersion')!='4.5.0Beta' AND fetchMetricText('ServerVersion')!='4.5.0RC';</query>
+    <message>This package may not be applied to a 4.5.0+ PostBooks database.
+    </message>
+  </prerequisite>
+
+ <prerequisite type = "query"
+               name = "Checking for mobile-enabled schemas" >
+    <query>SELECT NOT EXISTS(SELECT 1 FROM pg_namespace WHERE nspname = 'xm');</query>
+    <message>This package may not be applied to a mobile-enabled database. Please see your system administrator or contact xTuple.
+    </message>
+  </prerequisite>
+
+  <script file="postbooks_upgrade.sql" />
+  <script file="inventory_basic_install.sql" />
+  <script file="inventory_upgrade.sql" />
   <script file="manufacturing_basic_install.sql" />
   <script file="manufacturing_upgrade.sql" />
 

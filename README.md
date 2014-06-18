@@ -1,38 +1,51 @@
 xTuple
 ======
 
-xTuple Enterprise Resource Planning Mobile-Web client
-
 [![Build Status](https://travis-ci.org/xtuple/xtuple.png)](https://travis-ci.org/xtuple/xtuple)
+
+### What we're about
+
+xTuple is open-source business management software. The code is managed by an eponymous
+company in Norfolk, VA, and our community stretches around the world. Our web application
+is implemented as an [HTML5 node.js app](https://github.com/xtuple/xtuple/wiki/Overview).
+The other client to our server is a [desktop app](https://github.com/xtuple/qt-client) written
+in the cross-platform Qt framework.
+
+Most of our commercial customers are inventory-based manufacturers or distributors, and we have a 
+fair amount of commercially-licensed code to specifically support these use-cases. That said,
+businesses of all sorts, even services-based companies, run their operations on our open-source 
+core.
+
+We're always happy when people use xTuple as a launching point for their own projects,
+whether or not you have a commercial relationship with us. 
+
+### Why you might be interested in hacking on our software
+
+The xTuple platform provides a great starting point for business software in practically
+any industry. What you get for free is an entire stack to work on top of, and a lot
+of business objects that you might want, like `Invoices`, `Currencies`, `Tasks` and 
+`Contacts` (and about a hundred more) are already implemented.
+
+Moreover, one of the great strengths of the framework is extensibility and privilege
+control. Our extension system allows for a high level of modularity, and keeps you
+from having to rewrite the core. Fine-grained, centrally-managed privilege 
+control is also an important feature that businesses typically want, and
+we've taken special care to implement it reliably across the application.
+
+### Getting involved
+
+Fork us, take a test drive with our [free trial](http://www.xtuple.com/free-trial), 
+file a github issue. 
+If you want to be a contributor and are looking for a place to
+make your mark, we're keeping a list of issues that are 
+[fair game](https://github.com/xtuple/xtuple/issues?labels=fair+game) 
+to pick off and provide
+a convenient, well-documented starting point into our project.
 
 ### Installing this project
 
-The install script for this project is Debian based and designed to run on a 64 bit Ubuntu 12.04 machine. *If you do not have 64 bit hardware the install script will not work for you* and you will have to do a manual build. It is best if you do not already have postgres installed on your machine.
-
-#### 1. Fork this repo onto your own github account
-We recommend checking out the latest tagged release, but if you want to just
-checkout the lastest code you can skip this next step. Find and checkout the
-latest tag with the following:
-
-    git clone --recursive git://github.com/<username>/xtuple.git
-    cd xtuple
-    git remote add XTUPLE git://github.com/xtuple/xtuple.git
-    git fetch XTUPLE
-    git checkout `git describe --abbrev=0`
-
-#### 2. Run the install script
-
-    bash scripts/install_xtuple.sh
-
-You will be prompted for `sudo` credentials; installation will take a few
-minutes.
-
-#### 3. Setup and run the server
-
-    cd node-datasource
-    node main.js
-
-Launch your local browser and navigate to the address `localhost:8888`. Default username and password are `admin`.
+The best way to start coding on our stack is to use our
+[Vagrant setup](https://github.com/xtuple/xtuple/wiki/Become-an-xTuple-Developer!).
 
 ### Release Notes
 
@@ -40,9 +53,7 @@ View the [Release Notes](RELEASE.md) to see a change log.
 
 ### Additional Resources
 
-  * [How to Setup xTuple](https://github.com/xtuple/xtuple/wiki/How-to-set-up-xTuple)
-  * [Creating a Virtual Development Environment using Vagrant](https://github.com/xtuple/xtuple-vagrant/blob/master/README.md)
-  * [Architectural Overview](https://github.com/xtuple/xtuple/wiki/Overview)
+  * [Setting up a non-development demo environment](https://github.com/xtuple/xtuple/wiki/How-to-set-up-xTuple)
   * [Building an Extension Tutorial](https://github.com/xtuple/xtuple-extensions/blob/master/docs/TUTORIAL.md)
   * [API documentation](http://xtuple.com/jsdoc)
   * [Developer Wiki](https://github.com/xtuple/xtuple/wiki)

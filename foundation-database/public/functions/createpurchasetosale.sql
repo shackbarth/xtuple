@@ -46,6 +46,26 @@ DECLARE
   pDueDate ALIAS FOR $5;
   pPrice ALIAS FOR $6;
 
+BEGIN
+
+  RETURN createPurchaseToSale(pCoitemId, pItemSourceId, pDropShip, pQty, pDueDate, pPrice, NULL);
+
+END;
+$$ LANGUAGE 'plpgsql';
+
+
+CREATE OR REPLACE FUNCTION createPurchaseToSale(INTEGER, INTEGER, BOOLEAN, NUMERIC, DATE, NUMERIC, INTEGER) RETURNS INTEGER AS $$
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- See www.xtuple.com/CPAL for the full text of the software license.
+DECLARE
+  pCoitemId ALIAS FOR $1;
+  pItemSourceId ALIAS FOR $2;
+  pDropShip ALIAS FOR $3;
+  pQty ALIAS FOR $4;
+  pDueDate ALIAS FOR $5;
+  pPrice ALIAS FOR $6;
+  pPoheadId ALIAS FOR $7;
+
   _s RECORD;
   _w RECORD;
   _i RECORD;
@@ -98,6 +118,9 @@ BEGIN
     RETURN -2;
   END IF;
 
+  -- pPoheadId - NULL=add to existing PO if one exists
+  --               -1=must create new PO
+  --               >0=must add to existing specified PO
   IF (pDropShip) THEN
     SELECT COALESCE(pohead_id, -1) INTO _temp
     FROM pohead
@@ -110,7 +133,8 @@ BEGIN
       AND (pohead_shiptocity = COALESCE(_s.cohead_shiptocity, _s.addr_city, ''))
       AND (pohead_shiptostate = COALESCE(_s.cohead_shiptostate, _s.addr_state, ''))
       AND (pohead_shiptozipcode = COALESCE(_s.cohead_shiptozipcode, _s.addr_postalcode, ''))
-      AND (pohead_shiptocountry = COALESCE(_s.cohead_shiptocountry, _s.addr_country, '')) );
+      AND (pohead_shiptocountry = COALESCE(_s.cohead_shiptocountry, _s.addr_country, ''))
+      AND ((pohead_id=pPoheadId) OR (pPoheadid IS NULL)) );
   ELSE
     SELECT COALESCE(pohead_id, -1) INTO _temp
     FROM pohead
@@ -122,15 +146,22 @@ BEGIN
       AND (pohead_shiptocity = COALESCE(_w.addr_city, ''))
       AND (pohead_shiptostate = COALESCE(_w.addr_state, ''))
       AND (pohead_shiptozipcode = COALESCE(_w.addr_postalcode, ''))
-      AND (pohead_shiptocountry = COALESCE(_w.addr_country, '')) );
+      AND (pohead_shiptocountry = COALESCE(_w.addr_country, ''))
+      AND ((pohead_id=pPoheadId) OR (pPoheadid IS NULL)) );
   END IF;
 
   IF (FOUND) THEN
+    IF (pPoheadId = -1) THEN
+      RAISE EXCEPTION 'Problem creating new PO';
+    END IF;
     _poheadid := _temp;
     UPDATE pohead
     SET pohead_dropship = pDropShip
     WHERE (pohead_id = _poheadid);
   ELSE
+    IF (pPoheadId > 0) THEN
+      RAISE EXCEPTION 'Problem adding to existing PO';
+    END IF;
     SELECT NEXTVAL('pohead_pohead_id_seq') INTO _poheadid;
     SELECT fetchPoNumber() INTO _ponumber;
 

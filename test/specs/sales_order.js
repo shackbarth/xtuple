@@ -151,11 +151,12 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     }}],
     beforeSaveUIActions: [{it: 'sets up a valid line item',
       action: function (workspace, done) {
-        var gridRow;
+        var gridRow,
+          gridBox = workspace.$.salesOrderLineItemBox;
 
         primeSubmodels(function (submodels) {
-          workspace.$.salesOrderLineItemBox.newItem();
-          gridRow = workspace.$.salesOrderLineItemBox.$.editableGridRow;
+          gridBox.newItem();
+          gridRow = gridBox.$.editableGridRow;
           gridRow.$.itemSiteWidget.doValueChange({value: {item: submodels.itemModel,
             site: submodels.siteModel}});
           gridRow.$.quantityWidget.doValueChange({value: 5});
@@ -276,6 +277,32 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
         assert.include(_.map(characteristicWorkspace.$, function (control) {
           return control.attr;
         }), "isSalesOrders");
+      });
+    });
+    describe("Sales Order list", function () {
+      /**
+        @member Buttons
+        @memberof Invoice
+        @description The InvoiceWorkspace should be printable
+      */
+      it("XV.SalesOrderList should be printable", function () {
+        var list = new XV.SalesOrderList(),
+          actions = list.actions;
+        assert.include(_.pluck(actions, 'name'), 'print');
+        assert.include(_.pluck(actions, 'name'), 'email');
+      });
+    });
+    describe("Sales Order workspace", function () {
+      /**
+        @member Buttons
+        @memberof SalesOrder
+        @description The SalesOrderWorkspace should be printable
+      */
+      it("XV.SalesOrderWorkspace should be printable", function () {
+        var workspace = new XV.SalesOrderWorkspace(),
+          actions = workspace.actions;
+        assert.include(_.pluck(actions, 'name'), 'print');
+        assert.include(_.pluck(actions, 'name'), 'email');
       });
     });
     describe("Sales order workflow", function () {
@@ -756,4 +783,3 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
   exports.getBeforeSaveAction = getBeforeSaveAction;
 
 }());
-

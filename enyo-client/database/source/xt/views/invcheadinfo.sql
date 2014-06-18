@@ -131,7 +131,18 @@ insert into invchead (
   new.invchead_void,
   new.invchead_saletype_id,
   new.invchead_shipzone_id
-);
+)
+
+returning invchead.*,
+  null::numeric,
+  null::numeric,
+  null::numeric,
+  null::numeric,
+  null::numeric,
+  null::numeric,
+  null::numeric,
+  null::date,
+  null::date;
 
 create or replace rule "_UPDATE" as on update to xt.invcheadinfo do instead
 

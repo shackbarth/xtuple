@@ -34,6 +34,7 @@
     "public/tables/docass.sql",
     "public/tables/grppriv.sql",
     "public/tables/incdt.sql",
+    "public/tables/invchead.sql",
     "public/tables/invcitem.sql",
     "public/tables/invcitemtax.sql",
     "public/tables/itemsite.sql",
@@ -45,6 +46,7 @@
     "public/tables/prj.sql",
     "public/tables/prjtask.sql",
     "public/tables/quitem.sql",
+    "public/tables/shiphead.sql",
     "public/tables/shiptoinfo.sql",
     "public/tables/todoitem.sql",
     "public/tables/usrpref.sql",
@@ -216,6 +218,7 @@
     "public/tables/comment_trigger.sql",
     "public/tables/pkghead.sql",
     "public/tables/schemaord.sql",
+    "priv.sql",
     "update_version.sql"
   ]
 }

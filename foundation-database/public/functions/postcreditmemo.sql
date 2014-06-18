@@ -444,7 +444,7 @@ BEGIN
                          ('Credit Return ' || _r.item_number),
                          costcat_asset_accnt_id,
                          getPrjAccntId(_r.cmhead_prj_id, resolveCOSAccount(itemsite_id, _r.cust_id, _r.saletype_id, _r.shipzone_id)), 
-                         _itemlocSeries, _glDate, _r.std_cost) INTO _invhistid
+                         _itemlocSeries, _glDate, (_r.std_cost * _r.qty)) INTO _invhistid
         FROM itemsite, costcat
        WHERE ((itemsite_costcat_id=costcat_id)
           AND (itemsite_id=_r.itemsite_id));

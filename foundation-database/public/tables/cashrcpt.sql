@@ -1,0 +1,1 @@
+select xt.add_column('cashrcpt','cashrcpt_alt_curr_rate', 'NUMERIC', NULL, 'public');

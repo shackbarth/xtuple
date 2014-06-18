@@ -167,8 +167,9 @@ BEGIN
     END LOOP;
 
 -- _qoh can be used for the netable qoh because of the negative NN transactions
+-- change to update qtyonhand with _netable_qoh
     UPDATE itemsite
-       SET itemsite_qtyonhand = _qoh,
+       SET itemsite_qtyonhand = _netable_qoh,
            itemsite_nnqoh = _nonnetable_qoh,
            itemsite_value = CASE WHEN ((itemsite_costmethod='A') AND (_value < 0.0)) THEN 0.0
                                  ELSE _value END

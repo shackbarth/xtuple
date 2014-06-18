@@ -319,29 +319,20 @@ select xt.install_js('XM','Model','xtuple', $$
   };
 
   /**
-   Returns a complex query's results using the REST query structure. This is a
-   wrapper for XM.Model.query that reformats the query structure from a
-   rest_query to our XT.Rest structure. This dispatch function can be used by
-   a REST API client to query a resource when the query would be too long to
-   pass to the API as a GET URL query.
+   Format acomplex query's using the REST query structure into an xTuple's query.
+   This is a helper function that reformats the query structure from a
+   rest_query to our XT.Rest structure. This function should be used by reformat
+   any REST API client queriers.
 
    Sample usage:
-    select xt.post('{
-      "username": "admin",
-      "nameSpace": "XM",
-      "type": "Model",
-      "dispatch":{
-        "functionName":"restQuery",
-        "parameters":["Address", {"query": [{"city":{"EQUALS":"Norfolk"}}], "orderby": [{"ASC": "line1"}, {"DESC": "line2"}]}]
-      }
-    }');
+    XM.Model.restQueryFormat("XM.Address", {"query": [{"city":{"EQUALS":"Norfolk"}}], "orderby": [{"ASC": "line1"}, {"DESC": "line2"}]})
 
-   @param {String} recordType to query
    @param {Object} options: query
-   @returns Object
+   @returns {Object} The formated query
   */
-  XM.Model.restQuery = function (recordType, options) {
+  XM.Model.restQueryFormat = function (recordType, options) {
     options = options || {};
+
     var order = {},
         param = {},
         query = {},
@@ -365,7 +356,7 @@ select xt.install_js('XM','Model','xtuple', $$
         };
 
     /* Convert from rest_query to XM.Model.query structure. */
-    if (recordType && options) {
+    if (options) {
       if (options.query) {
         query.parameters = [];
         for (var i = 0; i < options.query.length; i++) {
@@ -380,6 +371,37 @@ select xt.install_js('XM','Model','xtuple', $$
           }
         }
       }
+
+      /* Convert free text query. */
+      if (recordType && options.q) {
+        /* Get schema and add string columns to search query. */
+        var data = Object.create(XT.Data),
+          nameSpace = recordType.beforeDot(),
+          type = recordType.afterDot(),
+          orm = data.fetchOrm(nameSpace, type),
+          schema = XT.Session.schema(nameSpace.decamelize(), type.decamelize()),
+          param = {
+            "attribute": []
+          };
+
+        for (var c = 0; c < schema[type].columns.length; c++) {
+          if (schema[type].columns[c].category === 'S') {
+            param.attribute.push(schema[type].columns[c].name);
+          }
+        }
+
+        if (param.attribute.length) {
+          /* Add all string columns to attribute query. */
+          query.parameters = query.parameters || [];
+
+          param.operator = 'MATCHES';
+
+          /* Replace any spaces with regex '.*' so multi-word search works on similar strings. */
+          param.value = options.q.replace(' ', '.*');
+          query.parameters.push(param);
+        }
+      }
+
       if (options.orderby || options.orderBy) {
         options.orderBy = options.orderby || options.orderBy;
         query.orderBy = [];
@@ -394,14 +416,17 @@ select xt.install_js('XM','Model','xtuple', $$
           }
         }
       }
+
       if (options.rowlimit || options.rowLimit) {
         options.rowLimit = options.rowlimit || options.rowLimit;
         query.rowLimit = options.rowLimit;
       }
+
       if (options.maxresults || options.maxResults) {
         options.maxResults = options.maxresults || options.maxResults;
         query.rowLimit = options.maxResults;
       }
+
       if (options.pagetoken || options.pageToken) {
         options.pageToken = options.pagetoken || options.pageToken;
         if (query.rowLimit) {
@@ -410,12 +435,49 @@ select xt.install_js('XM','Model','xtuple', $$
           query.rowOffset = (options.pageToken || 0);
         }
       }
+
       if (options.count) {
         query.count = options.count;
       }
     }
 
-    result = XM.Model.query(recordType, {"query": query});
+    return query;
+  };
+
+  /**
+   Returns a complex query's results using the REST query structure. This is a
+   wrapper for XM.Model.query that reformats the query structure from a
+   rest_query to our XT.Rest structure. This dispatch function can be used by
+   a REST API client to query a resource when the query would be too long to
+   pass to the API as a GET URL query.
+
+   Sample usage:
+    select xt.post('{
+      "username": "admin",
+      "nameSpace": "XM",
+      "type": "Model",
+      "dispatch":{
+        "functionName":"restQuery",
+        "parameters":["Address", {"query": [{"city":{"EQUALS":"Norfolk"}}], "orderby": [{"ASC": "line1"}, {"DESC": "line2"}]}]
+      }
+    }');
+
+   @param {String} recordType to query
+   @param {Object} options: query
+   @returns Object
+  */
+  XM.Model.restQuery = function (recordType, options) {
+    options = options || {};
+    var formattedOptions = {};
+
+    /* Convert from rest_query to XM.Model.query structure. */
+    if (recordType && options) {
+      formattedOptions = {
+        "query": XM.Model.restQueryFormat(recordType, options)
+      };
+    }
+
+    result = XM.Model.query(recordType, formattedOptions);
 
     return result;
   };

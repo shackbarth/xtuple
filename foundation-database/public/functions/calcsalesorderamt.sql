@@ -33,15 +33,19 @@ BEGIN
   SELECT COALESCE(SUM(ROUND((coitem_qtyord * coitem_qty_invuomratio) *
                             (coitem_price / coitem_price_invuomratio), 2)), 0.0),
          COALESCE(SUM(ROUND((coitem_qtyord * coitem_qty_invuomratio) *
-                            (coitem_unitcost / coitem_price_invuomratio), 2)), 0.0)
+                            (CASE WHEN (coitem_subnumber > 0) THEN 0.0 ELSE coitem_unitcost END
+                             / coitem_price_invuomratio), 2)), 0.0)
          INTO _subtotal, _cost
   FROM coitem
   WHERE (coitem_cohead_id=pCoheadid)
     AND (coitem_status != 'X');
 
   IF (pType IN ('T', 'B', 'X')) THEN
-    SELECT COALESCE(ROUND(SUM(taxdetail_tax), 2), 0.0) INTO _tax
-    FROM calculateTaxDetailSummary('S', pCoheadid, 'T');
+    SELECT SUM(tax) INTO _tax
+    FROM (SELECT COALESCE(ROUND(SUM(taxdetail_tax), 2), 0.0) AS tax
+          FROM tax
+               JOIN calculateTaxDetailSummary('S', pCoheadid, 'T')ON (taxdetail_tax_id=tax_id)
+          GROUP BY tax_id) AS data;
   END IF;
 
   IF (pType IN ('T', 'B', 'C')) THEN
