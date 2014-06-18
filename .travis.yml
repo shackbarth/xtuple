@@ -1,6 +1,7 @@
 language: c
 
 before_install:
+  - mv ~/.nvm ~/.nvm.disabled
   - wget git.io/hikK5g -qO- | sudo bash
   - n stable
 
@@ -22,6 +23,4 @@ after_failure:
   - env
   - cat test/lib/login_data.json
   - cat node-datasource/config.js
-  - ls -l enyo-client/application
-  - ls -l lib
   - cat npm-debug.log
