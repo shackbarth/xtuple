@@ -2,18 +2,19 @@ CREATE OR REPLACE FUNCTION postCCcredit(INTEGER, TEXT, INTEGER) RETURNS INTEGER 
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
-  pCCpay	ALIAS FOR $1;
+  pCCpay	      ALIAS FOR $1;
   preftype      ALIAS FOR $2;
   prefid        ALIAS FOR $3;
-  _c		RECORD;
+  _c		        RECORD;
+  _cardType     TEXT;
   _ccOrderDesc	TEXT;
   _cglaccnt     INTEGER;
-  _dglaccnt	INTEGER;
+  _dglaccnt	    INTEGER;
   _glseriesres  INTEGER;
-  _notes	TEXT := 'Credit via Credit Card';
-  _r		RECORD;
-  _sequence	INTEGER;
-  _dmaropenid	INTEGER;
+  _notes	      TEXT := 'Credit via Credit Card';
+  _r		        RECORD;
+  _sequence	    INTEGER;
+  _dmaropenid	  INTEGER;
 
 BEGIN
   IF ((preftype = 'cohead') AND NOT EXISTS(SELECT cohead_id
@@ -35,7 +36,7 @@ BEGIN
 
   SELECT * INTO _c
      FROM ccpay
-     LEFT JOIN ccard ON ccpay_ccard_id = ccard_id
+     LEFT OUTER JOIN ccard ON ccpay_ccard_id = ccard_id
      WHERE (ccpay_id = pCCpay);
 
   IF (NOT FOUND) THEN
@@ -49,16 +50,22 @@ BEGIN
     _dglaccnt := findARAccount(_c.ccpay_cust_id);
   END IF;
 
-  IF (_c.ccard_type IS NULL) THEN
-    -- TODO: Add 'E' for External ccbank_ccard_type. Use 'P' for now.
-    --_c.ccard_type = 'E';
-    _c.ccard_type = 'P';
+  IF (_c.ccard_type IS NOT NULL) THEN
+    _cardType = _c.ccard_type;
+  ELSE IF (_c.ccpay_card_type IS NOT NULL) THEN
+    -- Support External Pre-Auths where the Card Type is pushed into ccpay.
+    -- There is no ccpay_ccard_id to join ccard on and get ccard_type.
+    _cardType = _c.ccpay_card_type;
+  ELSE
+    -- TODO: Where is the other half of these -n error codes???
+    RAISE EXCEPTION 'Cannot find the Credit Card type [xtuple: postCCcredit, -3, %, %, %]',
+                    pCCpay, preftype, prefid;
   END IF;
 
   SELECT bankaccnt_accnt_id INTO _cglaccnt
   FROM ccbank
   JOIN bankaccnt ON (ccbank_bankaccnt_id=bankaccnt_id)
-  WHERE (ccbank_ccard_type=_c.ccard_type);
+  WHERE (ccbank_ccard_type=_cardType);
 
   IF (NOT FOUND) THEN
     RAISE EXCEPTION 'Cannot find the default Bank Account for this Credit Card [xtuple: postCCcredit, -1, %]',
@@ -73,9 +80,9 @@ BEGIN
   _sequence := fetchGLSequence();
 
   IF (_c.ccpay_r_ref IS NOT NULL) THEN
-    _ccOrderDesc := (_c.ccard_type || '-' || _c.ccpay_r_ref);
+    _ccOrderDesc := (_cardType || '-' || _c.ccpay_r_ref);
   ELSE
-    _ccOrderDesc := (_c.ccard_type || '-' || _c.ccpay_order_number::TEXT ||
+    _ccOrderDesc := (_cardType || '-' || _c.ccpay_order_number::TEXT ||
 		     '-' || COALESCE(_c.ccpay_order_number_seq::TEXT, ''));
   END IF;
 
