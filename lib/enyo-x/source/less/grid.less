@@ -1,6 +1,8 @@
 /*
   Styles relating to the grid box
 */
+@widgetFontSize: 13px;
+
 
 /* Entire box including the grid and the summary panel */
 .xv-grid-box {
@@ -34,10 +36,10 @@
   }
 
   .xv-grid-attr {
-    // This limits the text to three lines
+    // This limits the text to four lines
     overflow: hidden;
     display: -webkit-box;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 4;
     -webkit-box-orient: vertical;
 
     &.bold {
@@ -168,63 +170,16 @@
             height: 26px;
             padding-top: 3px;
             width: 100%;
-            font-size: 13px;
+            font-size: @widgetFontSize;
           }
-        }
-        .xv-input {
-          border: none;
-        }
-        .xv-picker-label {
-          display: none;
-        }
-        .xv-datewidget {
-          margin-right: 10px;
-          padding-top: 0;
-          .onyx-input-decorator {
-            padding: 0;
-            width: 100%;
-            input {
-              width: 85%;
-              font-size: 13px;
-            }
-          }
-        }
-        .xv-numberwidget {
-          padding-top: 6px;
-          .onyx-input-decorator {
-            .tightened-input-decorator;
-          }
-        }
-        .xv-combobox {
-          padding-left: 0;
-          input {
-            padding-top: 3px;
-            width: 80px;
-            font-size: 13px;
-          }
-        }
-        .xv-moneywidget {
-          padding-bottom: 0;
-          .onyx-input-decorator {
-            .tightened-input-decorator;
-          }
-        }
-        .xv-useraccount-widget {
-          // Hack: we shouldn't have to force this.
-          .xv-subinput {
-            width: 80px;
-            height: 16px;
-          }
-        }
-        .xv-subinput {
-          width: 100%;
         }
         .xv-input {
           padding-top: 6px;
           width: 100%;
           border: none;
+
         }
-        .xv-label, .xv-flexible-label {
+        .xv-label, .xv-flexible-label, .xv-picker-label {
           display: none;
         }
         .xv-relationwidget {
@@ -232,17 +187,28 @@
             margin: 0;
             margin-top: 5px;
           }
-          .onyx-input-decorator {
-            width: 100%;
-            padding-top: 6px;
+          &.xv-private-item-site-widget {
+            border-bottom: 0;
           }
-          .onyx-input {
-            width: 85%;
-            padding-right: 4px;
+          .onyx-input-decorator {
+            .tightened-input-decorator(85%);
           }
         }
-        .xv-private-item-site-widget {
-          border-bottom: 0;
+        .xv-datewidget {
+          .onyx-input-decorator {
+            .tightened-input-decorator(75%);
+          }
+        }
+        .xv-combobox {
+          .onyx-input-decorator {
+            .tightened-input-decorator(60%);
+          }
+        }
+        .xv-useraccount-widget {
+          .xv-input {
+            width: 80px;
+            height: 16px;
+          }
         }
       }
     }
@@ -284,12 +250,12 @@
   }
 }
 
-.tightened-input-decorator (@width: 100%) {
+.tightened-input-decorator (@inputWidth: 100%) {
   padding: 0;
-  width: @width;
+  width: 100%;
   margin: 0;
   input {
-    width: (@width);
-    font-size: 13px;
+    width: @inputWidth;
+    font-size: @widgetFontSize;
   }
 }

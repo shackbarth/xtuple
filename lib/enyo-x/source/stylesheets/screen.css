@@ -2329,7 +2329,7 @@ a,
 .xv-grid-box .xv-grid-attr {
   overflow: hidden;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
 }
 .xv-grid-box .xv-grid-attr.bold {
@@ -2459,85 +2459,52 @@ a,
   font-size: 13px;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-input {
-  border: none;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-picker-label {
-  display: none;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-datewidget {
-  margin-right: 10px;
-  padding-top: 0;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-datewidget .onyx-input-decorator {
-  padding: 0;
-  width: 100%;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-datewidget .onyx-input-decorator input {
-  width: 85%;
-  font-size: 13px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-numberwidget {
-  padding-top: 6px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-numberwidget .onyx-input-decorator {
-  padding: 0;
-  width: 100%;
-  margin: 0;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-numberwidget .onyx-input-decorator input {
-  width: 100%;
-  font-size: 13px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-combobox {
-  padding-left: 0;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-combobox input {
-  padding-top: 3px;
-  width: 80px;
-  font-size: 13px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-moneywidget {
-  padding-bottom: 0;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-moneywidget .onyx-input-decorator {
-  padding: 0;
-  width: 100%;
-  margin: 0;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-moneywidget .onyx-input-decorator input {
-  width: 100%;
-  font-size: 13px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-useraccount-widget .xv-subinput {
-  width: 80px;
-  height: 16px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-subinput {
-  width: 100%;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-input {
   padding-top: 6px;
   width: 100%;
   border: none;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-label,
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-flexible-label {
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-flexible-label,
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-picker-label {
   display: none;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget .xv-description {
   margin: 0;
   margin-top: 5px;
 }
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget .onyx-input-decorator {
-  width: 100%;
-  padding-top: 6px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget .onyx-input {
-  width: 85%;
-  padding-right: 4px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-private-item-site-widget {
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget.xv-private-item-site-widget {
   border-bottom: 0;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget .onyx-input-decorator {
+  padding: 0;
+  width: 100%;
+  margin: 0;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget .onyx-input-decorator input {
+  width: 85%;
+  font-size: 13px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-datewidget .onyx-input-decorator {
+  padding: 0;
+  width: 100%;
+  margin: 0;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-datewidget .onyx-input-decorator input {
+  width: 75%;
+  font-size: 13px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-combobox .onyx-input-decorator {
+  padding: 0;
+  width: 100%;
+  margin: 0;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-combobox .onyx-input-decorator input {
+  width: 60%;
+  font-size: 13px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-useraccount-widget .xv-input {
+  width: 80px;
+  height: 16px;
 }
 .xv-grid-box.xv-groupbox .xv-sales-summary-panel {
   border: none;
