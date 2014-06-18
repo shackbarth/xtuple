@@ -52,7 +52,7 @@ BEGIN
 
   IF (_c.ccard_type IS NOT NULL) THEN
     _cardType = _c.ccard_type;
-  ELSE IF (_c.ccpay_card_type IS NOT NULL) THEN
+  ELSIF (_c.ccpay_card_type IS NOT NULL) THEN
     -- Support External Pre-Auths where the Card Type is pushed into ccpay.
     -- There is no ccpay_ccard_id to join ccard on and get ccard_type.
     _cardType = _c.ccpay_card_type;
