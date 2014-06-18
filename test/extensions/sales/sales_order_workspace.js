@@ -190,7 +190,8 @@
         workspace.value.set("scheduleDate", newScheduleDate);
       });
       it('save, then delete order', function (done) {
-        assert.equal(workspace.value.status, XM.Model.READY_DIRTY);
+        assert.isTrue(workspace.value.status === XM.Model.READY_DIRTY ||
+          workspace.value.status === XM.Model.READY_NEW);
         smoke.saveWorkspace(workspace, function (err, model) {
           assert.isNull(err);
           // XXX - sloppy
