@@ -9,7 +9,6 @@ DECLARE
   _aropenid     INTEGER;
   _bankaccnt_id INTEGER;
   _c            RECORD;
-  _cardType     TEXT;
   _ccOrderDesc  TEXT;
   _journal      INTEGER;
   _realaccnt    INTEGER;
@@ -19,7 +18,6 @@ BEGIN
   SELECT * INTO _c
      FROM ccpay
      JOIN custinfo ON ccpay_cust_id = cust_id
-     LEFT OUTER JOIN ccard ON ccpay_ccard_id = ccard_id
      WHERE (ccpay_id = pCCpay);
 
   IF (NOT FOUND) THEN
@@ -31,29 +29,17 @@ BEGIN
     _c.ccpay_amount = pamount;
   END IF;
 
-  IF (_c.ccard_type IS NOT NULL) THEN
-    _cardType = _c.ccard_type;
-  ELSIF (_c.ccpay_card_type IS NOT NULL) THEN
-    -- Support External Pre-Auths where the Card Type is pushed into ccpay.
-    -- There is no ccpay_ccard_id to join ccard on and get ccard_type.
-    _cardType = _c.ccpay_card_type;
-  ELSE
-    -- TODO: Where is the other half of these -n error codes???
-    RAISE EXCEPTION 'Cannot find the Credit Card type [xtuple: postCCcashReceipt, -2, %, %, %]',
-                    pCCpay, pdocid, pdoctype;
-  END IF;
-
   SELECT bankaccnt_id, bankaccnt_accnt_id INTO _bankaccnt_id, _realaccnt
   FROM ccbank
   JOIN bankaccnt ON (ccbank_bankaccnt_id=bankaccnt_id)
-  WHERE (ccbank_ccard_type=_cardType);
+  WHERE (ccbank_ccard_type=_c.ccpay_card_type);
 
   IF (_bankaccnt_id IS NULL) THEN
     RAISE EXCEPTION 'Cannot find the default Bank Account for this Credit Card [xtuple: postCCcredit, -1, %]',
-                    _cardType;
+                    _c.ccpay_card_type;
   END IF;
 
-  _ccOrderDesc := (_cardType || '-' || _c.ccpay_order_number::TEXT ||
+  _ccOrderDesc := (_c.ccpay_card_type || '-' || _c.ccpay_order_number::TEXT ||
 		   '-' || _c.ccpay_order_number_seq::TEXT);
 
   _journal := fetchJournalNumber('C/R');
@@ -67,7 +53,7 @@ BEGIN
         cashrcpt_usecustdeposit
       ) VALUES (
         _c.ccpay_cust_id,   _c.ccpay_amount,     _c.ccpay_curr_id,
-        _cardType,      _c.ccpay_r_ordernum, _ccOrderDesc,
+        _c.ccpay_card_type,      _c.ccpay_r_ordernum, _ccOrderDesc,
         CURRENT_DATE,       _bankaccnt_id,
         fetchMetricBool('EnableCustomerDeposits'))
       RETURNING cashrcpt_id INTO _return;
@@ -76,7 +62,7 @@ BEGIN
       SET cashrcpt_cust_id=_c.ccpay_cust_id,
           cashrcpt_amount=_c.ccpay_amount,
           cashrcpt_curr_id=_c.ccpay_curr_id,
-          cashrcpt_fundstype=_cardType,
+          cashrcpt_fundstype=_c.ccpay_card_type,
           cashrcpt_docnumber=_c.ccpay_r_ordernum,
           cashrcpt_notes=_ccOrderDesc,
           cashrcpt_distdate=CURRENT_DATE,
