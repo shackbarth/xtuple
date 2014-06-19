@@ -110,10 +110,7 @@
         });
       });
       it('Supply list should have action to open Item Workbench', function (done) {
-        if (!XT.extensions.inventory) {
-          done();
-          return;
-        }
+        if (!XT.extensions.inventory) {return done(); }
         var verify,
           action = _.find(gridBox.$.supplyList.actions, function (action) {
             return action.name === "openItemWorkbench";
@@ -161,7 +158,7 @@
         */
       });
       it('after saving, should not be able to Open and have edit privs in Item Site Workspace', function (done) {
-        if (!XT.extensions.inventory) {done(); }
+        if (!XT.extensions.inventory) {return done(); }
         var originator = {}, statusReadyClean, workspaceContainer;
         originator.name = "openItem";
         // It's NOT a new order, go and make sure that we can't edit (after opening) Item Site WS
@@ -191,7 +188,7 @@
       it('changing the Schedule Date updates the line item\'s schedule date', function (done) {
         // Skip if no mfg ext or site cal not enabled... 
         // TODO - temporary until second notifyPopup (_nextWorkingDate) is handled properly in test
-        if (!XT.extensions.manufacturing || !XT.session.settings.get("UseSiteCalendar")) {done(); }
+        if (!(XT.extensions.manufacturing) || !(XT.session.settings.get("UseSiteCalendar"))) {return done(); }
         var getDowDate = function (dow) {
             var date = new Date(),
               currentDow = date.getDay(),
@@ -217,8 +214,8 @@
         workspace.value.set("scheduleDate", newScheduleDate);
       });
       it('save, then delete order', function (done) {
-        assert.isTrue(workspace.value.status === XM.Model.READY_DIRTY ||
-          workspace.value.status === XM.Model.READY_NEW);
+        assert.isTrue((workspace.value.status === XM.Model.READY_DIRTY ||
+          workspace.value.status === XM.Model.READY_NEW));
         smoke.saveWorkspace(workspace, function (err, model) {
           assert.isNull(err);
           // XXX - sloppy
