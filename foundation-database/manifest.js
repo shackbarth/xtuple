@@ -920,6 +920,7 @@
     "public/trigger_functions/cashrcptitem.sql",
     "public/trigger_functions/cashrcptmisc.sql",
     "public/trigger_functions/ccard.sql",
+    "public/trigger_functions/ccpay.sql",
     "public/trigger_functions/char.sql",
     "public/trigger_functions/charass.sql",
     "public/trigger_functions/charopt.sql",
@@ -1626,6 +1627,7 @@
     "public/tables/report/WarehouseMasterList.xml",
     "public/tables/report/items.xml",
 
-    "public/patches/fixacl.sql"
+    "public/patches/fixacl.sql",
+    "public/patches/populate_ccpay_card_type.sql"
   ]
 }
