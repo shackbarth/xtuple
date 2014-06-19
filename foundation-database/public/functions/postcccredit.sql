@@ -2,23 +2,23 @@ CREATE OR REPLACE FUNCTION postCCcredit(INTEGER, TEXT, INTEGER) RETURNS INTEGER 
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
-  pCCpay	      ALIAS FOR $1;
+  pCCpay        ALIAS FOR $1;
   preftype      ALIAS FOR $2;
   prefid        ALIAS FOR $3;
-  _c		        RECORD;
-  _ccOrderDesc	TEXT;
+  _c            RECORD;
+  _ccOrderDesc  TEXT;
   _cglaccnt     INTEGER;
-  _dglaccnt	    INTEGER;
+  _dglaccnt     INTEGER;
   _glseriesres  INTEGER;
-  _notes	      TEXT := 'Credit via Credit Card';
-  _r		        RECORD;
-  _sequence	    INTEGER;
-  _dmaropenid	  INTEGER;
+  _notes        TEXT := 'Credit via Credit Card';
+  _r            RECORD;
+  _sequence     INTEGER;
+  _dmaropenid   INTEGER;
 
 BEGIN
   IF ((preftype = 'cohead') AND NOT EXISTS(SELECT cohead_id
-					     FROM cohead
-					     WHERE (cohead_id=prefid))) THEN
+               FROM cohead
+               WHERE (cohead_id=prefid))) THEN
     RAISE EXCEPTION 'Cannot find original Sales Order for this Credit Card credit [xtuple: postCCcredit, -2, %, %, %]',
                     pCCpay, preftype, prefid;
   ELSIF ((preftype = 'aropen') AND NOT EXISTS(SELECT aropen_id
@@ -69,7 +69,7 @@ BEGIN
     _ccOrderDesc := (_c.ccpay_card_type || '-' || _c.ccpay_r_ref);
   ELSE
     _ccOrderDesc := (_c.ccpay_card_type || '-' || _c.ccpay_order_number::TEXT ||
-		     '-' || COALESCE(_c.ccpay_order_number_seq::TEXT, ''));
+         '-' || COALESCE(_c.ccpay_order_number_seq::TEXT, ''));
   END IF;
 
   _glseriesres := insertIntoGLSeries(_sequence, 'A/R', 'CC', _ccOrderDesc,
