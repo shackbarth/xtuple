@@ -40,7 +40,7 @@ BEGIN
   END IF;
 
   _ccOrderDesc := (_c.ccpay_card_type || '-' || _c.ccpay_order_number::TEXT ||
-       '-' || _c.ccpay_order_number_seq::TEXT);
+                  '-' || _c.ccpay_order_number_seq::TEXT);
 
   _journal := fetchJournalNumber('C/R');
 
@@ -103,9 +103,9 @@ BEGIN
                               findPrepaidAccount(_c.ccpay_cust_id),
                               _realaccnt,
                               NULL,
-            ROUND(currToBase(_c.ccpay_curr_id,
-                 _c.ccpay_amount,
-                 _c.ccpay_transaction_datetime::DATE),2),
+                              ROUND(currToBase(_c.ccpay_curr_id,
+                                               _c.ccpay_amount,
+                                               _c.ccpay_transaction_datetime::DATE),2),
                               CURRENT_DATE);
 
   RETURN _return;

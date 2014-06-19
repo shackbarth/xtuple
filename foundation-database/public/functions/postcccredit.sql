@@ -17,25 +17,25 @@ DECLARE
 
 BEGIN
   IF ((preftype = 'cohead') AND NOT EXISTS(SELECT cohead_id
-               FROM cohead
-               WHERE (cohead_id=prefid))) THEN
+                                           FROM cohead
+                                           WHERE (cohead_id=prefid))) THEN
     RAISE EXCEPTION 'Cannot find original Sales Order for this Credit Card credit [xtuple: postCCcredit, -2, %, %, %]',
                     pCCpay, preftype, prefid;
   ELSIF ((preftype = 'aropen') AND NOT EXISTS(SELECT aropen_id
-                                                FROM aropen
-                                                WHERE (aropen_id=prefid))) THEN
+                                              FROM aropen
+                                              WHERE (aropen_id=prefid))) THEN
     RAISE EXCEPTION 'Cannot find original A/R Open record for this Credit Card credit [xtuple: postCCcredit, -2, %, %, %]',
                     pCCpay, preftype, prefid;
   ELSIF ((preftype = 'cmhead') AND NOT EXISTS(SELECT cmhead_id
-                                                FROM cmhead
-                                               WHERE cmhead_id=prefid)) THEN
+                                              FROM cmhead
+                                              WHERE cmhead_id=prefid)) THEN
     RAISE EXCEPTION 'Cannot find original Credit Memo record for this Credit Card credit [xtuple: postCCcredit, -2, %, %, %]',
                     pCCpay, preftype, prefid;
   END IF;
 
   SELECT * INTO _c
-     FROM ccpay
-     WHERE (ccpay_id = pCCpay);
+  FROM ccpay
+  WHERE (ccpay_id = pCCpay);
 
   IF (NOT FOUND) THEN
     RAISE EXCEPTION 'Cannot find the record for this Credit Card credit [xtuple: postCCcredit, -3, %, %, %]',
@@ -69,7 +69,7 @@ BEGIN
     _ccOrderDesc := (_c.ccpay_card_type || '-' || _c.ccpay_r_ref);
   ELSE
     _ccOrderDesc := (_c.ccpay_card_type || '-' || _c.ccpay_order_number::TEXT ||
-         '-' || COALESCE(_c.ccpay_order_number_seq::TEXT, ''));
+                    '-' || COALESCE(_c.ccpay_order_number_seq::TEXT, ''));
   END IF;
 
   _glseriesres := insertIntoGLSeries(_sequence, 'A/R', 'CC', _ccOrderDesc,
