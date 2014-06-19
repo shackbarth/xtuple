@@ -58,7 +58,7 @@ BEGIN
     _cardType = _c.ccpay_card_type;
   ELSE
     -- TODO: Where is the other half of these -n error codes???
-    RAISE EXCEPTION 'Cannot find the Credit Card type [xtuple: postCCcredit, -3, %, %, %]',
+    RAISE EXCEPTION 'Cannot find the Credit Card type [xtuple: postCCcredit, -5, %, %, %]',
                     pCCpay, preftype, prefid;
   END IF;
 
