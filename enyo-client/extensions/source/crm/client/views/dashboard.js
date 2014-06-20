@@ -14,7 +14,7 @@ trailing:true, white:true*/
     // title is what show in the "add chart" picker on the
     // dashboard and the chart is the widget to be added
     newActions: [
-      {name: "openIncidents", label: "_openIncidents".loc(), item: "XV.OpenIncidentBarChart"},
+      {name: "assignedIncidents", label: "_assignedIncidents".loc(), item: "XV.AssignedIncidentBarChart"},
       {name: "opportunities", label: "_opportunities".loc(), item: "XV.OpportunityBarChart"}
     ]
   });

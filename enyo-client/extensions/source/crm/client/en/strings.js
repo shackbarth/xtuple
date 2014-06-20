@@ -7,12 +7,12 @@ strict:true, trailing:true, white:true */
   "use strict";
 
   var lang = XT.stringsFor("en_US", {
+    "_assignedIncidents": "Assigned Incidents",
     "_crm": "CRM",
     "_crmDescription": "Corporate Relationship Management",
     "_highPriority": "High Priority",
     "_incidentDefaultPublic": "Comment Default Public",
     "_incidentStatusColors": "Incident Status Colors",
-    "_openIncidents": "Open Incidents",
     "_maintainEmailProfiles": "Maintain Email Profiles",
     "_staleAnalysisWarning": "Free trial demo analysis data will not be updated from your live changes.",
     "_viewEmailProfiles": "View Email Profiles"

@@ -8,10 +8,10 @@ trailing:true, white:true*/
   XT.extensions.crm.initCharts = function () {
 
     enyo.kind({
-      name: "XV.OpenIncidentBarChart",
+      name: "XV.AssignedIncidentBarChart",
       kind: "XV.DrilldownBarChart",
       collection: "XM.IncidentListItemCollection",
-      chartTitle: "_openIncidents".loc(),
+      chartTitle: "_assignedIncidents".loc(),
       filterOptions: [
         { name: "all", parameters: [] },
         { name: "highPriority", parameters: [
@@ -24,12 +24,12 @@ trailing:true, white:true*/
         { name: "priority" },
         { name: "project" }
       ],
-      // suppress closed incidents
+      // assigned incidents only
       query: {
         parameters: [{
           attribute: "status",
-          operator: "!=",
-          value: "L"
+          operator: "=",
+          value: "A"
         }],
       }
     });
