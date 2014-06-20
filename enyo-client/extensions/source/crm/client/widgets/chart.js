@@ -38,7 +38,7 @@ trailing:true, white:true*/
       name: "XV.OpportunityBarChart",
       kind: "XV.DrilldownBarChart",
       collection: "XM.OpportunityListItemCollection",
-      chartTitle: "_opportunities".loc(),
+      chartTitle: "_opportunitiesNext30Days".loc(),
       groupByOptions: [
         { name: "opportunityStage", content: "_stage".loc() },
         { name: "opportunitySource", content: "_source".loc() },
@@ -47,6 +47,17 @@ trailing:true, white:true*/
         { name: "assignedTo" },
         { name: "priority" }
       ],
+      query: {
+        parameters: [{
+          attribute: "targetClose",
+          operator: ">=",
+          value: XT.date.applyTimezoneOffset(XV.Date.prototype.textToDate("0"), true)
+        }, {
+          attribute: "targetClose",
+          operator: "<=",
+          value: XT.date.applyTimezoneOffset(XV.Date.prototype.textToDate("+30"), true)
+        }],
+      },
       totalField: "amount"
     });
 

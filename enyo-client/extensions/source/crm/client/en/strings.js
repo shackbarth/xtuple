@@ -13,6 +13,7 @@ strict:true, trailing:true, white:true */
     "_highPriority": "High Priority",
     "_incidentDefaultPublic": "Comment Default Public",
     "_incidentStatusColors": "Incident Status Colors",
+    "_opportunitiesNext30Days": "Opportunities Next 30 Days",
     "_maintainEmailProfiles": "Maintain Email Profiles",
     "_staleAnalysisWarning": "Free trial demo analysis data will not be updated from your live changes.",
     "_viewEmailProfiles": "View Email Profiles"
