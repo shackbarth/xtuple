@@ -1717,26 +1717,18 @@ a,
 .xv-popup.xv-groupbox-popup .xv-relationwidget .xv-description.disabled {
   color: #777777;
 }
-.xv-popup.xv-groupbox-popup .xv-spinnerwidget .buttons {
+.xv-popup.xv-groupbox-popup .xv-spinnerwidget .xv-icon-decorator .onyx-icon {
   display: block;
-  padding: 0;
-  margin: 1px 0 1px 10px;
-  width: 20px;
-  height: 20px;
-  background: transparent;
-  color: #357ec7;
-  font-size: 20px;
   border: none;
+  font-size: 20px;
+  width: 20px;
+  padding: 0 4px 0 4px;
+}
+.xv-popup.xv-groupbox-popup .xv-spinnerwidget .xv-icon-decorator input {
+  width: 136px;
 }
 .xv-popup.xv-groupbox-popup .xv-spinnerwidget .slider {
   margin: 15px 10px;
-}
-.xv-popup.xv-groupbox-popup .xv-spinnerwidget.xv-numberwidget input {
-  width: 120px;
-}
-.xv-popup.xv-groupbox-popup .xv-combobox .icon-sort {
-  color: #357ec7;
-  vertical-align: middle;
 }
 .xv-popup.xv-groupbox-popup .xv-numberwidget input {
   text-align: right;
@@ -1830,9 +1822,12 @@ a,
 }
 .icon-folder-open-alt,
 .icon-calendar,
-.icon-sort {
+.icon-sort,
+.icon-angle-up,
+.icon-angle-down {
   color: #357ec7;
   vertical-align: middle;
+  text-align: center;
 }
 .xv-short-textarea .xv-textarea-input {
   min-height: 0;
@@ -2139,26 +2134,18 @@ a,
 .xv-workspace-container .xv-workspace .xv-workspace-panel .xv-relationwidget .xv-description.disabled {
   color: #777777;
 }
-.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-spinnerwidget .buttons {
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-spinnerwidget .xv-icon-decorator .onyx-icon {
   display: block;
-  padding: 0;
-  margin: 1px 0 1px 10px;
-  width: 20px;
-  height: 20px;
-  background: transparent;
-  color: #357ec7;
-  font-size: 20px;
   border: none;
+  font-size: 20px;
+  width: 20px;
+  padding: 0 4px 0 4px;
+}
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-spinnerwidget .xv-icon-decorator input {
+  width: 136px;
 }
 .xv-workspace-container .xv-workspace .xv-workspace-panel .xv-spinnerwidget .slider {
   margin: 15px 10px;
-}
-.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-spinnerwidget.xv-numberwidget input {
-  width: 120px;
-}
-.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-combobox .icon-sort {
-  color: #357ec7;
-  vertical-align: middle;
 }
 .xv-workspace-container .xv-workspace .xv-workspace-panel .xv-numberwidget input {
   text-align: right;
@@ -2485,7 +2472,7 @@ a,
   margin: 0;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget .onyx-input-decorator input {
-  width: 85%;
+  width: 76%;
   font-size: 13px;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-datewidget .onyx-input-decorator {
@@ -2494,7 +2481,7 @@ a,
   margin: 0;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-datewidget .onyx-input-decorator input {
-  width: 75%;
+  width: 76%;
   font-size: 13px;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-combobox .onyx-input-decorator {
@@ -2503,7 +2490,7 @@ a,
   margin: 0;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-combobox .onyx-input-decorator input {
-  width: 60%;
+  width: 76%;
   font-size: 13px;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-useraccount-widget .xv-input {
@@ -3102,26 +3089,18 @@ a,
 .xv-pullout .xv-parameter-panel .xv-relationwidget .xv-description.disabled {
   color: #777777;
 }
-.xv-pullout .xv-parameter-panel .xv-spinnerwidget .buttons {
+.xv-pullout .xv-parameter-panel .xv-spinnerwidget .xv-icon-decorator .onyx-icon {
   display: block;
-  padding: 0;
-  margin: 1px 0 1px 10px;
-  width: 20px;
-  height: 20px;
-  background: transparent;
-  color: #357ec7;
-  font-size: 20px;
   border: none;
+  font-size: 20px;
+  width: 20px;
+  padding: 0 4px 0 4px;
+}
+.xv-pullout .xv-parameter-panel .xv-spinnerwidget .xv-icon-decorator input {
+  width: 136px;
 }
 .xv-pullout .xv-parameter-panel .xv-spinnerwidget .slider {
   margin: 15px 10px;
-}
-.xv-pullout .xv-parameter-panel .xv-spinnerwidget.xv-numberwidget input {
-  width: 120px;
-}
-.xv-pullout .xv-parameter-panel .xv-combobox .icon-sort {
-  color: #357ec7;
-  vertical-align: middle;
 }
 .xv-pullout .xv-parameter-panel .xv-numberwidget input {
   text-align: right;
@@ -3392,26 +3371,18 @@ a,
 .xv-search .xv-search-container .xv-relationwidget .xv-description.disabled {
   color: #777777;
 }
-.xv-search .xv-search-container .xv-spinnerwidget .buttons {
+.xv-search .xv-search-container .xv-spinnerwidget .xv-icon-decorator .onyx-icon {
   display: block;
-  padding: 0;
-  margin: 1px 0 1px 10px;
-  width: 20px;
-  height: 20px;
-  background: transparent;
-  color: #357ec7;
-  font-size: 20px;
   border: none;
+  font-size: 20px;
+  width: 20px;
+  padding: 0 4px 0 4px;
+}
+.xv-search .xv-search-container .xv-spinnerwidget .xv-icon-decorator input {
+  width: 136px;
 }
 .xv-search .xv-search-container .xv-spinnerwidget .slider {
   margin: 15px 10px;
-}
-.xv-search .xv-search-container .xv-spinnerwidget.xv-numberwidget input {
-  width: 120px;
-}
-.xv-search .xv-search-container .xv-combobox .icon-sort {
-  color: #357ec7;
-  vertical-align: middle;
 }
 .xv-search .xv-search-container .xv-numberwidget input {
   text-align: right;

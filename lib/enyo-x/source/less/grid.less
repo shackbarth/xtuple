@@ -2,6 +2,11 @@
   Styles relating to the grid box
 */
 @widgetFontSize: 13px;
+@gridIconWidth: 4px;
+@gridIconPadding: 2px;
+@gridFieldDecoratorWidth: 100%;
+@gridFieldWidth: @gridFieldDecoratorWidth - (2 * @decoratorPadding);
+@iconGridFieldWidth: @gridFieldWidth - @gridIconWidth - (2 * @gridIconPadding);
 
 
 /* Entire box including the grid and the summary panel */
@@ -161,7 +166,7 @@
       border: 1px solid @bright-orange;
       .xv-grid-column {
         .onyx-input-decorator {
-          .tightened-input-decorator;
+          .tightened-input-decorator(100%);
         }
         .onyx-picker-decorator {
           padding-top: 6px;
@@ -175,7 +180,7 @@
         }
         .xv-input {
           padding-top: 6px;
-          width: 100%;
+          width: @gridFieldDecoratorWidth;
           border: none;
 
         }
@@ -191,17 +196,17 @@
             border-bottom: 0;
           }
           .onyx-input-decorator {
-            .tightened-input-decorator(85%);
+            .tightened-input-decorator;
           }
         }
         .xv-datewidget {
           .onyx-input-decorator {
-            .tightened-input-decorator(75%);
+            .tightened-input-decorator;
           }
         }
         .xv-combobox {
           .onyx-input-decorator {
-            .tightened-input-decorator(60%);
+            .tightened-input-decorator;
           }
         }
         .xv-useraccount-widget {
@@ -250,9 +255,9 @@
   }
 }
 
-.tightened-input-decorator (@inputWidth: 100%) {
+.tightened-input-decorator (@inputWidth: @iconGridFieldWidth) {
   padding: 0;
-  width: 100%;
+  width: @gridFieldDecoratorWidth;
   margin: 0;
   input {
     width: @inputWidth;

@@ -33,7 +33,7 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     maxlength: 12,
     components: [
-      {controlClasses: 'enyo-inline', components: [
+      {controlClasses: "enyo-inline", components: [
         {name: "label", content: "", classes: "xv-label"},
         {kind: "onyx.InputDecorator", components: [
           {name: "input", kind: "onyx.Input",
@@ -41,7 +41,7 @@ regexp:true, undef:true, trailing:true, white:true */
         ]},
         {name: "picker", kind: "XV.CurrencyPicker", classes: "xv-currency-picker", showLabel: false}
       ]},
-      {controlClasses: 'enyo-inline', name: "basePanel", showing: false, components: [
+      {controlClasses: "enyo-inline", name: "basePanel", showing: false, components: [
         {classes: "xv-label"},
         {kind: "onyx.InputDecorator", components: [
           {name: "baseAmountLabel", classes: "xv-label"}
