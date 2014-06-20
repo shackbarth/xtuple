@@ -53,7 +53,6 @@ trailing:true, white:true*/
       name: "crm",
       label: "_crm".loc(),
       panels: [
-        {name: "crmDashboard", kind: "XV.CrmDashboard"},
         {name: "accountList", kind: "XV.AccountList"},
         {name: "contactList", kind: "XV.ContactList"},
         {name: "crm_activityList", kind: "XV.ActivityList"},
@@ -62,6 +61,10 @@ trailing:true, white:true*/
         {name: "incidentList", kind: "XV.IncidentList", toggleSelected: false}
       ]
     };
+
+    if (XT.session.settings.get("DashboardsLite")) {
+      module.panels.unshift({name: "crmDashboard", kind: "XV.CrmDashboard"});
+    }
 
     isBiAvailable = XT.session.config.biAvailable && XT.session.privileges.get("ViewSalesHistory");
     if (isBiAvailable) {
