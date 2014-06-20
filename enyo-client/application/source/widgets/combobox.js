@@ -70,12 +70,9 @@ regexp:true, undef:true, trailing:true, white:true */
       this.inherited(arguments);
       this.createComponent({
         name: "comboboxNote",
-        container: this.$.fittableColumns,
+        container: this.$.container,
         classes: "xv-combobox-note"
       });
-      // TODO: git rid of this
-      this.$.input.applyStyle("padding-top", "8px");
-      this.$.input.applyStyle("padding-left", "8px");
     },
     /**
       Populate the note field

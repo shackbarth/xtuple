@@ -1532,6 +1532,12 @@ a,
   padding: 0;
   border: none;
 }
+.xv-limit-description {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+}
 .xv-app-panel {
   /* Setting this as min-width overrides enyo-narrow 100% */
   width: 320px;
@@ -2317,13 +2323,7 @@ a,
 .xv-grid-box .xv-scroller {
   background: #f8f8f8;
 }
-.xv-grid-box .xv-grid-attr {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 4;
-  -webkit-box-orient: vertical;
-}
-.xv-grid-box .xv-grid-attr.bold {
+.xv-limit-description .xv-grid-box .xv-grid-attr.bold {
   font-weight: bold;
 }
 .xv-grid-box .xv-grid-attr.error {

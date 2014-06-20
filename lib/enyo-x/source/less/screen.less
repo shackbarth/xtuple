@@ -85,6 +85,14 @@ a, .hyperlink {
   border: none;
 }
 
+  // This gives them 4 lines of description
+.xv-limit-description {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+}
+
 .xv-app-panel {
   /* Setting this as min-width overrides enyo-narrow 100% */
   width: @defaultPanelWidth;
