@@ -1,14 +1,16 @@
 
-CREATE OR REPLACE FUNCTION toggleBankrecCleared(INTEGER, TEXT, INTEGER) RETURNS BOOLEAN AS $$
+CREATE OR REPLACE FUNCTION toggleBankrecCleared(INTEGER, TEXT, INTEGER, NUMERIC, NUMERIC) RETURNS BOOLEAN AS $$
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pBankrecid ALIAS FOR $1;
   pSource    ALIAS FOR $2;
   pSourceid  ALIAS FOR $3;
+  pCurrrate  ALIAS FOR $4;
+  pAmount    ALIAS FOR $5;
 
 BEGIN
-  RETURN toggleBankrecCleared(pBankrecid, pSource, pSourceid, NULL, NULL, NULL);
+  RETURN toggleBankrecCleared(pBankrecid, pSource, pSourceid, pCurrrate, pAmount, NULL);
 END;
 $$ LANGUAGE 'plpgsql';
 
