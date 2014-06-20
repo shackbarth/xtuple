@@ -1,3 +1,4 @@
+SELECT dropIfExists('FUNCTION', 'toggleBankrecCleared(int,text,int)', 'public');
 
 CREATE OR REPLACE FUNCTION toggleBankrecCleared(INTEGER, TEXT, INTEGER, NUMERIC, NUMERIC) RETURNS BOOLEAN AS $$
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
