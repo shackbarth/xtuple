@@ -53,6 +53,7 @@ trailing:true, white:true*/
       name: "crm",
       label: "_crm".loc(),
       panels: [
+        {name: "crmDashboard", kind: "XV.CrmDashboard"},
         {name: "accountList", kind: "XV.AccountList"},
         {name: "contactList", kind: "XV.ContactList"},
         {name: "crm_activityList", kind: "XV.ActivityList"},
