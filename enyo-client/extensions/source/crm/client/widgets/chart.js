@@ -56,7 +56,7 @@ trailing:true, white:true*/
           attribute: "targetClose",
           operator: "<=",
           value: XT.date.applyTimezoneOffset(XV.Date.prototype.textToDate("+30"), true)
-        }],
+        }]
       },
       totalField: "amount"
     });
