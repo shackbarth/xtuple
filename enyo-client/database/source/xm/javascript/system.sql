@@ -9,7 +9,7 @@ select xt.install_js('XM','System','xtuple', $$
     "CCCompany",
     "CCTest",
     "CCRequireCCV",
-    "DashboardsLite",
+    "DashboardLite",
     "DefaultPriority",
     "RequireProjectAssignment",
     "UseProjects"
