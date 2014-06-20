@@ -7,7 +7,7 @@
   <prerequisite type = "query"
                 name = "Checking xTuple Edition" >
     <query>SELECT fetchMetricText('Application') = 'PostBooks';</query>
-    <message>This package must be applied to a Distribution database.</message>
+    <message>This package must be applied to a PostBooks database.</message>
   </prerequisite>
 
   <prerequisite type = "query"
@@ -38,7 +38,7 @@
                         FROM payco
                         GROUP BY payco_ccpay_id, payco_cohead_id
                         ORDER BY 1)
-      SELECT COALESCE(MAX(freq), 1) <= 1
+      SELECT (COALESCE(MAX(freq), 1) = 0 OR COALESCE(MAX(freq), 1) = 1)
       FROM counter;
     </query>
     <message>There are duplicate payco_ccpay_id and payco_cohead_id on the payco table. Please see your system administrator or contact xTuple.
