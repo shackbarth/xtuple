@@ -19,7 +19,7 @@ BEGIN
   IF (_numfound <= 0) THEN
     INSERT INTO ccbank (ccbank_ccard_type, ccbank_bankaccnt_id)
                 VALUES (pccardtype,        pbankaccntid)
-    RETURNING _ccbankid;
+    RETURNING ccbank_id INTO _ccbankid;
   END IF;
 
   RETURN _ccbankid;
