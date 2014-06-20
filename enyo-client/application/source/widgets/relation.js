@@ -27,7 +27,7 @@ regexp:true, undef:true, trailing:true, white:true, strict:false */
     nameAttribute: "jobTitle",
     descripAttribute: "phone",
     collection: "XM.ContactRelationCollection",
-    list: "XV.ContactList"
+    list: "XV.ContactList",
     published: {
       showAddress: false,
     },
