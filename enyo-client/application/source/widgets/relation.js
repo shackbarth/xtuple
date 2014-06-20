@@ -23,13 +23,13 @@ regexp:true, undef:true, trailing:true, white:true, strict:false */
     name: "XV.ContactWidget",
     kind: "XV.RelationWidget",
     label: "_contact".loc(),
-    collection: "XM.ContactRelationCollection",
-    list: "XV.ContactList",
     keyAttribute: "name",
     nameAttribute: "jobTitle",
     descripAttribute: "phone",
+    collection: "XM.ContactRelationCollection",
+    list: "XV.ContactList"
     published: {
-      showAddress: false
+      showAddress: false,
     },
     descriptionComponents: [
       {name: "jobTitleRow", controlClasses: "enyo-inline", showing: false, components: [
