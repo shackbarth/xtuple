@@ -1528,6 +1528,10 @@ a,
   color: #357ec7;
   cursor: pointer;
 }
+.xv-invisible-wrapper {
+  padding: 0;
+  border: none;
+}
 .xv-app-panel {
   /* Setting this as min-width overrides enyo-narrow 100% */
   width: 320px;
@@ -3155,6 +3159,10 @@ a,
 .xv-pullout .xv-parameter-panel .enyo-fittable-columns-layout > * {
   vertical-align: middle;
 }
+.xv-pullout .xv-parameter-panel .xv-input .onyx-input-decorator,
+.xv-pullout .xv-parameter-panel .xv-pickerwidget .onyx-input-decorator {
+  border: none;
+}
 .xv-pullout .xv-parameter-panel .xv-buttons {
   text-align: center;
 }
@@ -3440,6 +3448,10 @@ a,
 }
 .xv-search .xv-search-container .enyo-fittable-columns-layout > * {
   vertical-align: middle;
+}
+.xv-search .xv-search-container .xv-input .onyx-input-decorator,
+.xv-search .xv-search-container .xv-pickerwidget .onyx-input-decorator {
+  border: none;
 }
 .xv-search .xv-search-container .xv-buttons {
   text-align: center;

@@ -31,46 +31,27 @@ regexp:true, undef:true, trailing:true, white:true, strict:false */
     published: {
       showAddress: false
     },
-    components: [
-      {controlClasses: 'enyo-inline', components: [
-        {name: "label", classes: "xv-label"},
-        {kind: "onyx.InputDecorator", name: "decorator", classes: "xv-icon-decorator", components: [
-          {name: "input", kind: "onyx.Input",
-            onkeyup: "keyUp", onkeydown: "keyDown", onblur: "receiveBlur",
-            onfocus: "receiveFocus"},
-          {kind: "onyx.MenuDecorator", components: [
-            {kind: "onyx.IconButton", classes: "icon-folder-open-alt"},
-            {kind: "onyx.Menu", name: 'popupMenu', floating: true, components: [
-              {kind: "XV.MenuItem", name: "searchItem", content: "_search".loc()},
-              {kind: "XV.MenuItem", name: "openItem", content: "_open".loc(), disabled: true},
-              {kind: "XV.MenuItem", name: "newItem", content: "_new".loc(), disabled: true}
-            ]}
-          ]},
-          {name: "completer", kind: "XV.Completer"}
-        ]}
+    descriptionComponents: [
+      {name: "jobTitleRow", controlClasses: "enyo-inline", showing: false, components: [
+        {classes: 'xv-description', name: "name"}
       ]},
-      {name: 'descriptionContainer', components: [
-        {name: "jobTitleRow", controlClasses: "enyo-inline", showing: false, components: [
-          {classes: 'xv-description', name: "name"}
-        ]},
-        {name: "phoneRow", controlClasses: "enyo-inline", showing: false, components: [
-          {classes: "xv-description hyperlink", target: '_blank', name: "description"}
-        ]},
-        {name: "alternateRow", controlClasses: "enyo-inline", showing: false, components: [
-          {classes: "xv-description hyperlink", target: "_blank", name: "alternate"}
-        ]},
-        {name: "faxRow", controlClasses: "enyo-inline", showing: false, components: [
-          {classes: "xv-description hyperlink", target: "_blank", name: "fax"}
-        ]},
-        {name: "emailRow", controlClasses: "enyo-inline", showing: false, components: [
-          {classes: 'xv-description hyperlink', target: "_blank", name: "email"}
-        ]},
-        {name: "webAddressRow", controlClasses: "enyo-inline", showing: false, components: [
-          {classes: 'xv-description hyperlink', target: "_blank", name: "webAddress"}
-        ]},
-        {name: "addressRow", controlClasses: "enyo-inline", showing: false, components: [
-          {classes: "xv-description", name: "address", allowHtml: true}
-        ]}
+      {name: "phoneRow", controlClasses: "enyo-inline", showing: false, components: [
+        {classes: "xv-description hyperlink", target: '_blank', name: "description"}
+      ]},
+      {name: "alternateRow", controlClasses: "enyo-inline", showing: false, components: [
+        {classes: "xv-description hyperlink", target: "_blank", name: "alternate"}
+      ]},
+      {name: "faxRow", controlClasses: "enyo-inline", showing: false, components: [
+        {classes: "xv-description hyperlink", target: "_blank", name: "fax"}
+      ]},
+      {name: "emailRow", controlClasses: "enyo-inline", showing: false, components: [
+        {classes: 'xv-description hyperlink', target: "_blank", name: "email"}
+      ]},
+      {name: "webAddressRow", controlClasses: "enyo-inline", showing: false, components: [
+        {classes: 'xv-description hyperlink', target: "_blank", name: "webAddress"}
+      ]},
+      {name: "addressRow", controlClasses: "enyo-inline", showing: false, components: [
+        {classes: "xv-description", name: "address", allowHtml: true}
       ]}
     ],
     setValue: function (value, options) {
