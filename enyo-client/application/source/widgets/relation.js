@@ -64,6 +64,8 @@ regexp:true, undef:true, trailing:true, white:true, strict:false */
         return;
       }
 
+      // The rows are here because sometimes the values needs labels
+      // to go with the values.
       var jobTitle = value ? value.get("jobTitle") : "",
         phone = value ? value.get("phone") : "",
         alternate = value ? value.get("alternate") : "",
