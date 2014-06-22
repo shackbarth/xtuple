@@ -314,14 +314,23 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           // register extension and dependencies
           extensionSql = 'do $$ plv8.elog(NOTICE, "About to register extension ' +
             extensionName + '"); $$ language plv8;\n' + extensionSql;
+
           registerSql = "select xt.register_extension('%@', '%@', '%@', '', %@);\n"
             .f(extensionName, extensionComment, options.extensionLocation, loadOrder);
+
+          var grantExtToAdmin = "select xt.grant_role_ext('ADMIN', '%@');\n"
+            .f(extensionName);
+
+          extensionSql = grantExtToAdmin + extensionSql;
 
           dependencies = manifest.dependencies || [];
           _.each(dependencies, function (dependency) {
             var dependencySql = "select xt.register_extension_dependency('%@', '%@');\n"
-              .f(extensionName, dependency);
-            extensionSql = dependencySql + extensionSql;
+                .f(extensionName, dependency),
+              grantDependToAdmin = "select xt.grant_role_ext('ADMIN', '%@');\n"
+                .f(dependency);
+
+            extensionSql = dependencySql + grantDependToAdmin + extensionSql;
           });
           extensionSql = registerSql + extensionSql;
         }
