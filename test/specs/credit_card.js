@@ -114,7 +114,7 @@
         next();
       }
     }],
-    skipSmoke: true, // credit card is not a first-class business model
+    skipSmoke: true, // credit card is not a first-class business object with its own list
     skipDelete: true
   };
   exports.spec = spec;
