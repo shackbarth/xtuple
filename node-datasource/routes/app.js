@@ -44,14 +44,14 @@ var async = require("async"),
       versionSize = 1000000 * versionSplit[0] +             // Get "4" from "4.5.0-beta2".
         10000 * versionSplit[1] +                           // Get "5" from "4.5.0-beta2".
         100 * versionSplit[2].match(/^[0-9]+/g, '')[0],     // Get "0" from "0-beta2".
-      prerelease = versionSplit[2].replace(/^[0-9]+/g, ''), // Get "-beta1" from "0-beta2".
+      prerelease = versionSplit[2].replace(/^[0-9]+/g, ''), // Get "-beta2" from "0-beta2".
       preRegEx = /([a-zA-Z]+)([0-9]*)/g,                    // Capture pre-release as ["beta2", "beta", "2"].
       preMatch = preRegEx.exec(prerelease),
       preVersion,
       preNum;
 
     if (versionSplit.length > 3) {
-      versionSize += versionSplit[3].replace(/[^0-9]+/g, '');
+      versionSize += versionSplit[3];
     }
 
     if (preMatch && preMatch.length && preMatch[0] !== '') {
