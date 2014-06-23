@@ -6,7 +6,7 @@
 
 (function () {
   "use strict";
-  
+
   var crud = require("../lib/crud"),
     assert = require("chai").assert;
    /**
@@ -30,7 +30,6 @@
   @property {String} CreditCardType
   **/
   var spec = {
-    skipAll: true,
     recordType: "XM.CreditCard",
     enforceUpperKey: false,
     collectionType: "XM.CreditCardCollection",
@@ -66,7 +65,7 @@
     */
     privileges: {
       createUpdate: "ProcessCreditCards",
-      read: "ProcessCreditCards"     
+      read: "ProcessCreditCards"
     },
     createHash : {
       customer: 95, // TTOYS
@@ -115,8 +114,8 @@
         next();
       }
     }],
+    skipSmoke: true, // credit card is not a first-class business model
     skipDelete: true
-    
   };
   exports.spec = spec;
 }());
