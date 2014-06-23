@@ -1,7 +1,7 @@
 /*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true, white:true*/
-/*global XT:true, XV:true, XM:true, enyo:true, console:true */
+/*global XT:true, XV:true, XM:true, enyo:true, console:true, _:true */
 
 (function () {
 
@@ -66,6 +66,37 @@ trailing:true, white:true*/
         {name: "sales_activityList", kind: "XV.ActivityList"}
       ]
     };
+
+    if (XT.session.settings.get("DashboardLite")) {
+      // TODO if we commit to this approach it would make sense to move this code into
+      // XT.app.$.postbooks.insertDashboardCharts() or something like it
+      var newActions = [
+        {name: "salesHistory", label: "_salesHistory".loc(), item: "XV.SalesHistoryTimeSeriesChart"},
+        {name: "bookings", label: "_bookings".loc(), item: "XV.SalesOrderTimeSeriesChart"}
+      ];
+      var preExistingDashboard = _.find(XT.app.$.postbooks.modules, function (module) {
+        return module.name === "dashboardLite";
+      });
+
+      if (preExistingDashboard) {
+        preExistingDashboard.panels[0].newActions = _.union(preExistingDashboard.panels[0].newActions, newActions);
+
+      } else {
+        var dashboardModule = {
+          name: "dashboardLite",
+          label: "_dashboard".loc(),
+          panels: [
+            {
+              name: "dashboardLite",
+              kind: "XV.DashboardLite",
+              newActions: newActions
+            }
+          ]
+        };
+
+        XT.app.$.postbooks.insertModule(dashboardModule, 0);
+      }
+    }
 
     isBiAvailable = XT.session.config.biAvailable && XT.session.privileges.get("ViewSalesHistory");
     if (isBiAvailable) {

@@ -62,6 +62,25 @@ trailing:true, white:true*/
       ]
     };
 
+    if (XT.session.settings.get("DashboardLite")) {
+      var dashboardModule = {
+        name: "dashboardLite",
+        label: "_dashboard".loc(),
+        panels: [
+          {
+            name: "dashboardLite",
+            kind: "XV.DashboardLite",
+            newActions: [
+              {name: "assignedIncidents", label: "_assignedIncidents".loc(), item: "XV.AssignedIncidentBarChart"},
+              {name: "opportunities", label: "_opportunities".loc(), item: "XV.OpportunityBarChart"}
+            ]
+          }
+        ]
+      };
+
+      XT.app.$.postbooks.insertModule(dashboardModule, 0);
+    }
+
     isBiAvailable = XT.session.config.biAvailable && XT.session.privileges.get("ViewSalesHistory");
     if (isBiAvailable) {
       module.panels.push({name: "analysisPage", kind: "analysisFrame"});
