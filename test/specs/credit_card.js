@@ -68,7 +68,7 @@
       read: "ProcessCreditCards"
     },
     createHash : {
-      customer: 95, // TTOYS
+      customer: 102, // XRETAIL. Not a nested object because it's not a toOne from CreditCard
       creditCardType: "V",
       name: "John Smith",
       address1: "123 Main Street",

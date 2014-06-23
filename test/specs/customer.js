@@ -58,7 +58,6 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
     @property {CustomerAccount} CRMAccount
     */
   var spec = {
-    skipAll: true,
     recordType: "XM.Customer",
     collectionType: "XM.CustomerListItemCollection",
     /**
@@ -269,7 +268,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
     @description Tax Registrations panel should exist to attach existing/new Tax Registrations
     to the Customer
     @property {String} id ID attribute
-    @property {Customer} Customer 
+    @property {Customer} Customer
     @property {TaxAuthority} TaxAuthority
     @property {String} Number
     @property {TaxZone} TaxZone
@@ -287,7 +286,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
         "'number', 'taxZone', 'effective', 'expires', 'notes'", function () {
       });
        /**
-      @member 
+      @member
       @memberof CustomerTaxRegistration
       @description Users can create, update, and delete Tax Registrations if they have the
         MaintainTaxRegistrations privilege, and they can read Tax Registrations if they have
