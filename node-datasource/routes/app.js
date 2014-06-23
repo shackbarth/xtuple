@@ -59,7 +59,7 @@ var async = require("async"),
         preVersion = preMatch[1].match(/[a-zA-Z]+/g);       // Get ["beta"] from ["beta2", "beta", "2"].
 
         // Decrease versionSize for pre-releasees.
-        switch(preVersion[0].toLowerCase()) {
+        switch (preVersion[0].toLowerCase()) {
           case 'alpha':
             versionSize = versionSize - 50;
             break;
