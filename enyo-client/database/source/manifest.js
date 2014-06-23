@@ -218,6 +218,7 @@
     "public/tables/comment_trigger.sql",
     "public/tables/pkghead.sql",
     "public/tables/schemaord.sql",
+    "priv.sql",
     "update_version.sql"
   ]
 }

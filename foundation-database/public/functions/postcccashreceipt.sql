@@ -3,7 +3,7 @@ CREATE OR REPLACE FUNCTION postCCcashReceipt(pCCpay   INTEGER,
                                              pdoctype TEXT    DEFAULT NULL,
                                              pamount  NUMERIC DEFAULT NULL) RETURNS INTEGER AS
 $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _aropenid     INTEGER;
@@ -16,10 +16,9 @@ DECLARE
 
 BEGIN
   SELECT * INTO _c
-     FROM ccpay, ccard, custinfo
-     WHERE ( (ccpay_id = pCCpay)
-       AND   (ccpay_ccard_id = ccard_id)
-       AND   (ccpay_cust_id = cust_id) );
+     FROM ccpay
+     JOIN custinfo ON ccpay_cust_id = cust_id
+     WHERE (ccpay_id = pCCpay);
 
   IF (NOT FOUND) THEN
     RAISE EXCEPTION 'Cannot find the Credit Card transaction information [xtuple: postCCcashReceipt, -11, %]',
@@ -31,16 +30,17 @@ BEGIN
   END IF;
 
   SELECT bankaccnt_id, bankaccnt_accnt_id INTO _bankaccnt_id, _realaccnt
-  FROM ccbank JOIN bankaccnt ON (ccbank_bankaccnt_id=bankaccnt_id)
-  WHERE (ccbank_ccard_type=_c.ccard_type);
+  FROM ccbank
+  JOIN bankaccnt ON (ccbank_bankaccnt_id=bankaccnt_id)
+  WHERE (ccbank_ccard_type=_c.ccpay_card_type);
 
   IF (_bankaccnt_id IS NULL) THEN
     RAISE EXCEPTION 'Cannot find the default Bank Account for this Credit Card [xtuple: postCCcredit, -1, %]',
-                    _c.ccard_type;
+                    _c.ccpay_card_type;
   END IF;
 
-  _ccOrderDesc := (_c.ccard_type || '-' || _c.ccpay_order_number::TEXT ||
-		   '-' || _c.ccpay_order_number_seq::TEXT);
+  _ccOrderDesc := (_c.ccpay_card_type || '-' || _c.ccpay_order_number::TEXT ||
+                  '-' || _c.ccpay_order_number_seq::TEXT);
 
   _journal := fetchJournalNumber('C/R');
 
@@ -53,7 +53,7 @@ BEGIN
         cashrcpt_usecustdeposit
       ) VALUES (
         _c.ccpay_cust_id,   _c.ccpay_amount,     _c.ccpay_curr_id,
-        _c.ccard_type,      _c.ccpay_r_ordernum, _ccOrderDesc,
+        _c.ccpay_card_type,      _c.ccpay_r_ordernum, _ccOrderDesc,
         CURRENT_DATE,       _bankaccnt_id,
         fetchMetricBool('EnableCustomerDeposits'))
       RETURNING cashrcpt_id INTO _return;
@@ -62,7 +62,7 @@ BEGIN
       SET cashrcpt_cust_id=_c.ccpay_cust_id,
           cashrcpt_amount=_c.ccpay_amount,
           cashrcpt_curr_id=_c.ccpay_curr_id,
-          cashrcpt_fundstype=_c.ccard_type,
+          cashrcpt_fundstype=_c.ccpay_card_type,
           cashrcpt_docnumber=_c.ccpay_r_ordernum,
           cashrcpt_notes=_ccOrderDesc,
           cashrcpt_distdate=CURRENT_DATE,
@@ -98,14 +98,14 @@ BEGIN
     _return := _aropenid;
   END IF;
 
-  PERFORM insertGLTransaction(_journal, 'A/R', 'CR', _ccOrderDesc, 
+  PERFORM insertGLTransaction(_journal, 'A/R', 'CR', _ccOrderDesc,
                               ('Cash Receipt from Credit Card ' || _c.cust_name),
                               findPrepaidAccount(_c.ccpay_cust_id),
                               _realaccnt,
                               NULL,
-			      ROUND(currToBase(_c.ccpay_curr_id,
-					       _c.ccpay_amount,
-					       _c.ccpay_transaction_datetime::DATE),2),
+                              ROUND(currToBase(_c.ccpay_curr_id,
+                                               _c.ccpay_amount,
+                                               _c.ccpay_transaction_datetime::DATE),2),
                               CURRENT_DATE);
 
   RETURN _return;
