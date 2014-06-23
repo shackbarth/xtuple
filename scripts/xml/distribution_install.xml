@@ -19,14 +19,14 @@
 
  <prerequisite type = "query"
                name = "Checking for bad xTuple ERP database version" >
-    <query>SELECT fetchMetricText('ServerVersion') &lt; '4.5.0';</query>
-    <message>This package may not be applied to a 4.5+ Distribution database.
+<query>SELECT NOT fetchMetricText('ServerVersion') > '4.5.0' AND fetchMetricText('ServerVersion')!='4.5.0Beta' AND fetchMetricText('ServerVersion')!='4.5.0RC';</query>
+    <message>This package may not be applied to a 4.5+ PostBooks database.
     </message>
   </prerequisite>
 
  <prerequisite type = "query"
                name = "Checking for mobile-enabled schemas" >
-    <query>SELECT TRUE FROM pg_namespace WHERE nspname = 'xm';</query>
+    <query>SELECT NOT EXISTS(SELECT 1 FROM pg_namespace WHERE nspname = 'xm');</query>
     <message>This package may not be applied to a mobile-enabled database. Please see your system administrator or contact xTuple.
     </message>
   </prerequisite>
