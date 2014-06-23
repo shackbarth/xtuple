@@ -138,12 +138,20 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
           };
         creditCardModel.on("change:uuid", setCreditCard);
         creditCardModel.initialize(null, {isNew: true});
+        assert.isTrue(creditCardModel.canEdit("creditCardType"));
       }
     }],
     afterSaveActions: [{
       it: "should have saved the credit card correctly",
       action: function (data, next) {
         assert.equal(data.model.get("creditCards").models[0].get("number"), "************1111");
+        next();
+      }
+    }, {
+      it: "should not allow an edit to the saved credit card",
+      action: function (data, next) {
+        var creditCardModel = data.model.get("creditCards").models[0];
+        assert.isFalse(creditCardModel.canEdit("creditCardType"));
         next();
       }
     }],
