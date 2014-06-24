@@ -222,13 +222,13 @@ var  async = require('async'),
         credsClone.database = spec.database;
         buildDatabaseUtil.sendToDatabase(allSql, credsClone, spec, function (err, res) {
           if (spec.populateData) {
-            var commands = require(path.join(__dirname, "../../enyo-client/database/source/populate_data")).commands;
             var populateSql = "DO $$ XT.disableLocks = true; $$ language plv8;";
             var encryptionKey = fs.readFileSync(path.join(__dirname, "../../node-datasource", creds.encryptionKeyFile), "utf8");
-            _.each(commands, function (command) {
-              command.encryptionKey = encryptionKey;
-              command.username = creds.username;
-              populateSql += "select xt.patch(\'" + JSON.stringify(command) + "\');";
+            var patches = require(path.join(__dirname, "../../enyo-client/database/source/populate_data")).patches;
+            _.each(patches, function (patch) {
+              patch.encryptionKey = encryptionKey;
+              patch.username = creds.username;
+              populateSql += "select xt.patch(\'" + JSON.stringify(patch) + "\');";
             });
             populateSql += "DO $$ XT.disableLocks = undefined; $$ language plv8;";
             dataSource.query(populateSql, credsClone, databaseCallback);
