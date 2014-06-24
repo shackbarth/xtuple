@@ -10,6 +10,7 @@ var _ = require('underscore'),
   dataSource = require('../../node-datasource/lib/ext/datasource').dataSource,
   exec = require('child_process').exec,
   fs = require('fs'),
+  npm = require('npm'),
   path = require('path'),
   unregister = buildDatabaseUtil.unregister,
   winston = require('winston');
@@ -71,6 +72,8 @@ var _ = require('underscore'),
                 extPath = path.join(__dirname, "../../../xtuple-extensions/source", name);
               } else if (location === '/private-extensions') {
                 extPath = path.join(__dirname, "../../../private-extensions/source", name);
+              } else if (location === 'npm') {
+                extPath = path.join(__dirname, "../../node_modules", name);
               }
               return extPath;
             });
@@ -104,30 +107,59 @@ var _ = require('underscore'),
         });
       },
       buildAll = function (specs, creds, buildAllCallback) {
-        buildClient(specs, function (err, res) {
-          if (err) {
-            buildAllCallback(err);
-            return;
-          }
-          buildDatabase.buildDatabase(specs, creds, function (databaseErr, databaseRes) {
-            var returnMessage;
-            if (databaseErr && (specs[0].wipeViews || specs[0].initialize)) {
-              buildAllCallback(databaseErr);
-              return;
-
-            } else if (databaseErr) {
-              buildAllCallback("Build failed. Try wiping the views next time by running me without the -q flag.");
+        async.series([
+          function (done) {
+            // step 1: npm install extension if necessary
+            // an alternate approach would be only npm install these
+            // extensions on an npm install.
+            var allExtensions = _.reduce(specs, function (memo, spec) {
+              memo.push(spec.extensions);
+              return _.flatten(memo);
+            }, []);
+            var npmExtensions = _.filter(allExtensions, function (extName) {
+              return extName.indexOf("node_modules") >= 0;
+            });
+            if (npmExtensions.length === 0) {
+              done();
               return;
             }
-            returnMessage = "\n";
-            _.each(specs, function (spec) {
-              returnMessage += "Database: " + spec.database + '\nDirectories:\n';
-              _.each(spec.extensions, function (ext) {
-                returnMessage += '  ' + ext + '\n';
+            npm.load(function (err, res) {
+              if (err) {
+                done(err);
+                return;
+              }
+              npm.on("log", function (message) {
+                // log the progress of the installation
+                console.log(message);
               });
+              async.map(npmExtensions, function (extName, next) {
+                npm.commands.install([path.basename(extName)], next);
+              }, done);
             });
-            buildAllCallback(null, "Build succeeded." + returnMessage);
-          });
+          },
+          function (done) {
+            // step 2: build the client
+            buildClient(specs, done);
+          },
+          function (done) {
+            // step 3: build the database
+            buildDatabase.buildDatabase(specs, creds, function (databaseErr, databaseRes) {
+              if (databaseErr) {
+                buildAllCallback(databaseErr);
+                return;
+              }
+              var returnMessage = "\n";
+              _.each(specs, function (spec) {
+                returnMessage += "Database: " + spec.database + '\nDirectories:\n';
+                _.each(spec.extensions, function (ext) {
+                  returnMessage += '  ' + ext + '\n';
+                });
+              });
+              done(null, "Build succeeded." + returnMessage);
+            });
+          }
+        ], function (err, results) {
+          buildAllCallback(err, results && results[results.length - 1]);
         });
       },
       config;
