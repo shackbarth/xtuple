@@ -4,12 +4,14 @@ CREATE OR REPLACE FUNCTION unreleasePurchaseOrder(pPoheadid INTEGER) RETURNS INT
 BEGIN
 
   IF ( ( SELECT (COUNT(*) > 0)
-         FROM poitem
+         FROM poitem LEFT OUTER JOIN recv ON (recv_order_type='PO' AND
+                                              recv_orderitem_id=poitem_id)
          WHERE ( (poitem_pohead_id=pPoheadid)
            AND   ( (poitem_status='C') OR
                    (poitem_qty_received > 0.0) OR
                    (poitem_qty_returned > 0.0) OR
-                   (poitem_qty_vouchered > 0.0) ) ) ) ) THEN
+                   (poitem_qty_vouchered > 0.0) OR
+                   (recv_id IS NOT NULL) ) ) ) ) THEN
     RETURN -1;
   END IF;
 
