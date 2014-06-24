@@ -1579,14 +1579,19 @@ body {
 }
 .xv-buttons .onyx-button {
   margin: 2px;
+  min-height: 40px;
   min-width: 60px;
   background: #e1e1e1;
   color: #666666;
   font-size: 20px;
 }
+.xv-buttons .onyx-button[class^="icon-"]:before,
+.xv-buttons .onyx-button[class*=" icon-"]:before {
+  vertical-align: middle;
+  margin-right: 5px;
+}
 .xv-buttons .onyx-button.text {
   font-size: 17px;
-  font-family: 'Helvetica Neue', Helvetica, 'Nimbus Sans L', Arial, sans-serif;
 }
 .xv-buttons .onyx-button.selected {
   background: #357ec7;
