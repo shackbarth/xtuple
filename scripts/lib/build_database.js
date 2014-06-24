@@ -221,7 +221,20 @@ var  async = require('async'),
         winston.info("Applying build to database " + spec.database);
         credsClone.database = spec.database;
         buildDatabaseUtil.sendToDatabase(allSql, credsClone, spec, function (err, res) {
-          databaseCallback(err, res);
+          if (spec.populateData) {
+            var commands = require(path.join(__dirname, "../../enyo-client/database/source/populate_data")).commands;
+            var populateSql = "DO $$ XT.disableLocks = true; $$ language plv8;";
+            var encryptionKey = fs.readFileSync(path.join(__dirname, "../../node-datasource", creds.encryptionKeyFile), "utf8");
+            _.each(commands, function (command) {
+              command.encryptionKey = encryptionKey;
+              command.username = creds.username;
+              populateSql += "select xt.patch(\'" + JSON.stringify(command) + "\');";
+            });
+            populateSql += "DO $$ XT.disableLocks = undefined; $$ language plv8;";
+            dataSource.query(populateSql, credsClone, databaseCallback);
+          } else {
+            databaseCallback(err, res);
+          }
         });
       });
     };
