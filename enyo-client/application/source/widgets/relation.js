@@ -29,7 +29,7 @@ regexp:true, undef:true, trailing:true, white:true, strict:false */
     collection: "XM.ContactRelationCollection",
     list: "XV.ContactList",
     published: {
-      showAddress: false,
+      showAddress: false
     },
     descriptionComponents: [
       {name: "jobTitleRow", controlClasses: "enyo-inline", showing: false, components: [

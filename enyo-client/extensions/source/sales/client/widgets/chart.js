@@ -19,7 +19,7 @@ trailing:true, white:true*/
       parameters: [{
         attribute: "shipDate",
         operator: ">=",
-        value: XT.date.applyTimezoneOffset(XV.Date.prototype.textToDate("-30"), true)
+        value: XT.date.applyTimezoneOffset(XV.DateWidget.prototype.textToDate("-30"), true)
       }]
     },
     dateField: "shipDate",
@@ -40,11 +40,11 @@ trailing:true, white:true*/
       parameters: [{
         attribute: "orderDate",
         operator: ">=",
-        value: XT.date.applyTimezoneOffset(XV.Date.prototype.textToDate("0"), true)
+        value: XT.date.applyTimezoneOffset(XV.DateWidget.prototype.textToDate("0"), true)
       }, {
         attribute: "orderDate",
         operator: "<=",
-        value: XT.date.applyTimezoneOffset(XV.Date.prototype.textToDate("+30"), true)
+        value: XT.date.applyTimezoneOffset(XV.DateWidget.prototype.textToDate("+30"), true)
       }]
     },
     dateField: "orderDate",
