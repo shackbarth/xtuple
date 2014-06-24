@@ -49,7 +49,8 @@
 @panelsFontSize: 5em;
 @iconFontSize: 60%;
 @totalsFontSize: 14px;
-@buttonFontSize: 17px;
+@buttonFontSize: 20px;
+@buttonTextFontSize: 17px;
 
 // sizing
 @defaultPanelWidth: 320px;
@@ -137,13 +138,18 @@ body {
 
   .onyx-button {
     margin: 2px;
+    min-height: 40px;
     min-width: 60px;
     background: @button-gray;
     color: @charcoal;
     font-size: 20px;
+
+    &[class^="icon-"]:before, &[class*=" icon-"]:before {
+      vertical-align: middle;
+      margin-right: 5px;
+    }
     &.text {
-      font-size: @buttonFontSize;
-      font-family: @baseFont;
+      font-size: @buttonTextFontSize;
     }
     &.selected {
       background: @slate-blue;
