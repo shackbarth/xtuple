@@ -687,6 +687,7 @@
     "_thisWeek": "This Week",
     "_thisMonth": "This Month",
     "_thisYear": "This Year",
+    "_transactionKey": "Transaction Key",
     "_twoYears": "Two Years",
     "_to": "To",
     "_toDate": "To Date",
