@@ -16,7 +16,7 @@
     assert = require("chai").assert;
 
   describe('Workspaces', function () {
-    this.timeout(20 * 1000);
+    this.timeout(40 * 1000);
     it('should log in first', function (done) {
       zombieAuth.loadApp(done);
     });
@@ -83,7 +83,7 @@
     var workspaceContainer, workspace, model, id, moduleContainer;
 
     beforeEach(function (done) {
-      this.timeout(10 * 1000);
+      this.timeout(20 * 1000);
 
       smoke.navigateToExistingWorkspace(XT.app, "XV.ClassCodeList", function (_workspaceContainer) {
         workspaceContainer = _workspaceContainer;
@@ -101,7 +101,7 @@
       });
     });
     afterEach(function (done) {
-      this.timeout(10 * 1000);
+      this.timeout(20 * 1000);
 
       // maybe one of the tests already released the lock
       if (!model.hasLockKey()) {
