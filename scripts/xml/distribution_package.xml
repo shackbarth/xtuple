@@ -31,6 +31,12 @@
     </message>
   </prerequisite>
 
+ <prerequisite type = "query"
+               name = "Checking for xwd schema" >
+    <query>SELECT NOT EXISTS(SELECT 1 FROM pg_namespace WHERE nspname = 'xwd');</query>
+    <message>This package requires that XWD 240 package to be installed before continuing.</message>
+  </prerequisite>
+
   <script file="postbooks_upgrade.sql" />
   <script file="inventory_upgrade.sql" />
   <script file="distribution_upgrade.sql" />
