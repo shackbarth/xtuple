@@ -227,7 +227,13 @@ trailing:true, white:true*/
         creditCard = list.getModel(list.getFirstSelected()),
         ccv = this.$.ccv.value,
         amount = this.$.creditCardAmount.value,
-        disable = !creditCard || !amount || (!ccv && !!XT.session.settings.get("CCRequireCCV"));
+        disable = !creditCard ||
+          !amount ||
+          (!ccv && !!XT.session.settings.get("CCRequireCCV")) ||
+          // XXX refactor after attributesChanged refactor
+          // this kind should hold onto a reference to the model
+          // that backs the workspace
+          this.parent.parent.value.isNew();
 
       this.$.processButton.setDisabled(disable);
       this.$.authorizeButton.setDisabled(disable);
