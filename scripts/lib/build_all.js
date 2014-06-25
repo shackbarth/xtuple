@@ -85,6 +85,7 @@ var _ = require('underscore'),
               extensions: _.compact(paths),
               database: database,
               keepSql: options.keepSql,
+              populateData: options.populateData,
               wipeViews: options.wipeViews,
               clientOnly: options.clientOnly,
               databaseOnly: options.databaseOnly
@@ -173,6 +174,7 @@ var _ = require('underscore'),
       config = require(path.join(__dirname, "../../node-datasource/config.js"));
     }
     creds = config.databaseServer;
+    creds.encryptionKeyFile = config.datasource.encryptionKeyFile;
     creds.host = creds.hostname; // adapt our lingo to node-postgres lingo
     creds.username = creds.user; // adapt our lingo to orm installer lingo
 
@@ -214,6 +216,7 @@ var _ = require('underscore'),
       }
       buildSpecs.initialize = true;
       buildSpecs.keepSql = options.keepSql;
+      buildSpecs.populateData = options.populateData;
       buildSpecs.wipeViews = options.wipeViews;
       buildSpecs.clientOnly = options.clientOnly;
       buildSpecs.databaseOnly = options.databaseOnly;
@@ -249,6 +252,7 @@ var _ = require('underscore'),
           database: database,
           frozen: options.frozen,
           keepSql: options.keepSql,
+          populateData: options.populateData,
           wipeViews: options.wipeViews,
           clientOnly: options.clientOnly,
           databaseOnly: options.databaseOnly,

@@ -508,7 +508,7 @@ strict: false*/
             {kind: "XV.InputWidget", attr: "CCLogin",
               label: "_login".loc()},
             {kind: "XV.InputWidget", attr: "CCPassword",
-                label: "_password".loc()},
+                label: "_transactionKey".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "CCTest",
                 label: "_testMode".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "CCRequireCCV",
