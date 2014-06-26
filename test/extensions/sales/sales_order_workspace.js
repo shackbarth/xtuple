@@ -109,30 +109,6 @@
           assert.equal(gridBox.liveModels().length, 1);
         });
       });
-      it('Supply list should have action to open Item Workbench', function (done) {
-        if (!XT.extensions.inventory) {return done(); }
-        var verify,
-          action = _.find(gridBox.$.supplyList.actions, function (action) {
-            return action.name === "openItemWorkbench";
-          }),
-          prereq = action.prerequisite;
-        gridBox.$.supplyButton.bubble("ontap");
-        gridBox.$.supplyList.select(0);
-
-        gridBox.$.supplyList.value.models[0][prereq](function (hasPriv) {
-          assert.isTrue(hasPriv);
-          if (hasPriv) {
-            gridBox.$.supplyList.actionSelected(null, {action: {method: "openItemWorkbench"}, index: 0});
-
-            setTimeout(function () {
-              assert.equal(XT.app.$.postbooks.getActive().$.workspace.kind, "XV.ItemWorkbenchWorkspace");
-              XT.app.$.postbooks.getActive().doPrevious();
-              assert.equal(XT.app.$.postbooks.getActive().$.workspace.kind, "XV.SalesOrderWorkspace");
-              done();
-            }, 3000);
-          } else {done(); }
-        });
-      });
       it('adding a second line item should not copy the item', function (done) {
         workspace.value.once("change:total", done());
 
@@ -142,7 +118,7 @@
         assert.equal(gridBox.liveModels().length, 2);
         assert.notEqual(submodels.itemModel.id, gridRow.$.itemSiteWidget.$.privateItemSiteWidget.$.input.value);
 
-        // The intention was to delete the above line after verifying that the item doesn't copy but ran into 
+        // The intention was to delete the above line after verifying that the item doesn't copy but ran into
         // many issues so just populating with same data and saving it with 2 line items.
         gridRow.$.itemSiteWidget.doValueChange({value: {item: submodels.itemModel, site: submodels.siteModel}});
         gridRow.$.quantityWidget.doValueChange({value: 5});
@@ -156,62 +132,6 @@
               }
             });
         */
-      });
-      it('after saving, should not be able to Open and have edit privs in Item Site Workspace', function (done) {
-        if (!XT.extensions.inventory) {return done(); }
-        var originator = {}, statusReadyClean, workspaceContainer;
-        originator.name = "openItem";
-        // It's NOT a new order, go and make sure that we can't edit (after opening) Item Site WS
-        statusReadyClean = function () {
-          gridRow.$.itemSiteWidget.$.privateItemSiteWidget.menuItemSelected(null, {originator: originator});
-          /** XXX - what event can be used here instead? Tried a callback in menuItemSelected and passing it on
-            in PrivateItemSiteWidget's l154doWorkspace in the Private Item Site Widget.
-          */
-          setTimeout(function () {
-            workspaceContainer = XT.app.$.postbooks.getActive();
-            assert.equal(workspaceContainer.$.workspace.kind, "XV.ItemSiteWorkspace");
-            // "If notes are read only, assume that all the attributes are readOnly"... Lazy
-            assert.isTrue(workspaceContainer.$.workspace.value.isReadOnly("notes"));
-            // XXX - again, need an event
-            setTimeout(function () {
-              workspaceContainer.doPrevious();
-              assert.equal(XT.app.$.postbooks.getActive().$.workspace.kind, "XV.SalesOrderWorkspace");
-              // Update the notes field to leave the model READY_DIRTY
-              XT.app.$.postbooks.getActive().$.workspace.value.set("orderNotes", "test");
-              done();
-            }, 2000);
-          }, 3000);
-        };
-        workspace.value.once("status:READY_CLEAN", statusReadyClean);
-        workspace.save();
-      });
-      it('changing the Schedule Date updates the line item\'s schedule date', function (done) {
-        // Skip if no mfg ext or site cal not enabled... 
-        // TODO - temporary until second notifyPopup (_nextWorkingDate) is handled properly in test
-        if (!(XT.extensions.manufacturing) || !(XT.session.settings.get("UseSiteCalendar"))) {return done(); }
-        var getDowDate = function (dow) {
-            var date = new Date(),
-              currentDow = date.getDay(),
-              distance = dow - currentDow;
-            date.setDate(date.getDate() + distance);
-            return date;
-          },
-          newScheduleDate = getDowDate(0), // Sunday from current week
-          handlePopup = function () {
-            assert.equal(workspace.value.get("scheduleDate"), newScheduleDate);
-            // Confirm to update all line items
-            XT.app.$.postbooks.notifyTap(null, {originator: {name: "notifyYes"}});
-            // And verify that they were all updated with the new date
-            setTimeout(function () {
-              _.each(workspace.value.get("lineItems").models, function (model) {
-                assert.equal(model.get("scheduleDate"), newScheduleDate);
-              });
-              done();
-            }, 3000);
-          };
-
-        workspace.value.once("change:scheduleDate", handlePopup);
-        workspace.value.set("scheduleDate", newScheduleDate);
       });
       it('save, then delete order', function (done) {
         assert.isTrue((workspace.value.status === XM.Model.READY_DIRTY ||
