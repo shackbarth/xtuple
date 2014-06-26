@@ -1,5 +1,5 @@
-<package id        = "distribution-upgrade-450"
-         version   = "4.5.0"
+<package id        = "distribution-upgrade-451"
+         version   = "4.5.1"
          developer = "xTuple"
          descrip   = "load PostBooks resources"
          updater   = "2.2.4" >
@@ -19,8 +19,8 @@
 
  <prerequisite type = "query"
                name = "Checking for bad xTuple ERP database version" >
-<query>SELECT NOT fetchMetricText('ServerVersion') > '4.5.0' AND fetchMetricText('ServerVersion')!='4.5.0Beta' AND fetchMetricText('ServerVersion')!='4.5.0RC';</query>
-    <message>This package may not be applied to a 4.5+ Distribution database.
+<query>SELECT NOT fetchMetricText('ServerVersion') > '4.5.1' AND fetchMetricText('ServerVersion')!='4.5.0Beta' AND fetchMetricText('ServerVersion')!='4.5.0RC';</query>
+    <message>This package may not be applied to a 4.5.1+ Distribution database.
     </message>
   </prerequisite>
 
@@ -33,7 +33,7 @@
 
  <prerequisite type = "query"
                name = "Checking for xwd schema" >
-    <query>SELECT NOT EXISTS(SELECT 1 FROM pg_namespace WHERE nspname = 'xwd');</query>
+    <query>SELECT EXISTS(SELECT 1 FROM pg_namespace WHERE nspname = 'xwd');</query>
     <message>This package requires that XWD 240 package to be installed before continuing.</message>
   </prerequisite>
 
