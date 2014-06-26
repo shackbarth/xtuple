@@ -61,7 +61,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       tableName = defaultSchema ? defaultSchema + ".pkgreport" : "report",
       description,
       disableSql,
-      deleteSql,
+      updateSql,
       insertSql,
       enableSql;
 
@@ -80,20 +80,27 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     disableSql = "ALTER TABLE " + tableName + " DISABLE TRIGGER ALL;";
 
-    deleteSql = "delete from " + tableName + " " +
-      "where report_name = '" + name +
-      "' and report_grade = " + grade + ";";
 
     insertSql = "insert into " + tableName + " (report_name, report_descrip, " +
-      "report_source, report_loaddate, report_grade) VALUES (" +
+      "report_source, report_loaddate, report_grade) select " +
       "'" + name + "'," +
       "$$" + description + "$$," +
       "$$" + content + "$$," +
-      "now(), " + grade + ");";
+      "now(), " + grade +
+      " where not exists (select c.report_id from " + tableName + " c " +
+      "where report_name = '" + name +
+      "' and report_grade = " + grade + ");";
+
+    updateSql = "update " + tableName + " set " +
+      " report_descrip = $$" + description +
+      "$$, report_source = $$" + content +
+      "$$, report_loaddate = now() " +
+      "where report_name = '" + name +
+      "' and report_grade = " + grade + ";";
 
     enableSql = "ALTER TABLE " + tableName + " ENABLE TRIGGER ALL;";
 
-    return disableSql + deleteSql + insertSql + enableSql;
+    return disableSql + insertSql + updateSql + enableSql;
   };
 
   var convertFromScript = function (content, filename, defaultSchema) {
