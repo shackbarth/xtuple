@@ -70,7 +70,7 @@ tar -zcvf manufacturing-upgrade-$MAJ$MIN$PAT.gz manufacturing-upgrade-$MAJ$MIN$P
 #manufacturing install
 cd ../../
 mkdir scripts/output/manufacturing-install-$MAJ$MIN$PAT
-cp scripts/xml/xtmfg_package.xml scripts/output/manufacturing-install-$MAJ$MIN$PAT/package.xml
+cp scripts/xml/xtmfg_install.xml scripts/output/manufacturing-install-$MAJ$MIN$PAT/package.xml
 cp scripts/output/postbooks_upgrade.sql scripts/output/manufacturing-install-$MAJ$MIN$PAT
 cp scripts/output/inventory_basic_install.sql scripts/output/manufacturing-install-$MAJ$MIN$PAT
 cp scripts/output/inventory_upgrade.sql scripts/output/manufacturing-install-$MAJ$MIN$PAT
