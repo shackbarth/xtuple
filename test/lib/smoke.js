@@ -276,6 +276,12 @@
       }
       saveWorkspace(workspace, done);
     });
+    _.each(spec.afterSaveUIActions || [], function (spec) {
+      it(spec.it, function (done) {
+        this.timeout(20 * 1000);
+        spec.action(workspace, done);
+      });
+    });
     if (spec.captureObject) {
       return;
     }
