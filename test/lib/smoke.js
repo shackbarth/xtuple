@@ -189,6 +189,12 @@
 
     // back up to list
     app.$.postbooks.previous();
+    if (app.$.postbooks.getActive().kind === "XV.WorkspaceContainer") {
+      console.log("Ok, we want to be in the navigator by now");
+      console.log("Model status is", model.getStatusString());
+      console.log("Notify popup showing?", XT.app.$.postbooks.$.notifyPopup.showing);
+      console.log("Notify popup message", XT.app.$.postbooks.$.notifyMessage.getContent());
+    }
     assert.equal(app.$.postbooks.getActive().kind, "XV.Navigator");
 
     // here's the list
