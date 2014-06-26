@@ -435,7 +435,6 @@ app.get('/:org/logout', routes.logout);
 app.get('/:org/app', routes.app);
 app.get('/:org/debug', routes.debug);
 
-app.get('/:org/analysis', routes.analysis);
 app.all('/:org/credit-card', routes.creditCard);
 app.all('/:org/change-password', routes.changePassword);
 app.all('/:org/client/build/client-code', routes.clientCode);
