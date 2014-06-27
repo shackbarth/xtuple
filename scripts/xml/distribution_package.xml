@@ -52,7 +52,7 @@
   </prerequisite>
 
  <prerequisite type="query" name="Checking xwd Package Version">
-     <query>SELECT TRUE FROM pkghead WHERE pkghead_name = 'xwd' AND (pkghead_version ~* '2.4');</query>
+     <query>SELECT TRUE FROM pkghead WHERE pkghead_name = 'xwd' AND (pkghead_version >= '2.4');</query>
     <message>This package must be applied against the 2.4.0 version of the xwd package.</message>
   </prerequisite>
 
