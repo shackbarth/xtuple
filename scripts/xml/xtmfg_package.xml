@@ -16,6 +16,11 @@
     <message>This package must be applied to an xTuple ERP database that already contains the xtmfg package.</message>
   </prerequisite>
 
+ <prerequisite type="query" name="Checking xtmfg Package Version">
+     <query>SELECT TRUE FROM pkghead WHERE pkghead_name = 'xtmfg' AND (pkghead_version >= '4.4');</query>
+    <message>This package must be applied against the 4.4+ version of the xtmfg package.</message>
+  </prerequisite>
+
   <prerequisite type = "query"
                 name = "Checking xTuple ERP database version" >
     <query>SELECT fetchMetricText('ServerVersion') > '4.4.';</query>
