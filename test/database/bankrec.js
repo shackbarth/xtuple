@@ -18,65 +18,100 @@ var _    = require("underscore"),
       creds  = _.extend({}, config.databaseServer, {database: loginData.org}),
       bankaccnt,
       bankrec,
-      trans1 = { amount: 98.76 },
+      trans1 = { amount: 98.76 },       // Note: amounts for the two must differ
       trans2 = { amount: 54.32 },
       bankRecItemSql = 'SELECT * FROM bankrecitem '             +
-                       ' WHERE bankrecitem_bankrec_id=:brid'    +
-                       '   AND bankrecitem_source_id=:srcid'    +
-                       '   AND bankrecitem_source=:src;',
-      toggleCheckSql = "SELECT toggleBankRecCleared(:bankrec_id,'A/R'"         +
-                       ", gltrans_id, checkhead_curr_rate, checkhead_amount)"  +
+                       ' WHERE bankrecitem_bankrec_id=:brid:'   +
+                       '   AND bankrecitem_source=:src:'        +
+                       '   AND bankrecitem_source_id=:srcid:;',
+      toggleCheckSql = "SELECT toggleBankRecCleared(:bankrec_id:,'GL',"        +
+                       "  gltrans_id, checkhead_curr_rate, checkhead_amount)"  +
                        "  AS result"                                           +
                        " FROM checkhead JOIN gltrans ON (gltrans_doctype='CK'" +
                        "                    AND gltrans_misc_id=checkhead_id)" +
-                       " WHERE checkhead_id=:checkid;",
-      checkCheckSql = "SELECT *,"
-                      "       bankrecitem_amount/bankrecitem_curr_rate AS base"+
-                      " JOIN bankrecitem ON (gltrans_id=bankrecitem_source_id)"+
-                      " JOIN bankrec    ON (bankrecitem_bankrec_id=bankrec_id)"+
-                      " WHERE gltrans_doctype='CK'"                            +
-                      "   AND gltrans_misc_id=:checkid"                        +
-                      "   AND bankrec_id=:bankrec_id;",
-      bankAdjCheckSql = "SELECT *,"
-                    " ABS(bankadj_amount / bankadj_curr_rate) AS baseamt"      +
-                    "  FROM bankadj LEFT OUTER"                                +
-                    "  JOIN bankaccnt ON (bankadj_bankaccnt_id=bankaccnt_id)"  +
-                    "  LEFT OUTER"                                             +
-                    "  JOIN gltrans   ON (bankaccnt_accnt_id=gltrans_accnt_id" +
-                    "                 AND gltrans_doctype='AD'"                +
-                    "                 AND gltrans_notes ~ bankadj_notes"       +
-                    "                 AND gltrans_docnumber=bankadj_docnumber)"+
-                    "  LEFT OUTER"                                             +
-                    "  JOIN bankrecitem ON (bankrec_source='G/L' "             +
-                    "                   AND bankrec_source_id=gltrans_id)"     +
-                    " WHERE bankadj_id=:bankadjid;" // TODO: precise enough?
-      ;
+                       " WHERE checkhead_id=:checkid: AND gltrans_amount > 0;",
+      checkCheckSql = "SELECT *,"                                              +
+                     "       bankrecitem_amount/bankrecitem_curr_rate AS base" +
+                     " FROM gltrans"                                           +
+                     " JOIN bankrecitem ON (gltrans_id=bankrecitem_source_id)" +
+                     " JOIN bankrec    ON (bankrecitem_bankrec_id=bankrec_id)" +
+                     " WHERE gltrans_doctype='CK'"                             +
+                     "   AND gltrans_misc_id=:checkid:"                        +
+                     "   AND bankrec_id=:bankrecid:;",
+      bankAdjCheckSql = "SELECT *,"                                           +
+                  " ROUND(bankadj_amount / bankadj_curr_rate, 2) AS baseamt," +
+                  " CASE WHEN gltrans_id IS NULL AND bankrecitem_id IS NULL"  +
+                  "      THEN 0"                                              +
+                  "      WHEN gltrans_id IS NULL OR bankrecitem_id IS NULL"   +
+                  "      THEN 1"                                              +
+                  "      ELSE 2 END AS preferred"                             +
+                  "  FROM bankadj LEFT OUTER"                                 +
+                  "  JOIN gltrans   ON (gltrans_doctype='AD'"                 +
+                  "                 AND gltrans_misc_id=bankadj_id)"          +
+                  "  LEFT OUTER"                                              +
+                  "  JOIN bankrecitem ON (bankrecitem_source='AD'"            +
+                  "                   AND bankrecitem_source_id=bankadj_id)"  +
+                  "                   OR (bankrecitem_source='GL'"            +
+                  "                   AND bankrecitem_source_id=gltrans_id)"  +
+                  " WHERE bankadj_id=:bankadjid:"                             +
+                  " ORDER BY preferred DESC LIMIT 1;"
+    ;
 
-    it('looks for a bank account with no open reconciliations', function (done) {
+    it('looks for a bank account to work with', function (done) {
       var sql = 'SELECT * FROM bankaccnt WHERE bankaccnt_id IN ('       +
                 '   SELECT bankrec_bankaccnt_id FROM bankrec'           +
                 '   GROUP BY bankrec_bankaccnt_id'                      +
                 '   HAVING BOOL_AND(bankrec_posted)) LIMIT 1;'
                 ;
       datasource.query(sql, creds, function (err, res) {
-        assert.equal(res.rowCount, 1);
-        bankaccnt = _.clone(res.rows[0]);
-        assert.isNotNull(bankaccnt, 'we found a bank account');
-        done();
+        if (res.rowCount === 1) {
+          bankaccnt = _.clone(res.rows[0]);
+          assert.isNotNull(bankaccnt, 'we found a bank account');
+          bankrec = "create";
+          done();
+        } else {
+          var sql = 'SELECT * FROM bankaccnt WHERE bankaccnt_id IN ('       +
+                    '   SELECT bankrec_bankaccnt_id FROM bankrec'           +
+                    '    WHERE bankrec_opendate IN'                         +
+                    '      (SELECT MAX(bankrec_opendate) FROM bankrec'      +
+                    '        WHERE NOT bankrec_posted)'                     +
+                    ') LIMIT 1;'
+                    ;
+          datasource.query(sql, creds, function (err, res) {
+            assert.equal(res.rowCount, 1);
+            bankaccnt = _.clone(res.rows[0]);
+            assert.isNotNull(bankaccnt, 'we found a bank account');
+            bankrec = "select";
+            done();
+          });
+        }
       });
     });
 
-    it('creates a new open bankrec to test with', function (done) {
-      var sql = 'INSERT INTO bankrec (bankrec_bankaccnt_id,'    +
-                '  bankrec_opendate, bankrec_openbal'           +
-                ') SELECT bankrec_bankaccnt_id,'                +
-                '         bankrec_enddate + 1, bankrec_endbal'  +
-                '    FROM bankrec'                              +
-                '   WHERE bankrec_bankaccnt_id=' + bankaccnt.bankaccnt_id +
-                '     AND bankrec_posted'                       +
-                '   ORDER BY bankrec_enddate DESC'              +
-                '   LIMIT 1 RETURNING *;'
-                ;
+    it('gets an open bankrec to test with', function (done) {
+      var sql;
+      if (bankrec === "create") {
+        sql = 'INSERT INTO bankrec (bankrec_bankaccnt_id,'    +
+              '  bankrec_opendate, bankrec_openbal'           +
+              ') SELECT bankrec_bankaccnt_id,'                +
+              '         bankrec_enddate + 1, bankrec_endbal'  +
+              '    FROM bankrec'                              +
+              '   WHERE bankrec_bankaccnt_id=' + bankaccnt.bankaccnt_id +
+              '     AND bankrec_posted'                       +
+              '   ORDER BY bankrec_enddate DESC'              +
+              '   LIMIT 1 RETURNING *;'
+              ;
+      } else if (bankrec === "select") {
+        sql = 'SELECT * FROM bankrec'                                    +
+              ' WHERE bankrec_bankaccnt_id=' + bankaccnt.bankaccnt_id    +
+              '   AND bankrec_opendate IN'                               +
+              '  (SELECT MAX(bankrec_opendate) FROM bankrec'             +
+              '    WHERE NOT bankrec_posted'                             +
+              '      AND bankrec_bankaccnt_id=' + bankaccnt.bankaccnt_id +
+              '  );'
+              ;
+      }
+
       datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
         bankrec = _.clone(res.rows[0]);
@@ -86,80 +121,115 @@ var _    = require("underscore"),
       });
     });
 
-    it('creates a check as the 1st transaction to reconcile', function (done) {
-      var sql = "SELECT createCheck(" + bankaccnt.bankaccnt_id               +
-                "'V', (SELECT MIN(vend_id) FROM vendinfo), '"                +
-                bankrec.bankrec_opendate + "' + 1, " + trans1.amount + ", "  +
-                bankaccnt.bankaccnt_curr_id + ", NULL, NULL, 'Bearer',"      +
-                ", 'bankrec test 1', TRUE, NULL) RETURNING checkid;"
+    it('ensures there is an open accounting period', function (done) {
+      var sql = 'SELECT period_id, period_closed, period_freeze'        +
+                '  FROM period'                                         +
+                ' WHERE CURRENT_DATE BETWEEN period_start AND period_end;'
                 ;
-      datasource.query(sql, cred, function (err, res) {
+      datasource.query(sql, creds, function (err, res) {
+        var sql;
+        if (res.rowCount !== 1) {
+          sql = "INSERT INTO period (period_closed, period_freeze,"     +
+                "  period_name, period_quarter, period_start,"          +
+                "  period_end, period_number"                           +
+                ") VALUES (FALSE, FALSE, 'BankRec Test Period',"        +
+                "  EXTRACT(QUARTER FROM DATE CURRENT_DATE),"            +
+                "  DATE_TRUNC(MONTH, CURRENT_DATE),"                    +
+                "  DATE_TRUNC(MONTH, CURRENT_DATE) + '1 month',"        +
+                "  EXTRACT(month FROM DATE CURRENT_DATE)"               +
+                ") RETURNING period_id;"
+                ;
+        } else if (res.rows[0].period_closed === true) {
+          sql = 'SELECT openAccountingPeriod(' + res.rows[0].period_id +
+                ') AS period_id;'
+                ;
+        }
+        if (sql) {
+          datasource.query(sql, creds, function (err, res) {
+            assert.equal(res.rowCount, 1);
+            assert(res.period_id >= 0);
+            done();
+          });
+        } else {
+          done();
+        }
+      });
+    });
+
+    it('creates a check as the 1st transaction to reconcile', function (done) {
+      var sql = "SELECT createCheck(" + bankaccnt.bankaccnt_id + ", 'V',"      +
+                " (SELECT MIN(vend_id) FROM vendinfo), CURRENT_DATE, "         +
+                trans1.amount + ", " + bankaccnt.bankaccnt_curr_id + ", NULL," +
+                " NULL, 'Bearer', 'bankrec test 1', TRUE, NULL) AS checkid;"
+                ;
+      datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
-        assert(res.row[0].checkid > 0);
-        trans1.checkid = res.row[0].checkid;
+        assert(res.rows[0].checkid > 0);
+        trans1.checkid = res.rows[0].checkid;
         done();
       });
     });
 
     it('posts the check', function (done) {
       var sql = 'SELECT postCheck(' + trans1.checkid + ', NULL) AS result;';
-      datasource.query(sql, cred, function (err, res) {
+      datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
-        assert(res.row[0].result > 0);
-        trans1.journalNumber = res.row[0].result;
+        assert(res.rows[0].result > 0);
+        trans1.journalNumber = res.rows[0].result;
         done();
       });
     });
 
     it('marks the check as cleared', function (done) {
       var sql = _.clone(toggleCheckSql)
-                 .replace(':bankrec_id', bankrec.bankrec_id)
-                 .replace(':checkid',    trans1.checkid);
-      datasource.query(sql, cred, function (err, res) {
+                 .replace(':bankrec_id:', bankrec.bankrec_id)
+                 .replace(':checkid:',    trans1.checkid);
+      datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
-        assert.isTrue(res.row[0].result);
+        assert.isTrue(res.rows[0].result);
         done();
       });
     });
 
     it('confirms the check was marked as cleared', function (done) {
       var sql = _.clone(bankRecItemSql)
-                 .replace(':brid', bankrec.bankrec_id)
-                 .replace(':src', 'A/R')
-                 .replace('=:srcid',
+                 .replace(':brid:', bankrec.bankrec_id)
+                 .replace(':src:',  "'GL'")
+                 .replace('=:srcid:',
                           " IN (SELECT gltrans_id FROM gltrans WHERE"  +
                           " gltrans_doctype='CK' AND gltrans_misc_id=" +
-                          trans1.checkid)
+                          trans1.checkid + ")")
                  ;
-      datasource.query(sql, cred, function (err, res) {
+      datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
-        assert.isTrue(res.row[0].bankrecitem_cleared);
-        assert(res.row[0].bankrecitem_cleared);
+        assert.isTrue(res.rows[0].bankrecitem_cleared);
+        assert(res.rows[0].bankrecitem_cleared);
         done();
       });
     });
 
     it('marks the check as /not/ cleared', function (done) {
       var sql = _.clone(toggleCheckSql)
-                 .replace(':bankrec_id', bankrec.bankrec_id)
-                 .replace(':checkid',    trans1.checkid);
-      datasource.query(sql, cred, function (err, res) {
+                 .replace(':bankrec_id:', bankrec.bankrec_id)
+                 .replace(':checkid:',    trans1.checkid)
+                 ;
+      datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
-        assert.isFalse(res.row[0].result);
+        assert.isFalse(res.rows[0].result);
         done();
       });
     });
 
     it('confirms the check is no longer marked as cleared', function (done) {
       var sql = _.clone(bankRecItemSql)
-                 .replace(':brid', bankrec.bankrec_id)
-                 .replace(':src', 'A/R')
-                 .replace('=:srcid',
+                 .replace(':brid:', bankrec.bankrec_id)
+                 .replace(':src:',  "'GL'")
+                 .replace('=:srcid:',
                           " IN (SELECT gltrans_id FROM gltrans WHERE"  +
                           " gltrans_doctype='CK' AND gltrans_misc_id=" +
-                          trans1.checkid)
+                          trans1.checkid + ")")
                  ;
-      datasource.query(sql, cred, function (err, res) {
+      datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 0);
         done();
       });
@@ -167,28 +237,29 @@ var _    = require("underscore"),
 
     it('marks the check as cleared again', function (done) {
       var sql = _.clone(toggleCheckSql)
-                .replace(':bankrec_id', bankrec.bankrec_id)
-                .replace(':checkid',    trans1.checkid)
+                .replace(':bankrec_id:', bankrec.bankrec_id)
+                .replace(':checkid:',    trans1.checkid)
                 ;
-      datasource.query(sql, cred, function (err, res) {
+      datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
-        assert.isTrue(res.row[0].result);
+        assert.isTrue(res.rows[0].result);
         done();
       });
     });
 
     it('confirms that the check is marked as cleared again', function (done) {
-      var sql = bankRecItemSql.replace(':brid', bankrec.bankrec_id)
-                              .replace(':src', 'A/R')
-                              .replace('=:srcid',
-                                       " IN (SELECT gltrans_id FROM gltrans" +
-                                       " WHERE gltrans_doctype='CK' AND "
-                                       " gltrans_misc_id=" + trans1.checkid)
-                              ;
-      datasource.query(sql, cred, function (err, res) {
+      var sql = _.clone(bankRecItemSql)
+                 .replace(':brid:', bankrec.bankrec_id)
+                 .replace(':src:', "'GL'")
+                 .replace('=:srcid:',
+                          " IN (SELECT gltrans_id FROM gltrans" +
+                          " WHERE gltrans_doctype='CK' AND "    +
+                          " gltrans_misc_id=" + trans1.checkid + ")")
+                          ;
+      datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
-        assert.isTrue(res.row[0].bankrecitem_cleared);
-        assert(res.row[0].bankrecitem_cleared);
+        assert.isTrue(res.rows[0].bankrecitem_cleared);
+        assert(res.rows[0].bankrecitem_cleared);
         done();
       });
     });
@@ -197,17 +268,19 @@ var _    = require("underscore"),
       var sql = "INSERT INTO bankadj ("                                      +
                 " bankadj_bankaccnt_id, bankadj_bankadjtype_id,"             +
                 " bankadj_date, bankadj_docnumber,"                          +
-                " bankadj_amount, bankadj_notes, bankadj_curr_id"            +
-                ") SELECT " + bankaccnt.bankaccnt_id + ", bankadjtype_id, '" +
-                bankrec.bankrec_opendate + "' + 1, 'BankRecTest', "          +
-                trans2.amount + ", 'Bank Rec Test Transaction 2', "          +
-                bankaccnt.bankaccnt_curr_id                                  +
-                "    FROM bankadjtype RETURNING *;"
+                " bankadj_amount, bankadj_notes, bankadj_curr_id,"           +
+                " bankadj_curr_rate"                                         +
+                ") SELECT " + bankaccnt.bankaccnt_id + ", bankadjtype_id, "  +
+                "    CURRENT_DATE, 'BankRecTest', " + trans2.amount          +
+                ", 'Bank Rec Test Transaction 2', "                          +
+                bankaccnt.bankaccnt_curr_id + ", "                           +
+                " currrate(" + bankaccnt.bankaccnt_curr_id                   +
+                ", basecurrid(), CURRENT_DATE) FROM bankadjtype RETURNING *;"
                 ;
-      datasource.query(sql, cred, function (err, res) {
+      datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
         _.extend(trans2, res.rows[0]);
-        assert.isOk(trans2.bankadj_id, 'we have a bank adjustment');
+        assert.ok(trans2.bankadj_id, 'we have a bank adjustment');
         done();
       });
     });
@@ -216,22 +289,22 @@ var _    = require("underscore"),
       var sql = 'SELECT postBankReconciliation(' + bankrec.bankrec_id +
                 ') AS result;'
                 ;
-      datasource.query(sql, cred, function (err, res) {
+      datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
-        assert.equal(res.row[0].result, bankrec.bankrec_id);
+        assert.equal(res.rows[0].result, bankrec.bankrec_id);
         done();
       });
     });
 
     it('confirms the check was reconciled properly', function (done) {
       var sql = _.clone(checkCheckSql)
-                 .replace(':checkid', trans1.checkid)
-                 .replace(':bankrecid', bankrec.bankrec_id)
+                 .replace(':checkid:', trans1.checkid)
+                 .replace(':bankrecid:', bankrec.bankrec_id)
                  ;
-      datasource.query(sql, cred, function (err, res) {
+      datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
-        assert.isTrue(res.row[0].gltrans_rec);
-        assert.isTrue(res.row[0].bankrec_posted);
+        assert.isTrue(res.rows[0].gltrans_rec);
+        assert.isTrue(res.rows[0].bankrec_posted);
         done();
       });
     });
@@ -239,12 +312,26 @@ var _    = require("underscore"),
     // TODO: confirm the CashBasedTax reconciliation code worked
 
     it('confirms the bank adjustment was /not/ posted', function (done) {
-      sql = _.clone(bankAdjCheckSql).replace(':bankadjid', trans2.bankadj_id);
-      datasource.query(sql, cred, function (err, res) {
+      var sql = _.clone(bankAdjCheckSql)
+                 .replace(':bankadjid:', trans2.bankadj_id)
+                 ;
+      datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
-        assert.isFalse(res.row[0].bankadj_posted);
-        assert.notOk(res.row[0].gltrans_id);
-        assert.notOk(res.row[0].bankrecitem_id);
+        assert.isFalse(res.rows[0].bankadj_posted);
+        /* TODO: why does assert.notOk throw
+            Unrecoverable exception. Object function (express, errmsg) {
+              var test = new Assertion(null);
+              test.assert(
+                  express
+                , errmsg
+                , '[ negation message unavailable ]'
+              );
+            } has no method 'notOk'
+        assert.notOk(res.rows[0].gltrans_id,     'expecting no gltrans');
+        assert.notOk(res.rows[0].bankrecitem_id, 'expecting no bankrecitem');
+        */
+        assert(! res.rows[0].gltrans_id,     'expecting no gltrans');
+        assert(! res.rows[0].bankrecitem_id, 'expecting no bankrecitem');
         done();
       });
     });
@@ -253,24 +340,24 @@ var _    = require("underscore"),
       var sql = 'SELECT reopenBankReconciliation(' + bankrec.bankrec_id +
                 ') AS result;'
                 ;
-      datasource.query(sql, cred, function (err, res) {
+      datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
-        assert.equal(res.row[0].result, bankrec.bankrec_id);
+        assert.equal(res.rows[0].result, bankrec.bankrec_id);
         done();
       });
     });
 
     it('confirms the check was handled properly by the reopen', function (done) {
       var sql = _.clone(checkCheckSql)
-                 .replace(':checkid', trans1.checkid)
-                 .replace(':bankrecid', bankrec.bankrec_id)
+                 .replace(':checkid:',   trans1.checkid)
+                 .replace(':bankrecid:', bankrec.bankrec_id)
                  ;
-      datasource.query(sql, cred, function (err, res) {
+      datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
-        assert.isFalse(res.row[0].gltrans_rec);
-        assert.isFalse(res.row[0].bankrec_posted);
-        assert.closeTo(Math.abs(res.row[0].gltrans_amount), res.row[0].base,
-                       0.001);
+        assert.isFalse(res.rows[0].gltrans_rec);
+        assert.isFalse(res.rows[0].bankrec_posted);
+        assert.closeTo(Math.abs(res.rows[0].gltrans_amount), res.rows[0].base,
+                       0.006);
         done();
       });
     });
@@ -279,25 +366,24 @@ var _    = require("underscore"),
 
     it('marks the bank adjustment as cleared', function (done) {
       var sql = "SELECT toggleBankRecCleared(" + bankrec.bankrec_id         +
-                ", 'G/L', gltrans_id, bankadj_curr_rate,"                   +
-                "  bankadj_amount) AS result"                               +
-                " FROM bankadj JOIN gltrans"                                +
-                " ON (gltrans_doctype='AD' AND gltrans_misc_id=bankadj_id)" +
-                " WHERE bankadj_id=" + trans2.bankadj_id + ";"
+                ", 'AD', " + trans2.bankadj_id        +
+                ", " + trans2.bankadj_curr_rate       +
+                ", " + trans2.bankadj_amount + ") AS result;"
                 ;
-      datasource.query(sql, cred, function (err, res) {
+      datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
-        assert.isTrue(res.row[0].result);
+        assert.isTrue(res.rows[0].result);
         done();
       });
     });
 
     it('confirms the bank adjustment was /not/ posted but is cleared', function (done) {
-      sql = _.clone(bankAdjCheckSql).replace(':bankadjid', trans2.bankadj_id);
-      datasource.query(sql, cred, function (err, res) {
+      var sql = _.clone(bankAdjCheckSql)
+                 .replace(':bankadjid:', trans2.bankadj_id);
+      datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
-        assert.isFalse(res.row[0].bankadj_posted);
-        assert(res.row[0].bankrecitem_id >= 0);
+        assert.isFalse(res.rows[0].bankadj_posted);
+        assert(res.rows[0].bankrecitem_id >= 0);
         done();
       });
     });
@@ -306,22 +392,22 @@ var _    = require("underscore"),
       var sql = 'SELECT postBankReconciliation(' + bankrec.bankrec_id +
                 ') AS result;'
                 ;
-      datasource.query(sql, cred, function (err, res) {
+      datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
-        assert.equal(res.row[0].result, bankrec.bankrec_id);
+        assert.equal(res.rows[0].result, bankrec.bankrec_id);
         done();
       });
     });
 
     it('confirms the check was reconciled properly', function (done) {
       var sql = _.clone(checkCheckSql)
-                 .replace(':checkid', trans1.checkid)
-                 .replace(':bankrecid', bankrec.bankrec_id)
+                 .replace(':checkid:',   trans1.checkid)
+                 .replace(':bankrecid:', bankrec.bankrec_id)
                  ;
-      datasource.query(sql, cred, function (err, res) {
+      datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
-        assert.isTrue(res.row[0].gltrans_rec);
-        assert.isTrue(res.row[0].bankrec_posted);
+        assert.isTrue(res.rows[0].gltrans_rec);
+        assert.isTrue(res.rows[0].bankrec_posted);
         done();
       });
     });
@@ -329,14 +415,18 @@ var _    = require("underscore"),
     // TODO: confirm the CashBasedTax reconciliation code worked
 
     it('confirms the bank adjustment was cleared, posted, written to the GL', function (done) {
-      sql = _.clone(bankAdjCheckSql).replace(':bankadjid', trans2.bankadj_id);
-      datasource.query(sql, cred, function (err, res) {
+      var sql = _.clone(bankAdjCheckSql)
+                 .replace(':bankadjid:', trans2.bankadj_id);
+      datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
-        assert.isTrue(res.row[0].bankadj_posted);
-        assert(res.row[0].bankadj_sequence >= 0);
-        assert.isTrue(res.row[0].gltrans_rec);
-        assert.closeTo(Math.abs(res.row[0].gltrans_amount), res.row[0].baseamt,
-                       0.001);
+        assert.isTrue(res.rows[0].bankadj_posted);
+        assert(res.rows[0].bankadj_sequence >= 0);
+        assert.equal(res.rows[0].bankrecitem_source, 'GL');
+        assert.equal(res.rows[0].bankrecitem_source_id, res.rows[0].gltrans_id);
+        assert.isTrue(res.rows[0].gltrans_rec);
+        assert.closeTo(Math.abs(res.rows[0].gltrans_amount),
+                       res.rows[0].baseamt,
+                       0.006);
         done();
       });
     });
@@ -344,38 +434,38 @@ var _    = require("underscore"),
     it('deletes the bankrec', function (done) {
       var sql = 'SELECT deleteBankReconciliation(' + bankrec.bankrec_id +
                 ') AS result;';
-      datasource.query(sql, cred, function (err, res) {
+      datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
-        assert(res.row[0].result >= 0);
+        assert(res.rows[0].result >= 0);
         done();
       });
     });
 
     it('checks that the bankrec is really gone', function (done) {
-      var sql = 'SELECT COUNT(*) FROM bankrec WHERE bankrec_id = ' +
-                bankrec.bankrec_id;
-      datasource.query(sql, cred, function (err, res) {
+      var sql = 'SELECT COUNT(*) AS result FROM bankrec WHERE bankrec_id = ' +
+                bankrec.bankrec_id + ';';
+      datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
-        assert(res.row[0].result === 0);
+        assert(res.rows[0].result === 0);
         done();
       });
     });
 
     it('checks that the bankrecitems are gone', function (done) {
-      var sql = 'SELECT COUNT(*) FROM bankrecitem'
-                ' WHERE bankrecitem_bankrec_id = ' + bankrec.bankrec_id;
-      datasource.query(sql, cred, function (err, res) {
+      var sql = 'SELECT COUNT(*) AS result FROM bankrecitem' +
+                ' WHERE bankrecitem_bankrec_id = ' + bankrec.bankrec_id + ';';
+      datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
-        assert(res.row[0].result === 0);
+        assert(res.rows[0].result === 0);
         done();
       });
     });
 
     it('tries to delete a non-existent bankrec', function (done) {
       var sql = 'SELECT deleteBankReconciliation(-15) AS result;';
-      datasource.query(sql, cred, function (err, res) {
+      datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
-        assert(res.row[0].result === 0); // no, it doesn't complain
+        assert(res.rows[0].result === 0); // no, it doesn't complain
         done();
       });
     });
