@@ -5,11 +5,11 @@ before_install:
   - wget git.io/hikK5g -qO- | sudo bash
   - n latest
   - npm install xtuple-server -g
-  - sudo xtuple-server install-dev --xt-demo --pg-worldlogin
+  - n stable
 
 install:
-  - n stable
   - npm install
+  - sudo xtuple-server install-dev --xt-demo --pg-worldlogin
 
 before_script:
   - npm run test-build
