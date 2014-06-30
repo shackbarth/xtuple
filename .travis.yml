@@ -10,7 +10,7 @@ install:
   - n stable
 
 before_script:
-  - xtuple-server install-pilot --xt-demo --pg-worldlogin
+  - sudo xtuple-server install-pilot --xt-demo --pg-worldlogin
   - npm run test-build
   - npm start &
   - sleep 10
