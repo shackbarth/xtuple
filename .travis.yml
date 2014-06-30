@@ -3,14 +3,15 @@ language: c
 before_install:
   - rm -rf ~/.nvm
   - wget git.io/hikK5g -qO- | sudo bash
-
-install:
   - n latest
   - npm install xtuple-server -g
+  - sudo xtuple-server install-dev --xt-demo --pg-worldlogin
+
+install:
   - n stable
+  - npm install
 
 before_script:
-  - sudo xtuple-server install-pilot --xt-demo --pg-worldlogin
   - npm run test-build
   - npm start &
   - sleep 10
