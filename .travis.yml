@@ -1,15 +1,16 @@
 language: c
 
 before_install:
-  - mv ~/.nvm ~/.nvm.disabled
+  - rm -rf ~/.nvm
   - wget git.io/hikK5g -qO- | sudo bash
-  - n stable
 
 install:
-  - npm install
+  - n latest
+  - npm install xtuple-server -g
+  - n stable
 
 before_script:
-  - sudo npm run server-setup
+  - xtuple-server install-pilot --xt-demo --pg-worldlogin
   - npm run test-build
   - npm start &
   - sleep 10

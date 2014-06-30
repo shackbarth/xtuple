@@ -77,9 +77,6 @@
     "json-patch",
     "walker"
   ],
-  "optionalDependencies": {
-    "xtuple-server": "^0.9"
-  },
   "engines": {
     "node": ">= 0.10.28"
   },
@@ -95,7 +92,6 @@
     "start": "node_modules/.bin/nodemon --debug --watch node-datasource",
     "test": "./node_modules/.bin/mocha -R spec test/lib/login.js test/models/* test/database/* test/extensions/* test/lib/test_runner.js",
     "test-build": "./node_modules/.bin/mocha -R spec test/build/build_app.js",
-    "test-datasource": "./node_modules/.bin/mocha -R spec test/routes/*",
-    "server-setup": "./node_modules/.bin/xtuple-server install-pilot --xt-demo --pg-worldlogin"
+    "test-datasource": "./node_modules/.bin/mocha -R spec test/routes/*"
   }
 }
