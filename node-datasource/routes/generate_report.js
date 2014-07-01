@@ -15,6 +15,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     path = require("path"),
     ipp = require("ipp"),
     Report = require('fluentreports').Report,
+    qr = require('qr-image'),
     queryForData = require("./export").queryForData;
 
   /**
@@ -550,23 +551,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         return;
       }
 
-      async.each(marriedQrElements, function (element, next) {
-        var target = element.target.substring(0, 5);
-        imageFilenameMap[element.source] = target + ".png";
+      async.eachSeries(marriedQrElements, function (element, next) {
+        var targetFilename = element.target.replace(/\W+/g, "") + ".png",
+          qr_svg = qr.image(element.target, { type: 'png' }),
+          writeStream = fs.createWriteStream(path.join(workingDir, targetFilename));
 
-        // here's the actual qr code code, which requires node 10
-        //var qr = require('qr-image');
-        //var qr_svg = qr.image('I love QR!', { type: 'png' });
-        //qr_svg.pipe(require('fs').createWriteStream('i_love_qr.png'));
-
-        // here's the placeholder code that serves as a proof of concept
-        var sourceFile = path.join(__dirname, "../../i_love_qr.png");
-        fs.readFile(sourceFile, function (err, contents) {
-          fs.writeFile(path.join(workingDir, target + ".png"), contents, function (err) {
-            next();
-          });
+        qr_svg.pipe(writeStream);
+        writeStream.on("finish", function () {
+          imageFilenameMap[element.source] = targetFilename;
+          next();
         });
-        // end placeholder code
 
       }, done);
     };
