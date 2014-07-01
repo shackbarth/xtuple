@@ -106,4 +106,7 @@ WHERE (true)
   AND (prj_id=<? value("id") ?>)
 <? endif ?>
 <? literal("charClause") ?>
+<? if exists("prjtype_id") ?>
+   AND (prjtype_id = <? value("prjtype_id") ?>)
+<? endif ?>
 ORDER BY prj_number;
