@@ -1,5 +1,5 @@
-<package id        = "manufacturing-install-450"
-         version   = "4.5.0"
+<package id        = "manufacturing-install-451"
+         version   = "4.5.1"
          developer = "xTuple"
          descrip   = "load PostBooks resources"
          updater   = "2.2.4" >
@@ -7,7 +7,7 @@
   <prerequisite type = "query"
                 name = "Checking xTuple Edition" >
     <query>SELECT fetchMetricText('Application') = 'PostBooks';</query>
-    <message>This package must be applied to a Distribution Edition database.</message>
+    <message>This package must be applied to a PostBooks Edition database.</message>
   </prerequisite>
 
   <prerequisite type = "query"
@@ -17,17 +17,31 @@
     </message>
   </prerequisite>
 
- <prerequisite type = "query"
-               name = "Checking for bad xTuple ERP database version" >
-<query>SELECT NOT fetchMetricText('ServerVersion') > '4.5.0' AND fetchMetricText('ServerVersion')!='4.5.0Beta' AND fetchMetricText('ServerVersion')!='4.5.0RC';</query>
-    <message>This package may not be applied to a 4.5.0+ PostBooks database.
+  <prerequisite type = "query"
+                name = "Checking for bad xTuple ERP database version" >
+    <query>SELECT NOT fetchMetricText('ServerVersion') > '4.5.1' AND fetchMetricText('ServerVersion')!='4.5.0Beta' AND fetchMetricText('ServerVersion')!='4.5.0RC';</query>
+    <message>This package may not be applied to a 4.5.1+ PostBooks database.
     </message>
   </prerequisite>
 
- <prerequisite type = "query"
+  <prerequisite type = "query"
                name = "Checking for mobile-enabled schemas" >
     <query>SELECT NOT EXISTS(SELECT 1 FROM pg_namespace WHERE nspname = 'xm');</query>
     <message>This package may not be applied to a mobile-enabled database. Please see your system administrator or contact xTuple.
+    </message>
+  </prerequisite>
+
+  <prerequisite type = "query"
+               name = "Checking for duplicate Credit Card payments on Sales Orders" >
+    <query>
+      WITH counter AS (SELECT COUNT(*) AS freq
+                        FROM payco
+                        GROUP BY payco_ccpay_id, payco_cohead_id
+                        ORDER BY 1)
+      SELECT (COALESCE(MAX(freq), 1) = 0 OR COALESCE(MAX(freq), 1) = 1)
+      FROM counter;
+    </query>
+    <message>There are duplicate payco_ccpay_id and payco_cohead_id on the payco table. Please see your system administrator or contact xTuple.
     </message>
   </prerequisite>
 

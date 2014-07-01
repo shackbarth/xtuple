@@ -61,7 +61,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       tableName = defaultSchema ? defaultSchema + ".pkgreport" : "report",
       description,
       disableSql,
-      deleteSql,
+      updateSql,
       insertSql,
       enableSql;
 
@@ -80,20 +80,26 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     disableSql = "ALTER TABLE " + tableName + " DISABLE TRIGGER ALL;";
 
-    deleteSql = "delete from " + tableName + " " +
-      "where report_name = '" + name +
-      "' and report_grade = " + grade + ";";
-
     insertSql = "insert into " + tableName + " (report_name, report_descrip, " +
-      "report_source, report_loaddate, report_grade) VALUES (" +
+      "report_source, report_loaddate, report_grade) select " +
       "'" + name + "'," +
       "$$" + description + "$$," +
       "$$" + content + "$$," +
-      "now(), " + grade + ");";
+      "now(), " + grade +
+      " where not exists (select c.report_id from " + tableName + " c " +
+      "where report_name = '" + name +
+      "' and report_grade = " + grade + ");";
+
+    updateSql = "update " + tableName + " set " +
+      " report_descrip = $$" + description +
+      "$$, report_source = $$" + content +
+      "$$, report_loaddate = now() " +
+      "where report_name = '" + name +
+      "' and report_grade = " + grade + ";";
 
     enableSql = "ALTER TABLE " + tableName + " ENABLE TRIGGER ALL;";
 
-    return disableSql + deleteSql + insertSql + enableSql;
+    return disableSql + insertSql + updateSql + enableSql;
   };
 
   var convertFromScript = function (content, filename, defaultSchema) {
@@ -101,25 +107,29 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       tableName = defaultSchema ? defaultSchema + ".pkgscript" : "unknown",
       notes = "", //"xtMfg package",
       disableSql,
-      deleteSql,
       insertSql,
+      updateSql,
       enableSql;
 
     disableSql = "ALTER TABLE " + tableName + " DISABLE TRIGGER ALL;";
 
-    deleteSql = "delete from " + tableName + " " +
-      "where script_name = '" + name +
-      "';";
-
     insertSql = "insert into " + tableName + " (script_name, script_order, script_enabled, " +
-      "script_source, script_notes) VALUES (" +
+      "script_source, script_notes) select " +
       "'" + name + "', 0, TRUE, " +
       "$$" + content + "$$," +
-      "'" + notes + "');";
+      "'" + notes + "'" +
+      " where not exists (select c.script_id from " + tableName + " c " +
+      "where script_name = '" + name + "');";
+
+    updateSql = "update " + tableName + " set " +
+      "script_name = '" + name + "', script_order = 0, script_enabled = TRUE, " +
+      "script_source = $$" + content +
+      "$$, script_notes = '" + notes + "' " +
+      "where script_name = '" + name + "';";
 
     enableSql = "ALTER TABLE " + tableName + " ENABLE TRIGGER ALL;";
 
-    return disableSql + deleteSql + insertSql + enableSql;
+    return disableSql + insertSql + updateSql + enableSql;
   };
 
   var convertFromUiform = function (content, filename, defaultSchema) {
@@ -127,25 +137,28 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       tableName = defaultSchema ? defaultSchema + ".pkguiform" : "unknown",
       notes = "", //"xtMfg package",
       disableSql,
-      deleteSql,
       insertSql,
+      updateSql,
       enableSql;
 
     disableSql = "ALTER TABLE " + tableName + " DISABLE TRIGGER ALL;";
 
-    deleteSql = "delete from " + tableName + " " +
-      "where uiform_name = '" + name +
-      "';";
-
     insertSql = "insert into " + tableName + " (uiform_name, uiform_order, uiform_enabled, " +
-      "uiform_source, uiform_notes) VALUES (" +
+      "uiform_source, uiform_notes) select " +
       "'" + name + "', 0, TRUE, " +
       "$$" + content + "$$," +
-      "'" + notes + "');";
+      "'" + notes + "' " +
+      " where not exists (select c.uiform_id from " + tableName + " c " +
+      "where uiform_name = '" + name + "');";
+
+    updateSql = "update " + tableName + " set uiform_name = '" +
+      name + "', uiform_order = 0, uiform_enabled = TRUE, " +
+      "uiform_source = $$" + content + "$$, uiform_notes = '" + notes + "' " +
+      "where uiform_name = '" + name + "';";
 
     enableSql = "ALTER TABLE " + tableName + " ENABLE TRIGGER ALL;";
 
-    return disableSql + deleteSql + insertSql + enableSql;
+    return disableSql + insertSql + updateSql + enableSql;
   };
 
   var conversionMap = {
@@ -314,14 +327,23 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           // register extension and dependencies
           extensionSql = 'do $$ plv8.elog(NOTICE, "About to register extension ' +
             extensionName + '"); $$ language plv8;\n' + extensionSql;
+
           registerSql = "select xt.register_extension('%@', '%@', '%@', '', %@);\n"
             .f(extensionName, extensionComment, options.extensionLocation, loadOrder);
+
+          var grantExtToAdmin = "select xt.grant_role_ext('ADMIN', '%@');\n"
+            .f(extensionName);
+
+          extensionSql = grantExtToAdmin + extensionSql;
 
           dependencies = manifest.dependencies || [];
           _.each(dependencies, function (dependency) {
             var dependencySql = "select xt.register_extension_dependency('%@', '%@');\n"
-              .f(extensionName, dependency);
-            extensionSql = dependencySql + extensionSql;
+                .f(extensionName, dependency),
+              grantDependToAdmin = "select xt.grant_role_ext('ADMIN', '%@');\n"
+                .f(dependency);
+
+            extensionSql = dependencySql + grantDependToAdmin + extensionSql;
           });
           extensionSql = registerSql + extensionSql;
         }

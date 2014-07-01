@@ -8,10 +8,10 @@ trailing:true, white:true*/
   XT.extensions.crm.initCharts = function () {
 
     enyo.kind({
-      name: "XV.OpenIncidentBarChart",
+      name: "XV.AssignedIncidentBarChart",
       kind: "XV.DrilldownBarChart",
       collection: "XM.IncidentListItemCollection",
-      chartTitle: "_openIncidents".loc(),
+      chartTitle: "_assignedIncidents".loc(),
       filterOptions: [
         { name: "all", parameters: [] },
         { name: "highPriority", parameters: [
@@ -24,12 +24,12 @@ trailing:true, white:true*/
         { name: "priority" },
         { name: "project" }
       ],
-      // suppress closed incidents
+      // assigned incidents only
       query: {
         parameters: [{
           attribute: "status",
-          operator: "!=",
-          value: "L"
+          operator: "=",
+          value: "A"
         }],
       }
     });
@@ -38,7 +38,7 @@ trailing:true, white:true*/
       name: "XV.OpportunityBarChart",
       kind: "XV.DrilldownBarChart",
       collection: "XM.OpportunityListItemCollection",
-      chartTitle: "_opportunities".loc(),
+      chartTitle: "_opportunitiesNext30Days".loc(),
       groupByOptions: [
         { name: "opportunityStage", content: "_stage".loc() },
         { name: "opportunitySource", content: "_source".loc() },
@@ -47,6 +47,17 @@ trailing:true, white:true*/
         { name: "assignedTo" },
         { name: "priority" }
       ],
+      query: {
+        parameters: [{
+          attribute: "targetClose",
+          operator: ">=",
+          value: XT.date.applyTimezoneOffset(XV.Date.prototype.textToDate("0"), true)
+        }, {
+          attribute: "targetClose",
+          operator: "<=",
+          value: XT.date.applyTimezoneOffset(XV.Date.prototype.textToDate("+30"), true)
+        }]
+      },
       totalField: "amount"
     });
 
