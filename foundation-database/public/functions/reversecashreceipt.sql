@@ -18,6 +18,8 @@ DECLARE
   _debitAccntid INTEGER;
   _exchGain NUMERIC;
   _comment      TEXT;
+  _ccpayid  INTEGER;
+  _cctype TEXT;
 
 BEGIN
   _posted := 0;
@@ -58,13 +60,40 @@ BEGIN
   END IF;
 
   IF (_p.cashrcpt_fundstype IN ('A', 'D', 'M', 'V')) THEN
-    IF NOT EXISTS(SELECT ccpay_id
-                  FROM ccpay
-                  WHERE ((ccpay_order_number=CAST(pCashrcptid AS TEXT))
-                     AND (ccpay_status IN ('C', 'A')))) THEN
-      RETURN -8;
+    SELECT ccpay_id, ccpay_type INTO _ccpayid, _cctype
+    FROM ccpay
+    WHERE ((ccpay_r_ordernum IN (CAST(pCashrcptid AS TEXT), _p.cashrcpt_docnumber))
+       AND (ccpay_status IN ('C', 'A')));
+
+    IF NOT FOUND THEN
+      -- the following select seems to work except for xikar - bug 8848. why?
+      -- raise warning so there is some visibility if people fall into this path.
+      SELECT ccpay_id, ccpay_type INTO _ccpayid, _cctype
+      FROM ccpay
+      WHERE ((ccpay_order_number IN (CAST(pCashrcptid AS TEXT), _p.cashrcpt_docnumber))
+         AND (ccpay_status IN ('C', 'A')));
+      IF (NOT FOUND) THEN
+        RETURN -8;
+      ELSE
+        RAISE NOTICE 'PostCashReceipt() found ccpay_id % for order number %/% (ref 8848).',
+                      _ccpayid, pCashrcptid, _p.cashrcpt_docnumber;
+      END IF;
     END IF;
-    _debitAccntid := findPrepaidAccount(_p.cashrcpt_cust_id);
+
+-- If there is a ccpay entry and the card was charged directly, use the prepaid account
+    IF (_cctype = 'C' ) THEN
+      _debitAccntid := findPrepaidAccount(_p.cashrcpt_cust_id);
+-- If there is a ccpay entry and the card was preauthed and then charged, use the Bank account
+    ELSE
+      SELECT accnt_id INTO _debitAccntid
+      FROM cashrcpt, bankaccnt, accnt
+      WHERE ( (cashrcpt_bankaccnt_id=bankaccnt_id)
+       AND (bankaccnt_accnt_id=accnt_id)
+       AND (cashrcpt_id=pCashrcptid) );
+      IF (NOT FOUND) THEN
+        RETURN -6;
+      END IF;
+    END IF;
   ELSE
     SELECT accnt_id INTO _debitAccntid
     FROM cashrcpt, bankaccnt, accnt

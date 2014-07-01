@@ -13,6 +13,10 @@ scripts/lib/build
 scripts/lib/deploy
 scripts/lib/package.js
 test/lib/demo-test.backup
-test/lib/login_data.js
+test/lib/login_data.js*
 test/mocha/lib/demo-test.backup
-test/shared/login_data.js
+install.log
+enyo-client/application/lib
+enyo-client/application/build
+enyo-client/application/deploy
+lib/module

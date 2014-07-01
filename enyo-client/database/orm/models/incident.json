@@ -1635,7 +1635,7 @@
     "type": "IncidentEmailProfile",
     "table": "xt.incdtemlprofile",
     "isRest": true,
-    "idSequenceName": "emlprofile_emlprofile_id_seq",
+    "idSequenceName": "xt.emlprofile_emlprofile_id_seq",
     "comment": "Incident Email Profile Map",
     "privileges": {
       "all": {

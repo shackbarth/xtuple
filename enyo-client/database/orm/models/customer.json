@@ -851,7 +851,7 @@
     "type": "CustomerEmailProfile",
     "table": "xt.custemlprofile",
     "isRest": true,
-    "idSequenceName": "emlprofile_emlprofile_id_seq",
+    "idSequenceName": "xt.emlprofile_emlprofile_id_seq",
     "comment": "Customer Email Profile Map",
     "privileges": {
       "all": {
@@ -942,7 +942,7 @@
     "nameSpace": "SYS",
     "type": "CustomerEmailProfile",
     "table": "xt.custemlprofile",
-    "idSequenceName": "emlprofile_emlprofile_id_seq",
+    "idSequenceName": "xt.emlprofile_emlprofile_id_seq",
     "comment": "Customer Email Profile Map",
     "privileges": {
       "all": {

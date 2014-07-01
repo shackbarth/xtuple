@@ -5,7 +5,7 @@
     "type": "PurchaseEmailProfile",
     "table": "xt.poemlprofile",
     "isRest": true,
-    "idSequenceName": "emlprofile_emlprofile_id_seq",
+    "idSequenceName": "xt.emlprofile_emlprofile_id_seq",
     "comment": "Purchase Email Profile Map",
     "privileges": {
       "all": {

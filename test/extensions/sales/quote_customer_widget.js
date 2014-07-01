@@ -13,7 +13,7 @@
     assert = require("chai").assert;
 
   describe('Quote Workspace', function () {
-    this.timeout(20 * 1000);
+    this.timeout(40 * 1000);
 
     before(function (done) {
       zombieAuth.loadApp(done);

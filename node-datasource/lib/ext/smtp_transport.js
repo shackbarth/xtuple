@@ -8,7 +8,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   var nodemailer = require("nodemailer"),
     smtpOptions = {
       host: X.options.datasource.smtpHost,
-      secureConnection: false,
+      secureConnection: X.options.datasource.smtpPort === 465,
       port: X.options.datasource.smtpPort
     };
 

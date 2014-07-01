@@ -45,7 +45,7 @@
     };
 
   describe('Sales Order Workspace', function () {
-    this.timeout(20 * 1000);
+    this.timeout(60 * 1000);
 
     //
     // We'll want to have TTOYS, BTRUCK1, and WH1 onhand and ready for the test to work.
@@ -65,6 +65,10 @@
         smoke.navigateToNewWorkspace(XT.app, "XV.SalesOrderList", function (workspaceContainer) {
           workspace = workspaceContainer.$.workspace;
 
+          workspace.value.once("change:total", function () {
+            done();
+          });
+
           assert.equal(workspace.value.recordType, "XM.SalesOrder");
           //
           // Set the customer from the appropriate workspace quantityWidget
@@ -82,17 +86,6 @@
           // know that the workspace is ready to save.
           // It's good practice to set this trigger *before* we change the line
           // item fields, so that we're 100% sure we're ready for the responses.
-          workspace.value.once("change:total", function () {
-            done();
-            /* The following save was moved to the second test
-            smoke.saveWorkspace(workspace, function (err, model) {
-              assert.isNull(err);
-              // TODO: sloppy
-              setTimeout(function () {
-                smoke.deleteFromList(XT.app, model, done);
-              }, 2000);
-            });*/
-          });
 
           //
           // Set the line item fields
@@ -109,6 +102,33 @@
 
           // Verify that there is currently one row
           assert.equal(gridBox.liveModels().length, 1);
+        });
+      });
+      it('Supply list should have action to open Item Workbench', function (done) {
+        if (!XT.extensions.inventory) {
+          done();
+          return;
+        }
+        var verify,
+          action = _.find(gridBox.$.supplyList.actions, function (action) {
+            return action.name === "openItemWorkbench";
+          }),
+          prereq = action.prerequisite;
+        gridBox.$.supplyButton.bubble("ontap");
+        gridBox.$.supplyList.select(0);
+
+        gridBox.$.supplyList.value.models[0][prereq](function (hasPriv) {
+          assert.isTrue(hasPriv);
+          if (hasPriv) {
+            gridBox.$.supplyList.actionSelected(null, {action: {method: "openItemWorkbench"}, index: 0});
+
+            setTimeout(function () {
+              assert.equal(XT.app.$.postbooks.getActive().$.workspace.kind, "XV.ItemWorkbenchWorkspace");
+              XT.app.$.postbooks.getActive().doPrevious();
+              assert.equal(XT.app.$.postbooks.getActive().$.workspace.kind, "XV.SalesOrderWorkspace");
+              done();
+            }, 3000);
+          } else {done(); }
         });
       });
       it('adding a second line item should not copy the item', function (done) {

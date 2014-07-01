@@ -15,7 +15,7 @@
     };
 
   describe('ListRelationsBoxes', function () {
-    this.timeout(20 * 1000);
+    this.timeout(40 * 1000);
     it('should log in first', function (done) {
       zombieAuth.loadApp(done);
     });

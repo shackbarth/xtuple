@@ -9,7 +9,7 @@ FOLDER=deploy
 SUFFIX=`date "+-%Y_%m_%d-%I_%M_%S%p"`
 
 # The grandparent folder for this script
-SOURCE=$(cd `dirname $0`/../; pwd)
+SOURCE=$(cd `dirname $0`/..; pwd)
 
 # extract project folder name
 NAME=${SOURCE##*/}

@@ -1,17 +1,28 @@
-language: node_js
-node_js:
-  - "0.8"
+language: c
+
+before_install:
+  - rm -rf ~/.nvm
+  - wget git.io/hikK5g -qO- | sudo bash
+  - n latest
+  - npm install xtuple-server -g
+  - n stable
 
 install:
-  - "bash scripts/install_xtuple.sh -ipn"
+  - npm install
+  - sudo xtuple-server install-dev --xt-demo --pg-worldlogin
 
 before_script:
-  - "cd node-datasource"
-  - "node main.js &"
-  - "sleep 10"
-  - "cd .."
+  - npm run test-build
+  - npm start &
+  - sleep 10
 
 script:
-  - "npm run-script test"
-  - "npm run-script test-datasource"
-  - "npm run-script jshint"
+  - npm test
+  - npm run test-datasource
+  - npm run jshint
+
+after_failure:
+  - env
+  - cat test/lib/login_data.json
+  - cat node-datasource/config.js
+  - cat npm-debug.log

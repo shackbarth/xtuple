@@ -40,14 +40,47 @@ var async = require("async"),
     Works with three or four dot-separated numbers.
   */
   var getVersionSize = function (version) {
-    var versionSplit = version.split('.'),
-      versionSize = 1000000 * versionSplit[0] +
-        10000 * versionSplit[1] +
-        100 * versionSplit[2];
+    var versionSplit = version.split('.'),                  // e.g. "4.5.0-beta2".
+      versionSize = 1000000 * versionSplit[0] +             // Get "4" from "4.5.0-beta2".
+        10000 * versionSplit[1] +                           // Get "5" from "4.5.0-beta2".
+        100 * versionSplit[2].match(/^[0-9]+/g, '')[0],     // Get "0" from "0-beta2".
+      prerelease = versionSplit[2].replace(/^[0-9]+/g, ''), // Get "-beta2" from "0-beta2".
+      preRegEx = /([a-zA-Z]+)([0-9]*)/g,                    // Capture pre-release as ["beta2", "beta", "2"].
+      preMatch = preRegEx.exec(prerelease),
+      preVersion,
+      preNum;
 
     if (versionSplit.length > 3) {
       versionSize += versionSplit[3];
     }
+
+    if (preMatch && preMatch.length && preMatch[0] !== '') {
+      if (preMatch[1] !== '') {
+        preVersion = preMatch[1].match(/[a-zA-Z]+/g);       // Get ["beta"] from ["beta2", "beta", "2"].
+
+        // Decrease versionSize for pre-releasees.
+        switch (preVersion[0].toLowerCase()) {
+          case 'alpha':
+            versionSize = versionSize - 50;
+            break;
+          case 'beta':
+            versionSize = versionSize - 40;
+            break;
+          case 'rc':
+            versionSize = versionSize - 20;
+            break;
+          default :
+            X.err("Cannot get pre-release version number.");
+        }
+      }
+
+      // Add pre-release version to versionSize.
+      if (preMatch[2] !== '') {
+        preNum = preMatch[2].match(/[0-9]+/g);              // Get ["2"] from ["beta2", "beta", "2"].
+        versionSize = versionSize + parseInt(preNum);
+      }
+    }
+
     return versionSize;
   };
 
