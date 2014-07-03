@@ -23,6 +23,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     .option('-f, --frozen', 'Apply frozen scripts for first-time foundation extension installs.')
     .option('-i, --initialize', 'Initialize database. Must be used with the -b or -s flag.')
     .option('-k, --keepsql', 'Do not delete the temporary sql files that represent the payload of the build.')
+    .option('-p, --populate', 'Populate data.')
     .option('-q, --quick', 'Quicken install by not dropping the views pre-emptively.')
     .option('-s, --source [/path/to/source_data.sql]', 'Location of source data. Must be used with the -i flag.')
     .option('-u, --unregister', 'Unregister an extension.')
@@ -38,6 +39,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     frozen: program.frozen,
     initialize: program.initialize,
     keepSql: program.keepsql,
+    populateData: program.populate,
     source: program.source,
     unregister: program.unregister,
     wipeViews: !program.quick && !program.extension,

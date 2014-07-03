@@ -47,7 +47,7 @@ regexp:true, undef:true, trailing:true, white:true */
       options = options || {};
       var isRelation = this.isRelation(),
         that = this,
-        color = "black",
+        colorClass = "",
         enabled = false,
         input = this.$.input.getValue(),
         openWorkspace,
@@ -64,10 +64,10 @@ regexp:true, undef:true, trailing:true, white:true */
 
       // Turn on label link if applicable
       if (this.getValue() && isRelation) {
-        color = "blue";
+        colorClass = "hyperlink";
         enabled = true;
       }
-      this.$.label.setStyle("color: " + color);
+      this.$.label.addClass(colorClass);
       this.setLinkEnabled(enabled);
       this.setDisabled(enabled);
 

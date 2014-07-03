@@ -3,6 +3,12 @@
  <title>Item Costs By Class Code</title>
  <name>ItemCostsByClassCode</name>
  <description></description>
+ <grid>
+  <snap/>
+  <show/>
+  <x>0.05</x>
+  <y>0.05</y>
+ </grid>
  <size>Letter</size>
  <portrait/>
  <topmargin>50</topmargin>
@@ -43,6 +49,9 @@
            FROM item, classcode, uom
           WHERE ((item_classcode_id=classcode_id)
             AND (item_inv_uom_id=uom_id)
+          &lt;? if exists("onlyShowActive") ?>
+            AND (item_active) 
+          &lt;? endif ?> 
           &lt;? if exists("classcode_id") ?>
             AND (classcode_id=&lt;? value("classcode_id") ?>)
           &lt;? elseif exists("classcode_pattern") ?>

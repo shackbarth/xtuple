@@ -36,6 +36,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     file = require('./file'),
     generateReport = require('./generate_report'),
     generateOauthKey = require('./generate_oauth_key'),
+    installExtension = require('./install_extension'),
     locale = require('./locale'),
     passport = require('passport'),
     redirector = require('./redirector'),
@@ -93,6 +94,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.file = [ensureLogin, file.file];
   exports.generateOauthKey = [ensureLogin, generateOauthKey.generateKey];
   exports.generateReport = [ensureLogin, generateReport.generateReport];
+  exports.installExtension = [ensureLogin, installExtension.installExtension];
   exports.locale = [ensureLogin, locale.locale];
   exports.redirect = redirector.redirect;
   exports.resetPassword = [ensureLogin, changePassword.resetPassword];

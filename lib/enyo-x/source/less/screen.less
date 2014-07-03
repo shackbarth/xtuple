@@ -49,7 +49,8 @@
 @panelsFontSize: 5em;
 @iconFontSize: 60%;
 @totalsFontSize: 14px;
-@buttonFontSize: 17px;
+@buttonFontSize: 20px;
+@buttonTextFontSize: 17px;
 
 // sizing
 @defaultPanelWidth: 320px;
@@ -73,6 +74,24 @@ body {
 .disabled {
   opacity: 0.8;
   cursor: default;
+}
+
+a, .hyperlink {
+  color: @slate-blue;
+  cursor: pointer;
+}
+
+.xv-invisible-wrapper {
+  padding: 0;
+  border: none;
+}
+
+  // This gives them 4 lines of description
+.xv-limit-description {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
 }
 
 .xv-app-panel {
@@ -137,13 +156,18 @@ body {
 
   .onyx-button {
     margin: 2px;
+    min-height: 40px;
     min-width: 60px;
     background: @button-gray;
     color: @charcoal;
-    font-size: 20px;
+    font-size: @buttonFontSize;
+
+    &[class^="icon-"]:before, &[class*=" icon-"]:before {
+      vertical-align: middle;
+      margin-right: 5px;
+    }
     &.text {
-      font-size: @buttonFontSize;
-      font-family: @baseFont;
+      font-size: @buttonTextFontSize;
     }
     &.selected {
       background: @slate-blue;
@@ -244,9 +268,10 @@ body {
   }
 }
 
-.icon-folder-open-alt, .icon-calendar, .icon-sort {
+.icon-folder-open-alt, .icon-calendar, .icon-sort, .icon-angle-up, .icon-angle-down {
   color: @slate-blue;
   vertical-align: middle;
+  text-align: center;
 }
 
 .xv-short-textarea {
@@ -358,8 +383,6 @@ body {
 @import "dashboard.less";
 @import "list.less";
 @import "pullout.less";
-@import "widgets.less";
-@import "characteristics.less";
 @import "relations.less";
 @import "address.less";
 @import "search.less";

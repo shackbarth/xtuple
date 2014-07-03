@@ -23,6 +23,7 @@ white:true*/
         success: _.bind(this.didComplete, this)
       };
       var relevantPrivileges = [
+        "InstallExtension",
         "MaintainUsers",
         "MaintainPreferencesSelf",
         "MaintainWorkflowsSelf",
