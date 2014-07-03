@@ -23,24 +23,13 @@ var buildAll = require('../../scripts/lib/build_all'),
       buildAll.build({
         database: databaseName,
         initialize: true,
+        populateData: true,
         source: path.join(__dirname, "../../foundation-database/postbooks_demo_data.sql")
       }, function (err, res) {
         assert.isNull(err);
         done();
       });
     });
-
-    it('should have the POC metric', function (done) {
-      var sql = "select c.metric_id from metric c where c.metric_name = 'UnifiedBuild';";
-
-      creds.database = databaseName;
-      datasource.query(sql, creds, function (err, res) {
-        assert.isNull(err);
-        assert.equal(res.rowCount, 1);
-        done();
-      });
-    });
-
   });
 }());
 

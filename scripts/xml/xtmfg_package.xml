@@ -1,5 +1,5 @@
-<package id        = "manufacturing-upgrade-450"
-         version   = "4.5.0"
+<package id        = "manufacturing-upgrade-451"
+         version   = "4.5.1"
          developer = "xTuple"
          descrip   = "load PostBooks resources"
          updater   = "2.2.4" >
@@ -16,6 +16,11 @@
     <message>This package must be applied to an xTuple ERP database that already contains the xtmfg package.</message>
   </prerequisite>
 
+ <prerequisite type="query" name="Checking xtmfg Package Version">
+     <query>SELECT TRUE FROM pkghead WHERE pkghead_name = 'xtmfg' AND (pkghead_version >= '4.4');</query>
+    <message>This package must be applied against the 4.4+ version of the xtmfg package.</message>
+  </prerequisite>
+
   <prerequisite type = "query"
                 name = "Checking xTuple ERP database version" >
     <query>SELECT fetchMetricText('ServerVersion') > '4.4.';</query>
@@ -25,8 +30,8 @@
 
 <prerequisite type = "query"
                name = "Checking for bad xTuple ERP database version" >
-<query>SELECT NOT fetchMetricText('ServerVersion') > '4.5.0' AND fetchMetricText('ServerVersion')!='4.5.0Beta' AND fetchMetricText('ServerVersion')!='4.5.0RC';</query>
-    <message>This package may not be applied to a 4.5+ Manufacturing database.
+<query>SELECT NOT fetchMetricText('ServerVersion') > '4.5.1' AND fetchMetricText('ServerVersion')!='4.5.0Beta' AND fetchMetricText('ServerVersion')!='4.5.0RC';</query>
+    <message>This package may not be applied to a 4.5.1+ Manufacturing database.
     </message>
 </prerequisite>
 

@@ -14,7 +14,7 @@ var _ = require("underscore"),
 
   exports.accountBeforeDeleteActions = [{it: 'saves the account id', action: function (data, done) {
     data.deleteData = {
-      accntId: data.model.get("account"),
+      accntId: data.model.get("account").id || data.model.get("account"),
       accountModel: new XM.Account()
     };
     done();
