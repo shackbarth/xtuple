@@ -119,20 +119,27 @@ if (X.options.extensionRoutes && X.options.extensionRoutes.length > 0) {
 }
 */
 
+  var loadExtensionClientside = function (extension) {
+
+  };
   var loadExtensionRoutes = function (extension) {
-    if (!_.contains(["/private-extensions", "/xtuple-extensions"], extension.location)) {
-      return;
-    }
+    var extensionLocation = _.contains(["/private-extensions", "/xtuple-extensions"], extension.location) ?
+      X.path.join(__dirname, "../..", extension.location, "source") :
+      extension.location === "/core-extensions" ?
+      X.path.join(__dirname, "../enyo-client/extensions/source") :
+      extension.location === "npm" ?
+      X.path.join(__dirname, "../node_modules") : "error";
+
     if (!app) {
       // XXX time bomb: assuming app has been initialized, below, by now
       XT.log("Could not load extension routes");
       return;
     }
-    var manifest = JSON.parse(X.fs.readFileSync(X.path.join(__dirname, "../..", extension.location, "source",
+    var manifest = JSON.parse(X.fs.readFileSync(X.path.join(extensionLocation,
         extension.name, "database/source/manifest.js")));
     _.each(manifest.routes || [], function (routeDetails) {
       var verb = (routeDetails.verb || "all").toLowerCase(),
-        func = require(X.path.join(__dirname, "../..", extension.location, "source",
+        func = require(X.path.join(__dirname, "../..", extension.location,
           extension.name, "node-datasource", routeDetails.filename))[routeDetails.functionName];
 
       if (_.contains(["all", "get", "post", "patch", "delete"], verb)) {
@@ -156,6 +163,7 @@ if (X.options.extensionRoutes && X.options.extensionRoutes.length > 0) {
       database: X.options.datasource.databases[0],
       success: function (coll, results, options) {
         _.each(results, loadExtensionRoutes);
+        _.each(results, loadExtensionClientside);
       }
     });
   };
@@ -398,6 +406,12 @@ require('./oauth2/passport');
 var that = this;
 
 app.use(express.favicon(__dirname + '/views/login/assets/favicon.ico'));
+var useClientDir = function (path, dir) {
+  "use strict";
+  _.each(X.options.datasource.databases, function (orgValue, orgKey, orgList) {
+    app.use("/" + orgValue + '/' + path, express.static(dir, { maxAge: 86400000 }));
+  });
+};
 if (X.options.datasource.debugging) {
   _.each(X.options.datasource.databases, function (orgValue, orgKey, orgList) {
     "use strict";

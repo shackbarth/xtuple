@@ -28,6 +28,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           username: X.options.databaseServer.user,
           database: database,
           success: function (model, results) {
+            // TODO: also check role-granted privileges
             var privCheck = _.find(model.get("grantedPrivileges"), function (model) {
               return model.privilege === "InstallExtension";
             });
