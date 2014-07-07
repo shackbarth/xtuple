@@ -175,14 +175,14 @@ try {
 /**
  * Module dependencies.
  */
-  var passport = require('passport'),
-    oauth2 = require('./oauth2/oauth2'),
-    routes = require('./routes/routes'),
-    socketio = require('socket.io'),
-    url = require('url'),
-    utils = require('./oauth2/utils'),
-    user = require('./oauth2/user'),
-    destroySession;
+var passport = require('passport'),
+  oauth2 = require('./oauth2/oauth2'),
+  routes = require('./routes/routes'),
+  socketio = require('socket.io'),
+  url = require('url'),
+  utils = require('./oauth2/utils'),
+  user = require('./oauth2/user'),
+  destroySession;
 
 // TODO - for testing. remove...
 //http://stackoverflow.com/questions/13091037/node-js-heap-snapshots-and-google-chrome-snapshot-viewer
