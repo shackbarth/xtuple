@@ -3,12 +3,27 @@
   newcap:true, noarg:true, undef:true */
 /*global XT:true, describe:true, it:true, require:true, __dirname:true, before:true */
 
+// TODO: add cash receipt
+// TODO: turn on cashbasedtax
+// TODO: add use of sltrans as well as gltrans
 var _    = require("underscore"),
   assert = require('chai').assert,
   path   = require('path');
 
 (function () {
   "use strict";
+
+  // TODO: implement a real metasql parser; this one is stupid and minimal
+  var mqlToSql = function (query, params) {
+    var result = _.clone(query);
+    _.each(params, function (value, key) {
+      var valueRE = new RegExp("<\\? *value\\(['\"]"   + key + "['\"]\\) *\\?>", "g"),
+        literalRE = new RegExp("<\\? *literal\\(['\"]" + key + "['\"]\\) *\\?>", "g");
+      result = result.replace(valueRE,   "'" + value + "'");
+      result = result.replace(literalRE, value);
+    });
+    return result;
+  };
 
   describe('test bank reconciliation functions', function () {
 
@@ -21,23 +36,23 @@ var _    = require("underscore"),
       trans1 = { amount: 98.76 },       // Note: amounts for the two must differ
       trans2 = { amount: 54.32 },
       bankRecItemSql = 'SELECT * FROM bankrecitem '             +
-                       ' WHERE bankrecitem_bankrec_id=:brid:'   +
-                       '   AND bankrecitem_source=:src:'        +
-                       '   AND bankrecitem_source_id=:srcid:;',
-      toggleCheckSql = "SELECT toggleBankRecCleared(:bankrec_id:,'GL',"        +
+                       ' WHERE bankrecitem_bankrec_id=<? value("brid") ?>'   +
+                       '   AND bankrecitem_source=<? value("src") ?>'        +
+                       '   AND bankrecitem_source_id <? literal("srcid") ?>;',
+      toggleCheckSql = "SELECT toggleBankRecCleared(<? value('bankrecid') ?>,'GL'," +
                        "  gltrans_id, checkhead_curr_rate, checkhead_amount)"  +
                        "  AS result"                                           +
                        " FROM checkhead JOIN gltrans ON (gltrans_doctype='CK'" +
                        "                    AND gltrans_misc_id=checkhead_id)" +
-                       " WHERE checkhead_id=:checkid: AND gltrans_amount > 0;",
+                       " WHERE checkhead_id=<? value('checkid') ?> AND gltrans_amount > 0;",
       checkCheckSql = "SELECT *,"                                              +
                      "       bankrecitem_amount/bankrecitem_curr_rate AS base" +
                      " FROM gltrans"                                           +
                      " JOIN bankrecitem ON (gltrans_id=bankrecitem_source_id)" +
                      " JOIN bankrec    ON (bankrecitem_bankrec_id=bankrec_id)" +
                      " WHERE gltrans_doctype='CK'"                             +
-                     "   AND gltrans_misc_id=:checkid:"                        +
-                     "   AND bankrec_id=:bankrecid:;",
+                     "   AND gltrans_misc_id=<? value('checkid') ?>"                        +
+                     "   AND bankrec_id=<? value('bankrecid') ?>;",
       bankAdjCheckSql = "SELECT *,"                                           +
                   " ROUND(bankadj_amount / bankadj_curr_rate, 2) AS baseamt," +
                   " CASE WHEN gltrans_id IS NULL AND bankrecitem_id IS NULL"  +
@@ -53,7 +68,7 @@ var _    = require("underscore"),
                   "                   AND bankrecitem_source_id=bankadj_id)"  +
                   "                   OR (bankrecitem_source='GL'"            +
                   "                   AND bankrecitem_source_id=gltrans_id)"  +
-                  " WHERE bankadj_id=:bankadjid:"                             +
+                  " WHERE bankadj_id=<? value('bankadjid') ?>"                             +
                   " ORDER BY preferred DESC LIMIT 1;"
     ;
 
@@ -181,9 +196,8 @@ var _    = require("underscore"),
     });
 
     it('marks the check as cleared', function (done) {
-      var sql = _.clone(toggleCheckSql)
-                 .replace(':bankrec_id:', bankrec.bankrec_id)
-                 .replace(':checkid:',    trans1.checkid);
+      var sql = mqlToSql(toggleCheckSql, { bankrecid: bankrec.bankrec_id,
+                                           checkid:   trans1.checkid });
       datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
         assert.isTrue(res.rows[0].result);
@@ -192,14 +206,11 @@ var _    = require("underscore"),
     });
 
     it('confirms the check was marked as cleared', function (done) {
-      var sql = _.clone(bankRecItemSql)
-                 .replace(':brid:', bankrec.bankrec_id)
-                 .replace(':src:',  "'GL'")
-                 .replace('=:srcid:',
-                          " IN (SELECT gltrans_id FROM gltrans WHERE"  +
-                          " gltrans_doctype='CK' AND gltrans_misc_id=" +
-                          trans1.checkid + ")")
-                 ;
+      var sql = mqlToSql(bankRecItemSql,
+        { brid: bankrec.bankrec_id, src: 'GL',
+          srcid: " IN (SELECT gltrans_id FROM gltrans WHERE"  +
+                 " gltrans_doctype='CK' AND gltrans_misc_id=" +
+                 trans1.checkid + ")"});
       datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
         assert.isTrue(res.rows[0].bankrecitem_cleared);
@@ -209,10 +220,8 @@ var _    = require("underscore"),
     });
 
     it('marks the check as /not/ cleared', function (done) {
-      var sql = _.clone(toggleCheckSql)
-                 .replace(':bankrec_id:', bankrec.bankrec_id)
-                 .replace(':checkid:',    trans1.checkid)
-                 ;
+      var sql = mqlToSql(toggleCheckSql, { bankrecid: bankrec.bankrec_id,
+                                           checkid:   trans1.checkid });
       datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
         assert.isFalse(res.rows[0].result);
@@ -221,14 +230,11 @@ var _    = require("underscore"),
     });
 
     it('confirms the check is no longer marked as cleared', function (done) {
-      var sql = _.clone(bankRecItemSql)
-                 .replace(':brid:', bankrec.bankrec_id)
-                 .replace(':src:',  "'GL'")
-                 .replace('=:srcid:',
-                          " IN (SELECT gltrans_id FROM gltrans WHERE"  +
-                          " gltrans_doctype='CK' AND gltrans_misc_id=" +
-                          trans1.checkid + ")")
-                 ;
+      var sql = mqlToSql(bankRecItemSql,
+        { brid: bankrec.bankrec_id, src: 'GL',
+          srcid: " IN (SELECT gltrans_id FROM gltrans WHERE"  +
+                 " gltrans_doctype='CK' AND gltrans_misc_id=" +
+                 trans1.checkid + ")" });
       datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 0);
         done();
@@ -236,10 +242,8 @@ var _    = require("underscore"),
     });
 
     it('marks the check as cleared again', function (done) {
-      var sql = _.clone(toggleCheckSql)
-                .replace(':bankrec_id:', bankrec.bankrec_id)
-                .replace(':checkid:',    trans1.checkid)
-                ;
+      var sql = mqlToSql(toggleCheckSql, { bankrecid: bankrec.bankrec_id,
+                                           checkid:   trans1.checkid });
       datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
         assert.isTrue(res.rows[0].result);
@@ -248,14 +252,11 @@ var _    = require("underscore"),
     });
 
     it('confirms that the check is marked as cleared again', function (done) {
-      var sql = _.clone(bankRecItemSql)
-                 .replace(':brid:', bankrec.bankrec_id)
-                 .replace(':src:', "'GL'")
-                 .replace('=:srcid:',
-                          " IN (SELECT gltrans_id FROM gltrans" +
-                          " WHERE gltrans_doctype='CK' AND "    +
-                          " gltrans_misc_id=" + trans1.checkid + ")")
-                          ;
+      var sql = mqlToSql(bankRecItemSql,
+        { brid: bankrec.bankrec_id, src: 'GL',
+          srcid: " IN (SELECT gltrans_id FROM gltrans" +
+                 " WHERE gltrans_doctype='CK' AND "    +
+                 " gltrans_misc_id=" + trans1.checkid + ")"});
       datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
         assert.isTrue(res.rows[0].bankrecitem_cleared);
@@ -297,10 +298,8 @@ var _    = require("underscore"),
     });
 
     it('confirms the check was reconciled properly', function (done) {
-      var sql = _.clone(checkCheckSql)
-                 .replace(':checkid:', trans1.checkid)
-                 .replace(':bankrecid:', bankrec.bankrec_id)
-                 ;
+      var sql = mqlToSql(checkCheckSql, { checkid:  trans1.checkid,
+                                          bankrecid: bankrec.bankrec_id});
       datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
         assert.isTrue(res.rows[0].gltrans_rec);
@@ -312,9 +311,7 @@ var _    = require("underscore"),
     // TODO: confirm the CashBasedTax reconciliation code worked
 
     it('confirms the bank adjustment was /not/ posted', function (done) {
-      var sql = _.clone(bankAdjCheckSql)
-                 .replace(':bankadjid:', trans2.bankadj_id)
-                 ;
+      var sql = mqlToSql(bankAdjCheckSql, { bankadjid: trans2.bankadj_id});
       datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
         assert.isFalse(res.rows[0].bankadj_posted);
@@ -348,10 +345,8 @@ var _    = require("underscore"),
     });
 
     it('confirms the check was handled properly by the reopen', function (done) {
-      var sql = _.clone(checkCheckSql)
-                 .replace(':checkid:',   trans1.checkid)
-                 .replace(':bankrecid:', bankrec.bankrec_id)
-                 ;
+      var sql = mqlToSql(checkCheckSql, { checkid:   trans1.checkid,
+                                          bankrecid: bankrec.bankrec_id });
       datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
         assert.isFalse(res.rows[0].gltrans_rec);
@@ -378,8 +373,7 @@ var _    = require("underscore"),
     });
 
     it('confirms the bank adjustment was /not/ posted but is cleared', function (done) {
-      var sql = _.clone(bankAdjCheckSql)
-                 .replace(':bankadjid:', trans2.bankadj_id);
+      var sql = mqlToSql(bankAdjCheckSql, { bankadjid: trans2.bankadj_id});
       datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
         assert.isFalse(res.rows[0].bankadj_posted);
@@ -400,10 +394,8 @@ var _    = require("underscore"),
     });
 
     it('confirms the check was reconciled properly', function (done) {
-      var sql = _.clone(checkCheckSql)
-                 .replace(':checkid:',   trans1.checkid)
-                 .replace(':bankrecid:', bankrec.bankrec_id)
-                 ;
+      var sql = mqlToSql(checkCheckSql, { checkid:   trans1.checkid,
+                                          bankrecid: bankrec.bankrec_id });
       datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
         assert.isTrue(res.rows[0].gltrans_rec);
@@ -415,8 +407,7 @@ var _    = require("underscore"),
     // TODO: confirm the CashBasedTax reconciliation code worked
 
     it('confirms the bank adjustment was cleared, posted, written to the GL', function (done) {
-      var sql = _.clone(bankAdjCheckSql)
-                 .replace(':bankadjid:', trans2.bankadj_id);
+      var sql = mqlToSql(bankAdjCheckSql, { bankadjid: trans2.bankadj_id});
       datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
         assert.isTrue(res.rows[0].bankadj_posted);
