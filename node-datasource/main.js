@@ -96,12 +96,13 @@ var app;
   XT.session.schemas.SYS = false;
 
   var getExtensionDir = function (extension) {
-    return _.contains(["/private-extensions", "/xtuple-extensions"], extension.location) ?
-      X.path.join(__dirname, "../..", extension.location, "source", extension.name) :
-      extension.location === "/core-extensions" ?
-      X.path.join(__dirname, "../enyo-client/extensions/source", extension.name) :
-      extension.location === "npm" ?
-      X.path.join(__dirname, "../node_modules", extension.name) : "error";
+    var dirMap = {
+      "/private-extensions": X.path.join(__dirname, "../..", extension.location, "source", extension.name),
+      "/xtuple-extensions": X.path.join(__dirname, "../..", extension.location, "source", extension.name),
+      "/core-extensions": X.path.join(__dirname, "../enyo-client/extensions/source", extension.name),
+      "npm": X.path.join(__dirname, "../node_modules", extension.name)
+    };
+    return dirMap[extension.location];
   };
   var useClientDir = function (path, dir) {
     path = path.indexOf("npm") === 0 ? "/" + path : path;
@@ -144,7 +145,7 @@ var app;
         if (!app) {
           // XXX time bomb: assuming app has been initialized, below, by now
           XT.log("Could not load extension routes or client-side code because the app has not started");
-          process.exit(0);
+          process.exit(1);
           return;
         }
         useClientDir("/client", "../enyo-client/application");
