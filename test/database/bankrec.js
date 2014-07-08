@@ -3,8 +3,9 @@
   newcap:true, noarg:true, undef:true */
 /*global XT:true, describe:true, it:true, require:true, __dirname:true, before:true */
 
+/* note: much of this test consists of set up for testing tax handling */
+
 // TODO: add cash receipt
-// TODO: turn on cashbasedtax
 // TODO: add use of sltrans as well as gltrans
 var _    = require("underscore"),
   assert = require('chai').assert,
@@ -33,6 +34,12 @@ var _    = require("underscore"),
       creds  = _.extend({}, config.databaseServer, {database: loginData.org}),
       bankaccnt,
       bankrec,
+      po,
+      poitem,
+      recvid,
+      voucher,
+      voJournal,
+      wasCashBasedTax,
       trans1 = { amount: 98.76 },       // Note: amounts for the two must differ
       trans2 = { amount: 54.32 },
       bankRecItemSql = 'SELECT * FROM bankrecitem '             +
@@ -68,7 +75,7 @@ var _    = require("underscore"),
                   "                   AND bankrecitem_source_id=bankadj_id)"  +
                   "                   OR (bankrecitem_source='GL'"            +
                   "                   AND bankrecitem_source_id=gltrans_id)"  +
-                  " WHERE bankadj_id=<? value('bankadjid') ?>"                             +
+                  " WHERE bankadj_id=<? value('bankadjid') ?>"                +
                   " ORDER BY preferred DESC LIMIT 1;"
     ;
 
@@ -171,12 +178,198 @@ var _    = require("underscore"),
       });
     });
 
+    it('turns on cash-based tax handling if necessary', function (done) {
+      var sql = "SELECT fetchMetricBool('CashBasedTax') AS result;";
+      datasource.query(sql, creds, function (err, res) {
+        assert.equal(res.rowCount, 1);
+        wasCashBasedTax = res.rows[0].result === 't';
+        if (wasCashBasedTax) {
+          done();
+        } else {
+          var sql = "SELECT setMetric('CashBasedTax', 't') AS result;";
+          datasource.query(sql, creds, function (err, res) {
+            assert.equal(res.rowCount, 1);
+            done();
+          });
+        }
+      });
+    });
+
+    it('creates a purchase order', function (done) {
+      var sql = mqlToSql("INSERT INTO pohead (pohead_number, pohead_status,"   +
+                         "  pohead_agent_username, pohead_vend_id,"            +
+                         "  pohead_taxzone_id, pohead_orderdate,"              +
+                         "  pohead_curr_id, pohead_saved, pohead_comments,"    +
+                         "  pohead_warehous_id,"                               +
+                         "  pohead_printed, pohead_terms_id,pohead_taxtype_id" +
+                         ") SELECT fetchPoNumber(), 'U',"                      +
+                         "    CURRENT_USER, vend_id,"                          +
+                         "    vend_taxzone_id, CURRENT_DATE,"                  +
+                         "    vend_curr_id, false, 'Bank Rec Test',"           +
+                         "    (SELECT MIN(warehous_id) FROM whsinfo WHERE "    +
+                         "     warehous_active AND NOT warehous_transit),"     +
+                         "    false, vend_terms_id, taxass_taxtype_id"         +
+                         "   FROM vendinfo"                                    +
+                         "   JOIN taxass ON vend_taxzone_id=taxass_taxzone_id" +
+                         "   JOIN taxrate ON taxass_tax_id=taxrate_tax_id"     +
+                         "  WHERE vend_active"                                 +
+                         "    AND (taxrate_percent > 0 OR taxrate_amount > 0)" +
+                         " LIMIT 1 RETURNING *;",
+                         {  });
+      datasource.query(sql, creds, function (err, res) {
+        assert.equal(res.rowCount, 1);
+        po = res.rows[0];
+        done();
+      });
+    });
+
+    it('creates a purchase order item', function (done) {
+      var sql = mqlToSql("INSERT INTO poitem (poitem_pohead_id,"               +
+                         "  poitem_linenumber, poitem_status,"                 +
+                         "  poitem_taxtype_id, poitem_itemsite_id,"            +
+                         "  poitem_itemsrc_id, poitem_qty_ordered,"            +
+                         "  poitem_unitprice,"                                 +
+                         "  poitem_duedate, poitem_comments"                   +
+                         ") SELECT pohead_id, 1, 'O',"                         +
+                         "    pohead_taxtype_id, itemsite_id,"                 +
+                         "    itemsrc_id, 100,"                                +
+                         "    itemsrcprice(itemsrc_id, itemsite_warehous_id,"  +
+                         "          false, 100, pohead_curr_id,CURRENT_DATE)," +
+                         "    now() + '5 days', 'bankrec test'"                +
+                         "  FROM pohead"                                       +
+                         "  JOIN itemsrc  ON pohead_vend_id=itemsrc_vend_id"   +
+                         "  JOIN itemsite ON itemsrc_item_id=itemsite_item_id" +
+                         "  WHERE itemsite_active AND itemsrc_active"          +
+                         "    AND pohead_id=<? value('poheadid') ?>"           +
+                         " LIMIT 1 RETURNING *;", { poheadid: po.pohead_id });
+      datasource.query(sql, creds, function (err, res) {
+        assert.equal(res.rowCount, 1);
+        poitem = res.rows[0];
+        done();
+      });
+    });
+
+    it('calculates purchase order amounts', function (done) {
+      var sql = mqlToSql("SELECT" +
+                         "   SUM(poitem_qty_ordered*poitem_unitprice) AS amt," +
+                         "   SUM(poitem_freight) + pohead_freight AS freight," +
+                         "   (SELECT SUM(tax) FROM"                            +
+                         "      (SELECT ROUND(SUM(taxdetail_tax), 2) AS tax"   +
+                         "         FROM tax JOIN"                              +
+                         "      calculateTaxDetailSummary('PO',pohead_id,'T')" +
+                         "              ON (tax_id=taxdetail_tax_id)"          +
+                         "      GROUP BY tax_id) AS taxdata"                   +
+                         "   ) AS tax"                                         +
+                         "  FROM poitem"                                       +
+                         "  JOIN pohead ON poitem_pohead_id=pohead_id"         +
+                         " WHERE pohead_id=<? value('pohead_id') ?>"           +
+                         " GROUP BY pohead_id, pohead_freight;",
+                         { pohead_id: po.pohead_id });
+      datasource.query(sql, creds, function (err, res) {
+        assert.equal(res.rowCount, 1);
+        po.amount  = res.rows[0].amt;
+        po.freight = res.rows[0].freight;
+        po.tax     = res.rows[0].tax;
+        done();
+      });
+    });
+
+    it('release the purchase order', function (done) {
+      var sql = mqlToSql("SELECT releasePurchaseOrder(<? value('id') ?>)" +
+                         " AS result;", { id: po.pohead_id });
+      datasource.query(sql, creds, function (err, res) {
+        assert.equal(res.rowCount, 1);
+        assert(res.rows[0].result > 0);
+        done();
+      });
+    });
+
+    it('receives the purchase order', function (done) {
+      var sql = mqlToSql("SELECT enterReceipt('PO', poitem_id, 100, 0, ''," +
+                         "   pohead_curr_id, CURRENT_DATE, NULL) AS result" +
+                         "  FROM poitem"                                    +
+                         "  JOIN pohead ON poitem_pohead_id=pohead_id"      +
+                         " WHERE poitem_id=<? value('poitem_id') ?>;",
+                         { poitem_id: poitem.poitem_id });
+      datasource.query(sql, creds, function (err, res) {
+        assert.equal(res.rowCount, 1);
+        recvid = res.rows[0].result;
+        done();
+      });
+    });
+
+    it('posts the receipt', function (done) {
+      var sql = mqlToSql("SELECT postReceipt(<? value('recvid') ?>, NULL)" +
+                         " AS result;", { recvid: recvid });
+      datasource.query(sql, creds, function (err, res) {
+        assert.equal(res.rowCount, 1);
+        assert(res.rows[0].result > 0);
+        done();
+      });
+    });
+
+    it('creates a voucher', function (done) {
+      var sql = mqlToSql("INSERT INTO vohead (vohead_number, vohead_posted,"   +
+                         "  vohead_pohead_id, vohead_taxzone_id,"              +
+                         "  vohead_vend_id,   vohead_terms_id,"                +
+                         "  vohead_distdate,  vohead_docdate, vohead_duedate," +
+                         "  vohead_invcnumber, vohead_reference, vohead_1099," +
+                         "  vohead_amount,     vohead_curr_id,   vohead_notes" +
+                         ") SELECT fetchVoNumber(), false,"                    +
+                         "    pohead_id, pohead_taxzone_id,"                   +
+                         "    pohead_vend_id, pohead_terms_id,"                +
+                         "    CURRENT_DATE, CURRENT_DATE, now() + '30 days',"  +
+                         "    'Vend Invoice', 'bankrec test', false,"          +
+                         "    <? value('pototal') ?>,"                         +
+                         "    pohead_curr_id, 'bankrec test'"                  +
+                         "    FROM pohead"                                     +
+                         "   WHERE pohead_id=<? value('poheadid') ?>"          +
+                         " RETURNING *;",
+                         { poheadid: po.pohead_id,
+                           pototal: po.amount + po.freight + po.tax });
+      datasource.query(sql, creds, function (err, res) {
+        assert.equal(res.rowCount, 1);
+        voucher = res.rows[0];
+        done();
+      });
+    });
+
+    it('distributes the p/o item to the voucher', function (done) {
+      var sql = mqlToSql("SELECT distributeVoucherLine("                    +
+                         "<? value('voheadid') ?>,<? value('poitemid') ?>," +
+                         "<? value('currid') ?>) AS result;",
+                         { voheadid: voucher.vohead_id,
+                           poitemid: poitem.poitem_id,
+                           currid:   voucher.vohead_curr_id });
+      datasource.query(sql, creds, function (err, res) {
+        assert.equal(res.rowCount, 1);
+        assert.equal(res.rows[0].result, 1);
+        done();
+      });
+    });
+
+    it('posts the voucher', function (done) {
+      var sql = mqlToSql("SELECT postVoucher(<? value('id') ?>, TRUE)" +
+                         " AS result;", { id: voucher.vohead_id });
+      datasource.query(sql, creds, function (err, res) {
+        assert.equal(res.rowCount, 1);
+        voJournal = res.rows[0].result;
+        assert(voJournal > 0);
+        done();
+      });
+    });
+
     it('creates a check as the 1st transaction to reconcile', function (done) {
-      var sql = "SELECT createCheck(" + bankaccnt.bankaccnt_id + ", 'V',"      +
-                " (SELECT MIN(vend_id) FROM vendinfo), CURRENT_DATE, "         +
-                trans1.amount + ", " + bankaccnt.bankaccnt_curr_id + ", NULL," +
-                " NULL, 'Bearer', 'bankrec test 1', TRUE, NULL) AS checkid;"
-                ;
+      var sql = mqlToSql("SELECT createCheck(<? value('bankaccntid') ?>, 'V'," +
+                         "   vohead_vend_id, CURRENT_DATE, vohead_amount,"     +
+                         "   vohead_curr_id, NULL, NULL, 'Bearer',"            +
+                         "   'bankrec test 1', TRUE, apopen_id) AS checkid"    +
+                         "  FROM vohead"                                       +
+                         "  JOIN apopen ON vohead_number=apopen_docnumber"     +
+                         "             AND apopen_doctype='V'"                 +
+                         " WHERE apopen_journalnumber=<? value('journal') ?>;",
+                         { bankaccntid: bankaccnt.bankaccnt_id,
+                           journal:     voJournal });
       datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
         assert(res.rows[0].checkid > 0);
@@ -450,6 +643,18 @@ var _    = require("underscore"),
         assert(res.rows[0].result === 0);
         done();
       });
+    });
+
+    it('turns off cash-based tax handling if necessary', function (done) {
+      if (wasCashBasedTax) {
+        done();
+      } else {
+        var sql = "SELECT setMetric('CashBasedTax', 'f') AS result;";
+        datasource.query(sql, creds, function (err, res) {
+          assert.equal(res.rowCount, 1);
+          done();
+        });
+      }
     });
 
     it('tries to delete a non-existent bankrec', function (done) {
