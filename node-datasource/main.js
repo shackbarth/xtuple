@@ -143,7 +143,8 @@ var app;
       success: function (coll, results, options) {
         if (!app) {
           // XXX time bomb: assuming app has been initialized, below, by now
-          XT.log("Could not load extension routes");
+          XT.log("Could not load extension routes or client-side code because the app has not started");
+          process.exit(0);
           return;
         }
         useClientDir("/client", "../enyo-client/application");
