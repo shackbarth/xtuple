@@ -1,7 +1,7 @@
 /*jshint trailing:true, white:true, indent:2, strict:true, curly:true,
   immed:true, eqeqeq:true, forin:true, latedef:true,
   newcap:true, noarg:true, undef:true */
-/*global XT:true, describe:true, it:true, require:true, __dirname:true, before:true */
+/*global XT:true, describe:true, it:true, require:true, __dirname:true, before:true, console:true */
 
 /* note: much of this test consists of set up for testing tax handling */
 
@@ -20,7 +20,11 @@ var _    = require("underscore"),
     _.each(params, function (value, key) {
       var valueRE = new RegExp("<\\? *value\\(['\"]"   + key + "['\"]\\) *\\?>", "g"),
         literalRE = new RegExp("<\\? *literal\\(['\"]" + key + "['\"]\\) *\\?>", "g");
-      result = result.replace(valueRE,   "'" + value + "'");
+      if (_.isNumber(value)) {
+        result = result.replace(valueRE, value);
+      } else {
+        result = result.replace(valueRE, "'" + value + "'");
+      }
       result = result.replace(literalRE, value);
     });
     return result;
@@ -32,16 +36,29 @@ var _    = require("underscore"),
       datasource = require('../../../xtuple/node-datasource/lib/ext/datasource').dataSource,
       config = require(path.join(__dirname, "../../node-datasource/config.js")),
       creds  = _.extend({}, config.databaseServer, {database: loginData.org}),
+      start  = new Date(),
+      testTag = 'bankrec test ' + start.toLocaleTimeString(),
+      closeEnough = 0.006,
       bankaccnt,
+      bankadj = { amount: 54.32 },
       bankrec,
+      apcheck = {},
+      apcheckitem,
+      archeck = {},
+      aropen  = { amount: 12.34 },
+      badTaxIds,
+      cm,
       po,
       poitem,
+      arcreditmemo = {},
       recvid,
       voucher,
-      voJournal,
+      voitem,
+      vomisc       = { amount: 67.89 },
+      votax,
+      voitemtax,
+      vomisctax,
       wasCashBasedTax,
-      trans1 = { amount: 98.76 },       // Note: amounts for the two must differ
-      trans2 = { amount: 54.32 },
       bankRecItemSql = 'SELECT * FROM bankrecitem '             +
                        ' WHERE bankrecitem_bankrec_id=<? value("brid") ?>'   +
                        '   AND bankrecitem_source=<? value("src") ?>'        +
@@ -51,14 +68,16 @@ var _    = require("underscore"),
                        "  AS result"                                           +
                        " FROM checkhead JOIN gltrans ON (gltrans_doctype='CK'" +
                        "                    AND gltrans_misc_id=checkhead_id)" +
-                       " WHERE checkhead_id=<? value('checkid') ?> AND gltrans_amount > 0;",
+                       " WHERE checkhead_id=<? value('checkid') ?>"            +
+                       "   AND gltrans_amount > 0;",
+      postCheckSql  = "SELECT postCheck(<? value('id') ?>, NULL) AS result;",
       checkCheckSql = "SELECT *,"                                              +
                      "       bankrecitem_amount/bankrecitem_curr_rate AS base" +
                      " FROM gltrans"                                           +
                      " JOIN bankrecitem ON (gltrans_id=bankrecitem_source_id)" +
                      " JOIN bankrec    ON (bankrecitem_bankrec_id=bankrec_id)" +
                      " WHERE gltrans_doctype='CK'"                             +
-                     "   AND gltrans_misc_id=<? value('checkid') ?>"                        +
+                     "   AND gltrans_misc_id=<? value('checkid') ?>"           +
                      "   AND bankrec_id=<? value('bankrecid') ?>;",
       bankAdjCheckSql = "SELECT *,"                                           +
                   " ROUND(bankadj_amount / bankadj_curr_rate, 2) AS baseamt," +
@@ -76,8 +95,35 @@ var _    = require("underscore"),
                   "                   OR (bankrecitem_source='GL'"            +
                   "                   AND bankrecitem_source_id=gltrans_id)"  +
                   " WHERE bankadj_id=<? value('bankadjid') ?>"                +
-                  " ORDER BY preferred DESC LIMIT 1;"
+                  " ORDER BY preferred DESC LIMIT 1;",
+      getBankRecSql = "SELECT * FROM bankrec WHERE bankrec_id=<? value('id') ?>;",
+      bankRecGLSql = "SELECT gltrans.* "                                       +
+                     "  FROM gltrans"                                          +
+                     "  JOIN bankrecitem ON gltrans_id=bankrecitem_source_id"  +
+                     "                  AND bankrecitem_source='GL'"           +
+                     " WHERE bankrecitem_bankrec_id=<? value('bankrecid') ?>"  +
+                     "   AND bankrecitem_cleared;",
+      postBankRecSql = "SELECT postBankReconciliation(<? value('id') ?>)"  +
+                       "    AS result;",
+      taxhistCheckSql = "SELECT * FROM taxhist"                            +
+                        " WHERE taxhist_parent_id = <? value('voitem') ?>" +
+                        " ORDER BY taxhist_id DESC;",
+      gltransCheckSql = "SELECT count(*) FROM gltrans;", // TODO: make smarter
+      lastGltransCount = 0
     ;
+
+    it("patches tax accts to ensure tax handling /can/ work", function (done) {
+      var sql = "UPDATE tax SET tax_dist_accnt_id ="            +
+                " (SELECT accnt_id FROM accnt"                  +
+                "   WHERE accnt_descrip = 'Accounts Payable')"  +
+                " WHERE tax_dist_accnt_id IS NULL"              +
+                " RETURNING tax_id;";
+      datasource.query(sql, creds, function (err, res) {
+        assert.isNull(err);
+        badTaxIds = _.map(res.rows, function (v) { return v.tax_id; });
+        done();
+      });
+    });
 
     it('looks for a bank account to work with', function (done) {
       var sql = 'SELECT * FROM bankaccnt WHERE bankaccnt_id IN ('       +
@@ -111,28 +157,29 @@ var _    = require("underscore"),
     });
 
     it('gets an open bankrec to test with', function (done) {
-      var sql;
+      var mql, sql;
       if (bankrec === "create") {
-        sql = 'INSERT INTO bankrec (bankrec_bankaccnt_id,'    +
+        mql = 'INSERT INTO bankrec (bankrec_bankaccnt_id,'    +
               '  bankrec_opendate, bankrec_openbal'           +
               ') SELECT bankrec_bankaccnt_id,'                +
               '         bankrec_enddate + 1, bankrec_endbal'  +
               '    FROM bankrec'                              +
-              '   WHERE bankrec_bankaccnt_id=' + bankaccnt.bankaccnt_id +
+              '   WHERE bankrec_bankaccnt_id=<? value("bankaccnt") ?>' +
               '     AND bankrec_posted'                       +
               '   ORDER BY bankrec_enddate DESC'              +
               '   LIMIT 1 RETURNING *;'
               ;
       } else if (bankrec === "select") {
-        sql = 'SELECT * FROM bankrec'                                    +
-              ' WHERE bankrec_bankaccnt_id=' + bankaccnt.bankaccnt_id    +
+        mql = 'SELECT * FROM bankrec'                                    +
+              ' WHERE bankrec_bankaccnt_id=<? value("bankaccnt") ?>'     +
               '   AND bankrec_opendate IN'                               +
               '  (SELECT MAX(bankrec_opendate) FROM bankrec'             +
               '    WHERE NOT bankrec_posted'                             +
-              '      AND bankrec_bankaccnt_id=' + bankaccnt.bankaccnt_id +
+              '      AND bankrec_bankaccnt_id=<? value("bankaccnt") ?>'  +
               '  );'
               ;
       }
+      sql = mqlToSql(mql, {bankaccnt: bankaccnt.bankaccnt_id});
 
       datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
@@ -151,20 +198,20 @@ var _    = require("underscore"),
       datasource.query(sql, creds, function (err, res) {
         var sql;
         if (res.rowCount !== 1) {
-          sql = "INSERT INTO period (period_closed, period_freeze,"     +
-                "  period_name, period_quarter, period_start,"          +
+          sql = mqlToSql("INSERT INTO period ("                         +
+                "  period_closed, period_freeze, period_name,"          +
+                "  period_quarter, period_start,"                       +
                 "  period_end, period_number"                           +
-                ") VALUES (FALSE, FALSE, 'BankRec Test Period',"        +
+                ") VALUES (FALSE, FALSE, <? value('testTag') ?>,"       +
                 "  EXTRACT(QUARTER FROM DATE CURRENT_DATE),"            +
                 "  DATE_TRUNC(MONTH, CURRENT_DATE),"                    +
                 "  DATE_TRUNC(MONTH, CURRENT_DATE) + '1 month',"        +
                 "  EXTRACT(month FROM DATE CURRENT_DATE)"               +
-                ") RETURNING period_id;"
-                ;
+                ") RETURNING period_id;",
+                { testTag: testTag });
         } else if (res.rows[0].period_closed === true) {
-          sql = 'SELECT openAccountingPeriod(' + res.rows[0].period_id +
-                ') AS period_id;'
-                ;
+          sql = mqlToSql('SELECT openAccountingPeriod(<? value("period") ?>)' +
+                         ' AS period_id;', { period: res.rows[0].period_id });
         }
         if (sql) {
           datasource.query(sql, creds, function (err, res) {
@@ -205,7 +252,7 @@ var _    = require("underscore"),
                          ") SELECT fetchPoNumber(), 'U',"                      +
                          "    CURRENT_USER, vend_id,"                          +
                          "    vend_taxzone_id, CURRENT_DATE,"                  +
-                         "    vend_curr_id, false, 'Bank Rec Test',"           +
+                         "    vend_curr_id, false, <? value('testTag') ?>,"    +
                          "    (SELECT MIN(warehous_id) FROM whsinfo WHERE "    +
                          "     warehous_active AND NOT warehous_transit),"     +
                          "    false, vend_terms_id, taxass_taxtype_id"         +
@@ -215,7 +262,7 @@ var _    = require("underscore"),
                          "  WHERE vend_active"                                 +
                          "    AND (taxrate_percent > 0 OR taxrate_amount > 0)" +
                          " LIMIT 1 RETURNING *;",
-                         {  });
+                         { testTag: testTag });
       datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
         po = res.rows[0];
@@ -235,13 +282,14 @@ var _    = require("underscore"),
                          "    itemsrc_id, 100,"                                +
                          "    itemsrcprice(itemsrc_id, itemsite_warehous_id,"  +
                          "          false, 100, pohead_curr_id,CURRENT_DATE)," +
-                         "    now() + '5 days', 'bankrec test'"                +
+                         "    now() + '5 days', <? value('testTag') ?>"        +
                          "  FROM pohead"                                       +
                          "  JOIN itemsrc  ON pohead_vend_id=itemsrc_vend_id"   +
                          "  JOIN itemsite ON itemsrc_item_id=itemsite_item_id" +
                          "  WHERE itemsite_active AND itemsrc_active"          +
                          "    AND pohead_id=<? value('poheadid') ?>"           +
-                         " LIMIT 1 RETURNING *;", { poheadid: po.pohead_id });
+                         " LIMIT 1 RETURNING *;",
+                         { poheadid: po.pohead_id, testTag: testTag });
       datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
         poitem = res.rows[0];
@@ -270,11 +318,12 @@ var _    = require("underscore"),
         po.amount  = res.rows[0].amt;
         po.freight = res.rows[0].freight;
         po.tax     = res.rows[0].tax;
+        apcheck.amount = po.amount + po.freight + po.tax;
         done();
       });
     });
 
-    it('release the purchase order', function (done) {
+    it('releases the purchase order', function (done) {
       var sql = mqlToSql("SELECT releasePurchaseOrder(<? value('id') ?>)" +
                          " AS result;", { id: po.pohead_id });
       datasource.query(sql, creds, function (err, res) {
@@ -319,14 +368,16 @@ var _    = require("underscore"),
                          "    pohead_id, pohead_taxzone_id,"                   +
                          "    pohead_vend_id, pohead_terms_id,"                +
                          "    CURRENT_DATE, CURRENT_DATE, now() + '30 days',"  +
-                         "    'Vend Invoice', 'bankrec test', false,"          +
-                         "    <? value('pototal') ?>,"                         +
-                         "    pohead_curr_id, 'bankrec test'"                  +
+                         "    'Vend Invoice', <? value('testTag') ?>, false,"  +
+                         "    <? value('vototal') ?>,"                         +
+                         "    pohead_curr_id, <? value('testTag') ?>"          +
                          "    FROM pohead"                                     +
                          "   WHERE pohead_id=<? value('poheadid') ?>"          +
-                         " RETURNING *;",
+                         " RETURNING *,"                                       +
+                         "   currRate(vohead_curr_id, CURRENT_DATE) AS exrate;",
                          { poheadid: po.pohead_id,
-                           pototal: po.amount + po.freight + po.tax });
+                           vototal:  apcheck.amount + vomisc.amount,
+                           testTag:  testTag });
       datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
         voucher = res.rows[0];
@@ -335,15 +386,55 @@ var _    = require("underscore"),
     });
 
     it('distributes the p/o item to the voucher', function (done) {
-      var sql = mqlToSql("SELECT distributeVoucherLine("                    +
-                         "<? value('voheadid') ?>,<? value('poitemid') ?>," +
-                         "<? value('currid') ?>) AS result;",
-                         { voheadid: voucher.vohead_id,
-                           poitemid: poitem.poitem_id,
-                           currid:   voucher.vohead_curr_id });
+      var sql = mqlToSql("SELECT distributeVoucherLine(vohead_id,"          +
+                         "  poitem_id, vohead_curr_id) AS result"           +
+                         "  FROM vohead JOIN poitem"                        +
+                         "          ON (vohead_pohead_id=poitem_pohead_id)" +
+                         " WHERE poitem_id = <? value('poitem_id') ?>;",
+                         { poitem_id: poitem.poitem_id });
       datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
         assert.equal(res.rows[0].result, 1);
+        done();
+      });
+    });
+
+    it('gets the voitem', function (done) {
+      var sql = mqlToSql("SELECT * FROM voitem" +
+                         " WHERE voitem_vohead_id=<? value('vohead') ?>;",
+                         { vohead: voucher.vohead_id });
+      datasource.query(sql, creds, function (err, res) {
+        assert.equal(res.rowCount, 1);
+        voitem = res.rows[0];
+        assert(voitem.voitem_id > 0);
+        done();
+      });
+    });
+
+    it('creates a misc voucher distribution', function (done) {
+      var sql = mqlToSql("INSERT INTO vodist (vodist_vohead_id,"               +
+                         "  vodist_poitem_id, vodist_costelem_id,"             +
+                         "  vodist_accnt_id, vodist_amount,"                   +
+                         "  vodist_discountable, vodist_expcat_id,"            +
+                         "  vodist_tax_id, vodist_notes"                       +
+                         ") SELECT <? value('vohead') ?>, -1, -1,"             +
+                         "    COALESCE(tax_sales_accnt_id,tax_dist_accnt_id)," +
+                         "    <? value('miscamt') ?>,"                         +
+                         "    FALSE, -1, tax_id, <? value('testTag') ?>"       +
+                         "  FROM tax"                                          +
+                         "  JOIN taxass ON tax_id = taxass_tax_id"             +
+                         "  JOIN taxtype ON taxass_taxtype_id=taxtype_id"      +
+                         "  JOIN poitem ON taxtype_id=poitem_taxtype_id"       +
+                         "  JOIN pohead ON poitem_pohead_id=pohead_id"         +
+                         "            AND taxass_taxzone_id=pohead_taxzone_id" +
+                         " WHERE poitem_id=<? value('poitemid') ?>"            +
+                         " RETURNING *;",
+                         { vohead:   voucher.vohead_id, miscamt: vomisc.amount,
+                           poitemid: poitem.poitem_id,  testTag: testTag });
+      datasource.query(sql, creds, function (err, res) {
+        assert.equal(res.rowCount, 1);
+        vomisc = res.rows[0];
+        assert(vomisc.vodist_id > 0);
         done();
       });
     });
@@ -353,44 +444,123 @@ var _    = require("underscore"),
                          " AS result;", { id: voucher.vohead_id });
       datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
-        voJournal = res.rows[0].result;
-        assert(voJournal > 0);
+        assert(res.rows[0].result > 0);
         done();
       });
     });
 
-    it('creates a check as the 1st transaction to reconcile', function (done) {
+    it('checks for voucher tax distributions', function (done) {
+      var sql = mqlToSql("SELECT 1 AS seq, * FROM voheadtax"                   +
+                         " WHERE taxhist_parent_id=<? value('voheadid') ?>"    +
+                         " UNION ALL "                                         +
+                         "SELECT 2 AS seq, voitemtax.*"                        +
+                         "  FROM voitemtax"                                    +
+                         "  JOIN voitem ON taxhist_parent_id=voitem_id"        +
+                         " WHERE voitem_vohead_id=<? value('voheadid') ?>"     +
+                         " ORDER BY seq, taxhist_id;",
+                         { voheadid: voucher.vohead_id });
+      datasource.query(sql, creds, function (err, res) {
+        assert.equal(res.rowCount, 2); // TODO: why not 3 = head + poitem + vodist
+        votax = res.rows[0];
+        assert.closeTo(votax.taxhist_basis, 0, closeEnough);
+        voitemtax = res.rows[1];
+        assert.closeTo(voitemtax.taxhist_basis,
+                       - poitem.poitem_unitprice * poitem.poitem_qty_ordered,
+                       closeEnough);
+/* TODO vomisctax = res.rows[2];
+        assert.closeTo(vomisctax.taxhist_basis,
+                       vomisc.vodist_amount, closeEnough); */
+        done();
+      });
+    });
+
+    it('creates an apcheck to reconcile', function (done) {
       var sql = mqlToSql("SELECT createCheck(<? value('bankaccntid') ?>, 'V'," +
                          "   vohead_vend_id, CURRENT_DATE, vohead_amount,"     +
-                         "   vohead_curr_id, NULL, NULL, 'Bearer',"            +
-                         "   'bankrec test 1', TRUE, apopen_id) AS checkid"    +
+                         "   vohead_curr_id, NULL, NULL, 'AP Bearer',"         +
+                         "   <? value('testTag') ?>, TRUE, NULL) AS checkid"   +
                          "  FROM vohead"                                       +
-                         "  JOIN apopen ON vohead_number=apopen_docnumber"     +
-                         "             AND apopen_doctype='V'"                 +
-                         " WHERE apopen_journalnumber=<? value('journal') ?>;",
+                         " WHERE vohead_id=<? value('voheadid') ?>;",
                          { bankaccntid: bankaccnt.bankaccnt_id,
-                           journal:     voJournal });
+                           voheadid:    voucher.vohead_id,
+                           testTag:     testTag });
       datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
         assert(res.rows[0].checkid > 0);
-        trans1.checkid = res.rows[0].checkid;
+        var checkid = res.rows[0].checkid;
+        sql = mqlToSql("UPDATE checkhead SET checkhead_number="      +
+                       "  fetchNextCheckNumber(<? value('bank') ?>)" +
+                       " WHERE checkhead_id=<? value('check') ?>"    +
+                       " RETURNING *;",
+                       { bank: bankaccnt.bankaccnt_id, check: checkid });
+        datasource.query(sql, creds, function (err, res) {
+          assert.equal(res.rowCount, 1);
+          apcheck = res.rows[0];
+          done();
+        });
+      });
+    });
+
+    it('creates a credit memo to attach to the apcheck', function (done) {
+      var sql = mqlToSql("SELECT createAPCreditMemo(NULL, pohead_vend_id,"     +
+                         "       fetchJournalNumber('AP-MISC'),"               +
+                         "       <? value('vonumber') ?>, pohead_number,"      +
+                         "       CURRENT_DATE, <? value('amount') ?>,"         +
+                         "       <? value('testTag') ?>, -1,"                  +
+                         "       CAST(now()+'30 days' AS DATE),"               +
+                         "       pohead_terms_id, pohead_curr_id) AS result"   +
+                         "  FROM pohead"                                       +
+                         " WHERE pohead_id=<? value('poheadid') ?>;",
+                         { amount:   apcheck.checkhead_amount,
+                           testTag:  testTag,
+                           vonumber: voucher.vohead_number,
+                           poheadid: po.pohead_id });
+      datasource.query(sql, creds, function (err, res) {
+        assert.equal(res.rowCount, 1);
+        cm = res.rows[0].result;
+        assert(cm > 0);
         done();
       });
     });
 
-    it('posts the check', function (done) {
-      var sql = 'SELECT postCheck(' + trans1.checkid + ', NULL) AS result;';
+    it('creates a checkitem for the credit memo', function (done) {
+      var sql = mqlToSql("INSERT INTO checkitem ("                             +
+                         "  checkitem_checkhead_id, checkitem_apopen_id,"      +
+                         "  checkitem_vouchernumber, checkitem_amount,"        +
+                         "  checkitem_ponumber, checkitem_discount,"           +
+                         "  checkitem_docdate,"                                +
+                         "  checkitem_curr_id, checkitem_curr_rate"            +
+                         ") SELECT <? value('checkid') ?>, apopen_id,"         +
+                         "    <? value('vonumber') ?>, apopen_amount,"         +
+                         "    apopen_ponumber, 0, CURRENT_DATE,"               +
+                         "    apopen_curr_id, apopen_curr_rate"                +
+                         "  FROM apopen"                                       +
+                         " WHERE apopen_journalnumber=<? value('journal') ?>"  +
+                         " RETURNING *;",
+                         { checkid: apcheck.checkhead_id,
+                           vonumber: voucher.vohead_number,
+                           journal: cm });
+      datasource.query(sql, creds, function (err, res) {
+        assert.equal(res.rowCount, 1);
+        apcheckitem = res.rows[0];
+        assert(apcheckitem.checkitem_id > 0);
+        done();
+      });
+    });
+
+    it('posts the apcheck', function (done) {
+      var sql = mqlToSql(postCheckSql, { id: apcheck.checkhead_id });
       datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
         assert(res.rows[0].result > 0);
-        trans1.journalNumber = res.rows[0].result;
+        apcheck.journalNumber = res.rows[0].result;
         done();
       });
     });
 
-    it('marks the check as cleared', function (done) {
+    it('marks the apcheck as cleared', function (done) {
       var sql = mqlToSql(toggleCheckSql, { bankrecid: bankrec.bankrec_id,
-                                           checkid:   trans1.checkid });
+                                           checkid:   apcheck.checkhead_id });
       datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
         assert.isTrue(res.rows[0].result);
@@ -398,12 +568,12 @@ var _    = require("underscore"),
       });
     });
 
-    it('confirms the check was marked as cleared', function (done) {
+    it('confirms the apcheck was marked as cleared', function (done) {
       var sql = mqlToSql(bankRecItemSql,
         { brid: bankrec.bankrec_id, src: 'GL',
           srcid: " IN (SELECT gltrans_id FROM gltrans WHERE"  +
                  " gltrans_doctype='CK' AND gltrans_misc_id=" +
-                 trans1.checkid + ")"});
+                 apcheck.checkhead_id + ")"});
       datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
         assert.isTrue(res.rows[0].bankrecitem_cleared);
@@ -412,9 +582,9 @@ var _    = require("underscore"),
       });
     });
 
-    it('marks the check as /not/ cleared', function (done) {
+    it('marks the apcheck as /not/ cleared', function (done) {
       var sql = mqlToSql(toggleCheckSql, { bankrecid: bankrec.bankrec_id,
-                                           checkid:   trans1.checkid });
+                                           checkid:   apcheck.checkhead_id });
       datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
         assert.isFalse(res.rows[0].result);
@@ -422,21 +592,21 @@ var _    = require("underscore"),
       });
     });
 
-    it('confirms the check is no longer marked as cleared', function (done) {
+    it('confirms the apcheck is no longer marked as cleared', function (done) {
       var sql = mqlToSql(bankRecItemSql,
         { brid: bankrec.bankrec_id, src: 'GL',
           srcid: " IN (SELECT gltrans_id FROM gltrans WHERE"  +
                  " gltrans_doctype='CK' AND gltrans_misc_id=" +
-                 trans1.checkid + ")" });
+                 apcheck.checkhead_id + ")" });
       datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 0);
         done();
       });
     });
 
-    it('marks the check as cleared again', function (done) {
+    it('marks the apcheck as cleared again', function (done) {
       var sql = mqlToSql(toggleCheckSql, { bankrecid: bankrec.bankrec_id,
-                                           checkid:   trans1.checkid });
+                                           checkid:   apcheck.checkhead_id });
       datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
         assert.isTrue(res.rows[0].result);
@@ -444,12 +614,12 @@ var _    = require("underscore"),
       });
     });
 
-    it('confirms that the check is marked as cleared again', function (done) {
+    it('confirms that the apcheck is marked as cleared again', function (done) {
       var sql = mqlToSql(bankRecItemSql,
         { brid: bankrec.bankrec_id, src: 'GL',
           srcid: " IN (SELECT gltrans_id FROM gltrans" +
                  " WHERE gltrans_doctype='CK' AND "    +
-                 " gltrans_misc_id=" + trans1.checkid + ")"});
+                 " gltrans_misc_id=" + apcheck.checkhead_id + ")"});
       datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
         assert.isTrue(res.rows[0].bankrecitem_cleared);
@@ -458,31 +628,121 @@ var _    = require("underscore"),
       });
     });
 
-    it('creates a bank adjustment as a second transaction', function (done) {
-      var sql = "INSERT INTO bankadj ("                                      +
-                " bankadj_bankaccnt_id, bankadj_bankadjtype_id,"             +
-                " bankadj_date, bankadj_docnumber,"                          +
-                " bankadj_amount, bankadj_notes, bankadj_curr_id,"           +
-                " bankadj_curr_rate"                                         +
-                ") SELECT " + bankaccnt.bankaccnt_id + ", bankadjtype_id, "  +
-                "    CURRENT_DATE, 'BankRecTest', " + trans2.amount          +
-                ", 'Bank Rec Test Transaction 2', "                          +
-                bankaccnt.bankaccnt_curr_id + ", "                           +
-                " currrate(" + bankaccnt.bankaccnt_curr_id                   +
-                ", basecurrid(), CURRENT_DATE) FROM bankadjtype RETURNING *;"
+    it('creates an a/r credit memo', function (done) {
+      var sql = mqlToSql("SELECT createArCreditMemo(NULL, cust_id,"            +
+                "    fetchArMemoNumber(), cohead_number, CURRENT_DATE,"        +
+                "    <? value('refund') ?>, <? value('testTag') ?>,"           +
+                "    (SELECT MIN(rsncode_id) FROM rsncode), NULL, NULL,"       +
+                "    CURRENT_DATE, cust_terms_id, cust_salesrep_id) AS result" +
+                "  FROM custinfo"                                              +
+                "  JOIN cohead ON cust_id=cohead_cust_id"                      +
+                "  JOIN taxass ON cust_taxzone_id=taxass_taxzone_id"           +
+                "  JOIN taxrate ON taxass_tax_id=taxrate_tax_id"               +
+                "  WHERE cust_id IN (SELECT MIN(cust_id)"                      +
+                "                      FROM custinfo WHERE cust_active)"       +
+                "  AND (taxrate_percent > 0 OR taxrate_amount > 0) LIMIT 1;",
+                { refund: aropen.amount, testTag: testTag });
+      datasource.query(sql, creds, function (err, res) {
+        assert.equal(res.rowCount, 1);
+        aropen.id = res.rows[0].result;
+        assert(aropen.id > 0);
+        done();
+      });
+    });
+
+    it('creates an archeck to reconcile', function (done) {
+      var sql = mqlToSql("SELECT createCheck(<? value('bankaccntid') ?>, 'C'," +
+                         "   aropen_cust_id, CURRENT_DATE, aropen_amount,"     +
+                         "   aropen_curr_id, NULL, NULL, 'AR Bearer',"         +
+                         "   <? value('testTag') ?>, TRUE, <? value('aropen') ?>) AS checkid"   +
+                         "  FROM aropen"                                       +
+                         " WHERE aropen_id=<? value('aropen') ?>;",
+                         { bankaccntid: bankaccnt.bankaccnt_id,
+                           aropen:      aropen.id,
+                           testTag:     testTag });
+      datasource.query(sql, creds, function (err, res) {
+        assert.equal(res.rowCount, 1);
+        assert(res.rows[0].checkid > 0);
+        var checkid = res.rows[0].checkid;
+        sql = mqlToSql("UPDATE checkhead SET checkhead_number="      +
+                       "  fetchNextCheckNumber(<? value('bank') ?>)" +
+                       " WHERE checkhead_id=<? value('check') ?>"    +
+                       " RETURNING *;",
+                       { bank: bankaccnt.bankaccnt_id, check: checkid });
+        datasource.query(sql, creds, function (err, res) {
+          assert.equal(res.rowCount, 1);
+          archeck = res.rows[0];
+          done();
+        });
+      });
+    });
+
+    it('posts the archeck', function (done) {
+      var sql = mqlToSql(postCheckSql, { id: archeck.checkhead_id });
+      datasource.query(sql, creds, function (err, res) {
+        assert.equal(res.rowCount, 1);
+        assert(res.rows[0].result > 0);
+        archeck.journalNumber = res.rows[0].result;
+        done();
+      });
+    });
+
+    it('marks the archeck as cleared', function (done) {
+      var sql = mqlToSql(toggleCheckSql, { bankrecid: bankrec.bankrec_id,
+                                           checkid:   archeck.checkhead_id });
+      datasource.query(sql, creds, function (err, res) {
+        assert.equal(res.rowCount, 1);
+        assert.isTrue(res.rows[0].result);
+        done();
+      });
+    });
+
+    it('confirms the archeck was marked as cleared', function (done) {
+      var sql = mqlToSql(bankRecItemSql,
+        { brid: bankrec.bankrec_id, src: 'GL',
+          srcid: " IN (SELECT gltrans_id FROM gltrans WHERE"  +
+                 " gltrans_doctype='CK' AND gltrans_misc_id=" +
+                 archeck.checkhead_id + ")"});
+      datasource.query(sql, creds, function (err, res) {
+        assert.equal(res.rowCount, 1);
+        assert.isTrue(res.rows[0].bankrecitem_cleared);
+        assert(res.rows[0].bankrecitem_cleared);
+        done();
+      });
+    });
+
+    it('creates a bank adjustment', function (done) {
+      var sql = mqlToSql("INSERT INTO bankadj ("                             +
+                "  bankadj_bankaccnt_id, bankadj_bankadjtype_id,"            +
+                "  bankadj_date, bankadj_docnumber, bankadj_amount,"         +
+                "  bankadj_notes, bankadj_curr_id,"                          +
+                "  bankadj_curr_rate"                                        +
+                ") SELECT <? value('bankaccnt') ?>, bankadjtype_id,"         +
+                "    CURRENT_DATE, 'BankRecTest', <? value('amount') ?>,"    +
+                "    <? value('testTag') ?>,      <? value('currid') ?>,"    +
+                "    currrate(<? value('currid') ?>, basecurrid(),"          +
+                "             CURRENT_DATE) FROM bankadjtype RETURNING *;",
+                { amount: bankadj.amount, bankaccnt: bankaccnt.bankaccnt_id,
+                  testTag: testTag,      currid: bankaccnt.bankaccnt_curr_id })
                 ;
       datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
-        _.extend(trans2, res.rows[0]);
-        assert.ok(trans2.bankadj_id, 'we have a bank adjustment');
+        _.extend(bankadj, res.rows[0]);
+        assert.ok(bankadj.bankadj_id, 'we have a bank adjustment');
+        done();
+      });
+    });
+    
+    it('looks at the gltrans table before posting', function (done) {
+      var sql = mqlToSql(gltransCheckSql, { testTag: testTag });
+      datasource.query(sql, creds, function (err, res) {
+        lastGltransCount = res.rows.length;
         done();
       });
     });
 
     it('posts the reconciliation', function (done) {
-      var sql = 'SELECT postBankReconciliation(' + bankrec.bankrec_id +
-                ') AS result;'
-                ;
+      var sql = mqlToSql(postBankRecSql, {id: bankrec.bankrec_id});
       datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
         assert.equal(res.rows[0].result, bankrec.bankrec_id);
@@ -490,46 +750,74 @@ var _    = require("underscore"),
       });
     });
 
-    it('confirms the check was reconciled properly', function (done) {
-      var sql = mqlToSql(checkCheckSql, { checkid:  trans1.checkid,
-                                          bankrecid: bankrec.bankrec_id});
+    it('confirms the posted bankrec was updated properly', function (done) {
+      var sql = mqlToSql(getBankRecSql, { id: bankrec.bankrec_id });
       datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
-        assert.isTrue(res.rows[0].gltrans_rec);
         assert.isTrue(res.rows[0].bankrec_posted);
+        assert.isNotNull(res.rows[0].bankrec_postdate, 'expect a post date');
         done();
       });
     });
 
-    // TODO: confirm the CashBasedTax reconciliation code worked
+    it('confirms the gl for the posted bankrec was updated', function (done) {
+      var sql = mqlToSql(bankRecGLSql, { bankrecid: bankrec.bankrec_id });
+      datasource.query(sql, creds, function (err, res) {
+        var recorded = _.filter(res.rows,
+                                function (v) { return v.gltrans_rec; });
+        assert.equal(res.rows.length, recorded.length, 'AND(gltrans_rec) should be true');
+        done();
+      });
+    });
+
+    it('confirms the apcheck was reconciled properly', function (done) {
+      var sql = mqlToSql(checkCheckSql, { checkid:   apcheck.checkhead_id,
+                                          bankrecid: bankrec.bankrec_id });
+      datasource.query(sql, creds, function (err, res) {
+        assert.equal(res.rowCount, 1);
+        assert.isTrue(res.rows[0].gltrans_rec);
+        assert.isTrue(res.rows[0].bankrec_posted);
+        assert.closeTo(res.rows[0].gltrans_amount,
+                       apcheck.checkhead_amount / apcheck.checkhead_curr_rate,
+                       closeEnough);
+        done();
+      });
+    });
+
+    // we expect the reconcile to create gltrans records for voitem tax
+    it('confirms reconcile updated gltrans properly', function (done) {
+      var sql = mqlToSql(gltransCheckSql, { testTag: testTag });
+      datasource.query(sql, creds, function (err, res) {
+// TODO assert(res.rows.length > lastGltransCount, 'expected new gltrans');
+        lastGltransCount = res.rows.length;
+        done();
+      });
+    });
+
+    it('confirms reconcile updated taxhist properly', function (done) {
+      var sql = mqlToSql(taxhistCheckSql, { voitem: voitem.voitem_id });
+      datasource.query(sql, creds, function (err, res) {
+        assert.equal(res.rowCount, 1, "expect 1 taxhist record for the voitem");
+        assert.closeTo(-res.rows[0].taxhist_basis, po.amount, closeEnough);
+        assert.closeTo(-res.rows[0].taxhist_tax,   po.tax,    closeEnough);
+        done();
+      });
+    });
 
     it('confirms the bank adjustment was /not/ posted', function (done) {
-      var sql = mqlToSql(bankAdjCheckSql, { bankadjid: trans2.bankadj_id});
+      var sql = mqlToSql(bankAdjCheckSql, { bankadjid: bankadj.bankadj_id});
       datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
         assert.isFalse(res.rows[0].bankadj_posted);
-        /* TODO: why does assert.notOk throw
-            Unrecoverable exception. Object function (express, errmsg) {
-              var test = new Assertion(null);
-              test.assert(
-                  express
-                , errmsg
-                , '[ negation message unavailable ]'
-              );
-            } has no method 'notOk'
-        assert.notOk(res.rows[0].gltrans_id,     'expecting no gltrans');
-        assert.notOk(res.rows[0].bankrecitem_id, 'expecting no bankrecitem');
-        */
-        assert(! res.rows[0].gltrans_id,     'expecting no gltrans');
-        assert(! res.rows[0].bankrecitem_id, 'expecting no bankrecitem');
+        assert.isNull(res.rows[0].gltrans_id,     'expecting no gltrans');
+        assert.isNull(res.rows[0].bankrecitem_id, 'expecting no bankrecitem');
         done();
       });
     });
 
     it('reopens the reconcilation', function (done) {
       var sql = 'SELECT reopenBankReconciliation(' + bankrec.bankrec_id +
-                ') AS result;'
-                ;
+                ') AS result;';
       datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
         assert.equal(res.rows[0].result, bankrec.bankrec_id);
@@ -537,26 +825,64 @@ var _    = require("underscore"),
       });
     });
 
-    it('confirms the check was handled properly by the reopen', function (done) {
-      var sql = mqlToSql(checkCheckSql, { checkid:   trans1.checkid,
+    it('confirms the reopened bankrec was updated properly', function (done) {
+      var sql = mqlToSql(getBankRecSql, { id: bankrec.bankrec_id });
+      datasource.query(sql, creds, function (err, res) {
+        assert.equal(res.rowCount, 1);
+        assert.isFalse(res.rows[0].bankrec_posted);
+        assert.isNull(res.rows[0].bankrec_postdate, 'expect empty post date');
+        done();
+      });
+    });
+
+    it('confirms the gl for the reopened bankrec was updated', function (done) {
+      var sql = mqlToSql(bankRecGLSql, { bankrecid: bankrec.bankrec_id });
+      datasource.query(sql, creds, function (err, res) {
+        var recorded = _.filter(res.rows,
+                                function (v) { return v.gltrans_rec; });
+        assert.equal(0, recorded.length, 'AND(gltrans_rec) should be true');
+        done();
+      });
+    });
+
+    it('confirms the apcheck was "reopened" properly', function (done) {
+      var sql = mqlToSql(checkCheckSql, { checkid:   apcheck.checkhead_id,
                                           bankrecid: bankrec.bankrec_id });
       datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
         assert.isFalse(res.rows[0].gltrans_rec);
         assert.isFalse(res.rows[0].bankrec_posted);
         assert.closeTo(Math.abs(res.rows[0].gltrans_amount), res.rows[0].base,
-                       0.006);
+                       closeEnough);
         done();
       });
     });
 
-    // TODO: confirm the CashBasedTax reconciliation code worked
+    // we expect the reconcile to create gltrans records for voitem tax
+    it('confirms unreconcile updated gltrans properly', function (done) {
+      var sql = mqlToSql(gltransCheckSql, { testTag: testTag });
+      datasource.query(sql, creds, function (err, res) {
+// TODO assert(res.rows.length > lastGltransCount, 'expected new gltrans');
+        lastGltransCount = res.rows.length;
+        done();
+      });
+    });
+
+    it('confirms reconcile updated taxhist properly', function (done) {
+      var sql = mqlToSql(taxhistCheckSql, { voitem: voitem.voitem_id });
+      datasource.query(sql, creds, function (err, res) {
+// TODO assert.equal(res.rowCount, 2, "expect 2 taxhist record for the voitem");
+        assert.closeTo(-res.rows[0].taxhist_basis, po.amount, closeEnough);
+        assert.closeTo(-res.rows[0].taxhist_tax,   po.tax,    closeEnough);
+        done();
+      });
+    });
 
     it('marks the bank adjustment as cleared', function (done) {
       var sql = "SELECT toggleBankRecCleared(" + bankrec.bankrec_id         +
-                ", 'AD', " + trans2.bankadj_id        +
-                ", " + trans2.bankadj_curr_rate       +
-                ", " + trans2.bankadj_amount + ") AS result;"
+                ", 'AD', " + bankadj.bankadj_id        +
+                ", " + bankadj.bankadj_curr_rate       +
+                ", " + bankadj.bankadj_amount + ") AS result;"
                 ;
       datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
@@ -566,7 +892,7 @@ var _    = require("underscore"),
     });
 
     it('confirms the bank adjustment was /not/ posted but is cleared', function (done) {
-      var sql = mqlToSql(bankAdjCheckSql, { bankadjid: trans2.bankadj_id});
+      var sql = mqlToSql(bankAdjCheckSql, { bankadjid: bankadj.bankadj_id});
       datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
         assert.isFalse(res.rows[0].bankadj_posted);
@@ -576,9 +902,7 @@ var _    = require("underscore"),
     });
 
     it('posts the reconciliation again', function (done) {
-      var sql = 'SELECT postBankReconciliation(' + bankrec.bankrec_id +
-                ') AS result;'
-                ;
+      var sql = mqlToSql(postBankRecSql, {id: bankrec.bankrec_id});
       datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
         assert.equal(res.rows[0].result, bankrec.bankrec_id);
@@ -586,21 +910,62 @@ var _    = require("underscore"),
       });
     });
 
-    it('confirms the check was reconciled properly', function (done) {
-      var sql = mqlToSql(checkCheckSql, { checkid:   trans1.checkid,
+    it('confirms the 2nd posted bankrec was updated properly', function (done) {
+      var sql = mqlToSql(getBankRecSql, { id: bankrec.bankrec_id });
+      datasource.query(sql, creds, function (err, res) {
+        assert.equal(res.rowCount, 1);
+        assert.isTrue(res.rows[0].bankrec_posted);
+        assert.isNotNull(res.rows[0].bankrec_postdate, 'expect a post date');
+        done();
+      });
+    });
+
+    it('confirms the gl for 2nd posted bankrec was updated', function (done) {
+      var sql = mqlToSql(bankRecGLSql, { bankrecid: bankrec.bankrec_id });
+      datasource.query(sql, creds, function (err, res) {
+        var recorded = _.filter(res.rows,
+                                function (v) { return v.gltrans_rec; });
+        assert.equal(res.rows.length, recorded.length, 'AND(gltrans_rec) should be true');
+        done();
+      });
+    });
+
+    it('confirms the apcheck was reconciled properly', function (done) {
+      var sql = mqlToSql(checkCheckSql, { checkid:   apcheck.checkhead_id,
                                           bankrecid: bankrec.bankrec_id });
       datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
         assert.isTrue(res.rows[0].gltrans_rec);
         assert.isTrue(res.rows[0].bankrec_posted);
+        assert.closeTo(res.rows[0].gltrans_amount,
+                       apcheck.checkhead_amount / apcheck.checkhead_curr_rate,
+                       closeEnough);
         done();
       });
     });
 
-    // TODO: confirm the CashBasedTax reconciliation code worked
+    // we expect the reconcile to create gltrans records for voitem tax
+    it('confirms 2nd reconcile updated gltrans properly', function (done) {
+      var sql = mqlToSql(gltransCheckSql, { testTag: testTag });
+      datasource.query(sql, creds, function (err, res) {
+// TODO assert(res.rows.length > lastGltransCount, 'expected new gltrans');
+        lastGltransCount = res.rows.length;
+        done();
+      });
+    });
 
-    it('confirms the bank adjustment was cleared, posted, written to the GL', function (done) {
-      var sql = mqlToSql(bankAdjCheckSql, { bankadjid: trans2.bankadj_id});
+    it('confirms 2nd reconcile updated taxhist properly', function (done) {
+      var sql = mqlToSql(taxhistCheckSql, { voitem: voitem.voitem_id });
+      datasource.query(sql, creds, function (err, res) {
+// TODO assert.equal(res.rowCount, 3, "expect 3 taxhist record for the voitem");
+        assert.closeTo(-res.rows[0].taxhist_basis, po.amount, closeEnough);
+        assert.closeTo(-res.rows[0].taxhist_tax,   po.tax,    closeEnough);
+        done();
+      });
+    });
+
+    it('confirms the bank adj was posted & written to the GL', function (done) {
+      var sql = mqlToSql(bankAdjCheckSql, { bankadjid: bankadj.bankadj_id});
       datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
         assert.isTrue(res.rows[0].bankadj_posted);
@@ -609,8 +974,7 @@ var _    = require("underscore"),
         assert.equal(res.rows[0].bankrecitem_source_id, res.rows[0].gltrans_id);
         assert.isTrue(res.rows[0].gltrans_rec);
         assert.closeTo(Math.abs(res.rows[0].gltrans_amount),
-                       res.rows[0].baseamt,
-                       0.006);
+                       res.rows[0].baseamt, closeEnough);
         done();
       });
     });
@@ -664,6 +1028,20 @@ var _    = require("underscore"),
         assert(res.rows[0].result === 0); // no, it doesn't complain
         done();
       });
+    });
+
+    it('resets tax_dist_accnt_id to NULL', function (done) {
+      var sql = mqlToSql('UPDATE tax SET tax_dist_accnt_id = NULL' +
+                         ' WHERE tax_id IN (<? literal("idlist") ?>);',
+                         { idlist: badTaxIds.join(', ') });
+      if (badTaxIds.length <= 0) {
+        done();
+      } else {
+        datasource.query(sql, creds, function (err, res) {
+          assert.isNull(err);
+          done();
+        });
+      }
     });
 
   });
