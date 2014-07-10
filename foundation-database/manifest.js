@@ -81,6 +81,7 @@
     "public/functions/averagesalesprice.sql",
     "public/functions/avgcost.sql",
     "public/functions/balanceitemsite.sql",
+    "public/functions/bankreconciliation.sql",
     "public/functions/basecurrid.sql",
     "public/functions/bomcontains.sql",
     "public/functions/bomhistsequence.sql",
