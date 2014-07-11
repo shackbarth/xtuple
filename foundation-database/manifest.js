@@ -1015,6 +1015,7 @@
     "public/tables/bankrecitem.sql",
     "public/tables/cashrcpt.sql",
     "public/tables/ccpay.sql",
+    "public/tables/checkhead.sql",
     "public/tables/metric.sql",
     "public/tables/payco.sql",
     "public/tables/priv.sql",
