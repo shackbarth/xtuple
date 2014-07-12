@@ -1305,7 +1305,7 @@ strict: false*/
                   city: "billtoCity", state: "billtoState",
                   postalCode: "billtoPostalCode", country: "billtoCountry"}
               },
-              {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+              {kind: "onyx.GroupboxHeader", content: "_notes".loc(), name: "notesHeader"},
               {kind: "XV.TextArea", attr: "notes", fit: true}
             ]}
           ]}
@@ -1336,12 +1336,12 @@ strict: false*/
       this.inherited(arguments);
       if (enyo.platform.touch) {
         this.$.panels.createComponents([
-          {kind: "XV.InvoiceLineItemBox", name: "invoiceLineItemBox", attr: "lineItems",
+          {kind: "XV.InvoiceLineItemBox", name: "lineItemBox", attr: "lineItems",
             title: "_lineItems".loc(), addBefore: this.$.settingsPanel, classes: "medium-panel"}
         ], {owner: this});
       } else {
         this.$.panels.createComponents([
-          {kind: "XV.InvoiceLineItemGridBox", name: "invoiceLineItemBox", title: "_lineItems".loc(),
+          {kind: "XV.InvoiceLineItemGridBox", name: "lineItemBox", title: "_lineItems".loc(),
             attr: "lineItems", addBefore: this.$.settingsPanel}
         ], {owner: this});
       }
@@ -1882,13 +1882,13 @@ strict: false*/
       this.inherited(arguments);
       if (enyo.platform.touch) {
         this.$.panels.createComponents([
-          {kind: "XV.ReturnLineItemBox", name: "returnLineItemBox",
+          {kind: "XV.ReturnLineItemBox", name: "lineItemBox",
             attr: "lineItems", title: "_lineItems".loc(),
               addBefore: this.$.settingsPanel, classes: "medium-panel"}
         ], {owner: this});
       } else {
         this.$.panels.createComponents([
-          {kind: "XV.ReturnLineItemGridBox", name: "returnLineItemBox",
+          {kind: "XV.ReturnLineItemGridBox", name: "lineItemBox",
             title: "_lineItems".loc(), attr: "lineItems", addBefore: this.$.settingsPanel}
         ], {owner: this});
       }

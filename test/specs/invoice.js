@@ -183,8 +183,8 @@ TODO deferred to later sprint:
         var gridRow;
 
         workspace.value.on("change:total", done);
-        workspace.$.invoiceLineItemBox.newItem();
-        gridRow = workspace.$.invoiceLineItemBox.$.editableGridRow;
+        workspace.$.lineItemBox.newItem();
+        gridRow = workspace.$.lineItemBox.$.editableGridRow;
         // TODO
         //gridRow.$.itemSiteWidget.doValueChange({value: {item: submodels.itemModel,
           //site: submodels.siteModel}});
@@ -1211,10 +1211,10 @@ TODO deferred to later sprint:
 
         enyo.platform.touch = true;
         workspace = new XV.InvoiceWorkspace();
-        assert.equal(workspace.$.invoiceLineItemBox.kind, "XV.InvoiceLineItemBox");
+        assert.equal(workspace.$.lineItemBox.kind, "XV.InvoiceLineItemBox");
         enyo.platform.touch = false;
         workspace = new XV.InvoiceWorkspace();
-        assert.equal(workspace.$.invoiceLineItemBox.kind, "XV.InvoiceLineItemGridBox");
+        assert.equal(workspace.$.lineItemBox.kind, "XV.InvoiceLineItemGridBox");
       });
       /**
         @member Navigation
