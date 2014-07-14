@@ -51,9 +51,6 @@
                       it('checks for the export button', function () {
                         var exportButton = getExportButton(component);
                         assert.ok(exportButton);
-                        // TODO: need to populate before we can export
-                        // assert.doesNotThrow(exportButton.doTap());
-                        // TODO: find the generated file & check contents
                       });
 
                       it('creates line items for ' + component, function () {
@@ -62,8 +59,9 @@
                             gridRow,
                             startingRows = gridBox.liveModels().length;
 
-                        assert.isFalse(exportButton.disabled,
-                                      'export enabled for fresh data');
+                        assert.equal(startingRows, 0, 'expect no data for new gridbox');
+                        assert.isTrue(exportButton.disabled,
+                                      'expect export disabled if no data');
                         gridBox.newItem();
                         gridRow = gridBox.$.editableGridRow;
                         assert.equal(gridBox.liveModels().length, startingRows += 1);
@@ -74,6 +72,16 @@
                         gridRow.bubble("onkeyup", {keyCode: 13});
                         assert.equal(gridBox.liveModels().length, startingRows += 1);
                       });
+
+                      // TODO: populate, apply, & actually export
+                      // generate some data
+                      // assert.isTrue(exportButton.disabled,
+                      //               'expect export disabled if no data');
+                      // save the data
+                      // assert.isFalse(exportButton.disabled,
+                      //               'expect export disabled if no data');
+                      // assert.doesNotThrow(exportButton.doTap());
+                      // find the generated file & check contents
                     });
                   }
                 });
