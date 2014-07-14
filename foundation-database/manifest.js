@@ -872,6 +872,7 @@
     "public/functions/transtype.sql",
     "public/functions/trylock.sql",
     "public/functions/undomerge.sql",
+    "public/functions/unreleasepurchaseorder.sql",
     "public/functions/uomusedforitem.sql",
     "public/functions/updateabcclass.sql",
     "public/functions/updatecharassignment.sql",

@@ -398,13 +398,16 @@ require('./oauth2/passport');
 var that = this;
 
 app.use(express.favicon(__dirname + '/views/login/assets/favicon.ico'));
-_.each(X.options.datasource.databases, function (orgValue, orgKey, orgList) {
-  "use strict";
-  app.use("/" + orgValue + '/client', express.static('../enyo-client/application', { maxAge: 86400000 }));
-  app.use("/" + orgValue + '/core-extensions', express.static('../enyo-client/extensions', { maxAge: 86400000 }));
-  app.use("/" + orgValue + '/private-extensions', express.static('../../private-extensions', { maxAge: 86400000 }));
-  app.use("/" + orgValue + '/xtuple-extensions', express.static('../../xtuple-extensions', { maxAge: 86400000 }));
-});
+if (X.options.datasource.debugging) {
+  _.each(X.options.datasource.databases, function (orgValue, orgKey, orgList) {
+    "use strict";
+    app.use("/" + orgValue + '/client', express.static('../enyo-client/application', { maxAge: 86400000 }));
+    app.use("/" + orgValue + '/core-extensions', express.static('../enyo-client/extensions', { maxAge: 86400000 }));
+    app.use("/" + orgValue + '/private-extensions', express.static('../../private-extensions', { maxAge: 86400000 }));
+    app.use("/" + orgValue + '/xtuple-extensions', express.static('../../xtuple-extensions', { maxAge: 86400000 }));
+    app.use("/" + orgValue + '/npm', express.static('../node_modules', { maxAge: 86400000 }));
+  });
+}
 app.use('/assets', express.static('views/login/assets', { maxAge: 86400000 }));
 
 app.get('/:org/dialog/authorize', oauth2.authorization);
@@ -435,16 +438,16 @@ app.get('/:org/logout', routes.logout);
 app.get('/:org/app', routes.app);
 app.get('/:org/debug', routes.debug);
 
-app.get('/:org/analysis', routes.analysis);
 app.all('/:org/credit-card', routes.creditCard);
 app.all('/:org/change-password', routes.changePassword);
 app.all('/:org/client/build/client-code', routes.clientCode);
 app.all('/:org/email', routes.email);
 app.all('/:org/export', routes.exxport);
 app.get('/:org/file', routes.file);
-app.all('/:org/oauth/generate-key', routes.generateOauthKey);
 app.get('/:org/generate-report', routes.generateReport);
+app.all('/:org/install-extension', routes.installExtension);
 app.get('/:org/locale', routes.locale);
+app.all('/:org/oauth/generate-key', routes.generateOauthKey);
 app.get('/:org/reset-password', routes.resetPassword);
 app.post('/:org/oauth/revoke-token', routes.revokeOauthToken);
 app.all('/:org/vcfExport', routes.vcfExport);

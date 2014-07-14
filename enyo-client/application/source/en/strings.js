@@ -15,7 +15,6 @@
     // Models
     // ********
 
-    "_analysis": "Analysis",
     "_all": "All",
     "_annualy": "Annually",
     "_asset": "Asset",
@@ -157,6 +156,7 @@
     "_closeDate": "Close Date",
     "_code": "Code",
     "_configure": "Configure",
+    "_commandCenter": "Command Center",
     "_commentType": "Comment Type",
     "_commentsEditable": "Comments Editable",
     "_company": "Company",
@@ -285,6 +285,7 @@
     "_extendedPrice": "Extended Price",
     "_extendedDescription": "Extended Description",
     "_extendedPriceScale": "Extended Price Scale",
+    "_extensionName": "Extension Name",
     "_externalReference": "External Reference",
     "_delivery": "Delivery",
     "_department": "Department",
@@ -352,6 +353,7 @@
     "_invoiceNumber": "Invoice #",
     "_invoices": "Invoices",
     "_initials": "Initials",
+    "_installExtension": "Install Extension",
     "_inventoryUnit": "Inventory Unit",
     "_isActive": "Active",
     "_isAddresses": "Addresses",
@@ -687,6 +689,7 @@
     "_thisWeek": "This Week",
     "_thisMonth": "This Month",
     "_thisYear": "This Year",
+    "_transactionKey": "Transaction Key",
     "_twoYears": "Two Years",
     "_to": "To",
     "_toDate": "To Date",
@@ -987,6 +990,8 @@
     "_customerOrProspect": "Would you like to create a new Customer or a new Prospect?",
     "_deleteLine?": "Are you sure you want to delete this line?",
     "_exitPageWarning": "You are about to leave the xTuple application.",
+    "_installExtensionWarning": "Extensions are very powerful and potentially have full access to your " +
+      "data. You should only install an extension from a source you trust.",
     "_insufficientPrivileges": "You have insufficient privileges to perform this action.",
     "_manualFreight": "Manually editing the freight will disable automatic freight recalculations.",
     "_mustSave": "You must save your changes before proceeding.",

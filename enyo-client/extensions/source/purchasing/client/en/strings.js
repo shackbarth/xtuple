@@ -57,6 +57,7 @@ strict:true, trailing:true, white:true */
     "_UseEarliestAvailDateOnPOItem": "Use Earliest Date",
     "_vendorItem": "Vendor Item",
     "_vendorItemNumber": "VendorItemNumber",
+    "_vendors": "Vendors",
     "_vendorUnit": "Vendor Unit",
     "_viewPurchaseOrders": "View Purchase Orders",
     "_vouchered": "Vouchered",
