@@ -284,6 +284,8 @@ server.exchange('assertion', jwtBearer(function (client, header, claimSet, signa
 
   verifier.update(data);
 
+  console.log("I'm inside the exchange!");
+
   if (verifier.verify(pub, utils.base64urlUnescape(signature), 'base64')) {
     var accessToken = utils.generateUUID(),
         accesshash,
@@ -297,10 +299,14 @@ server.exchange('assertion', jwtBearer(function (client, header, claimSet, signa
         expires = new Date(today.getTime() + (60 * 60 * 1000)), // One hour from now.
         token = new SYS.Oauth2token();
 
+
     // Verify JWT was formed correctly.
     if (!decodedHeader || !decodedHeader.alg || !decodedHeader.typ) {
       return done(new Error("Invalid JWT header."));
     }
+
+    console.log();
+
     if (!decodedClaimSet || decodedClaimSet.length < 5 || !decodedClaimSet.iss ||
       !decodedClaimSet.scope || !decodedClaimSet.aud || !decodedClaimSet.exp ||
       !decodedClaimSet.iat) {
@@ -332,6 +338,8 @@ server.exchange('assertion', jwtBearer(function (client, header, claimSet, signa
       return done(new Error("JWT has expired."));
     }
 
+    console.log("PRN:" + decodedClaimSet.prn);
+
     // Validate decodedClaimSet.prn user and scopes.
     if (client.get("delegatedAccess") && decodedClaimSet.prn) {
       db.users.findByUsername(decodedClaimSet.prn, client.get("organization"), function (err, user) {
@@ -361,6 +369,8 @@ server.exchange('assertion', jwtBearer(function (client, header, claimSet, signa
         if (scopes.length < 1) {
           return done(new Error("Invalid JWT scope."));
         }
+
+        console.log("got this far");
 
         // JWT is valid, create access token, save and return it.
 
@@ -417,10 +427,11 @@ server.exchange('assertion', jwtBearer(function (client, header, claimSet, signa
         token.initialize(null, {isNew: true, database: scopes[0]});
       });
     } else {
-      // No prn, throw error for now.
-      return done(new Error("Invalid JWT. No delegate user."));
-
-      // TODO - Handle public scopes with no delegatedAccess users if we ever need to.
+      // Either there is no prn, OR client.delegatedAccess is not enabled.
+      // TODO: Right now, if you create a service account and uncheck the "delegatedAccess"
+      //   field, then you will see this error. We need to handle public scopes with no
+      //   delegated users here.
+      return done(new Error("Invalid JWT. No delegated user or delegated access is not enabled for this client."));
     }
   } else {
     return done(new Error("Invalid JWT. Signature verification failed"));
@@ -451,6 +462,8 @@ server.exchange('assertion', jwtBearer(function (client, header, claimSet, signa
 exports.authorization = [
   server.authorization(function (clientID, redirectURI, scope, type, done) {
     "use strict";
+
+    console.log("in authorization");
 
     // Get the org from the scope URI e.g. 'dev' from: 'https://mobile.xtuple.com/auth/dev'
     scope = url.parse(scope[0], true);
