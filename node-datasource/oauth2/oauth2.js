@@ -284,8 +284,6 @@ server.exchange('assertion', jwtBearer(function (client, header, claimSet, signa
 
   verifier.update(data);
 
-  console.log("I'm inside the exchange!");
-
   if (verifier.verify(pub, utils.base64urlUnescape(signature), 'base64')) {
     var accessToken = utils.generateUUID(),
         accesshash,
@@ -304,8 +302,6 @@ server.exchange('assertion', jwtBearer(function (client, header, claimSet, signa
     if (!decodedHeader || !decodedHeader.alg || !decodedHeader.typ) {
       return done(new Error("Invalid JWT header."));
     }
-
-    console.log();
 
     if (!decodedClaimSet || decodedClaimSet.length < 5 || !decodedClaimSet.iss ||
       !decodedClaimSet.scope || !decodedClaimSet.aud || !decodedClaimSet.exp ||
@@ -338,8 +334,6 @@ server.exchange('assertion', jwtBearer(function (client, header, claimSet, signa
       return done(new Error("JWT has expired."));
     }
 
-    console.log("PRN:" + decodedClaimSet.prn);
-
     // Validate decodedClaimSet.prn user and scopes.
     if (client.get("delegatedAccess") && decodedClaimSet.prn) {
       db.users.findByUsername(decodedClaimSet.prn, client.get("organization"), function (err, user) {
@@ -369,8 +363,6 @@ server.exchange('assertion', jwtBearer(function (client, header, claimSet, signa
         if (scopes.length < 1) {
           return done(new Error("Invalid JWT scope."));
         }
-
-        console.log("got this far");
 
         // JWT is valid, create access token, save and return it.
 
@@ -462,8 +454,6 @@ server.exchange('assertion', jwtBearer(function (client, header, claimSet, signa
 exports.authorization = [
   server.authorization(function (clientID, redirectURI, scope, type, done) {
     "use strict";
-
-    console.log("in authorization");
 
     // Get the org from the scope URI e.g. 'dev' from: 'https://mobile.xtuple.com/auth/dev'
     scope = url.parse(scope[0], true);
