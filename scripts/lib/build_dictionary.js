@@ -91,7 +91,11 @@ if (typeof XT === 'undefined') {
       return;
     }
 
-    if (destinationLang.indexOf("_") >= 0) {
+    if (destinationLang.indexOf("zh") === 0) {
+      // Google uses the country code for chinese, but uses dashes instead of our underscores
+      destinationLang = destinationLang.replace("_", "-");
+
+    } else if (destinationLang.indexOf("_") >= 0) {
       // strip off the locale for google
       destinationLang = destinationLang.substring(0, destinationLang.indexOf("_"));
     }
@@ -157,12 +161,16 @@ if (typeof XT === 'undefined') {
     @param {String} destinationLang. In form "es_MX".
     @param {Function} masterCallback
    */
-  exports.exportEnglish = function (database, apiKey, destinationLang, masterCallback) {
+  exports.exportEnglish = function (options, masterCallback) {
     var creds = require("../../node-datasource/config").databaseServer,
       sql = "select dict_strings, dict_is_database, dict_is_framework, " +
         "dict_language_name, ext_name from xt.dict " +
         "left join xt.ext on dict_ext_id = ext_id " +
-        "where dict_language_name = 'en_US'";
+        "where dict_language_name = 'en_US'",
+      database = options.database,
+      apiKey = options.apiKey,
+      destinationDir = options.directory,
+      destinationLang = options.language;
 
     if (destinationLang) {
       sql = sql + " or dict_language_name = $1";
@@ -217,12 +225,24 @@ if (typeof XT === 'undefined') {
       // group together english and foreign strings of the same extension
       var marriedRows = marryLists(res.rows);
       async.map(marriedRows, processExtension, function (err, extensions) {
+        // sort alpha so as to keep diffs under control
+        _.each(extensions, function (extension) {
+          extension.strings = _.sortBy(extension.strings, function (stringObj) {
+            return stringObj.key.toLowerCase();
+          });
+        });
+        extensions = _.sortBy(extensions, function (extObj) {
+          return extObj.extension;
+        });
+
         var output = {
           language: destinationLang || "",
           extensions: extensions
         };
-        // filename convention is ./scripts/private/es_MX_dictionary.js
-        var exportFilename = path.join(__dirname, "../private",
+        // filename convention is ./scripts/output/es_MX_dictionary.js
+        destinationDir = destinationDir || path.join(__dirname, "../output");
+
+        var exportFilename = path.join(destinationDir,
           (destinationLang || "blank") + "_dictionary.js");
         console.log("Exporting to", exportFilename);
         fs.writeFile(exportFilename, JSON.stringify(output, undefined, 2), function (err, result) {
@@ -243,7 +263,11 @@ if (typeof XT === 'undefined') {
     if (filename.substring(0, 1) !== '/') {
       filename = path.join(process.cwd(), filename);
     }
-
+    if (path.extname(filename) !== '.js') {
+      console.log("Skipping non-dictionary file", filename);
+      masterCallback();
+      return;
+    }
     fs.readFile(filename, "utf8", function (err, contents) {
       if (err) {
         masterCallback(err);

@@ -49,7 +49,8 @@
 @panelsFontSize: 5em;
 @iconFontSize: 60%;
 @totalsFontSize: 14px;
-@buttonFontSize: 17px;
+@buttonFontSize: 20px;
+@buttonTextFontSize: 17px;
 
 // sizing
 @defaultPanelWidth: 320px;
@@ -71,7 +72,7 @@ body {
 }
 
 .disabled {
-  opacity: 0.6;
+  opacity: 0.8;
   cursor: default;
 }
 
@@ -137,13 +138,18 @@ body {
 
   .onyx-button {
     margin: 2px;
+    min-height: 40px;
     min-width: 60px;
     background: @button-gray;
     color: @charcoal;
-    font-size: 20px;
+    font-size: @buttonFontSize;
+
+    &[class^="icon-"]:before, &[class*=" icon-"]:before {
+      vertical-align: middle;
+      margin-right: 5px;
+    }
     &.text {
-      font-size: @buttonFontSize;
-      font-family: @baseFont;
+      font-size: @buttonTextFontSize;
     }
     &.selected {
       background: @slate-blue;
@@ -305,7 +311,7 @@ body {
   border: none;
 
   .onyx-icon-button, .onyx-popup-decorator {
-    margin: 0 6px 0 3px;
+    margin: 0 5px 0 3px;
     div {
       text-shadow: none;
       color: @white;
@@ -323,8 +329,9 @@ body {
     .onyx-icon-button {
       margin: 0;
     }
+    text-align: center;
+    width: 50px;
     height: 40px;
-    width: 40px;
   }
 
   .onyx-menu {
@@ -336,6 +343,7 @@ body {
   }
 
   .xv-toolbar-label, .xv-search {
+    color: @white;
     width: @searchLength;
     margin: 0;
     margin-left: 6px;

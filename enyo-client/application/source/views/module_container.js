@@ -8,6 +8,9 @@ trailing:true, white:true*/
   enyo.kind({
     name: "XV.Postbooks",
     kind: "XV.ModuleContainer",
+    handlers: {
+      onNoBaseCurr: "handleNoBaseCurr"
+    },
     modules: [
       {name: "welcome", label: "_welcome".loc(), hasSubmenu: false,
         panels: [
@@ -36,6 +39,50 @@ trailing:true, white:true*/
         welcome.setAttributes({src: url + params});
       }
       this.inherited(arguments);
+    },
+    handleNoBaseCurr: function () {
+      var that = this,
+        wsCallback = function (model) {
+          // If workspace was not saved, prompt again.
+          if (model) {
+            return;
+          } else {
+            that.handleNoBaseCurr();
+          }
+        };
+
+      this.notify(this, {
+        type: XM.Model.QUESTION,
+        message: "_selectBaseCurrency".loc(),
+        yesLabel: "_setBaseCurrToUSD".loc(),
+        noLabel: "_createBaseCurr".loc(),
+        callback: function (response) {
+          if (!response.answer) {
+            // User doesn't want to use USD, open Currency workspace
+            that.addWorkspace(null, {
+              workspace: "XV.CurrencyWorkspace",
+              attributes: {
+                isBase: true
+              },
+              callback: wsCallback
+            });
+
+          // User confirms that they want to use USD, open USD workspace, set isBase
+          } else if (response.answer) {
+            that.addWorkspace(null, {
+              workspace: "XV.CurrencyWorkspace",
+              id: "USD",
+              attributes: {
+                isBase: true
+              },
+              callback: wsCallback,
+              success: function () {
+                this.$.isBase.setValue(true);
+              }
+            });
+          }
+        }
+      });
     }
 
   });

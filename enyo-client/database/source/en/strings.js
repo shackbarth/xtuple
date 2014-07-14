@@ -297,6 +297,7 @@ strict:true, trailing:true, white:true */
     "_xtdb_postCashReceipt6": "The selected Cash Receipt cannot be posted as the Bank Account cannot be determined. You must make a Bank Account Assignment for this Cash Receipt before you may post it.",
     "_xtdb_postCashReceipt7": "The selected Cash Receipt cannot be posted, probably because the Customer's Prepaid Account was not found.",
     "_xtdb_postCashReceipt8": "Cannot post this Cash Receipt because the credit card records could not be found.",
+    "_xtdb_postCCCashReceipt1": "Cannot post this Cash Receipt because annot find the default Bank Account for this Credit Card.",
     "_xtdb_postCCCashReceipt11": "Cannot post this Cash Receipt because the record of the credit card transaction either does not exist or is not consistent.",
     "_xtdb_postCCcredit1": "Cannot post this Credit Card refund because the default Bank Account for this Credit Card could not be found.",
     "_xtdb_postCCcredit2": "Cannot post this Credit Card refund because an invalid id/reference-type pair was passed.",

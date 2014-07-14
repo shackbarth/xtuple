@@ -23,8 +23,11 @@ white:true*/
         success: _.bind(this.didComplete, this)
       };
       var relevantPrivileges = [
+        "InstallExtension",
         "MaintainUsers",
-        "MaintainPreferencesSelf"
+        "MaintainPreferencesSelf",
+        "MaintainWorkflowsSelf",
+        "MaintainAllWorkflows"
       ];
       XT.session.addRelevantPrivileges("core", relevantPrivileges);
       XT.session.loadSessionObjects(XT.session.PRIVILEGES, options);
@@ -135,6 +138,7 @@ white:true*/
   XT.cacheCollection("XM.taxZones", "XM.TaxZoneCollection");
   XT.cacheCollection("XM.taxCodes", "XM.TaxCodeCollection");
   XT.cacheCollection("XM.units", "XM.UnitCollection");
+  XT.cacheCollection("XM.users", "XM.UserAccountRelationCollection", "username");
   XT.cacheCollection("XM.filters", "XM.FilterCollection");
   XT.cacheCollection("XM.reasonCodes", "XM.ReasonCodeCollection");
   XT.cacheCollection("XM.vendorTypes", "XM.VendorTypeCollection");

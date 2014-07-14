@@ -1520,7 +1520,7 @@ body {
   bottom: 4px !important;
 }
 .disabled {
-  opacity: 0.6;
+  opacity: 0.8;
   cursor: default;
 }
 .xv-app-panel {
@@ -1579,14 +1579,19 @@ body {
 }
 .xv-buttons .onyx-button {
   margin: 2px;
+  min-height: 40px;
   min-width: 60px;
   background: #e1e1e1;
   color: #666666;
   font-size: 20px;
 }
+.xv-buttons .onyx-button[class^="icon-"]:before,
+.xv-buttons .onyx-button[class*=" icon-"]:before {
+  vertical-align: middle;
+  margin-right: 5px;
+}
 .xv-buttons .onyx-button.text {
   font-size: 17px;
-  font-family: 'Helvetica Neue', Helvetica, 'Nimbus Sans L', Arial, sans-serif;
 }
 .xv-buttons .onyx-button.selected {
   background: #357ec7;
@@ -1768,7 +1773,7 @@ body {
 }
 .onyx-toolbar .onyx-icon-button,
 .onyx-toolbar .onyx-popup-decorator {
-  margin: 0 6px 0 3px;
+  margin: 0 5px 0 3px;
 }
 .onyx-toolbar .onyx-icon-button div,
 .onyx-toolbar .onyx-popup-decorator div {
@@ -1780,8 +1785,9 @@ body {
   color: #ff9c00;
 }
 .onyx-toolbar .onyx-popup-decorator {
+  text-align: center;
+  width: 50px;
   height: 40px;
-  width: 40px;
 }
 .onyx-toolbar .onyx-popup-decorator .onyx-icon-button {
   margin: 0;
@@ -1794,6 +1800,7 @@ body {
 }
 .onyx-toolbar .xv-toolbar-label,
 .onyx-toolbar .xv-search {
+  color: #fdfdfd;
   width: 185px;
   margin: 0;
   margin-left: 6px;
@@ -1918,12 +1925,18 @@ body {
   width: 100% !important;
   height: 100% !important;
 }
+.xv-workspace-container .xv-workspace .xv-buttons .onyx-button {
+  border: 1px solid #d7d7d7;
+}
+.xv-workspace-container .xv-workspace .xv-buttons .onyx-button[disabled] {
+  opacity: 0.6;
+  cursor: default;
+}
 .xv-workspace-container .xv-workspace .panel .xv-buttons {
   background-color: #efefef;
   margin: 0;
 }
 .xv-workspace-container .xv-workspace .panel .xv-buttons .onyx-button {
-  border: 1px solid #d7d7d7;
   border-radius: 0;
   margin: 0;
 }
@@ -1972,6 +1985,10 @@ body {
 }
 .xv-workspace-container .xv-workspace .xv-workspace-panel .enyo-fittable-columns-layout > * {
   vertical-align: middle;
+}
+.xv-workspace-container .xv-workspace .onyx-input-decorator.onyx-disabled {
+  opacity: 0.8;
+  cursor: default;
 }
 .xv-workspace-container .xv-workspace .xv-totals-panel .onyx-input-decorator > input,
 .xv-workspace-container .xv-workspace .xv-totals-panel * {
@@ -2094,6 +2111,12 @@ body {
 .xv-grid-box .xv-scroller {
   background: #f8f8f8;
 }
+.xv-grid-box .xv-grid-attr {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
 .xv-grid-box .xv-grid-attr.bold {
   font-weight: bold;
 }
@@ -2135,8 +2158,8 @@ body {
   display: inline-block;
 }
 .xv-grid-box .xv-grid-row .xv-grid-header {
-  background-color: #d8d8d8;
-  color: #fdfdfd;
+  background-color: #d7d7d7;
+  color: #0e0e0e;
   font-size: .8em;
   font-weight: bold;
   text-transform: uppercase;
@@ -2296,9 +2319,8 @@ body {
   display: none;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget-description {
-  text-indent: 0;
-  padding-bottom: 0;
-  padding-top: 8px;
+  margin: 0;
+  margin-top: 5px;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-private-item-site-widget {
   border-bottom: 0;
@@ -2351,7 +2373,7 @@ body {
 }
 .dashboard .selectable-chart {
   width: 500px;
-  height: 230px;
+  height: 250px;
 }
 .dashboard .selectable-chart .chart-title-bar {
   width: 500px;
@@ -2361,12 +2383,68 @@ body {
 }
 .selectable-chart {
   margin: 10px;
-  color: #fdfdfd;
+  color: #357ec7;
   overflow: hidden;
+  /*  The chart-filters may not be need as we are using the class xv-pullout
+      for styles.  Delete when finished hacking the filter styles.
+
+  .chart-filters {
+  	  background-color: @white;
+  	  
+  	  -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+	  -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+	  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .chart-filters .xv-parameter-panel {
+  	  background-color: @ghost;
+  	  border: 1px solid @smoke;
+  	  margin: 0 4px 6px 0;
+  	  width: 100%;
+  }
+  
+  .chart-filters.xv-parameter-panel .onyx-groupbox-header {
+	  padding: 6px 10px;
+	  border-bottom: 1px solid @smoke;
+	  background: @lightest-gray;
+	  color: @near-black;
+  }
+
+  .chart-filters.xv-parameter-panel .enyo-fittable-columns-layout {
+	  border-bottom: 1px solid @smoke;
+	  background: @white;
+    color: @near-black;
+    position: relative;
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  .chart-filters.xv-parameter-panel .enyo-fittable-columns-layout > * {
+    vertical-align: middle;
+  }
+
+  .chart-filters.xv-parameter-panel .xv-label {
+    text-align: right;
+  }
+  
+  */
+}
+.selectable-chart .xv-list-item {
+  border-bottom: 1px solid grey;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+}
+.selectable-chart .xv-list-item .long {
+  padding-left: 7px;
+  width: 250px;
+}
+.selectable-chart .onyx-popup {
+  margin-top: 40px;
+  margin-left: 200px;
 }
 .selectable-chart .chart-title-bar {
-  height: 32px;
-  background-color: #373737;
+  height: 48px;
+  background-color: #efefef;
+  text-transform: none;
   -webkit-border-top-right-radius: 10px;
   -moz-border-radius-topright: 10px;
   border-top-right-radius: 10px;
@@ -2376,15 +2454,32 @@ body {
 }
 .selectable-chart .chart-title-bar .chart-title {
   padding-top: 8px;
+  color: #070707;
   text-align: center;
+  /*font-size: 2em;*/
+  font-weight: normal;
+  font-family: Helvetica;
+}
+.selectable-chart .chart-title-bar .chart-sub-title {
+  /*padding-top: 8px;*/
+  color: #0000ff;
+  text-align: center;
+  font-size: small;
+  font-weight: normal;
+  font-family: Helvetica;
 }
 .selectable-chart .chart-title-bar .remove-icon {
   position: absolute;
   top: 0;
   right: 0;
 }
+.selectable-chart .chart-title-bar .icon-filter {
+  color: #070707;
+  position: absolute;
+  right: 35px;
+}
 .selectable-chart .chart-bottom {
-  background-color: #666666;
+  background-color: #fdfdfd;
   border: 1px solid #444444;
   border-top: none;
   -webkit-border-bottom-right-radius: 10px;
@@ -2396,11 +2491,14 @@ body {
 }
 .selectable-chart .chart-bottom .xv-picker-label {
   width: 100px;
-  color: #fdfdfd;
+  color: #070707;
 }
 .selectable-chart .chart-bottom .onyx-button {
   width: 130px;
   padding: 10px 10px;
+}
+.selectable-chart .chart-filterDrawer {
+  top: 0px;
 }
 /**
   Styles relating to Lists
@@ -2458,10 +2556,7 @@ body {
 .xv-list-column.third {
   width: 100px;
 }
-.xv-list-column.money {
-  width: 75px;
-  text-align: right;
-}
+.xv-list-column.money,
 .xv-list-column.quantity {
   width: 75px;
   text-align: right;
@@ -2915,14 +3010,12 @@ body {
   position: relative;
 }
 .xv-relationwidget-description {
-  white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
-  text-indent: 140px;
-  font-size: small;
-  padding-bottom: 4px;
-  max-width: 325px;
-  color: black;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  max-width: 250px;
+  margin: 5px 5px 5px 80px;
 }
 .xv-relationwidget-description.disabled {
   color: #777777;

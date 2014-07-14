@@ -2,7 +2,7 @@
   "author": "xTuple <dev@xtuple.com>",
   "name": "xtuple",
   "description": "xTuple Enterprise Resource Planning Mobile-Web client",
-  "version": "4.4.2",
+  "version": "4.5.2",
   "repository": {
     "type": "git",
     "url": "https://github.com/xtuple/xtuple.git"
@@ -24,6 +24,8 @@
     "less": "1.5.0",
     "moment": "2.4.x",
     "nodemailer": "0.3.x",
+    "npm":"1.4.x",
+    "node-forge": "0.6.x",
     "oauth2orize": "0.1.x",
     "oauth2orize-jwt-bearer": "0.1.x",
     "passport": "0.1.x",
@@ -40,7 +42,6 @@
     "socket.io": "0.9.x",
     "underscore": "1.4.x",
     "winston": "0.7.x",
-    "xmla4js": "git://github.com/rpbouman/xmla4js.git",
     "underscore.string": "~2.3.3",
     "ursa":"0.8.x"
   },
@@ -63,7 +64,7 @@
   },
   "main": "node-datasource/main.js",
   "scripts": {
-    "build-basic-postbooks-package-sql": "./scripts/explode_manifest.js -m foundation-database/safe_toolkit_manifest.js -n toolkit.sql; ./scripts/explode_manifest.js -m foundation-database/manifest.js -n updates.sql",
+    "build-basic-postbooks-package-sql": "./scripts/explode_manifest.js -m foundation-database/manifest.js -n postbooks_upgrade.sql",
     "build-basic-empty": "./scripts/build_app.js -d empty --databaseonly -e foundation-database -i -s foundation-database/empty_data.sql",
     "build-basic-postbooks-demo": "./scripts/build_app.js -d postbooks_demo --databaseonly -e foundation-database -i -s foundation-database/postbooks_demo_data.sql",
     "build-basic-quickstart": "./scripts/build_app.js -d quickstart --databaseonly -e foundation-database -i -s foundation-database/quickstart_data.sql",

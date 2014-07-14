@@ -45,6 +45,11 @@
     autoRegex = XM.Document.AUTO_NUMBER + "|" + XM.Document.AUTO_OVERRIDE_NUMBER;
     if (model instanceof XM.Document && model.numberPolicy.match(autoRegex)) {
       // wait for the model to fetch its id if appropriate
+      if (model.id) {
+        // the id is already defined? No need to wait for it from the server, then.
+        done(workspaceContainer);
+        return;
+      }
       eventName = "change:" + model.idAttribute;
       idChanged = function () {
         if (model.id) {
@@ -184,6 +189,12 @@
 
     // back up to list
     app.$.postbooks.previous();
+    if (app.$.postbooks.getActive().kind === "XV.WorkspaceContainer") {
+      console.log("Ok, we want to be in the navigator by now");
+      console.log("Model status is", model.getStatusString());
+      console.log("Notify popup showing?", XT.app.$.postbooks.$.notifyPopup.showing);
+      console.log("Notify popup message", XT.app.$.postbooks.$.notifyMessage.getContent());
+    }
     assert.equal(app.$.postbooks.getActive().kind, "XV.Navigator");
 
     // here's the list
@@ -270,6 +281,12 @@
         XG.capturedId = workspace.value.id;
       }
       saveWorkspace(workspace, done);
+    });
+    _.each(spec.afterSaveUIActions || [], function (spec) {
+      it(spec.it, function (done) {
+        this.timeout(20 * 1000);
+        spec.action(workspace, done);
+      });
     });
     if (spec.captureObject) {
       return;

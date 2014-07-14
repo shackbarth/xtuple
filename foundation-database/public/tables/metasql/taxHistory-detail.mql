@@ -32,8 +32,8 @@ FROM (
 ------------BEGIN SALES--------------
 -- All sales tax history including memos 
 SELECT 
-  taxhist_distdate, taxhist_journalnumber,
-  tax_code AS tax, tax_descrip,
+  COALESCE(taxpay_distdate, taxhist_distdate) AS taxhist_distdate,
+  taxhist_journalnumber, tax_code AS tax, tax_descrip,
   COALESCE(taxtype_name,<? value("none") ?>) AS taxtype, taxtype_descrip,
   COALESCE(taxclass_code,<? value("none") ?>) AS taxclass, taxclass_descrip,
   COALESCE(taxauth_code,<? value("none") ?>) AS taxauth, taxauth_name AS taxauth_descrip,
@@ -70,13 +70,13 @@ SELECT
   END AS freightbase,
   CASE
     WHEN (cohist_misc_type = 'F') THEN
-      taxhist_tax / taxhist_curr_rate
+      COALESCE(taxpay_tax, taxhist_tax) / taxhist_curr_rate
     ELSE 0
   END AS freighttax,
   0 AS purchasebase,
-  taxhist_tax AS taxlocal,
-  taxhist_tax / taxhist_curr_rate AS taxbase,
-  taxhist_tax / taxhist_curr_rate AS salestaxbase,
+  COALESCE(taxpay_tax, taxhist_tax) AS taxlocal,
+  COALESCE(taxpay_tax, taxhist_tax) / taxhist_curr_rate AS taxbase,
+  COALESCE(taxpay_tax, taxhist_tax) / taxhist_curr_rate AS salestaxbase,
   0 AS purchasetaxbase,
   'qty' AS qty_xtnumericrole,
   'saleprice' AS unitprice_xtnumericrole,
@@ -94,12 +94,14 @@ FROM cohisttax
  LEFT OUTER JOIN taxzone ON (cohist_taxzone_id=taxzone_id)
  LEFT OUTER JOIN itemsite ON (cohist_itemsite_id=itemsite_id)
  LEFT OUTER JOIN item ON (itemsite_item_id=item_id)
+ LEFT OUTER JOIN taxpay ON (taxpay_taxhist_id=taxhist_id)
+WHERE ((true)
 <? if exists("distDate") ?>
-WHERE ((taxhist_distdate BETWEEN <? value("startDate") ?>
-                             AND <? value("endDate") ?>)
+ AND (taxhist_distdate BETWEEN <? value("startDate") ?>
+                           AND <? value("endDate") ?>)
 <? else ?>
-WHERE ((taxhist_docdate BETWEEN <? value("startDate") ?>
-                             AND <? value("endDate") ?>)
+ AND (taxhist_docdate BETWEEN <? value("startDate") ?>
+                          AND <? value("endDate") ?>)
 <? endif ?>
 <? if exists("tax_id") ?>
  AND (taxhist_tax_id=<? value("tax_id") ?>)
@@ -116,6 +118,9 @@ WHERE ((taxhist_docdate BETWEEN <? value("startDate") ?>
 <? if exists("taxzone_id") ?>
  AND (taxzone_id=<? value("taxzone_id") ?>)
 <? endif ?>
+<? if exists("cashbasedtax") ?>
+ AND (taxpay_id IS NOT NULL)
+<? endif ?>
 )
 <? endif ?>
 --------------END SALES--------------------
@@ -129,8 +134,8 @@ UNION ALL
 <? if exists("showPurchases") ?>
 -- A/P Memo history
 SELECT 
-  taxhist_distdate, taxhist_journalnumber,
-  tax_code AS tax, tax_descrip,
+  COALESCE(taxpay_distdate, taxhist_distdate) AS taxhist_distdate,
+  taxhist_journalnumber, tax_code AS tax, tax_descrip,
   COALESCE(taxtype_name,<? value("none") ?>) AS taxtype, taxtype_descrip,
   COALESCE(taxclass_code,<? value("none") ?>) AS taxclass, taxclass_descrip,
   COALESCE(taxauth_code,<? value("none") ?>) AS taxauth, taxauth_name AS taxauth_descrip,
@@ -154,10 +159,10 @@ SELECT
   0 AS freightbase,
   0 AS freighttax,
   apopen_amount / apopen_curr_rate AS purchasebase,
-  taxhist_tax AS taxlocal,
-  taxhist_tax / taxhist_curr_rate AS taxbase,
+  COALESCE(taxpay_tax, taxhist_tax) AS taxlocal,
+  COALESCE(taxpay_tax, taxhist_tax) / taxhist_curr_rate AS taxbase,
   0 AS salestaxbase,
-  taxhist_tax / taxhist_curr_rate AS purchasetaxbase,
+  COALESCE(taxpay_tax, taxhist_tax) / taxhist_curr_rate AS purchasetaxbase,
   'qty' AS qty_xtnumericrole,
   'purchaseprice' AS unitprice_xtnumericrole,
   'extprice' AS extension_xtnumericrole,
@@ -172,12 +177,14 @@ FROM apopentax
  JOIN curr_symbol ON (curr_id=taxhist_curr_id)
  LEFT OUTER JOIN taxclass ON (tax_taxclass_id=taxclass_id)
  LEFT OUTER JOIN taxauth ON (tax_taxauth_id=taxauth_id)
+ LEFT OUTER JOIN taxpay ON (taxpay_taxhist_id=taxhist_id)
+WHERE ((true)
 <? if exists("distDate") ?>
-WHERE ((taxhist_distdate BETWEEN <? value("startDate") ?>
-                             AND <? value("endDate") ?>)
+ AND (taxhist_distdate BETWEEN <? value("startDate") ?>
+                           AND <? value("endDate") ?>)
 <? else ?>
-WHERE ((taxhist_docdate BETWEEN <? value("startDate") ?>
-                             AND <? value("endDate") ?>)
+ AND (taxhist_docdate BETWEEN <? value("startDate") ?>
+                          AND <? value("endDate") ?>)
 <? endif ?>
 <? if exists("tax_id") ?>
  AND (taxhist_tax_id=<? value("tax_id") ?>)
@@ -195,12 +202,15 @@ WHERE ((taxhist_docdate BETWEEN <? value("startDate") ?>
  AND (false)
 <? endif ?>
  AND (taxhist_distdate IS NOT NULL)
+<? if exists("cashbasedtax") ?>
+ AND (taxpay_id IS NOT NULL)
+<? endif ?>
 )
 UNION ALL
 --Voucher Header History
 SELECT 
-  taxhist_distdate, taxhist_journalnumber,
-  tax_code AS tax, tax_descrip,
+  COALESCE(taxpay_distdate, taxhist_distdate) AS taxhist_distdate,
+  taxhist_journalnumber, tax_code AS tax, tax_descrip,
   COALESCE(taxtype_name,<? value("none") ?>) AS taxtype, taxtype_descrip,
   COALESCE(taxclass_code,<? value("none") ?>) AS taxclass, taxclass_descrip,
   COALESCE(taxauth_code,<? value("none") ?>) AS taxauth, taxauth_name AS taxauth_descrip,
@@ -217,10 +227,10 @@ SELECT
   0 AS freightbase,
   0 AS freighttax,
   0 AS purchasebase,
-  taxhist_tax AS taxlocal,
-  taxhist_tax / taxhist_curr_rate AS taxbase,
+  COALESCE(taxpay_tax, taxhist_tax) AS taxlocal,
+  COALESCE(taxpay_tax, taxhist_tax) / taxhist_curr_rate AS taxbase,
   0 AS salestaxbase,
-  taxhist_tax / taxhist_curr_rate AS purchasetaxbase,
+  COALESCE(taxpay_tax, taxhist_tax) / taxhist_curr_rate AS purchasetaxbase,
   'qty' AS qty_xtnumericrole,
   'purchaseprice' AS unitprice_xtnumericrole,
   'extprice' AS amount_xtnumericrole,
@@ -237,12 +247,14 @@ FROM voheadtax
  LEFT OUTER JOIN taxclass ON (tax_taxclass_id=taxclass_id)
  LEFT OUTER JOIN taxauth ON (tax_taxauth_id=taxauth_id)
  LEFT OUTER JOIN taxzone ON (vohead_taxzone_id=taxzone_id)
+ LEFT OUTER JOIN taxpay ON (taxpay_taxhist_id=taxhist_id)
+WHERE ((true)
 <? if exists("distDate") ?>
-WHERE ((taxhist_distdate BETWEEN <? value("startDate") ?>
-                             AND <? value("endDate") ?>)
+ AND (taxhist_distdate BETWEEN <? value("startDate") ?>
+                           AND <? value("endDate") ?>)
 <? else ?>
-WHERE ((taxhist_docdate BETWEEN <? value("startDate") ?>
-                             AND <? value("endDate") ?>)
+ AND (taxhist_docdate BETWEEN <? value("startDate") ?>
+                          AND <? value("endDate") ?>)
 <? endif ?>
 <? if exists("tax_id") ?>
  AND (taxhist_tax_id=<? value("tax_id") ?>)
@@ -260,12 +272,15 @@ WHERE ((taxhist_docdate BETWEEN <? value("startDate") ?>
  AND (taxzone_id=<? value("taxzone_id") ?>)
 <? endif ?>
  AND (taxhist_distdate IS NOT NULL)
+<? if exists("cashbasedtax") ?>
+ AND (taxpay_id IS NOT NULL)
+<? endif ?>
 )
 UNION ALL
 --Voucher Line Item
 SELECT 
-  taxhist_distdate, taxhist_journalnumber,
-  tax_code AS tax, tax_descrip,
+  COALESCE(taxpay_distdate, taxhist_distdate) AS taxhist_distdate,
+  taxhist_journalnumber, tax_code AS tax, tax_descrip,
   COALESCE(taxtype_name,<? value("none") ?>) AS taxtype, taxtype_descrip,
   COALESCE(taxclass_code,<? value("none") ?>) AS taxclass, taxclass_descrip,
   COALESCE(taxauth_code,<? value("none") ?>) AS taxauth, taxauth_name AS taxauth_descrip,
@@ -282,10 +297,10 @@ SELECT
   0 AS freightbase,
   0 AS freighttax,
   currToBase(vohead_curr_id, COALESCE(SUM(vodist_amount),0), vohead_distdate)  AS purchasebase,
-  taxhist_tax AS taxlocal,
-  taxhist_tax / taxhist_curr_rate AS taxbase,
+  COALESCE(taxpay_tax, taxhist_tax) AS taxlocal,
+  COALESCE(taxpay_tax, taxhist_tax) / taxhist_curr_rate AS taxbase,
   0 AS salestaxbase,
-  taxhist_tax / taxhist_curr_rate AS purchasetaxbase,
+  COALESCE(taxpay_tax, taxhist_tax) / taxhist_curr_rate AS purchasetaxbase,
   'qty' AS qty_xtnumericrole,
   'purchaseprice' AS unitprice_xtnumericrole,
   'extprice' AS amount_xtnumericrole,
@@ -309,12 +324,14 @@ FROM voitemtax
  LEFT OUTER JOIN itemsite ON (poitem_itemsite_id=itemsite_id)
  LEFT OUTER JOIN item ON (itemsite_item_id=item_id)
  LEFT OUTER JOIN expcat ON (expcat_id=poitem_expcat_id)
+ LEFT OUTER JOIN taxpay ON (taxpay_taxhist_id=taxhist_id)
+WHERE ((true)
 <? if exists("distDate") ?>
-WHERE ((taxhist_distdate BETWEEN <? value("startDate") ?>
-                             AND <? value("endDate") ?>)
+ AND (taxhist_distdate BETWEEN <? value("startDate") ?>
+                           AND <? value("endDate") ?>)
 <? else ?>
-WHERE ((taxhist_docdate BETWEEN <? value("startDate") ?>
-                             AND <? value("endDate") ?>)
+ AND (taxhist_docdate BETWEEN <? value("startDate") ?>
+                          AND <? value("endDate") ?>)
 <? endif ?>
 <? if exists("tax_id") ?>
  AND (taxhist_tax_id=<? value("tax_id") ?>)
@@ -332,14 +349,17 @@ WHERE ((taxhist_docdate BETWEEN <? value("startDate") ?>
  AND (taxzone_id=<? value("taxzone_id") ?>)
 <? endif ?>
  AND (taxhist_distdate IS NOT NULL)
+<? if exists("cashbasedtax") ?>
+ AND (taxpay_id IS NOT NULL)
+<? endif ?>
 )
-GROUP BY taxhist_id,taxhist_distdate,tax_code,tax_descrip,
+GROUP BY taxhist_id, taxpay_distdate,taxhist_distdate,tax_code,tax_descrip,
   taxtype_name,taxtype_descrip,taxclass_code,taxclass_descrip,
   taxauth_code,taxauth_descrip,taxzone,taxzone_descrip,curr_abbr,
   vohead_number,pohead_number,item_number,item_descrip1,
   vohead_curr_id,vohead_distdate,vohead_docdate,vend_name,
   expcat_code,expcat_descrip,taxhist_tax,taxhist_curr_rate,
-  voitem_qty, taxhist_journalnumber
+  voitem_qty, taxhist_journalnumber, taxpay_tax
 <? endif ?>
 -------------END PURCHASE--------------
 ORDER BY docdate DESC, docnumber DESC

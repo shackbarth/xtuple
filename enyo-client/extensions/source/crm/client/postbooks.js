@@ -55,12 +55,31 @@ trailing:true, white:true*/
       panels: [
         {name: "accountList", kind: "XV.AccountList"},
         {name: "contactList", kind: "XV.ContactList"},
-        {name: "activityList", kind: "XV.ActivityList"},
+        {name: "crm_activityList", kind: "XV.ActivityList"},
         {name: "toDoList", kind: "XV.ToDoList"},
         {name: "opportunityList", kind: "XV.OpportunityList"},
         {name: "incidentList", kind: "XV.IncidentList", toggleSelected: false}
       ]
     };
+
+    if (XT.session.settings.get("DashboardLite")) {
+      var dashboardModule = {
+        name: "dashboardLite",
+        label: "_dashboard".loc(),
+        panels: [
+          {
+            name: "dashboardLite",
+            kind: "XV.DashboardLite",
+            newActions: [
+              {name: "assignedIncidents", label: "_assignedIncidents".loc(), item: "XV.AssignedIncidentBarChart"},
+              {name: "opportunities", label: "_opportunities".loc(), item: "XV.OpportunityBarChart"}
+            ]
+          }
+        ]
+      };
+
+      XT.app.$.postbooks.insertModule(dashboardModule, 0);
+    }
 
     isBiAvailable = XT.session.config.biAvailable && XT.session.privileges.get("ViewSalesHistory");
     if (isBiAvailable) {

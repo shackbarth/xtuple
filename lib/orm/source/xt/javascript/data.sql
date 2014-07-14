@@ -102,16 +102,48 @@ select xt.install_js('XT','Data','xtuple', $$
           attributes = attributeIsString ? [parameter.attribute] : parameter.attribute;
 
         attributes.map(function (attribute) {
-          var prop = XT.Orm.getProperty(orm, attribute),
+          var rootAttribute = (attribute.indexOf('.') < 0) ? attribute : attribute.split(".")[0],
+            prop = XT.Orm.getProperty(orm, rootAttribute),
             propName = prop.name,
             childOrm,
             naturalKey,
-            index;
+            index,
+            walkPath = function (pathParts, currentOrm, pathIndex) {
+              var currentAttributeIsString = typeof pathParts[pathIndex] === 'string',
+                currentProp = XT.Orm.getProperty(currentOrm, pathParts[pathIndex]),
+                subChildOrm,
+                naturalKey;
 
-          if ((prop.toOne || prop.toMany) && attribute.indexOf('.') < 0) {
+              if ((currentProp.toOne || currentProp.toMany)) {
+                if (currentProp.toOne && currentProp.toOne.type) {
+                  subChildOrm = that.fetchOrm(nameSpace, currentProp.toOne.type);
+                } else if (currentProp.toMany && currentProp.toMany.type) {
+                  subChildOrm = that.fetchOrm(nameSpace, currentProp.toMany.type);
+                } else {
+                  plv8.elog(ERROR, "toOne or toMany property is missing it's 'type': " + currentProp.name);
+                }
+
+                if (pathIndex < pathParts.length - 1) {
+                  /* Recurse. */
+                  walkPath(pathParts, subChildOrm, pathIndex + 1);
+                } else {
+                  /* This is the end of the path. */
+                  naturalKey = XT.Orm.naturalKey(subChildOrm);
+                  if (currentAttributeIsString) {
+                    /* add the natural key to the end of the requested attribute */
+                    parameter.attribute = attribute + "." + naturalKey;
+                  } else {
+                    /* swap out the attribute in the array for the one with the prepended natural key */
+                    index = parameter.attribute.indexOf(attribute);
+                    parameter.attribute.splice(index, 1);
+                    parameter.attribute.splice(index, 0, attribute + "."  + naturalKey);
+                  }
+                }
+              }
+            }
+
+          if ((prop.toOne || prop.toMany)) {
             /* Someone is querying on a toOne without using a path */
-            /* TODO: even if there's a path x.y, it's possible that it's still not
-              correct because the correct path maybe is x.y.naturalKeyOfY */
             if (prop.toOne && prop.toOne.type) {
               childOrm = that.fetchOrm(nameSpace, prop.toOne.type);
             } else if (prop.toMany && prop.toMany.type) {
@@ -119,15 +151,22 @@ select xt.install_js('XT','Data','xtuple', $$
             } else {
               plv8.elog(ERROR, "toOne or toMany property is missing it's 'type': " + prop.name);
             }
-            naturalKey = XT.Orm.naturalKey(childOrm);
-            if (attributeIsString) {
-              /* add the natural key to the end of the requested attribute */
-              parameter.attribute = attribute + "." + naturalKey;
+
+            if (attribute.indexOf('.') < 0) {
+              naturalKey = XT.Orm.naturalKey(childOrm);
+              if (attributeIsString) {
+                /* add the natural key to the end of the requested attribute */
+                parameter.attribute = attribute + "." + naturalKey;
+              } else {
+                /* swap out the attribute in the array for the one with the prepended natural key */
+                index = parameter.attribute.indexOf(attribute);
+                parameter.attribute.splice(index, 1);
+                parameter.attribute.splice(index, 0, attribute + "."  + naturalKey);
+              }
             } else {
-              /* swap out the attribute in the array for the one with the prepended natural key */
-              index = parameter.attribute.indexOf(attribute);
-              parameter.attribute.splice(index, 1);
-              parameter.attribute.splice(index, 0, attribute + "."  + naturalKey);
+              /* Even if there's a path x.y, it's possible that it's still not
+                correct because the correct path maybe is x.y.naturalKeyOfY */
+              walkPath(attribute.split("."), orm, 0);
             }
           }
         });
@@ -276,8 +315,8 @@ select xt.install_js('XT','Data','xtuple', $$
                 plv8.elog(ERROR, 'Attribute not found in object map: ' + param.attribute);
               }
 
-              identifiers.push(pertinentExtension.isChild || pertinentExtension.isExtension ? 
-                "jt" + (joins.length - 1) : 
+              identifiers.push(pertinentExtension.isChild || pertinentExtension.isExtension ?
+                "jt" + (joins.length - 1) :
                 "t1");
               identifiers.push(prop.attr.column);
               pgType = this.getPgTypeFromOrmType(
@@ -416,8 +455,8 @@ select xt.install_js('XT','Data','xtuple', $$
                   plv8.elog(ERROR, 'Attribute not found in object map: ' + param.attribute[c]);
                 }
 
-                identifiers.push(pertinentExtension.isChild || pertinentExtension.isExtension ? 
-                  "jt" + (joins.length - 1) : 
+                identifiers.push(pertinentExtension.isChild || pertinentExtension.isExtension ?
+                  "jt" + (joins.length - 1) :
                   "t1");
                 identifiers.push(prop.attr.column);
 
@@ -528,7 +567,7 @@ select xt.install_js('XT','Data','xtuple', $$
             /*
               We might need to look at toOne if the client is asking for a toOne without specifying
               the path. Unfortunately, if they do specify the path, then sql2 will fail. So this does
-              work, although we're really sorting by the primary key of the toOne, whereas the 
+              work, although we're really sorting by the primary key of the toOne, whereas the
               user probably wants us to sort by the natural key TODO
             */
             orderByColumnIdentifiers.push(prop.attr ? prop.attr.column : prop.toOne.column);
@@ -1921,6 +1960,13 @@ select xt.install_js('XT','Data','xtuple', $$
         return ret;
       }
 
+      /* Because we query views of views, you can get inconsistent results */
+      /* when doing limit and offest queries without an order by. Add a default. */
+      if (limit && offset && (!orderBy || !orderBy.length) && !clause.orderByColumns) {
+        /* We only want this on sql1, not sql2's clause.orderBy. */
+        clause.orderByColumns = XT.format('order by t1.%1$I', [pkeyColumn]);
+      }
+
       /* Query the model. */
       sql1 = XT.format(sql1, [tableNamespace.decamelize(), table.decamelize(), pkeyColumn]);
       sql1 = sql1.replace('{joins}', clause.joins)
@@ -2220,6 +2266,7 @@ select xt.install_js('XT','Data','xtuple', $$
           if (printFormat && !prop.toOne && !prop.toMany) {
             switch(prop.attr.type) {
               case "Date":
+              case "DueDate":
                 preOffsetDate = item[itemAttr];
                 offsetDate = preOffsetDate &&
                   new Date(preOffsetDate.valueOf() + 60000 * preOffsetDate.getTimezoneOffset());

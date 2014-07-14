@@ -5,9 +5,29 @@
     "remove from 440_schema.sql everything that's defined here. it's now redundant"
   ],
   "databaseScripts": [
+    "../lib/orm/source/create_xt_schema.sql",
+    "../lib/orm/source/xt/functions/add_column.sql",
+    "../lib/orm/source/xt/functions/add_constraint.sql",
+    "../lib/orm/source/xt/functions/add_index.sql",
+    "../lib/orm/source/xt/functions/add_primary_key.sql",
+    "../lib/orm/source/xt/functions/create_table.sql",
+
+    "public/indexes/apopentax.sql",
+    "public/indexes/aropentax.sql",
+    "public/indexes/asohisttax.sql",
+    "public/indexes/cmheadtax.sql",
+    "public/indexes/cmitemtax.sql",
+    "public/indexes/cobilltax.sql",
+    "public/indexes/cobmisctax.sql",
+    "public/indexes/cohisttax.sql",
     "public/indexes/evntlog.sql",
+    "public/indexes/invchead.sql",
+    "public/indexes/invcheadtax.sql",
     "public/indexes/invcitemtax.sql",
     "public/indexes/shipitem.sql",
+    "public/indexes/taxhist.sql",
+    "public/indexes/voheadtax.sql",
+    "public/indexes/voitemtax.sql",
 
     "public/types/achline.sql",
     "public/types/apaging.sql",
@@ -851,6 +871,7 @@
     "public/functions/transtype.sql",
     "public/functions/trylock.sql",
     "public/functions/undomerge.sql",
+    "public/functions/unreleasepurchaseorder.sql",
     "public/functions/uomusedforitem.sql",
     "public/functions/updateabcclass.sql",
     "public/functions/updatecharassignment.sql",
@@ -900,6 +921,7 @@
     "public/trigger_functions/cashrcptitem.sql",
     "public/trigger_functions/cashrcptmisc.sql",
     "public/trigger_functions/ccard.sql",
+    "public/trigger_functions/ccpay.sql",
     "public/trigger_functions/char.sql",
     "public/trigger_functions/charass.sql",
     "public/trigger_functions/charopt.sql",
@@ -990,7 +1012,17 @@
     "public/trigger_functions/wo.sql",
     "public/trigger_functions/womatl.sql",
 
+    "public/tables/bankrecitem.sql",
+    "public/tables/cashrcpt.sql",
+    "public/tables/ccpay.sql",
+    "public/tables/ccbank.sql",
     "public/tables/metric.sql",
+    "public/tables/payco.sql",
+    "public/tables/priv.sql",
+    "public/tables/tax.sql",
+    "public/tables/taxpay.sql",
+
+    "public/tables/location.sql",
     "public/views/address.sql",
     "public/views/apmemo.sql",
     "public/views/armemo.sql",
@@ -1249,6 +1281,7 @@
     "public/tables/metasql/prices-detail.mql",
     "public/tables/metasql/pricingFreight-detail.mql",
     "public/tables/metasql/projectTasks-detail.mql",
+    "public/tables/metasql/projects-detail_nohierarchy.mql",
     "public/tables/metasql/projects-detail.mql",
     "public/tables/metasql/prospects-detail.mql",
     "public/tables/metasql/purchase-purchaserequests.mql",
@@ -1596,6 +1629,7 @@
     "public/tables/report/WarehouseMasterList.xml",
     "public/tables/report/items.xml",
 
-    "public/patches/fixacl.sql"
+    "public/patches/fixacl.sql",
+    "public/patches/populate_ccpay_card_type.sql"
   ]
 }

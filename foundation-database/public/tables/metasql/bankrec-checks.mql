@@ -45,7 +45,7 @@ SELECT COALESCE(SUM(amount),0.0) AS cleared_amount
 <? else ?>
 SELECT gltrans_id AS id, 1 AS altid,
        COALESCE(bankrecitem_cleared, FALSE) AS cleared,
-       gltrans_date AS transdate,
+       COALESCE(bankrecitem_effdate, gltrans_date) AS transdate,
        gltrans_doctype AS doc_type,
        gltrans_docnumber AS doc_number,
        gltrans_notes AS notes,
@@ -77,11 +77,18 @@ SELECT gltrans_id AS id, 1 AS altid,
    AND (NOT COALESCE(checkhead_void, false))
    AND (gltrans_amount > 0)
    AND (gltrans_doctype != 'JP')
-   AND (bankaccnt_id=<? value("bankaccntid") ?>) )
+   AND (bankaccnt_id=<? value("bankaccntid") ?>)
+<? if exists("source") ?>
+   AND ('GL' = <? value("source") ?>)
+<? endif ?>
+<? if exists("sourceid") ?>
+   AND (gltrans_id = <? value("sourceid") ?>)
+<? endif ?>
+ )
  UNION ALL
 SELECT sltrans_id AS id, 2 AS altid,
        COALESCE(bankrecitem_cleared, FALSE) AS cleared,
-       sltrans_date AS transdate,
+       COALESCE(bankrecitem_effdate, sltrans_date) AS transdate,
        sltrans_doctype AS doc_type,
        sltrans_docnumber AS doc_number,
        sltrans_notes AS notes,
@@ -111,11 +118,18 @@ SELECT sltrans_id AS id, 2 AS altid,
    AND (NOT sltrans_rec)
    AND (NOT COALESCE(checkhead_void, false))
    AND (sltrans_amount > 0)
-   AND (bankaccnt_id=<? value("bankaccntid") ?>) )
+   AND (bankaccnt_id=<? value("bankaccntid") ?>)
+<? if exists("source") ?>
+   AND ('SL' = <? value("source") ?>)
+<? endif ?>
+<? if exists("sourceid") ?>
+   AND (sltrans_id = <? value("sourceid") ?>)
+<? endif ?>
+ )
  UNION ALL
 SELECT bankadj_id AS id, 3 AS altid,
        COALESCE(bankrecitem_cleared, FALSE) AS cleared,
-       bankadj_date AS transdate,
+       COALESCE(bankrecitem_effdate, bankadj_date) AS transdate,
        'ADJ' AS doc_type,
        bankadj_docnumber AS doc_number,
        bankadjtype_name AS notes,
@@ -135,6 +149,13 @@ SELECT bankadj_id AS id, 3 AS altid,
  WHERE ( (((bankadjtype_iscredit=true) AND (bankadj_amount > 0)) OR ((bankadjtype_iscredit=false) AND (bankadj_amount < 0)))
    AND (bankadj_bankadjtype_id=bankadjtype_id)
    AND (NOT bankadj_posted)
-   AND (bankadj_bankaccnt_id=<? value("bankaccntid") ?>) )
+   AND (bankadj_bankaccnt_id=<? value("bankaccntid") ?>)
+<? if exists("source") ?>
+   AND ('AD' = <? value("source") ?>)
+<? endif ?>
+<? if exists("sourceid") ?>
+   AND (bankadj_id = <? value("sourceid") ?>)
+<? endif ?>
+ )
 ORDER BY sortdate;
 <? endif ?>

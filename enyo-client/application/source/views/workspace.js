@@ -430,9 +430,62 @@ strict: false*/
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "DatabaseComments"}
           ]}
+        ]},
+        {kind: "XV.Groupbox",
+          title: "_commandCenter".loc(), name: "commandPanel", components: [
+          {kind: "XV.ScrollableGroupbox",
+            classes: "in-panel", components: [
+            {kind: "onyx.GroupboxHeader", content: "_installExtension".loc()},
+            {kind: "XV.InputWidget", name: "extensionName", label: "_extensionName".loc()},
+            {kind: "FittableColumns", classes: "xv-buttons center", components: [
+              {kind: "onyx.Button", name: "extensionButton", classes: "icon-ok", ontap: "installExtension"},
+            ]},
+          ]}
         ]}
       ]}
-    ]
+    ],
+    create: function () {
+      this.inherited(arguments);
+      var hasPriv = XT.session.privileges.get("InstallExtension");
+      this.$.extensionName.setDisabled(!hasPriv);
+      this.$.extensionButton.setDisabled(!hasPriv);
+    },
+    installExtension: function () {
+      var that = this,
+        callback = function (response) {
+          if (!response.answer) {
+            return;
+          }
+
+          XT.dataSource.callRoute("install-extension",
+            {
+              extensionName: that.$.extensionName.getValue()
+            },
+            {
+              success: function (message) {
+                that.doNotify({message: message});
+              },
+              error: function (error) {
+                that.doNotify({message: error.message ? error.message() : error});
+              }
+            }
+          );
+        };
+
+      if (!this.$.extensionName.getValue()) {
+        this.doNotify({
+          type: XM.Model.WARNING,
+          message: "_attributeIsRequired".loc().replace("{attr}", "_extensionName".loc())
+        });
+        return;
+      }
+
+      this.doNotify({
+        type: XM.Model.QUESTION,
+        message: "_installExtensionWarning".loc() + "_confirmAction".loc(),
+        callback: callback
+      });
+    }
   });
 
   enyo.kind({
@@ -455,7 +508,7 @@ strict: false*/
             {kind: "XV.InputWidget", attr: "CCLogin",
               label: "_login".loc()},
             {kind: "XV.InputWidget", attr: "CCPassword",
-                label: "_password".loc()},
+                label: "_transactionKey".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "CCTest",
                 label: "_testMode".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "CCRequireCCV",
@@ -620,7 +673,8 @@ strict: false*/
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "abbreviation"},
             {kind: "XV.InputWidget", attr: "name"},
-            {kind: "XV.InputWidget", attr: "symbol"}
+            {kind: "XV.InputWidget", attr: "symbol"},
+            {kind: "XV.CheckboxWidget", attr: "isBase", name: "isBase"}
           ]}
         ]}
       ]}
@@ -1217,6 +1271,13 @@ strict: false*/
       name: "print",
       isViewMethod: true,
       label: "_print".loc(),
+      privilege: "PrintInvoices",
+      prerequisite: "isReadyClean"
+    },
+    {
+      name: "email",
+      isViewMethod: true,
+      label: "_email".loc(),
       privilege: "PrintInvoices",
       prerequisite: "isReadyClean"
     }],
@@ -2266,6 +2327,20 @@ strict: false*/
       onPaymentPosted: 'handlePaymentPosted',
     },
     model: "XM.SalesOrder",
+    printOnSaveSetting: "DefaultPrintPOOnSave",
+    actions: [{
+      name: "print",
+      isViewMethod: true,
+      label: "_print".loc(),
+      privilege: "ViewSalesOrders",
+      prerequisite: "isReadyClean"
+    },
+    {name: "email",
+      isViewMethod: true,
+      label: "_email".loc(),
+      privilege: "ViewSalesOrders",
+      prerequisite: "isReadyClean"
+    }],
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
@@ -2280,6 +2355,8 @@ strict: false*/
             {kind: "XV.DateWidget", attr: "packDate"},
             {kind: "XV.InputWidget", attr: "formatStatus",
               label: "_status".loc()},
+            {kind: "XV.CheckboxWidget", attr: "printOnSaveSetting",
+              label: "_printOnSave".loc()},
             {kind: "onyx.GroupboxHeader", content: "_billTo".loc()},
             {kind: "XV.SalesCustomerWidget", attr: "customer",
                name: "customerWidget", showAddress: true,
@@ -2343,6 +2420,16 @@ strict: false*/
         {kind: "XV.SalesOrderDocumentsBox", attr: "documents"}
       ]}
     ],
+    /**
+     * When the printOnSaveSetting checkbox is changed,
+     * also change the workspace setting.
+     */
+    controlValueChanged: function (inSender, inEvent) {
+      this.inherited(arguments);
+      if (inEvent.originator.attr === 'printOnSaveSetting') {
+        this.printOnSaveSetting = inEvent.originator.value;
+      }
+    },
     /**
      * @listens onPaymentPosted
      */

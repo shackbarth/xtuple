@@ -1,10 +1,159 @@
+4.5.1 (2014/06/25)
+==================
+
+Features and bugfixes
+---------------------
+- Fixed 
+  issue #[21772](http://www.xtuple.org/xtincident/view/bugs/21772) 
+  _*Error message is displayed in JS console on selecting to open a configure screen_ 
+- Implemented 
+  issue #[22128](http://www.xtuple.org/xtincident/view/bugs/22128) 
+  _Support filters for dashboards._ 
+- Fixed 
+  issue #[22218](http://www.xtuple.org/xtincident/view/bugs/22218) 
+  _Add support to print and email Sales Order acknowledgements_ 
+- Fixed 
+  issue #[22926](http://www.xtuple.org/xtincident/view/bugs/22926) 
+  _*'Backflush' option is available in the Post production screen for work orders with materials issued_ 
+- Implemented 
+  issue #[22996](http://www.xtuple.org/xtincident/view/bugs/22996) 
+  _signature capture_ 
+- Fixed 
+  issue #[23288](http://www.xtuple.org/xtincident/view/bugs/23288) 
+  _Can not open item work bench from Sales Order_ 
+- Implemented 
+  issue #[23796](http://www.xtuple.org/xtincident/view/bugs/23796) 
+  _Export grid list to csv_ 
+- Implemented 
+  issue #[23852](http://www.xtuple.org/xtincident/view/bugs/23852) 
+  _inventory component of invoice_ 
+- Implemented 
+  issue #[23853](http://www.xtuple.org/xtincident/view/bugs/23853) 
+  _refactor xv.input and xv.inputwidget_ 
+- Fixed 
+  issue #[23860](http://www.xtuple.org/xtincident/view/bugs/23860) 
+  _Handle "no data" case from dashboard filter_ 
+- Fixed 
+  issue #[23867](http://www.xtuple.org/xtincident/view/bugs/23867) 
+  _Add support to XT.Data for x.y.naturalKeyOfY queries_ 
+- Fixed 
+  issue #[23868](http://www.xtuple.org/xtincident/view/bugs/23868) 
+  _*Unable to edit sale order line item after opening item site from line item screen_ 
+- Fixed 
+  issue #[23876](http://www.xtuple.org/xtincident/view/bugs/23876) 
+  _update xwd and xtmfg pkghead_ 
+- Implemented 
+  issue #[23894](http://www.xtuple.org/xtincident/view/bugs/23894) 
+  _Support install of third-party extensions using npm_ 
+- Implemented 
+  issue #[23965](http://www.xtuple.org/xtincident/view/bugs/23965) 
+  _dashboards-lite_ 
+
+4.5.0 (Beta 2014/05/22, Final 2014/06/06)
+==================
+
+Critical deployment changes
+---------------------------
+- If you installed 4.5.0 beta on your database, and want to upgrade it from the beta
+  to 4.5.0 final, you'll need to update the column type of the `taxpay.taxpay_id`
+  column from `integer` to `serial`.
+
+  If you're going straight to 4.5 final, you don't have to worry about this.
+
+  In general, of course, it's best not to put your production database through a beta.
+  You can pilot on a beta, but then to get to the final, you should pilot straight
+  from your production version to the final.
+
+
+Features and bugfixes
+---------------------
+- Implemented 
+  issue #[23243](http://www.xtuple.org/xtincident/view/bugs/23243) 
+  _unified build: bring in xwd_ 
+- Fixed 
+  issue #[23279](http://www.xtuple.org/xtincident/view/bugs/23279) 
+  _Can't open order on issue to shipping screen_ 
+- Fixed 
+  issue #[23411](http://www.xtuple.org/xtincident/view/bugs/23411) 
+  _Need a way to set Base Currency_ 
+- Fixed 
+  issue #[23559](http://www.xtuple.org/xtincident/view/bugs/23559) 
+  _Syntax error on Sales Orders_ 
+- Fixed 
+  issue #[23588](http://www.xtuple.org/xtincident/view/bugs/23588) 
+  _Item on Sales Order copies irrelevantly_ 
+- Fixed 
+  issue #[23602](http://www.xtuple.org/xtincident/view/bugs/23602) 
+  _Rescheduling Sales Order does not reschedule all lines_ 
+- Fixed 
+  issue #[23607](http://www.xtuple.org/xtincident/view/bugs/23607) 
+  _Description cut off on item site widget_ 
+- Fixed 
+  issue #[23649](http://www.xtuple.org/xtincident/view/bugs/23649) 
+  _Filters on Work Orders do not work_ 
+- Fixed 
+  issue #[23760](http://www.xtuple.org/xtincident/view/bugs/23760) 
+  _error in itemsite list_ 
+
 4.4.1 (2014/05/09)
 ==================
 
 Features and bugfixes
 ---------------------
-TODO: document
-
+- Fixed 
+  issue #[21728](http://www.xtuple.org/xtincident/view/bugs/21728) 
+  _Worksheet (Timesheet) sets rate to 0 on Expense line when Billable unchecked_ 
+- Fixed 
+  issue #[21973](http://www.xtuple.org/xtincident/view/bugs/21973) 
+  _Web client does not work on IE 11_ 
+- Fixed 
+  issue #[23111](http://www.xtuple.org/xtincident/view/bugs/23111) 
+  _Time Expense settings on tasks missing_ 
+- Implemented 
+  issue #[23165](http://www.xtuple.org/xtincident/view/bugs/23165) 
+  _Apply XT.Data buildClause refactor to three implementations_ 
+- Fixed 
+  issue #[23234](http://www.xtuple.org/xtincident/view/bugs/23234) 
+  _Can not enter work sheets without view items privilege_ 
+- Implemented 
+  issue #[23241](http://www.xtuple.org/xtincident/view/bugs/23241) 
+  _Unified build: get data to match in commercial databases_ 
+- Implemented 
+  issue #[23242](http://www.xtuple.org/xtincident/view/bugs/23242) 
+  _unified build: build reports, uiforms, metasql, etc._ 
+- Fixed 
+  issue #[23250](http://www.xtuple.org/xtincident/view/bugs/23250) 
+  _Can not enter a worksheet without unit privileges_ 
+- Fixed 
+  issue #[23323](http://www.xtuple.org/xtincident/view/bugs/23323) 
+  _Errors on search_ 
+- Implemented 
+  issue #[23340](http://www.xtuple.org/xtincident/view/bugs/23340) 
+  _Unified build: move in reports_ 
+- Implemented 
+  issue #[23357](http://www.xtuple.org/xtincident/view/bugs/23357) 
+  _unified build: standard and mfg dbscripts need not be frozen_ 
+- Implemented 
+  issue #[23359](http://www.xtuple.org/xtincident/view/bugs/23359) 
+  _production windows vagrant dry run_ 
+- Fixed 
+  issue #[23370](http://www.xtuple.org/xtincident/view/bugs/23370) 
+  _Can not open documents after "Apply" clicked_ 
+- Fixed 
+  issue #[23402](http://www.xtuple.org/xtincident/view/bugs/23402) 
+  _Cannot create some New things in Empty Database_ 
+- Fixed 
+  issue #[23406](http://www.xtuple.org/xtincident/view/bugs/23406) 
+  _various work order bugs_ 
+- Fixed 
+  issue #[23414](http://www.xtuple.org/xtincident/view/bugs/23414) 
+  _Installing Inventory throws error_ 
+- Fixed 
+  issue #[23560](http://www.xtuple.org/xtincident/view/bugs/23560) 
+  _Sales Order Line items do not default to header site_ 
+- Fixed 
+  issue #[23597](http://www.xtuple.org/xtincident/view/bugs/23597) 
+  _Lazy load does not work on Inventory Availability_ 
 
 
 4.4.0 (2014/04/04)

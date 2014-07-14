@@ -34,10 +34,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     email = require('./email'),
     exxport = require('./export'),
     data = require('./data'),
-    olapData = require('./olapdata'),
     file = require('./file'),
     generateReport = require('./generate_report'),
     generateOauthKey = require('./generate_oauth_key'),
+    installExtension = require('./install_extension'),
     locale = require('./locale'),
     passport = require('passport'),
     redirector = require('./redirector'),
@@ -72,11 +72,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.post = [ensureLogin, data.post];
 
   //
-  //  OLAP query route
-  //
-  exports.queryOlapCatalog = [ensureLogin, olapData.queryOlapCatalog];
-
-  //
   // REST API Routes
   exports.restDiscoveryList = [
     restDiscovery.list
@@ -100,6 +95,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.file = [ensureLogin, file.file];
   exports.generateOauthKey = [ensureLogin, generateOauthKey.generateKey];
   exports.generateReport = [ensureLogin, generateReport.generateReport];
+  exports.installExtension = [ensureLogin, installExtension.installExtension];
   exports.locale = [ensureLogin, locale.locale];
   exports.redirect = redirector.redirect;
   exports.analysis = [ensureLogin, analysis.analysis];

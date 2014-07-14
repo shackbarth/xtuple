@@ -82,7 +82,7 @@ var  async = require('async'),
           extensionCallback(null, "");
           return;
         }
-        //winston.info("Installing extension", databaseName, extension);
+        //console.log("Installing extension", databaseName, extension);
         // deal with directory structure quirks
         var baseName = path.basename(extension),
           isFoundation = extension.indexOf("foundation-database") >= 0,
@@ -96,11 +96,11 @@ var  async = require('async'),
             extension.indexOf("extension") >= 0,
           isPublicExtension = extension.indexOf("xtuple-extensions") >= 0,
           isPrivateExtension = extension.indexOf("private-extensions") >= 0,
+          isNpmExtension = baseName.indexOf("xtuple-") >= 0,
           dbSourceRoot = (isFoundation || isFoundationExtension) ? extension :
             isLibOrm ? path.join(extension, "source") :
             path.join(extension, "database/source"),
           manifestOptions = {
-            useSafeFoundationToolkit: isFoundation && !isFoundationExtension && extensions.length === 1,
             useFrozenScripts: spec.frozen,
             useFoundationScripts: baseName.indexOf('inventory') >= 0 ||
               baseName.indexOf('manufacturing') >= 0 ||
@@ -110,7 +110,8 @@ var  async = require('async'),
             wipeViews: isApplicationCore && spec.wipeViews,
             extensionLocation: isCoreExtension ? "/core-extensions" :
               isPublicExtension ? "/xtuple-extensions" :
-              isPrivateExtension ? "/private-extensions" : "not-applicable"
+              isPrivateExtension ? "/private-extensions" :
+              isNpmExtension ? "npm" : "not-applicable"
           };
 
         buildDatabaseUtil.explodeManifest(path.join(dbSourceRoot, "manifest.js"),
@@ -222,7 +223,20 @@ var  async = require('async'),
         winston.info("Applying build to database " + spec.database);
         credsClone.database = spec.database;
         buildDatabaseUtil.sendToDatabase(allSql, credsClone, spec, function (err, res) {
-          databaseCallback(err, res);
+          if (spec.populateData) {
+            var populateSql = "DO $$ XT.disableLocks = true; $$ language plv8;";
+            var encryptionKey = fs.readFileSync(path.join(__dirname, "../../node-datasource", creds.encryptionKeyFile), "utf8");
+            var patches = require(path.join(__dirname, "../../enyo-client/database/source/populate_data")).patches;
+            _.each(patches, function (patch) {
+              patch.encryptionKey = encryptionKey;
+              patch.username = creds.username;
+              populateSql += "select xt.patch(\'" + JSON.stringify(patch) + "\');";
+            });
+            populateSql += "DO $$ XT.disableLocks = undefined; $$ language plv8;";
+            dataSource.query(populateSql, credsClone, databaseCallback);
+          } else {
+            databaseCallback(err, res);
+          }
         });
       });
     };

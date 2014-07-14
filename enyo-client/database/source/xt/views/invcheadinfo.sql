@@ -13,11 +13,9 @@ select invchead.*,
     - COALESCE(xt.invc_authorized_credit(invchead_invcnumber), 0)
     - COALESCE(xt.cust_outstanding_credit(invchead_cust_id, invchead_curr_id, invchead_invcdate), 0))
   ) as balance,
-  cust_number,
   determineDueDate(invchead_terms_id, invchead_invcdate) AS due_date,
   determineDiscountDate(invchead_terms_id, invchead_invcdate) AS dis_date
-  from invchead
-  left join cust on cust_id = invchead_cust_id;
+  from invchead;
 
 $$, false);
 
@@ -133,7 +131,18 @@ insert into invchead (
   new.invchead_void,
   new.invchead_saletype_id,
   new.invchead_shipzone_id
-);
+)
+
+returning invchead.*,
+  null::numeric,
+  null::numeric,
+  null::numeric,
+  null::numeric,
+  null::numeric,
+  null::numeric,
+  null::numeric,
+  null::date,
+  null::date;
 
 create or replace rule "_UPDATE" as on update to xt.invcheadinfo do instead
 
