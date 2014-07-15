@@ -25,64 +25,70 @@
       zombieAuth.loadApp(appLoaded);
     });
 
-    describe('Test Grid Boxes', function () {
-      it('Test Grid Box Functionality', function () {
+    it('Test Grid Box Functionality', function () {
+      _.each(XV, function (value, key) {
+        var list,
+          kinds = ['SalesOrderList', 'QuoteList', 'InvoiceList', 'ReturnList', 'ProjectList'];
+        // lists with grid boxes; TODO: find candidates automatically
+        if (_.contains(kinds, key)) {
+          describe('Create Workspace for XV.' + key, function () {
+            it('Create a Workspace', function () {
+              list = "XV." + key;
+              smoke.navigateToNewWorkspace(XT.app, list, function (workspaceContainer) {
+                var workspace = workspaceContainer.$.workspace,
+                    getExportButton = function (obj) {
+                      var result = null;
+                      if (_.isObject(obj.$)) {
+                        result = obj.$.exportButton ||
+                                 _.find(obj.$, getExportButton);
+                      }
+                      return result;
+                    };
 
-        _.each(XV, function (value, key) {
-          var list,
-            kinds = ['SalesOrderList', 'QuoteList', 'InvoiceList', 'ReturnList', 'ProjectList'];
-          // lists with grid boxes; TODO: find candidates automatically
-          if (_.contains(kinds, key)) {
+                _.each(workspace.$, function (component) {
+                  if (XV.inheritsFrom(component, 'XV.GridBox')) {
+                    describe('Checking ' + component.name, function () {
+                      it('checks for the export button', function () {
+                        var exportButton = getExportButton(component);
+                        assert.ok(exportButton);
+                      });
 
-            describe('Create Workspace for XV.' + key, function () {
-              it('Create a Workspace', function () {
-                list = "XV." + key;
-                smoke.navigateToNewWorkspace(XT.app, list, function (workspaceContainer) {
-                  var workspace = workspaceContainer.$.workspace;
-                  _.each(workspace.$, function (component) {
-                    if (XV.inheritsFrom(component, 'XV.GridBox')) {
-
-                      describe('Test creating line items for ' + component, function () {
-                        it('Create line items', function () {
-                          var gridBox = component, gridRow,
+                      it('creates line items for ' + component, function () {
+                        var gridBox = component,
+                            exportButton = getExportButton(gridBox),
+                            gridRow,
                             startingRows = gridBox.liveModels().length;
 
-                          gridBox.newItem();
-                          gridRow = gridBox.$.editableGridRow;
-                          // verify that there is an increase in rows
-                          assert.equal(gridBox.liveModels().length, startingRows += 1);
+                        assert.equal(startingRows, 0, 'expect no data for new gridbox');
+                        assert.isTrue(exportButton.disabled,
+                                      'expect export disabled if no data');
+                        gridBox.newItem();
+                        gridRow = gridBox.$.editableGridRow;
+                        assert.equal(gridBox.liveModels().length, startingRows += 1);
+                        assert.isTrue(exportButton.disabled,
+                                       'export disabled for changed data');
 
-                          // Add a new row using the enter key
-                          gridRow.bubble("onkeyup", {keyCode: 13});
-                          // verify again that a row has been added
-                          assert.equal(gridBox.liveModels().length, startingRows += 1);
-                        });
-
-                        it('Check export', function () {
-                          var getExportButton = function (obj) {
-                            var result = null;
-                            if (_.isObject(obj.$)) {
-                              result = obj.$.exportButton ||
-                                       _.find(obj.$, getExportButton);
-                            }
-                            return result;
-                          };
-
-                          var gridBox = component,
-                              exportButton = getExportButton(gridBox);
-                          assert.ok(exportButton);
-                          // TODO: need to populate before we can export
-                          // assert.doesNotThrow(exportButton.doTap());
-                          // TODO: find the generated file & check contents
-                        });
+                        // Add a new row using the enter key
+                        gridRow.bubble("onkeyup", {keyCode: 13});
+                        assert.equal(gridBox.liveModels().length, startingRows += 1);
                       });
-                    }
-                  });
+
+                      // TODO: populate, apply, & actually export
+                      // generate some data
+                      // assert.isTrue(exportButton.disabled,
+                      //               'expect export disabled if no data');
+                      // save the data
+                      // assert.isFalse(exportButton.disabled,
+                      //               'expect export disabled if no data');
+                      // assert.doesNotThrow(exportButton.doTap());
+                      // find the generated file & check contents
+                    });
+                  }
                 });
               });
             });
-          }
-        });
+          });
+        }
       });
     });
   });
