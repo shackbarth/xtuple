@@ -1,3 +1,22 @@
+4.5.2 (2014/07/15)
+==================
+
+Features and bugfixes
+---------------------
+- Fixed
+  issue #[23636](http://www.xtuple.org/xtincident/view/bugs/23636) 
+  _Error when running Inventory Availability_ 
+- Fixed 
+  issue #[23714](http://www.xtuple.org/xtincident/view/bugs/23714) 
+  _*Quantity 'At Shipping' gets doubled on selecting 'Issue All' or 'Issue Line' multiple times_ 
+- Fixed 
+  issue #[23979](http://www.xtuple.org/xtincident/view/bugs/23979) 
+  _*Unable to build Mobile Web client on empty databases_ 
+- Fixed 
+  issue #[24098](http://www.xtuple.org/xtincident/view/bugs/24098) 
+  _Icons only displaying when debugging = true_ 
+
+
 4.5.1 (2014/06/25)
 ==================
 
