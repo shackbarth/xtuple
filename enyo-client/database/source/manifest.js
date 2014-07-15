@@ -59,6 +59,7 @@
     "xt/functions/add_priv.sql",
     "public/tables/priv.sql",
     "xt/functions/add_role.sql",
+    "add_admin_role.sql",
     "xt/functions/add_report_definition.sql",
     "xt/functions/average_cost.sql",
     "xt/functions/change_password.sql",
