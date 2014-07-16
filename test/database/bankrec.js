@@ -46,7 +46,9 @@ var _    = require("underscore"),
       badTaxIds,
       cashrcpt,
       cm,
+      cobmisc = {},
       cohead, coitem,
+      invchead = {},
       pohead, poitem,
       recvid,
       voucher, voitem,
@@ -567,14 +569,14 @@ var _    = require("underscore"),
     it('creates a sales order item', function (done) {
       var sql = mqlToSql("INSERT INTO coitem (coitem_cohead_id,"               +
                "    coitem_linenumber, coitem_scheddate, coitem_taxtype_id,"   +
-               "    coitem_status,     coitem_promdate,"                       +
+               "    coitem_status,     coitem_promdate, coitem_qtyreturned,"   +
                "    coitem_qtyord, coitem_qtyshipped, coitem_itemsite_id,"     +
                "    coitem_unitcost, coitem_price, coitem_custprice,"          +
                "    coitem_qty_uom_id, coitem_price_uom_id,"                   +
                "    coitem_qty_invuomratio, coitem_price_invuomratio"          +
                ") SELECT cohead_id,"                                           +
                "    1,   CURRENT_DATE + itemsite_leadtime, cohead_taxtype_id," +
-               "    'O', CURRENT_DATE + itemsite_leadtime,"                    +
+               "    'O', CURRENT_DATE + itemsite_leadtime, 0,"                 +
                "    123, 0, itemsite_id,"                                      +
                "    itemcost(itemsite_id), item_listprice, item_listprice,"    +
                "    item_price_uom_id, item_price_uom_id,"                     +
@@ -587,6 +589,7 @@ var _    = require("underscore"),
                " WHERE cohead_id=<? value('coheadid') ?>"                      +
                "   AND itemsite_active"                                        +
                "   AND item_price_uom_id=item_inv_uom_id"                      +
+/* simplify!*/ "  AND item_type != 'K'"                                        +
                " LIMIT 1 RETURNING *;",
                  { coheadid: cohead.cohead_id, testTag: testTag });
       datasource.query(sql, creds, function (err, res) {
@@ -618,6 +621,74 @@ var _    = require("underscore"),
         cohead.amount = cohead.amount + cohead.tax;
         assert(cohead.amount > 0, 'expect the sales order to have value');
         assert(cohead.tax    > 0, 'expect the sales order to have tax');
+        done();
+      });
+    });
+
+    it('issue the sales order to shipping', function (done) {
+      var sql = mqlToSql("SELECT issueToShipping(coitem_id, coitem_qtyord)" +
+                         "       AS result"                                 +
+                         "  FROM coitem WHERE coitem_id=<? value('id') ?>;",
+                         { id: coitem.coitem_id });
+      datasource.query(sql, creds, function (err, res) {
+        assert.equal(res.rowCount, 1);
+        assert(res.rows[0].result > 0, 'expected issueToShipping to succeed');
+        done();
+      });
+    });
+
+    it('ships the sales order', function (done) {
+      var sql = mqlToSql("SELECT shipShipment(shiphead_id) AS result"          +
+                         "  FROM shiphead"                                     +
+                         "  JOIN shipitem ON shiphead_order_type = 'SO'"       +
+                         "               AND shiphead_id=shipitem_shiphead_id" +
+                         " WHERE shipitem_orderitem_id=<? value('coitem') ?>;",
+                         { coitem: coitem.coitem_id });
+      datasource.query(sql, creds, function (err, res) {
+        assert.equal(res.rowCount, 1);
+        // TODO: why does shipShipment return NULL on success?
+        assert(res.rows[0].result === null || res.rows[0].result > 0,
+               'expected shipShipment to succeed');
+        done();
+      });
+    });
+
+    // this creates cobmisc and cobill records for all uninvoiced coitems
+    it('selects the shipment for billing', function (done) {
+      var sql = mqlToSql("SELECT selectUninvoicedShipment(shiphead_id)"        +
+                         "       AS result"                                    +
+                         "  FROM shiphead"                                     +
+                         "  JOIN shipitem ON shiphead_order_type = 'SO'"       +
+                         "               AND shiphead_id=shipitem_shiphead_id" +
+                         " WHERE shipitem_orderitem_id=<? value('coitem') ?>;",
+                         { coitem: coitem.coitem_id });
+      datasource.query(sql, creds, function (err, res) {
+        assert.equal(res.rowCount, 1);
+        cobmisc.cobmisc_id = res.rows[0].result;
+        assert(cobmisc.cobmisc_id > 0,
+               'expected selectUninvoicedShipment to succeed');
+        done();
+      });
+    });
+
+    it('creates an invoice', function (done) {
+      var sql = mqlToSql("SELECT createInvoice(<? value('cobmisc') ?>) AS id;",
+                         { cobmisc: cobmisc.cobmisc_id });
+      datasource.query(sql, creds, function (err, res) {
+        assert.equal(res.rowCount, 1);
+        invchead.invchead_id = res.rows[0].id;
+        assert(invchead.invchead_id > 0, 'expected createInvoice to succeed');
+        done();
+      });
+    });
+
+    it('posts the invoice', function (done) {
+      var sql = mqlToSql("SELECT postInvoice(<? value('id') ?>) AS result;",
+                         { id: invchead.invchead_id });
+      datasource.query(sql, creds, function (err, res) {
+        assert.equal(res.rowCount, 1);
+        var result = res.rows[0].result;
+        assert(result === null || result > 0, 'expected postInvoice to succeed');
         done();
       });
     });
@@ -949,6 +1020,7 @@ var _    = require("underscore"),
       var sql = mqlToSql(taxpayCheckSql,
                          { taxhist: 'aropentax', taxparent: aropen.aropen_id });
       datasource.query(sql, creds, function (err, res) {
+        console.log('aropentax records: ' + res.rowCount);
 //TODO  assert.equal(res.rowCount, 1, 'expect 1 aropen taxpay');
 //TODO  assert.closeTo(res.rows[0].taxpay_tax, 0, closeEnough);
         done();
@@ -1146,6 +1218,7 @@ var _    = require("underscore"),
       var sql = mqlToSql(taxpayCheckSql,
                          { taxhist: 'aropentax', taxparent: aropen.aropen_id });
       datasource.query(sql, creds, function (err, res) {
+        console.log('aropentax records: ' + res.rowCount);
 //TODO  assert.equal(res.rowCount, 1, 'expect 1 aropen taxpay');
 //TODO  assert.closeTo(res.rows[0].taxpay_tax, 0, closeEnough);
         done();
