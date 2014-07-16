@@ -59,9 +59,15 @@
                             gridRow,
                             startingRows = gridBox.liveModels().length;
 
-                        assert.equal(startingRows, 0, 'expect no data for new gridbox');
-                        assert.isTrue(exportButton.disabled,
-                                      'expect export disabled if no data');
+                        // fyi: some workspaces prepopulate with dirty data
+                        if (startingRows == 0) {
+                          assert.isTrue(exportButton.disabled,
+                                       'expect export disabled if no data');
+                        } else if (_.every(gridBox.liveModels(), function (m) {
+                                     return m.isReadyClean(); })) {
+                          assert.isFalse(exportButton.disabled,
+                                       'expect export enabled for clean data');
+                        }
                         gridBox.newItem();
                         gridRow = gridBox.$.editableGridRow;
                         assert.equal(gridBox.liveModels().length, startingRows += 1);
