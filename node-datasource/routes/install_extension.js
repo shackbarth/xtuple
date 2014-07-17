@@ -32,11 +32,40 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             var privCheck = _.find(model.get("grantedPrivileges"), function (model) {
               return model.privilege === "InstallExtension";
             });
-            if (!privCheck) {
-              callback({message: "_insufficientPrivileges"});
+            if (privCheck) {
+              callback(); // the user has this privilege!
               return;
             }
-            callback(); // success!
+            // this gets a little dicey: check all the user's roles for the priv, which
+            // requires async.map
+            var roles = _.map(model.get("grantedUserAccountRoles"), function (grantedRole) {
+              return grantedRole.userAccountRole;
+            });
+            var checkRole = function (roleName, next) {
+              var role = new SYS.UserAccountRole();
+              role.fetch({
+                id: roleName,
+                username: X.options.databaseServer.user,
+                database: database,
+                success: function (roleModel, results) {
+                  var rolePriv = _.find(roleModel.get("grantedPrivileges"), function (grantedPriv) {
+                    return grantedPriv.privilege === "InstallExtension";
+                  });
+                  next(null, rolePriv);
+                }
+              });
+            };
+            async.map(roles, checkRole, function (err, results) {
+              // if any of the roles give the priv, then the user has the priv
+              var result = _.reduce(results, function (memo, priv) {
+                return priv || memo;
+              }, false);
+              if (err || !result) {
+                callback({message: "_insufficientPrivileges"});
+                return;
+              }
+              callback(); // success!
+            });
           },
           error: function () {
             callback({message: "_restoreError"});
@@ -75,7 +104,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         return;
       }
       console.log("all done");
-      res.send({data: "_success"});
+      res.send({data: "_success!"});
     });
   };
 }());

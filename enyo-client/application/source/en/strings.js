@@ -661,6 +661,7 @@
     "_subtotal": "Subtotal",
     "_suffix": "Suffix",
     "_summary": "Summary",
+    "_success!": "Success!",
     "_successors": "Successors",
     "_symbol": "Symbol",
     "_system": "System",
