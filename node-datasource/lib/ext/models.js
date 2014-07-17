@@ -110,6 +110,13 @@ white:true*/
 
     recordType: 'SYS.User',
 
+    /**
+      Checks for a user privilege. Also checks all the roles that the user is a part of.
+      Necessarily async because not all the relevant data is nested.
+      Not portable to the client because of the backbone-relational-lessness
+      of the models.
+      `callback(err, result)` where result is truthy iff the user has the privilege
+    */
     checkPrivilege: function (privName, database, callback) {
       var privCheck = _.find(this.get("grantedPrivileges"), function (model) {
         return model.privilege === privName;
