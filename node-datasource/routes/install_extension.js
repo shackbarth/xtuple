@@ -61,8 +61,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       buildExtension
     ], function (err, results) {
       if (err) {
-        console.log(err);
         err.isError = true;
+        err.errorMessage = err.message;
         res.send(err);
         return;
       }
