@@ -3,7 +3,14 @@
   newcap:true, noarg:true, undef:true */
 /*global XT:true, describe:true, it:true, require:true, __dirname:true, before:true, console:true */
 
-/* note: much of this test consists of set up for testing tax handling */
+/* note: much of this test consists of SETUP for testing tax handling.
+ * bank reconciliation when cash-based taxation is enabled
+ * is supposed to create taxpay and corresponding gltrans records.
+ * to test this, we need to turn on cashed-based taxation,
+ * generate both a/r and a/p transactions, reconcile the bank
+ * statement, and check the tax history.
+ * reopening the bankrec is supposed to reverse these transactions.
+ */
 
 // TODO: add use of sltrans as well as gltrans
 var _    = require("underscore"),
@@ -104,10 +111,16 @@ var _    = require("underscore"),
       postBankRecSql = "SELECT postBankReconciliation(<? value('id') ?>)"  +
                        "    AS result;",
       gltransCheckSql = "SELECT COUNT(*) AS cnt FROM gltrans;", // TODO: make smarter
-      taxpayCheckSql  = "SELECT * FROM taxpay"                          +
-                        "  JOIN <? literal('taxhist') ?>"               +
-                        "       ON (taxpay_taxhist_id=taxhist_id)"      +
+      taxinfoCheckSql = "SELECT * FROM <? literal('taxhist') ?>"   +
+                        "  LEFT OUTER JOIN taxpay"                 +
+                        "       ON (taxpay_taxhist_id=taxhist_id)" +
                         " WHERE taxhist_parent_id=<? value('taxparent') ?>;",
+      cohisttaxinfoSql = "SELECT * FROM cohisttax"                             +
+                         "  JOIN cohist ON taxhist_parent_id=cohist_id"        +
+                         "  LEFT OUTER JOIN taxpay"                            +
+                         "       ON taxhist_id=taxpay_taxhist_id"              +
+                         " WHERE cohist_itemsite_id=<? value('itemsite') ?>"   +
+                         "   AND cohist_ordernumber=<? value('cohead') ?>;",
       lastGltransCount = 0
     ;
 
@@ -524,28 +537,38 @@ var _    = require("underscore"),
 
     it('creates a sales order', function (done) {
       var sql = mqlToSql("INSERT INTO cohead (cohead_number, cohead_cust_id,"  +
-                 "    cohead_orderdate, cohead_shiptoname,"                    +
+                 "    cohead_orderdate, cohead_packdate,"                      +
+                 "    cohead_shipto_id, cohead_shiptoname,"                    +
                  "    cohead_shiptoaddress1, cohead_shiptoaddress2,"           +
                  "    cohead_shiptoaddress3, cohead_shiptocity,"               +
                  "    cohead_shiptostate, cohead_shiptozipcode,"               +
                  "    cohead_shiptocountry, cohead_ordercomments,"             +
-                 "    cohead_salesrep_id, cohead_terms_id, cohead_freight,"    +
+                 "    cohead_salesrep_id, cohead_terms_id, cohead_holdtype,"   +
+                 "    cohead_freight, cohead_calcfreight,"                     +
                  "    cohead_shipto_cntct_id, cohead_shipto_cntct_first_name," +
                  "    cohead_shipto_cntct_last_name,"                          +
                  "    cohead_curr_id, cohead_taxzone_id, cohead_taxtype_id,"   +
                  "    cohead_saletype_id,"                                     +
-                 "    cohead_shipzone_id"                                      +
+                 "    cohead_shipvia,"                                         +
+                 "    cohead_shipchrg_id,"                                     +
+                 "    cohead_shipzone_id, cohead_shipcomplete"                 +
                  ") SELECT fetchSoNumber(), cust_id,"                          +
-                 "    CURRENT_DATE, shipto_name,"                              +
+                 "    CURRENT_DATE, CURRENT_DATE,"                             +
+                 "    shipto_id, shipto_name,"                                 +
                  "    addr_line1, addr_line2,"                                 +
                  "    addr_line3, addr_city,"                                  +
                  "    addr_state, addr_postalcode,"                            +
                  "    addr_country, <? value('testTag') ?>,"                   +
-                 "    cust_salesrep_id, cust_terms_id, 0,"                     +
+                 "    cust_salesrep_id, cust_terms_id, 'N',"                   +
+                 "    0, TRUE,"                                                +
                  "    cntct_id, cntct_first_name, cntct_last_name,"            +
                  "    cust_curr_id, shipto_taxzone_id, taxass_taxtype_id,"     +
-                 "    (SELECT MIN(saletype_id) FROM saletype),"                +
-                 "    shipto_shipzone_id"                                      +
+                 "    (SELECT saletype_id FROM saletype"                       +
+                 "      WHERE saletype_code='REP'),"                           +
+                 "    (SELECT MIN(shipvia_code) FROM shipvia),"                +
+                 "    (SELECT shipchrg_id FROM shipchrg"                       +
+                 "      WHERE shipchrg_name='ADDCHARGE'),"                     +
+                 "    shipto_shipzone_id, FALSE"                               +
                  "  FROM custinfo"                                             +
                  "  JOIN shiptoinfo ON cust_id=shipto_cust_id"                 +
                  "                 AND shipto_active"                          +
@@ -568,16 +591,16 @@ var _    = require("underscore"),
 
     it('creates a sales order item', function (done) {
       var sql = mqlToSql("INSERT INTO coitem (coitem_cohead_id,"               +
-               "    coitem_linenumber, coitem_scheddate, coitem_taxtype_id,"   +
-               "    coitem_status,     coitem_promdate, coitem_qtyreturned,"   +
-               "    coitem_qtyord, coitem_qtyshipped, coitem_itemsite_id,"     +
+               "    coitem_linenumber, coitem_scheddate, coitem_itemsite_id,"  +
+               "    coitem_taxtype_id, coitem_status,"                         +
+               "    coitem_qtyord, coitem_qtyshipped,  coitem_qtyreturned,"    +
                "    coitem_unitcost, coitem_price, coitem_custprice,"          +
                "    coitem_qty_uom_id, coitem_price_uom_id,"                   +
                "    coitem_qty_invuomratio, coitem_price_invuomratio"          +
                ") SELECT cohead_id,"                                           +
-               "    1,   CURRENT_DATE + itemsite_leadtime, cohead_taxtype_id," +
-               "    'O', CURRENT_DATE + itemsite_leadtime, 0,"                 +
-               "    123, 0, itemsite_id,"                                      +
+               "    1, CURRENT_DATE + itemsite_leadtime, itemsite_id,"         +
+               "    getItemTaxType(item_id, cohead_taxzone_id), 'O',"          +
+               "    123, 0, 0,"                                                +
                "    itemcost(itemsite_id), item_listprice, item_listprice,"    +
                "    item_price_uom_id, item_price_uom_id,"                     +
                "    1, 1"                                                      +
@@ -600,6 +623,23 @@ var _    = require("underscore"),
       });
     });
 
+    it('updates the sales order with item info', function (done) {
+      var sql = mqlToSql("UPDATE cohead SET cohead_freight=("                  +
+                         "    SELECT SUM(freightdata_total)"                   +
+                         "      FROM freightDetail('SO', cohead_id,"           +
+                         "              cohead_cust_id, cohead_shipto_id,"     +
+                         "              CURRENT_DATE, cohead_shipvia,"         +
+                         "              cohead_curr_id))"                      +
+                         " WHERE cohead_id=<? value('cohead_id') ?>"           +
+                         " RETURNING cohead_freight;",
+                         { cohead_id: cohead.cohead_id });
+      datasource.query(sql, creds, function (err, res) {
+        assert.equal(res.rowCount, 1);
+        cohead.cohead_freight = res.rows[0].cohead_freight;
+        done();
+      });
+    });
+
     it('calculates sales order amounts', function (done) {
       var sql = mqlToSql("SELECT SUM(coitem_qtyord*coitem_price) AS amt,"      +
                          "   (SELECT SUM(tax) FROM"                            +
@@ -616,11 +656,11 @@ var _    = require("underscore"),
                          { cohead_id: cohead.cohead_id });
       datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
-        cohead.amount  = res.rows[0].amt;
-        cohead.tax     = res.rows[0].tax;
-        cohead.amount = cohead.amount + cohead.tax;
-        assert(cohead.amount > 0, 'expect the sales order to have value');
-        assert(cohead.tax    > 0, 'expect the sales order to have tax');
+        cohead.subtotal = res.rows[0].amt;
+        cohead.tax      = res.rows[0].tax;
+        cohead.amount   = cohead.subtotal + cohead.cohead_freight + cohead.tax;
+        assert(cohead.subtotal > 0, 'expect the sales order to have value');
+        assert(cohead.tax      > 0, 'expect the sales order to have tax');
         done();
       });
     });
@@ -693,6 +733,10 @@ var _    = require("underscore"),
       });
     });
 
+    // TODO? UPDATE shipdatasum SET shipdatasum_shipped=true
+    //        WHERE shipdatasum_cosmisc_tracknum = ''
+    //          AND shipdatasum_shiphead_number='60103';
+
     it('creates a cash receipt to reconcile', function (done) {
       var sql = mqlToSql("INSERT INTO cashrcpt ("                              +
                          "  cashrcpt_cust_id, cashrcpt_amount,"                +
@@ -700,18 +744,22 @@ var _    = require("underscore"),
                          "  cashrcpt_bankaccnt_id, cashrcpt_notes,"            +
                          "  cashrcpt_curr_id, cashrcpt_number,"                +
                          "  cashrcpt_docdate, cashrcpt_applydate,"             +
-                         "  cashrcpt_curr_rate"                                +
+                         "  cashrcpt_distdate, cashrcpt_usecustdeposit,"       +
+                         "  cashrcpt_curr_rate,"                               +
+                         "  cashrcpt_salescat_id, cashrcpt_discount"           +
                          ") SELECT cohead_cust_id, <? value('amount') ?>,"     +
                          "       'C', 'CR ' || <? value('testTag') ?>,"        +
                          "       <? value('bank') ?>, <? value('testTag') ?>," +
                          "       cohead_curr_id, fetchCashRcptNumber(),"       +
-                         "       CURRENT_DATE, CURRENT_DATE,"                  +
-                         "       currRate(cohead_curr_id, CURRENT_DATE)"       +
+                         "       NULL, CURRENT_DATE,"                          +
+                         "       CURRENT_DATE, TRUE,"                          +
+                         "       currRate(cohead_curr_id, CURRENT_DATE),"      +
+                         "       -1, 0"                                        +
                          "    FROM cohead"                                     +
                          "   WHERE cohead_id=<? value('coheadid') ?>"          +
                          " RETURNING *;",
                          { coheadid: cohead.cohead_id,
-                           amount:   cohead.amount + cohead.tax,
+                           amount:   cohead.amount,
                            bank:     bankaccnt.bankaccnt_id,
                            testTag:  testTag
                          });
@@ -719,6 +767,25 @@ var _    = require("underscore"),
         assert.equal(res.rowCount, 1);
         assert(res.rows[0].cashrcpt_id > 0);
         cashrcpt = res.rows[0];
+        done();
+      });
+    });
+
+    it('apply the cash receipt to the invoice', function (done) {
+      var sql = mqlToSql("SELECT applyCashReceiptLineBalance("                 +
+                         "     <? value('crid') ?>, aropen_id, aropen_amount," +
+                         "     aropen_curr_id) AS result"                      +
+                         "  FROM aropen"                                       +
+                         "  JOIN invchead ON aropen_doctype = 'I'"             +
+                         "           AND aropen_docnumber=invchead_invcnumber" +
+                         " WHERE invchead_id=<? value('invchead') ?>;",
+                         { crid:     cashrcpt.cashrcpt_id,
+                           invchead: invchead.invchead_id });
+      datasource.query(sql, creds, function (err, res) {
+        assert.equal(res.rowCount, 1);
+        assert(res.rows[0].result > 0, 'expect an application');
+        // applyCashReceiptLineBalance subtracts discounts so we can't just
+        // assert.closeTo(res.rows[0].result, cohead.amount, closeEnough);
         done();
       });
     });
@@ -735,10 +802,11 @@ var _    = require("underscore"),
       });
     });
 
-    it('find the aropen for the cash receipt', function (done) {
-      var sql = mqlToSql("SELECT aropen.* FROM aropen JOIN cashrcptitem" +
-                         "    ON aropen_id=cashrcptitem_aropen_id"       +
-                         " WHERE cashrcptitem_cashrcpt_id=<? value('id') ?>;",
+    it('finds the aropen for the cash receipt application', function (done) {
+      var sql = mqlToSql("SELECT aropen.* FROM aropen JOIN cashrcptitem"     +
+                         "    ON aropen_id=cashrcptitem_aropen_id"           +
+                         " WHERE cashrcptitem_cashrcpt_id=<? value('id') ?>" +
+                         "   AND aropen_doctype = 'I';",
                          { id: cashrcpt.cashrcpt_id });
       datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
@@ -908,7 +976,7 @@ var _    = require("underscore"),
       });
     });
 
-    it('looks at the gltrans table before posting', function (done) {
+    it('gets the size of the gltrans table before posting', function (done) {
       var sql = mqlToSql(gltransCheckSql, { testTag: testTag });
       datasource.query(sql, creds, function (err, res) {
         lastGltransCount = res.rows[0].cnt;
@@ -916,29 +984,33 @@ var _    = require("underscore"),
       });
     });
 
-    it('looks for the voucher item in taxpay before posting', function (done) {
-      var sql = mqlToSql(taxpayCheckSql,
+    it('checks voitem tax data before posting', function (done) {
+      var sql = mqlToSql(taxinfoCheckSql,
                          { taxhist: 'voitemtax', taxparent: voitem.voitem_id });
       datasource.query(sql, creds, function (err, res) {
-        assert.equal(res.rowCount, 0, 'expect no voitem taxpay');
+        assert.equal(res.rowCount, 1,        'expect one voitemtax record');
+        assert.isNull(res.rows[0].taxpay_id, 'expect no voitem taxpay');
         done();
       });
     });
 
-    it('looks for the misc distrib in taxpay before posting', function (done) {
-      var sql = mqlToSql(taxpayCheckSql,
+    it('checks misc distrib tax data before posting', function (done) {
+      var sql = mqlToSql(taxinfoCheckSql,
                          { taxhist: 'voheadtax', taxparent: voucher.vohead_id });
       datasource.query(sql, creds, function (err, res) {
-        assert.equal(res.rowCount, 0, 'expect no vodist taxpay');
+        assert.equal(res.rowCount, 1,        'expect one voheadtax record');
+        assert.isNull(res.rows[0].taxpay_id, 'expect no vohead taxpay');
         done();
       });
     });
 
-    it('looks for the cashrcpt taxpay before posting', function (done) {
-      var sql = mqlToSql(taxpayCheckSql,
-                         { taxhist: 'aropentax', taxparent: aropen.aropen_id });
+    it('checks cashrcpt application tax data before posting', function (done) {
+      var sql = mqlToSql(cohisttaxinfoSql,
+                         { itemsite: coitem.coitem_itemsite_id,
+                           cohead:   cohead.cohead_number });
       datasource.query(sql, creds, function (err, res) {
-        assert.equal(res.rowCount, 0, 'expect 0 aropen taxpay');
+        assert.equal(res.rowCount, 1,        'expect 1 cohisttax record');
+        assert.isNull(res.rows[0].taxpay_id, 'expect no cohist taxpay');
         done();
       });
     });
@@ -986,43 +1058,45 @@ var _    = require("underscore"),
       });
     });
 
-    // we expect the reconcile to create gltrans records for voitem tax
     it('confirms reconcile updated gltrans properly', function (done) {
       var sql = mqlToSql(gltransCheckSql, { testTag: testTag });
       datasource.query(sql, creds, function (err, res) {
-// TODO assert(res.rows[0].cnt > lastGltransCount, 'expected new gltrans');
+        assert(res.rows[0].cnt > lastGltransCount, 'expected tax records');
         lastGltransCount = res.rows[0].cnt;
         done();
       });
     });
 
-    it('looks for the voucher item in taxpay after posting', function (done) {
-      var sql = mqlToSql(taxpayCheckSql,
+    it('checks voitem tax data after posting', function (done) {
+      var sql = mqlToSql(taxinfoCheckSql,
                          { taxhist: 'voitemtax', taxparent: voitem.voitem_id });
       datasource.query(sql, creds, function (err, res) {
-        assert.equal(res.rowCount, 1, 'expect 1 voitem taxpay');
+        assert.equal(res.rowCount, 1,           'expect 1 voitemtax record');
+        assert.isNotNull(res.rows[0].taxpay_id, 'expect a voitem taxpay');
         assert.closeTo(res.rows[0].taxpay_tax, voitemtax.taxhist_tax, closeEnough);
         done();
       });
     });
 
-    it('looks for the misc distrib in taxpay after posting', function (done) {
-      var sql = mqlToSql(taxpayCheckSql,
+    it('checks misc distrib tax data after posting', function (done) {
+      var sql = mqlToSql(taxinfoCheckSql,
                          { taxhist: 'voheadtax', taxparent: voucher.vohead_id });
       datasource.query(sql, creds, function (err, res) {
-        assert.equal(res.rowCount, 1, 'expect 1 vodist taxpay');
+        assert.equal(res.rowCount, 1,           'expect a vodisttax record');
+        assert.isNotNull(res.rows[0].taxpay_id, 'expect a vodist taxpay');
         assert.closeTo(res.rows[0].taxpay_tax, votax.taxhist_tax, closeEnough);
         done();
       });
     });
 
-    it('looks for the cashrcpt taxpay after posting', function (done) {
-      var sql = mqlToSql(taxpayCheckSql,
-                         { taxhist: 'aropentax', taxparent: aropen.aropen_id });
+    it('checks cashrcpt application tax data after posting', function (done) {
+      var sql = mqlToSql(cohisttaxinfoSql,
+                         { itemsite: coitem.coitem_itemsite_id,
+                           cohead:   cohead.cohead_number });
       datasource.query(sql, creds, function (err, res) {
-        console.log('aropentax records: ' + res.rowCount);
-//TODO  assert.equal(res.rowCount, 1, 'expect 1 aropen taxpay');
-//TODO  assert.closeTo(res.rows[0].taxpay_tax, 0, closeEnough);
+        assert.equal(res.rowCount, 1,           'expect a cohisttax record');
+        assert.isNotNull(res.rows[0].taxpay_id, 'expect a cohist taxpay');
+        // discount => can't assert.closeTo(res.rows[0].taxpay_tax ...
         done();
       });
     });
@@ -1068,29 +1142,42 @@ var _    = require("underscore"),
       });
     });
 
-    it('looks for the voucher item in taxpay after reopening', function (done) {
-      var sql = mqlToSql(taxpayCheckSql,
+    it('confirms reconcile updated gltrans properly', function (done) {
+      var sql = mqlToSql(gltransCheckSql, { testTag: testTag });
+      datasource.query(sql, creds, function (err, res) {
+        assert(res.rows[0].cnt > lastGltransCount, 'expected tax reversals');
+        lastGltransCount = res.rows[0].cnt;
+        done();
+      });
+    });
+
+    it('checks voitem tax data after reopening', function (done) {
+      var sql = mqlToSql(taxinfoCheckSql,
                          { taxhist: 'voitemtax', taxparent: voitem.voitem_id });
       datasource.query(sql, creds, function (err, res) {
-        assert.equal(res.rowCount, 0, 'expect no voitem taxpay');
+        assert.equal(res.rowCount, 1,        'expect one voitemtax record');
+        assert.isNull(res.rows[0].taxpay_id, 'expect no voitem taxpay');
         done();
       });
     });
 
-    it('looks for the misc distrib in taxpay after reopening', function (done) {
-      var sql = mqlToSql(taxpayCheckSql,
+    it('checks misc distrib tax data after reopening', function (done) {
+      var sql = mqlToSql(taxinfoCheckSql,
                          { taxhist: 'voheadtax', taxparent: voucher.vohead_id });
       datasource.query(sql, creds, function (err, res) {
-        assert.equal(res.rowCount, 0, 'expect no vodist taxpay');
+        assert.equal(res.rowCount, 1,        'expect one voheadtax record');
+        assert.isNull(res.rows[0].taxpay_id, 'expect no vohead taxpay');
         done();
       });
     });
 
-    it('looks for the cashrcpt taxpay after reopening', function (done) {
-      var sql = mqlToSql(taxpayCheckSql,
-                         { taxhist: 'aropentax', taxparent: aropen.aropen_id });
+    it('checks cashrcpt application tax data after reopening', function (done) {
+      var sql = mqlToSql(cohisttaxinfoSql,
+                         { itemsite: coitem.coitem_itemsite_id,
+                           cohead:   cohead.cohead_number });
       datasource.query(sql, creds, function (err, res) {
-        assert.equal(res.rowCount, 0, 'expect 0 aropen taxpay');
+        assert.equal(res.rowCount, 1,        'expect 1 cohisttax record');
+        assert.isNull(res.rows[0].taxpay_id, 'expect no cohist taxpay');
         done();
       });
     });
@@ -1184,43 +1271,45 @@ var _    = require("underscore"),
       });
     });
 
-    // we expect the reconcile to create gltrans records for voitem tax
-    it('confirms 2nd reconcile updated gltrans properly', function (done) {
+    it('confirms reposting updated gltrans properly', function (done) {
       var sql = mqlToSql(gltransCheckSql, { testTag: testTag });
       datasource.query(sql, creds, function (err, res) {
-// TODO assert(res.rows[0].cnt > lastGltransCount, 'expected new gltrans');
+        assert(res.rows[0].cnt > lastGltransCount, 'expected new tax records');
         lastGltransCount = res.rows[0].cnt;
         done();
       });
     });
 
-    it('looks for the voucher item in taxpay after reposting', function (done) {
-      var sql = mqlToSql(taxpayCheckSql,
+    it('checks voitem tax data after reposting', function (done) {
+      var sql = mqlToSql(taxinfoCheckSql,
                          { taxhist: 'voitemtax', taxparent: voitem.voitem_id });
       datasource.query(sql, creds, function (err, res) {
-        assert.equal(res.rowCount, 1, 'expect 1 voitem taxpay');
+        assert.equal(res.rowCount, 1,           'expect 1 voitemtax record');
+        assert.isNotNull(res.rows[0].taxpay_id, 'expect a voitem taxpay');
         assert.closeTo(res.rows[0].taxpay_tax, voitemtax.taxhist_tax, closeEnough);
         done();
       });
     });
 
-    it('looks for the misc distrib in taxpay after reposting', function (done) {
-      var sql = mqlToSql(taxpayCheckSql,
+    it('checks misc distrib tax data after reposting', function (done) {
+      var sql = mqlToSql(taxinfoCheckSql,
                          { taxhist: 'voheadtax', taxparent: voucher.vohead_id });
       datasource.query(sql, creds, function (err, res) {
-        assert.equal(res.rowCount, 1, 'expect 1 vodist taxpay');
+        assert.equal(res.rowCount, 1,           'expect a vodisttax record');
+        assert.isNotNull(res.rows[0].taxpay_id, 'expect a vodist taxpay');
         assert.closeTo(res.rows[0].taxpay_tax, votax.taxhist_tax, closeEnough);
         done();
       });
     });
 
-    it('looks for the cashrcpt taxpay after reposting', function (done) {
-      var sql = mqlToSql(taxpayCheckSql,
-                         { taxhist: 'aropentax', taxparent: aropen.aropen_id });
+    it('checks cashrcpt application tax data after reposting', function (done) {
+      var sql = mqlToSql(cohisttaxinfoSql,
+                         { itemsite: coitem.coitem_itemsite_id,
+                           cohead:   cohead.cohead_number });
       datasource.query(sql, creds, function (err, res) {
-        console.log('aropentax records: ' + res.rowCount);
-//TODO  assert.equal(res.rowCount, 1, 'expect 1 aropen taxpay');
-//TODO  assert.closeTo(res.rows[0].taxpay_tax, 0, closeEnough);
+        assert.equal(res.rowCount, 1,           'expect a cohisttax record');
+        assert.isNotNull(res.rows[0].taxpay_id, 'expect a cohist taxpay');
+        // discount => can't assert.closeTo(res.rows[0].taxpay_tax ...
         done();
       });
     });
