@@ -274,8 +274,7 @@ server.exchange(oauth2orize.exchange.refreshToken(function (client, refreshToken
 // signature parts and a done callback. If these values are valid, the
 // application issues an access token on behalf of the user in the JWT `prn`
 // property.
-
-server.exchange('assertion', jwtBearer(function (client, header, claimSet, signature, done) {
+var jwtExchange = function (client, header, claimSet, signature, done) {
   "use strict";
 
   var data = header + "." + claimSet,
@@ -428,8 +427,10 @@ server.exchange('assertion', jwtBearer(function (client, header, claimSet, signa
   } else {
     return done(new Error("Invalid JWT. Signature verification failed"));
   }
-}));
-
+};
+// Support both known grant types.
+server.exchange('assertion', jwtBearer(jwtExchange));
+server.exchange('urn:ietf:params:oauth:grant-type:jwt-bearer', jwtBearer(jwtExchange));
 
 // TODO - We need a token revoke endpoint some day.
 //https://developers.google.com/accounts/docs/OAuth2WebServer#tokenrevoke
