@@ -51,8 +51,12 @@ FROM (
                  (ipsitem_price * itemuomtouomratio(<? value('item_id') ?>, NULL, ipsitem_price_uom_id)) * iteminvpricerat(ipsitem_item_id)
                 WHEN (ipsitem_type = 'D') THEN
                  noNeg(<? value('item_listprice') ?> - (<? value('item_listprice') ?> * ipsitem_discntprcnt) - ipsitem_fixedamtdiscount)
+                WHEN ((ipsitem_type = 'M') AND fetchMetricBool('Long30Markups') AND fetchMetricBool('WholesalePriceCosting')) THEN
+                 (<? value('item_listcost') ?> / (1.0 - ipsitem_discntprcnt) + ipsitem_fixedamtdiscount)
                 WHEN ((ipsitem_type = 'M') AND fetchMetricBool('Long30Markups')) THEN
                  (<? value('item_unitcost') ?> / (1.0 - ipsitem_discntprcnt) + ipsitem_fixedamtdiscount)
+                WHEN (ipsitem_type = 'M' AND fetchMetricBool('WholesalePriceCosting')) THEN
+                 (<? value('item_listcost') ?> + (<? value('item_listcost') ?> * ipsitem_discntprcnt) + ipsitem_fixedamtdiscount)
                 WHEN (ipsitem_type = 'M') THEN
                  (<? value('item_unitcost') ?> + (<? value('item_unitcost') ?> * ipsitem_discntprcnt) + ipsitem_fixedamtdiscount)
                 ELSE 0.00
@@ -101,11 +105,16 @@ FROM (
                 ELSE ipsitem_qtybreak
            END AS invqty,
            ipsitem_qtybreak AS qtybreak,
-           CASE WHEN ipsitem_type = 'N' THEN (ipsitem_price * itemuomtouomratio(<? value('item_id') ?>, NULL, ipsitem_price_uom_id)) *
-                                              iteminvpricerat(ipsitem_item_id)
-                WHEN ipsitem_type = 'D' THEN noNeg(<? value('item_listprice') ?> - (<? value('item_listprice') ?> * ipsitem_discntprcnt) - ipsitem_fixedamtdiscount)
+           CASE WHEN ipsitem_type = 'N' THEN
+                 (ipsitem_price * itemuomtouomratio(<? value('item_id') ?>, NULL, ipsitem_price_uom_id)) * iteminvpricerat(ipsitem_item_id)
+                WHEN ipsitem_type = 'D' THEN
+                 noNeg(<? value('item_listprice') ?> - (<? value('item_listprice') ?> * ipsitem_discntprcnt) - ipsitem_fixedamtdiscount)
+                WHEN ((ipsitem_type = 'M') AND fetchMetricBool('Long30Markups') AND fetchMetricBool('WholesalePriceCosting')) THEN
+                 (<? value('item_listcost') ?> / (1.0 - ipsitem_discntprcnt) + ipsitem_fixedamtdiscount)
                 WHEN ((ipsitem_type = 'M') AND fetchMetricBool('Long30Markups')) THEN
                  (<? value('item_unitcost') ?> / (1.0 - ipsitem_discntprcnt) + ipsitem_fixedamtdiscount)
+                WHEN (ipsitem_type = 'M' AND fetchMetricBool('WholesalePriceCosting')) THEN
+                 (<? value('item_listcost') ?> + (<? value('item_listcost') ?> * ipsitem_discntprcnt) + ipsitem_fixedamtdiscount)
                 WHEN (ipsitem_type = 'M') THEN
                  (<? value('item_unitcost') ?> + (<? value('item_unitcost') ?> * ipsitem_discntprcnt) + ipsitem_fixedamtdiscount)
                 ELSE 0.00
