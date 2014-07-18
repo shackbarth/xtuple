@@ -27,19 +27,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           id: username,
           username: X.options.databaseServer.user,
           database: database,
-          success: function (model, results) {
-            // TODO: also check role-granted privileges
-            var privCheck = _.find(model.get("grantedPrivileges"), function (model) {
-              return model.privilege === "InstallExtension";
-            });
-            if (!privCheck) {
-              callback({message: "_insufficientPrivileges"});
-              return;
-            }
-            callback(); // success!
+          success: function (userModel, results) {
+            userModel.checkPrivilege("InstallExtension", database, callback);
           },
           error: function () {
-            callback({message: "_restoreError"});
+            callback({message: "_privilegeCheckError"});
           }
         });
       },
@@ -77,13 +69,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       useClientDir
     ], function (err, results) {
       if (err) {
-        console.log(err);
         err.isError = true;
+        err.errorMessage = err.message;
         res.send(err);
         return;
       }
       console.log("all done");
-      res.send({data: "_success"});
+      res.send({data: "_success!"});
     });
   };
 }());
