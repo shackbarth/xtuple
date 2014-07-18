@@ -463,7 +463,7 @@ strict: false*/
             },
             {
               success: function (message) {
-                that.doNotify({message: message});
+                that.doNotify({message: message && message.loc()});
               },
               error: function (error) {
                 that.doNotify({message: error.message ? error.message() : error});

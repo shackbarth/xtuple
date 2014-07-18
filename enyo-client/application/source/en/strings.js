@@ -661,6 +661,7 @@
     "_subtotal": "Subtotal",
     "_suffix": "Suffix",
     "_summary": "Summary",
+    "_success!": "Success!",
     "_successors": "Successors",
     "_symbol": "Symbol",
     "_system": "System",
@@ -991,7 +992,7 @@
     "_deleteLine?": "Are you sure you want to delete this line?",
     "_exitPageWarning": "You are about to leave the xTuple application.",
     "_installExtensionWarning": "Extensions are very powerful and potentially have full access to your " +
-      "data. You should only install an extension from a source you trust.",
+      "data. You should only install an extension from a source you trust. ",
     "_insufficientPrivileges": "You have insufficient privileges to perform this action.",
     "_manualFreight": "Manually editing the freight will disable automatic freight recalculations.",
     "_mustSave": "You must save your changes before proceeding.",
