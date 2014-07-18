@@ -46,17 +46,14 @@ BEGIN
     END IF;
   END IF;
 
-  SELECT cashrcpt_cust_id, (cust_number||'-'||cust_name) AS custnote,
-         cashrcpt_fundstype, cashrcpt_number, cashrcpt_docnumber,
-         cashrcpt_distdate, cashrcpt_amount, cashrcpt_discount,
+  SELECT cashrcpt.*,
+         (cust_number||'-'||cust_name) AS custnote,
          (cashrcpt_amount / cashrcpt_curr_rate) AS cashrcpt_amount_base,
-	 (cashrcpt_discount / cashrcpt_curr_rate) AS cashrcpt_discount_base,
-         cashrcpt_notes,
+         (cashrcpt_discount / cashrcpt_curr_rate) AS cashrcpt_discount_base,
          cashrcpt_bankaccnt_id AS bankaccnt_id,
          accnt_id AS prepaid_accnt_id,
-         cashrcpt_usecustdeposit,
-         COALESCE(cashrcpt_applydate, cashrcpt_distdate) AS applydate,
-         cashrcpt_curr_id, cashrcpt_curr_rate, cashrcpt_posted, cashrcpt_void INTO _p
+         COALESCE(cashrcpt_applydate, cashrcpt_distdate) AS applydate
+       INTO _p
   FROM cashrcpt LEFT OUTER JOIN custinfo ON (cashrcpt_cust_id=cust_id)
                 LEFT OUTER JOIN accnt ON (accnt_id=findPrepaidAccount(cashrcpt_cust_id))
   WHERE ( (findPrepaidAccount(cashrcpt_cust_id)=0 OR accnt_id > 0) -- G/L interface might be disabled
@@ -336,6 +333,23 @@ BEGIN
                      _debitAccntid, round(_p.cashrcpt_amount_base, 2) * -1, 
                      _p.cashrcpt_distdate,
                      _p.custnote, pCashrcptid );
+
+  -- Post any gain/loss from the alternate currency exchange rate
+  IF (COALESCE(_p.cashrcpt_alt_curr_rate, 0.0) <> 0.0) THEN
+    _exchGain := ROUND((_p.cashrcpt_curr_rate - _p.cashrcpt_alt_curr_rate) * _p.cashrcpt_amount_base, 2);
+
+    IF (_exchGain <> 0) THEN
+      PERFORM insertIntoGLSeries( _sequence, 'A/R', 'CR',
+                          (_p.cashrcpt_fundstype || '-' || _p.cashrcpt_docnumber),
+                          _debitAccntid, (_exchGain * -1.0),
+                          _p.cashrcpt_distdate, _p.custnote, pCashrcptid );      
+                          
+      PERFORM insertIntoGLSeries( _sequence, 'A/R', 'CR',
+                          (_p.cashrcpt_fundstype || '-' || _p.cashrcpt_docnumber),
+                          getGainLossAccntId(_debitAccntid), _exchGain,
+                          _p.cashrcpt_distdate, _p.custnote, pCashrcptid );      
+    END IF;
+  END IF;
 
   PERFORM postGLSeries(_sequence, pJournalNumber);
 
