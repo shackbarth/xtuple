@@ -429,7 +429,7 @@ var jwtExchange = function (client, header, claimSet, signature, done) {
   }
 };
 // Support both known grant types.
-//server.exchange('assertion', jwtBearer(jwtExchange));
+server.exchange('assertion', jwtBearer(jwtExchange));
 server.exchange('urn:ietf:params:oauth:grant-type:jwt-bearer', jwtBearer(jwtExchange));
 
 // TODO - We need a token revoke endpoint some day.
