@@ -59,6 +59,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           database: database,
           extension: path.join(__dirname, "../../node_modules", extensionName)
         }, callback);
+      },
+      // make the client-side assets immediately available to the webserver
+      // without the need for a datasource restart
+      useClientDir = function (callback) {
+        X.useClientDir("npm/" + extensionName + "/client",
+          path.join(__dirname, "../../node_modules", extensionName, "client"));
+        callback();
       };
 
     async.series([
@@ -66,7 +73,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       validateUser,
       npmLoad,
       npmInstall,
-      buildExtension
+      buildExtension,
+      useClientDir
     ], function (err, results) {
       if (err) {
         console.log(err);

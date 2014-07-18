@@ -104,7 +104,7 @@ var app;
     };
     return dirMap[extension.location];
   };
-  var useClientDir = function (path, dir) {
+  var useClientDir = X.useClientDir = function (path, dir) {
     path = path.indexOf("npm") === 0 ? "/" + path : path;
     _.each(X.options.datasource.databases, function (orgValue, orgKey, orgList) {
       app.use("/" + orgValue + path, express.static(dir, { maxAge: 86400000 }));
