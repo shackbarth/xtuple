@@ -741,6 +741,7 @@
     "public/functions/releaseinvcnumber.sql",
     "public/functions/releasenumber.sql",
     "public/functions/releaseponumber.sql",
+    "public/functions/releasepr.sql",
     "public/functions/releaseprnumber.sql",
     "public/functions/releasepurchaseorder.sql",
     "public/functions/releasequnumber.sql",
