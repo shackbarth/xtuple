@@ -12,6 +12,8 @@
     "../lib/orm/source/xt/functions/add_primary_key.sql",
     "../lib/orm/source/xt/functions/create_table.sql",
 
+    "public/patches/fixflcol.sql",
+
     "public/indexes/apopentax.sql",
     "public/indexes/aropentax.sql",
     "public/indexes/asohisttax.sql",

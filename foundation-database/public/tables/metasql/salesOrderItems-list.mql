@@ -101,8 +101,7 @@ SELECT coitem_id,
        END AS discountfromcust,
        coitem_unitcost,
        CASE WHEN (coitem_price = 0.0) THEN 0.0
-            ELSE ROUND((coitem_qtyord * coitem_qty_invuomratio) *
-                 ((coitem_price / coitem_price_invuomratio) - (coitem_unitcost / coitem_price_invuomratio)),2)
+            ELSE ROUND(coitem_qtyord * coitem_qty_invuomratio * (coitem_price - coitem_unitcost) / coitem_price_invuomratio,2)
        END AS margin,
        CASE WHEN (coitem_price = 0.0) THEN 0.0
             ELSE ((coitem_price - coitem_unitcost) / coitem_price)
