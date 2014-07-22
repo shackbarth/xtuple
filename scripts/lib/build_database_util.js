@@ -14,7 +14,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     dataSource = require('../../node-datasource/lib/ext/datasource').dataSource,
     winston = require('winston');
 
-
   var defaultExtensions = [
     path.join(__dirname, '../../foundation-database'),
     path.join(__dirname, '../../lib/orm'),
@@ -420,8 +419,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     });
   };
 
-  // xtmfg -> inventory + manufacturing
-  // xwd -> inventory + distribution
   var inspectUnmobilizedDatabase = function (creds, done) {
     var extSql = "select * from public.pkghead where pkghead_name in ('xtmfg', 'xwd');",
       editionMap = {
