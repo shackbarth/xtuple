@@ -36,75 +36,19 @@ var _ = require('underscore'),
     var buildSpecs = {},
       databases = [],
       extension,
-      //
-      // Looks in a database to see which extensions are registered, and
-      // tacks onto that list the core directories.
-      //
       getRegisteredExtensions = function (database, callback) {
-        var result,
-          credsClone = JSON.parse(JSON.stringify(creds)),
-          existsSql = "select relname from pg_class where relname = 'ext'",
-          preInstallSql = "select xt.js_init();update xt.ext set ext_location = '/core-extensions' " +
-            "where ext_name = 'oauth2' and ext_location = '/xtuple-extensions';",
-          extSql = preInstallSql + "SELECT * FROM xt.ext ORDER BY ext_load_order",
-          defaultExtensions = [
-            { ext_location: '/core-extensions', ext_name: 'crm' },
-            { ext_location: '/core-extensions', ext_name: 'project' },
-            { ext_location: '/core-extensions', ext_name: 'sales' },
-            { ext_location: '/core-extensions', ext_name: 'billing' },
-            { ext_location: '/core-extensions', ext_name: 'purchasing' },
-            { ext_location: '/core-extensions', ext_name: 'oauth2' }
-          ],
-          adaptExtensions = function (err, res) {
-            if (err) {
-              callback(err);
-              return;
-            }
-
-            var paths = _.map(_.compact(res.rows), function (row) {
-              var location = row.ext_location,
-                name = row.ext_name,
-                extPath;
-
-              if (location === '/core-extensions') {
-                extPath = path.join(__dirname, "/../../enyo-client/extensions/source/", name);
-              } else if (location === '/xtuple-extensions') {
-                extPath = path.join(__dirname, "../../../xtuple-extensions/source", name);
-              } else if (location === '/private-extensions') {
-                extPath = path.join(__dirname, "../../../private-extensions/source", name);
-              } else if (location === 'npm') {
-                extPath = path.join(__dirname, "../../node_modules", name);
-              }
-              return extPath;
-            });
-
-            paths.unshift(path.join(__dirname, "../../enyo-client")); // core path
-            paths.unshift(path.join(__dirname, "../../lib/orm")); // lib path
-            paths.unshift(path.join(__dirname, "../../foundation-database")); // foundation path
-            callback(null, {
-              extensions: _.compact(paths),
-              database: database,
-              keepSql: options.keepSql,
-              populateData: options.populateData,
-              wipeViews: options.wipeViews,
-              clientOnly: options.clientOnly,
-              databaseOnly: options.databaseOnly
-            });
-          };
-
+        var credsClone = JSON.parse(JSON.stringify(creds));
         credsClone.database = database;
-        dataSource.query(existsSql, credsClone, function (err, res) {
-          if (err) {
-            callback(err);
-            return;
-          }
-          if (res.rowCount === 0) {
-            // xt.ext doesn't exist, because this is probably a brand-new DB.
-            // No problem! Give them the core extensions.
-            adaptExtensions(null, { rows: defaultExtensions });
-          } else {
-            dataSource.query(extSql, credsClone, adaptExtensions);
-          }
+        buildDatabaseUtil.inspectDatabaseExtensions(credsClone, function (err, paths) {
+          callback(null, {
+            extensions: paths,
+            database: database,
+            keepSql: options.keepSql,
+            populateData: options.populateData,
+            wipeViews: options.wipeViews,
+            clientOnly: options.clientOnly,
+            databaseOnly: options.databaseOnly
+          });
         });
       },
       buildAll = function (specs, creds, buildAllCallback) {
@@ -118,7 +62,7 @@ var _ = require('underscore'),
               return _.flatten(memo);
             }, []);
             var npmExtensions = _.filter(allExtensions, function (extName) {
-              return extName.indexOf("node_modules") >= 0;
+              return extName && extName.indexOf("node_modules") >= 0;
             });
             if (npmExtensions.length === 0) {
               done();
@@ -165,13 +109,10 @@ var _ = require('underscore'),
       },
       config;
 
-    // the config path is not relative if it starts with a slash
-    if (options.config && options.config.substring(0, 1) === '/') {
-      config = require(options.config);
-    } else if (options.config) {
-      config = require(path.join(process.cwd(), options.config));
+    if (options.config) {
+      config = require(path.resolve(process.cwd(), options.config));
     } else {
-      config = require(path.join(__dirname, "../../node-datasource/config.js"));
+      config = require(path.resolve(__dirname, "../../node-datasource/config.js"));
     }
     creds = config.databaseServer;
     creds.encryptionKeyFile = config.datasource.encryptionKeyFile;
@@ -193,6 +134,9 @@ var _ = require('underscore'),
     } else if (options.backup && options.source) {
       callback("You can build from backup or from source but not both.");
 
+    } else if (options.backup && options.extension) {
+      callback("When you're building from a backup you get whatever extensions the backup merits.");
+
     } else if (options.initialize &&
         (options.backup || options.source) &&
         options.database &&
@@ -203,16 +147,18 @@ var _ = require('underscore'),
 
       buildSpecs.database = options.database;
       if (options.backup) {
-        // the backup path is not relative if it starts with a slash
-        buildSpecs.backup = options.backup.substring(0, 1) === '/' ?
-          options.backup :
-          path.join(process.cwd(), options.backup);
+        buildSpecs.backup = path.resolve(process.cwd(), options.backup);
+        buildSpecs.extensions = false;
+        // we'll determine the extensions by looking at the db after restore
       }
       if (options.source) {
-        // the source path is not relative if it starts with a slash
-        buildSpecs.source = options.source.substring(0, 1) === '/' ?
-          options.source :
-          path.join(process.cwd(), options.source);
+        buildSpecs.source = path.resolve(process.cwd(), options.source);
+        // if we initialize with the foundation, that means we want
+        // an unmobilized build
+        buildSpecs.extensions = options.extension ?
+          [options.extension] :
+          buildDatabaseUtil.defaultExtensions;
+        console.log("extensions are ", buildSpecs);
       }
       buildSpecs.initialize = true;
       buildSpecs.keepSql = options.keepSql;
@@ -220,19 +166,6 @@ var _ = require('underscore'),
       buildSpecs.wipeViews = options.wipeViews;
       buildSpecs.clientOnly = options.clientOnly;
       buildSpecs.databaseOnly = options.databaseOnly;
-      // if we initialize with the foundation, that means we want
-      // an unmobilized build
-      buildSpecs.extensions = options.extension ? [options.extension] : [
-        path.join(__dirname, '../../foundation-database'),
-        path.join(__dirname, '../../lib/orm'),
-        path.join(__dirname, '../../enyo-client'),
-        path.join(__dirname, '../../enyo-client/extensions/source/crm'),
-        path.join(__dirname, '../../enyo-client/extensions/source/project'),
-        path.join(__dirname, '../../enyo-client/extensions/source/sales'),
-        path.join(__dirname, '../../enyo-client/extensions/source/billing'),
-        path.join(__dirname, '../../enyo-client/extensions/source/purchasing'),
-        path.join(__dirname, '../../enyo-client/extensions/source/oauth2')
-      ];
       buildAll([buildSpecs], creds, callback);
 
     } else if (options.initialize || options.backup || options.source) {
@@ -244,10 +177,7 @@ var _ = require('underscore'),
       // the user has specified an extension to build or unregister
       // extensions are assumed to be specified relative to the cwd
       buildSpecs = _.map(databases, function (database) {
-        // the extension is not relative if it starts with a slash
-        var extension = options.extension.substring(0, 1) === '/' ?
-          options.extension :
-          path.join(process.cwd(), options.extension);
+        var extension = path.resolve(process.cwd(), options.extension);
         return {
           database: database,
           frozen: options.frozen,

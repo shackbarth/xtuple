@@ -62,6 +62,7 @@ var  async = require('async'),
         specs[0].wasInitialized = true;
         specs[0].backup = undefined;
         specs[0].source = undefined;
+        console.log("specs are", specs);
         buildDatabase(specs, creds, masterCallback);
       });
       return;
