@@ -62,7 +62,6 @@ var  async = require('async'),
         specs[0].wasInitialized = true;
         specs[0].backup = undefined;
         specs[0].source = undefined;
-        console.log("specs are", specs);
         buildDatabase(specs, creds, masterCallback);
       });
       return;
@@ -83,7 +82,6 @@ var  async = require('async'),
           extensionCallback(null, "");
           return;
         }
-        //console.log("Installing extension", databaseName, extension);
         // deal with directory structure quirks
         var baseName = path.basename(extension),
           isFoundation = extension.indexOf("foundation-database") >= 0,

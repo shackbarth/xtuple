@@ -405,7 +405,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   var inspectMobilizedDatabase = function (creds, done) {
     var extSql = "SELECT * FROM xt.ext ORDER BY ext_load_order";
     dataSource.query(extSql, creds, function (err, res) {
-      console.log("extSql", err, res);
       if (err) {
         return done(err);
       }
@@ -498,8 +497,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         });
       },
       finish = function (err, results) {
-        console.log(arguments);
-        console.log("new spec", spec);
         if (err) {
           winston.error("init database error", err.message, err.stack, err);
         }
@@ -613,6 +610,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   };
 
   exports.defaultExtensions = defaultExtensions;
+  exports.inspectDatabaseExtensions = inspectDatabaseExtensions;
   exports.explodeManifest = explodeManifest;
   exports.initDatabase = initDatabase;
   exports.sendToDatabase = sendToDatabase;

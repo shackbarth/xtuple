@@ -158,7 +158,6 @@ var _ = require('underscore'),
         buildSpecs.extensions = options.extension ?
           [options.extension] :
           buildDatabaseUtil.defaultExtensions;
-        console.log("extensions are ", buildSpecs);
       }
       buildSpecs.initialize = true;
       buildSpecs.keepSql = options.keepSql;
