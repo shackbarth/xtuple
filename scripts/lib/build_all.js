@@ -54,6 +54,25 @@ var _ = require('underscore'),
       buildAll = function (specs, creds, buildAllCallback) {
         async.series([
           function (done) {
+            // step 0: init the database, if requested
+
+            if (specs.length === 1 &&
+                specs[0].initialize &&
+                (specs[0].backup || specs[0].source)) {
+
+              // The user wants to initialize the database first (i.e. Step 0)
+              // Do that, then call this function again
+              buildDatabaseUtil.initDatabase(specs[0], creds, function (err, res) {
+                specs[0].wasInitialized = true;
+                done(err, res);
+              });
+              return;
+            } else {
+              done();
+            }
+
+          },
+          function (done) {
             // step 1: npm install extension if necessary
             // an alternate approach would be only npm install these
             // extensions on an npm install.
