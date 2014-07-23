@@ -1628,12 +1628,14 @@ a,
 */
 .xv-popup {
   background: #505050;
-  margin: 0;
-  max-height: 400px;
-  width: 400px;
+  max-height: 500px;
   min-width: 320px;
-  padding: 7px;
+  max-width: 500px;
+  padding: 10px;
   text-align: center;
+}
+.xv-popup .message {
+  margin-bottom: 10px;
 }
 .xv-popup.xv-groupbox-popup {
   width: 320px;

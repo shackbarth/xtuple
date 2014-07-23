@@ -18,8 +18,8 @@ strict:true, trailing:true, white:true */
     "_fullListUrl": "Full List URL",
     "_generatingPrivateKey": "A new keypair will be generated for this OAUTH2 client. " +
       "The public key will be saved in the database with this client. The private key " +
-      "is available as a one-time download. The password for the key store file will be " +
-      "\"notasecret\". Click \"ok\" to downloading the private key.",
+      "is available as a one-time download with a password of " +
+      "\"notasecret\".",
     "_logoURL": "Logo URL",
     "_maintainOauth2clients": "Maintain OAUTH2 Clients",
     "_oauth2": "OAUTH2",

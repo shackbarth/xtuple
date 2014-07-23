@@ -56,6 +56,9 @@
 @defaultPanelWidth: 320px;
 @toolbarHeight: 55px;
 @searchLength: 185px;
+// popups
+@maxPopupHeight: 500px;
+@maxPopupWidth: 500px;
 
 // libs
 @import "../../lib/font-awesome/less/font-awesome.less";
@@ -196,12 +199,15 @@ a, .hyperlink {
 */
 .xv-popup {
   background: @header-gray;
-  margin: 0;
-  max-height: 400px;
-  width: 400px;
+  max-height: @maxPopupHeight;
   min-width: @defaultPanelWidth;
-  padding: 7px;
+  max-width: @maxPopupWidth;
+  padding: 10px;
   text-align: center;
+
+  .message {
+    margin-bottom: 10px;
+  }
 
   &.xv-groupbox-popup {
     .xv-workspace-container > .xv-workspace > .xv-workspace-panel;
