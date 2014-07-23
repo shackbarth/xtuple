@@ -44,29 +44,6 @@ var  async = require('async'),
         host: 'localhost' }
   */
   var buildDatabase = exports.buildDatabase = function (specs, creds, masterCallback) {
-    if (specs.length === 1 &&
-        specs[0].initialize &&
-        (specs[0].backup || specs[0].source)) {
-
-      // The user wants to initialize the database first (i.e. Step 0)
-      // Do that, then call this function again
-      buildDatabaseUtil.initDatabase(specs[0], creds, function (err, res) {
-        if (err) {
-          winston.error("Init database error: ", err);
-          masterCallback(err);
-          return;
-        }
-        // recurse to do the build step. Of course we don't want to initialize a second
-        // time, so destroy those flags.
-        specs[0].initialize = false;
-        specs[0].wasInitialized = true;
-        specs[0].backup = undefined;
-        specs[0].source = undefined;
-        buildDatabase(specs, creds, masterCallback);
-      });
-      return;
-    }
-
     //
     // The function to generate all the scripts for a database
     //
@@ -82,7 +59,6 @@ var  async = require('async'),
           extensionCallback(null, "");
           return;
         }
-        //console.log("Installing extension", databaseName, extension);
         // deal with directory structure quirks
         var baseName = path.basename(extension),
           isFoundation = extension.indexOf("foundation-database") >= 0,
