@@ -77,6 +77,11 @@ select xt.install_js('XT','Discovery','xtuple', $$
       master.description = "Lets you get and manipulate all xTuple ERP business objects.";
       master.discoveryRestUrl = rootUrl + org + "/discovery/" + version + "/apis/" + version + "/rest";
       master.discoveryLink = "./apis/" + version + "/rest";
+      master.parameters = {
+        "resources": "object",
+        "description": "A query parameter array of resources you want to return. Useful for requesting a subset of resources instead of all of them. e.g. ?resources[]=Contact&resources[]=ToDo",
+        "location": "query"
+      };
       master.icons = {
         "x16": rootUrl + org + "/assets/api/api-16.png",
         "x32": rootUrl + org + "/assets/api/api-32.png"
@@ -586,8 +591,8 @@ select xt.install_js('XT','Discovery','xtuple', $$
           "query": {
             "type": "object",
             "description": "Query different resource properties based on their JSON-Schema. e.g. ?query[property1][BEGINS_WITH]=foo&query[property2][EQUALS]=bar",
-            "location": "query",
-            "$ref": "TODO: add this when moving to JSON-Schema draft v5"
+            "location": "query"
+            //"$ref": "TODO: add this when moving to JSON-Schema draft v5"
           },
           "orderby": {
             "type": "object",
@@ -651,8 +656,8 @@ select xt.install_js('XT','Discovery','xtuple', $$
           "query": {
             "type": "object",
             "description": "Query different resource properties based on their JSON-Schema. e.g. ?query[property1][BEGINS_WITH]=foo&query[property2][EQUALS]=bar",
-            "location": "query",
-            "$ref": "TODO"
+            "location": "query"
+            //"$ref": "TODO"
           },
           "orderby": {
             "type": "object",
