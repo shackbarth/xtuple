@@ -2928,6 +2928,7 @@ a,
 .selectable-chart .chart-title-bar .icon-filter {
   color: #070707;
   position: absolute;
+  top: 0;
   right: 35px;
 }
 .selectable-chart .chart-bottom {
