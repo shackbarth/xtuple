@@ -14,8 +14,17 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     dataSource = require('../../node-datasource/lib/ext/datasource').dataSource,
     winston = require('winston');
 
-
-
+  var defaultExtensions = [
+    path.join(__dirname, '../../foundation-database'),
+    path.join(__dirname, '../../lib/orm'),
+    path.join(__dirname, '../../enyo-client'),
+    path.join(__dirname, '../../enyo-client/extensions/source/crm'),
+    path.join(__dirname, '../../enyo-client/extensions/source/project'),
+    path.join(__dirname, '../../enyo-client/extensions/source/sales'),
+    path.join(__dirname, '../../enyo-client/extensions/source/billing'),
+    path.join(__dirname, '../../enyo-client/extensions/source/purchasing'),
+    path.join(__dirname, '../../enyo-client/extensions/source/oauth2')
+  ];
 
   var convertFromMetasql = function (content, filename, defaultSchema) {
     var lines = content.split("\n"),
@@ -376,6 +385,71 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     });
   };
 
+  var pathFromExtension = function (name, location) {
+    if (location === '/core-extensions') {
+      return path.join(__dirname, "/../../enyo-client/extensions/source/", name);
+    } else if (location === '/xtuple-extensions') {
+      return path.join(__dirname, "../../../xtuple-extensions/source", name);
+    } else if (location === '/private-extensions') {
+      return path.join(__dirname, "../../../private-extensions/source", name);
+    } else if (location === 'npm') {
+      return path.join(__dirname, "../../node_modules", name);
+    }
+  };
+
+  //
+  // Looks in a database to see which extensions are registered, and
+  // tacks onto that list the core directories.
+  //
+  var inspectMobilizedDatabase = function (creds, done) {
+    var extSql = "SELECT * FROM xt.ext ORDER BY ext_load_order";
+    dataSource.query(extSql, creds, function (err, res) {
+      if (err) {
+        return done(err);
+      }
+
+      var paths = _.map(_.compact(res.rows), function (row) {
+        return pathFromExtension(row.ext_name, row.ext_location);
+      });
+
+      paths.unshift(path.join(__dirname, "../../enyo-client")); // core path
+      paths.unshift(path.join(__dirname, "../../lib/orm")); // lib path
+      paths.unshift(path.join(__dirname, "../../foundation-database")); // foundation path
+      done(null, _.compact(paths));
+    });
+  };
+
+  var inspectUnmobilizedDatabase = function (creds, done) {
+    var extSql = "select * from public.pkghead where pkghead_name in ('xtmfg', 'xwd');",
+      editionMap = {
+        xtmfg: ["inventory", "manufacturing"],
+        xwd: ["inventory", "distribution"]
+      };
+    dataSource.query(extSql, creds, function (err, res) {
+      if (err) {
+        return done(err);
+      }
+      var extensions = _.unique(_.flatten(_.map(res.rows, function (row) {
+        return _.map(editionMap[row.pkghead_name], function (ext) {
+          return path.join(__dirname, "../../../private-extensions/source", ext);
+        });
+      })));
+      done(err, defaultExtensions.concat(extensions));
+    });
+  };
+
+  var inspectDatabaseExtensions = function (creds, done) {
+    var isMobilizedSql = "select * from information_schema.tables where table_schema = 'xt' and table_name = 'ext';";
+
+    dataSource.query(isMobilizedSql, creds, function (err, res) {
+      if (res.rowCount === 0) {
+        inspectUnmobilizedDatabase(creds, done);
+      } else {
+        inspectMobilizedDatabase(creds, done);
+      }
+    });
+  };
+
   //
   // Step 0 (optional, triggered by flags), wipe out the database
   // and load it from scratch using pg_restore something.backup unless
@@ -416,7 +490,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           if (err) {
             console.log("ignoring restore db error", err);
           }
-          callback(null, res);
+          done(null, res);
         });
       },
       finish = function (err, results) {
@@ -437,7 +511,15 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       async.series([
         dropDatabase,
         createDatabase,
-        restoreBackup
+        restoreBackup,
+        function (done) {
+          credsClone.database = databaseName;
+          inspectDatabaseExtensions(credsClone, function (err, paths) {
+            // in the case of a build-from-backup, we ignore any user desires and dictate the extensions
+            spec.extensions = paths;
+            done();
+          });
+        }
       ], finish);
     }
   };
@@ -524,6 +606,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     async.each(specs, unregisterEach, masterCallback);
   };
 
+  exports.defaultExtensions = defaultExtensions;
+  exports.inspectDatabaseExtensions = inspectDatabaseExtensions;
   exports.explodeManifest = explodeManifest;
   exports.initDatabase = initDatabase;
   exports.sendToDatabase = sendToDatabase;
