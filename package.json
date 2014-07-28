@@ -53,6 +53,7 @@
     "html5": "0.3.13",
     "zombie": "1.4.x",
     "csslint": "~0.10.0",
+    "xtuple-documentation": "~0.0.1",
     "nodemon": "~1.0.15"
   },
   "optionalDependencies": {
@@ -69,6 +70,7 @@
     "build-basic-postbooks-demo": "./scripts/build_app.js -d postbooks_demo --databaseonly -e foundation-database -i -s foundation-database/postbooks_demo_data.sql",
     "build-basic-quickstart": "./scripts/build_app.js -d quickstart --databaseonly -e foundation-database -i -s foundation-database/quickstart_data.sql",
     "jshint": "./node_modules/.bin/jshint --exclude node-datasource/lib/query/node_modules lib/backbone-x/source lib/enyo-x/source lib/tools/source enyo-client/application/source/ enyo-client/extensions node-datasource",
+    "jsdoc-api": "rm -rf scripts/output;./node_modules/xtuple-documentation/node_modules/jsdoc/jsdoc -t ./node_modules/xtuple-documentation/jsdoc-setup/api-templates -c ./node_modules/xtuple-documentation/jsdoc-setup/jsdoc.conf.json -d ./scripts/output -r ./lib/backbone-x/source ./lib/tools/source ./lib/enyo-x/source/widgets ./lib/enyo-x/source/views ./lib/enyo-x/source/app.js ./lib/enyo-x/source/core.js ./node_modules/xtuple-documentation/jsdoc-setup/api-readme.md",
     "preinstall": "cd node-datasource/lib/query ; npm install",
     "start": "node_modules/.bin/nodemon node-datasource/main.js --debug --watch node-datasource",
     "test-build": "./node_modules/.bin/mocha -R spec test/build/build_app.js",
