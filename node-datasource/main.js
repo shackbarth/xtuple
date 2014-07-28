@@ -104,7 +104,7 @@ var app;
     };
     return dirMap[extension.location];
   };
-  var useClientDir = function (path, dir) {
+  var useClientDir = X.useClientDir = function (path, dir) {
     path = path.indexOf("npm") === 0 ? "/" + path : path;
     _.each(X.options.datasource.databases, function (orgValue, orgKey, orgList) {
       app.use("/" + orgValue + path, express.static(dir, { maxAge: 86400000 }));
@@ -422,7 +422,6 @@ app.get('/:org/logout', routes.logout);
 app.get('/:org/app', routes.app);
 app.get('/:org/debug', routes.debug);
 
-app.get('/:org/analysis', routes.analysis);
 app.all('/:org/credit-card', routes.creditCard);
 app.all('/:org/change-password', routes.changePassword);
 app.all('/:org/client/build/client-code', routes.clientCode);

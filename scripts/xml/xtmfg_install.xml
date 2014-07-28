@@ -1,5 +1,5 @@
-<package id        = "manufacturing-install-452"
-         version   = "4.5.2"
+<package id        = "manufacturing-install-460-beta"
+         version   = "4.6.0Beta"
          developer = "xTuple"
          descrip   = "load PostBooks resources"
          updater   = "2.2.4" >
@@ -19,8 +19,8 @@
 
   <prerequisite type = "query"
                 name = "Checking for bad xTuple ERP database version" >
-    <query>SELECT NOT fetchMetricText('ServerVersion') > '4.5.2' AND fetchMetricText('ServerVersion')!='4.5.0Beta' AND fetchMetricText('ServerVersion')!='4.5.0RC';</query>
-    <message>This package may not be applied to a 4.5.2+ PostBooks database.
+    <query>SELECT NOT fetchMetricText('ServerVersion') >= '4.6.0' AND fetchMetricText('ServerVersion')!='4.6.0-beta' AND fetchMetricText('ServerVersion')!='4.6.0RC';</query>
+    <message>This package may not be applied to a 4.6.0+ Distribution database.
     </message>
   </prerequisite>
 

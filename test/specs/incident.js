@@ -122,6 +122,16 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
         incidentModel.set("assignedTo", new XM.UserAccountRelation());
         assert.equal(incidentModel.get("status"), XM.Incident.ASSIGNED);
       });
+      it("Incident status does not revert to assigned from closed when user is assigned to it", function () {
+        incidentModel.set("status", XM.Incident.CLOSED);
+        incidentModel.set("assignedTo", new XM.UserAccountRelation());
+        assert.equal(incidentModel.get("status"), XM.Incident.CLOSED);
+      });
+      it("Incident status does not revert to assigned from resolved when user is assigned to it", function () {
+        incidentModel.set("status", XM.Incident.RESOLVED);
+        incidentModel.set("assignedTo", new XM.UserAccountRelation());
+        assert.equal(incidentModel.get("status"), XM.Incident.RESOLVED);
+      });
     });
     /**
     @member Privileges

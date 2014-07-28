@@ -65,7 +65,6 @@ strict:true, trailing:true, white:true */
     "_shipTo": "Ship To",
     "_showQuotesAfterConverted": "Show Quotes after Conversion to SO",
     "_showSaveAndAddbutton": "Show 'Save and Add to Packing List' Button on Sales Order",
-    "_staleAnalysisWarning": "Free trial demo analysis data will not be updated from your live changes.",
     "_termsType": "Terms Type",
     "_thisWeek": "This Week",
     "_thisMonth": "This Month",
