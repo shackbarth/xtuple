@@ -364,6 +364,37 @@ CREATE VIEW docinfo AS
         WHERE ((docass_source_type='S')
          AND (docass_source_id=cohead_id)
          AND (cust_id=cohead_cust_id))
+------------ INVOICE -----------
+ UNION ALL
+ SELECT docass_id AS id,
+        invchead_invcnumber AS target_number,
+        docass_target_type AS target_type,
+        docass_target_id AS target_id,
+        docass_source_type AS source_type,
+        docass_source_id AS source_id,
+        cust_name AS name, firstline(invchead_notes) AS description,
+        docass_purpose AS purpose
+        FROM docass, invchead, custinfo
+        WHERE ((docass_target_type='INV')
+         AND (docass_target_id=invchead_id)
+         AND (cust_id=invchead_cust_id))
+ UNION ALL
+ SELECT docass_id AS id,
+        invchead_invcnumber AS target_number,
+        docass_source_type AS target_type,
+        docass_source_id AS target_id,
+        docass_target_type AS source_type,
+        docass_target_id AS source_id,
+        cust_name AS name, firstline(invchead_notes) AS description,
+        CASE 
+          WHEN docass_purpose = 'A' THEN 'C'
+          WHEN docass_purpose = 'C' THEN 'A'
+          ELSE docass_purpose
+        END AS purpose
+        FROM docass, invchead, custinfo
+        WHERE ((docass_source_type='INV')
+         AND (docass_source_id=invchead_id)
+         AND (cust_id=invchead_cust_id))
  ------------ PURCHASE ORDER -----------
  UNION ALL
  SELECT docass_id AS id,

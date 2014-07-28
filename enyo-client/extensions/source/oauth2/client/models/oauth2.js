@@ -34,6 +34,7 @@ white:true*/
       bindEvents: function () {
         XM.Model.prototype.bindEvents.apply(this, arguments);
         this.on('statusChange', this.statusDidChange);
+        this.on('change:clientType', this.clientTypeDidChange);
       },
 
       // clientType must not be editable once first saved.
@@ -49,6 +50,10 @@ white:true*/
           this.set('clientSecret', XT.generateUUID());
           this.set('issued', new Date());
         }
+      },
+
+      clientTypeDidChange: function () {
+        this.set("delegatedAccess", this.get("clientType") === 'jwt bearer');
       },
 
       save: function (key, value, options) {

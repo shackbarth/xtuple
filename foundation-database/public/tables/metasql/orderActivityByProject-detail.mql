@@ -130,7 +130,7 @@ SELECT prjtask_id AS id,
   LEFT OUTER JOIN addr ON (cntct_addr_id=addr_id)
 
  WHERE (prjtask_prj_id = <? value("prj_id") ?> )
- GROUP BY custinfo.cust_name, prjtask.prjtask_id, addr.addr_city, addr.addr_state, cntct_name
+ GROUP BY prjtask_prj_id, custinfo.cust_name, prjtask.prjtask_id, addr.addr_city, addr.addr_state, cntct_name, prjtask.prjtask_number, prjtask.prjtask_status, prjtask_username, prjtask.prjtask_owner_username, prjtask_name, prjtask_descrip, prjtask_due_date, prjtask_assigned_date, prjtask_start_date, prjtask_completed_date, prjtask_hours_budget, prjtask_hours_actual, prjtask_exp_budget, prjtask_exp_actual
 
 <? if exists("showIn") ?>
 UNION ALL
