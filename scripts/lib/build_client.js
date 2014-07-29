@@ -62,6 +62,8 @@ var _ = require('underscore'),
     } else {
       extName = path.basename(extPath).replace(/\/$/, ""); // the name of the extension
       fs.readFile(path.join(__dirname, "build", extName + ".js"), "utf8", function (err, code) {
+        var version;
+
         if (err) {
           if (err.code === 'ENOENT') {
             // it's not necessarily an error if there's no code here.
@@ -73,27 +75,16 @@ var _ = require('underscore'),
           return;
         }
         // get the extension version from the database manifest file
-        fs.readFile(path.join(extPath, "database/source/manifest.js"), "utf8", function (err, manifestContents) {
-          if (err) {
-            callback(err);
-            return;
-          }
-          var manifestDetails = JSON.parse(manifestContents);
-          if (!manifestDetails.version) {
-            // if the extensions don't declare their version, default to the package version
-            fs.readFile(path.join(__dirname, "../../package.json"), "utf8", function (err, packageJson) {
-              if (err) {
-                callback(err);
-                return;
-              }
-              var packageDetails = JSON.parse(packageJson);
-              callback(null, constructQuery(code, extName, packageDetails.version, "js"));
-            });
-
-          } else {
-            callback(null, constructQuery(code, extName, manifestDetails.version, "js"));
-          }
-        });
+        if (fs.existsSync(path.resolve(extPath, "package.json"))) {
+          version = require(path.resolve(extPath, "package.json")).version;
+        } else {
+          version = JSON.parse(fs.readFileSync(path.resolve(extPath, "database/source/manifest.js"))).version;
+        }
+        if (!version) {
+          // if the extensions don't declare their version, default to the package version
+          version = require(path.resolve(__dirname, "../../package.json")).version;
+        }
+        callback(null, constructQuery(code, extName, version, "js"));
       });
     }
   };

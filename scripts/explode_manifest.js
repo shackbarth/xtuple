@@ -22,12 +22,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     .option('-n, --name [inventory_upgrade.sql]', 'Name of destination file.')
     .parse(process.argv);
 
-  // the path is not relative if it starts with a slash
-  var manifestPath = program.manifest.substring(0, 1) === '/' ?
-    program.manifest :
-    path.join(process.cwd(), program.manifest);
+  var manifestFilename = path.resolve(process.cwd(), program.manifest);
 
-  buildDatabaseUtil.explodeManifest(manifestPath, {}, function (err, contents) {
+  buildDatabaseUtil.explodeManifest({manifestFilename: manifestFilename}, function (err, contents) {
     var outputFile;
     if (err) {
       console.log("error: ", err);

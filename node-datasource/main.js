@@ -117,11 +117,12 @@ var app;
   var loadExtensionServerside = function (extension) {
     var packagePath = X.path.join(getExtensionDir(extension), "package.json");
     var packageJson = X.fs.existsSync(packagePath) ? require(packagePath) : undefined;
-    var manifest = JSON.parse(X.fs.readFileSync(X.path.join(getExtensionDir(extension),
-        "database/source/manifest.js")));
+    var manifestPath = X.path.join(getExtensionDir(extension), "database/source/manifest.js");
+    var manifest = X.fs.existsSync(manifestPath) ? JSON.parse(X.fs.readFileSync(manifestPath)) : {};
     var version = packageJson ? packageJson.version : manifest.version;
     X.versions[extension.name] = version || "none"; // XXX the "none" is temporary until we have core extensions in npm
 
+    // TODO: be able to define routes in package.json
     _.each(manifest.routes || [], function (routeDetails) {
       var verb = (routeDetails.verb || "all").toLowerCase(),
         func = require(X.path.join(getExtensionDir(extension),

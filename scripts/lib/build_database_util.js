@@ -181,13 +181,85 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     }
   };
 
-  var explodeManifest = function (manifestFilename, options, manifestCallback) {
+  // register extension and dependencies
+  var getRegistrationSql = function (options, extensionLocation) {
+    var registerSql = 'do $$ plv8.elog(NOTICE, "About to register extension ' +
+      options.name + '"); $$ language plv8;\n';
+
+    registerSql = "select xt.register_extension('%@', '%@', '%@', '', %@);\n"
+      .f(options.name, options.description || options.comment, extensionLocation, options.loadOrder || 9999);
+
+    var grantExtToAdmin = "select xt.grant_role_ext('ADMIN', '%@');\n"
+      .f(options.name);
+
+    registerSql = grantExtToAdmin + registerSql;
+
+    // TODO: infer dependencies from package.json using peerDependencies
+    var dependencies = options.dependencies || [];
+    _.each(dependencies, function (dependency) {
+      var dependencySql = "select xt.register_extension_dependency('%@', '%@');\n"
+          .f(options.name, dependency),
+        grantDependToAdmin = "select xt.grant_role_ext('ADMIN', '%@');\n"
+          .f(dependency);
+
+      registerSql = dependencySql + grantDependToAdmin + registerSql;
+    });
+    return registerSql;
+  };
+
+  var composeExtensionSql = function (scriptSql, packageFile, options, callback) {
+    // each String of the scriptContents is the concatenated SQL for the script.
+    // join these all together into a single string for the whole extension.
+    var extensionSql = _.reduce(scriptSql, function (memo, script) {
+      return memo + script;
+    }, "");
+
+    if (options.registerExtension) {
+      extensionSql = getRegistrationSql(packageFile, options.extensionLocation) +
+        extensionSql;
+    }
+    if (options.runJsInit) {
+      // unless it it hasn't yet been defined (ie. lib/orm),
+      // running xt.js_init() is probably a good idea.
+      extensionSql = "select xt.js_init();" + extensionSql;
+    }
+
+    if (options.wipeViews) {
+      // If we want to pre-emptively wipe out the views, the best place to do it
+      // is at the start of the core application code
+      fs.readFile(path.join(__dirname, "../../enyo-client/database/source/delete_system_orms.sql"),
+          function (err, wipeSql) {
+        if (err) {
+          callback(err);
+          return;
+        }
+        extensionSql = wipeSql + extensionSql;
+        callback(null, extensionSql);
+      });
+    } else {
+      callback(null, extensionSql);
+    }
+  };
+
+  var explodeManifest = function (options, manifestCallback) {
+    var manifestFilename = options.manifestFilename;
+    var packageJson;
     var dbSourceRoot = path.dirname(manifestFilename);
+
+    if (options.extensionPath && fs.existsSync(path.resolve(options.extensionPath, "package.json"))) {
+      packageJson = require(path.resolve(options.extensionPath, "package.json"));
+    }
     //
     // Step 2:
     // Read the manifest files.
     //
-    if (!fs.existsSync(manifestFilename)) {
+
+    if (!fs.existsSync(manifestFilename) && packageJson) {
+      console.log("No manifest file " + manifestFilename + ". There is probably no db-side code in the extension.");
+      composeExtensionSql([], packageJson, options, manifestCallback);
+      return;
+
+    } else if (!fs.existsSync(manifestFilename)) {
       // error condition: no manifest file
       manifestCallback("Cannot find manifest " + manifestFilename);
       return;
@@ -201,16 +273,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         extraManifestScripts,
         alterPaths = dbSourceRoot.indexOf("foundation-database") < 0,
         extensionName,
-        loadOrder,
         extensionComment;
 
       try {
         manifest = JSON.parse(manifestString);
-        extensionName = manifest.name;
-        extensionComment = manifest.comment;
         databaseScripts = manifest.databaseScripts;
         defaultSchema = manifest.defaultSchema;
-        loadOrder = manifest.loadOrder || 999;
 
       } catch (error) {
         // error condition: manifest file is not properly formatted
@@ -294,16 +362,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
           // convert special files: metasql, uiforms, reports, uijs
           scriptContents = conversionMap[extname](scriptContents, fullFilename, defaultSchema);
-          //
-          // Allow inclusion of js files in manifest. If it is a js file,
-          // use plv8 to execute it.
-          //
-          //if (fullFilename.substring(fullFilename.length - 2) === 'js') {
-            // this isn't quite working yet
-            // http://adpgtech.blogspot.com/2013/03/loading-useful-modules-in-plv8.html
-            // put in lib/orm's manifest.js: "../../tools/lib/underscore/underscore-min.js",
-          //  scriptContents = "do $$ " + scriptContents + " $$ language plv8;";
-          //}
 
           //
           // Incorrectly-ended sql files (i.e. no semicolon) make for unhelpful error messages
@@ -326,57 +384,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           manifestCallback(err);
           return;
         }
-        // each String of the scriptContents is the concatenated SQL for the script.
-        // join these all together into a single string for the whole extension.
-        var extensionSql = _.reduce(scriptSql, function (memo, script) {
-          return memo + script;
-        }, "");
 
-        if (options.registerExtension) {
-          // register extension and dependencies
-          extensionSql = 'do $$ plv8.elog(NOTICE, "About to register extension ' +
-            extensionName + '"); $$ language plv8;\n' + extensionSql;
-
-          registerSql = "select xt.register_extension('%@', '%@', '%@', '', %@);\n"
-            .f(extensionName, extensionComment, options.extensionLocation, loadOrder);
-
-          var grantExtToAdmin = "select xt.grant_role_ext('ADMIN', '%@');\n"
-            .f(extensionName);
-
-          extensionSql = grantExtToAdmin + extensionSql;
-
-          dependencies = manifest.dependencies || [];
-          _.each(dependencies, function (dependency) {
-            var dependencySql = "select xt.register_extension_dependency('%@', '%@');\n"
-                .f(extensionName, dependency),
-              grantDependToAdmin = "select xt.grant_role_ext('ADMIN', '%@');\n"
-                .f(dependency);
-
-            extensionSql = dependencySql + grantDependToAdmin + extensionSql;
-          });
-          extensionSql = registerSql + extensionSql;
-        }
-        if (options.runJsInit) {
-          // unless it it hasn't yet been defined (ie. lib/orm),
-          // running xt.js_init() is probably a good idea.
-          extensionSql = "select xt.js_init();" + extensionSql;
-        }
-
-        if (options.wipeViews) {
-          // If we want to pre-emptively wipe out the views, the best place to do it
-          // is at the start of the core application code
-          fs.readFile(path.join(__dirname, "../../enyo-client/database/source/delete_system_orms.sql"),
-              function (err, wipeSql) {
-            if (err) {
-              manifestCallback(err);
-              return;
-            }
-            extensionSql = wipeSql + extensionSql;
-            manifestCallback(null, extensionSql);
-          });
-        } else {
-          manifestCallback(null, extensionSql);
-        }
+        composeExtensionSql(scriptSql, packageJson || manifest, options, manifestCallback);
 
       });
       //

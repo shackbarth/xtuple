@@ -73,15 +73,20 @@ var  async = require('async'),
           isPublicExtension = extension.indexOf("xtuple-extensions") >= 0,
           isPrivateExtension = extension.indexOf("private-extensions") >= 0,
           isNpmExtension = baseName.indexOf("xtuple-") >= 0,
+          isExtension = !isFoundation && !isLibOrm && !isApplicationCore,
           dbSourceRoot = (isFoundation || isFoundationExtension) ? extension :
             isLibOrm ? path.join(extension, "source") :
             path.join(extension, "database/source"),
           manifestOptions = {
+            manifestFilename: path.resolve(dbSourceRoot, "manifest.js"),
+            extensionPath: isExtension ?
+              path.resolve(dbSourceRoot, "../../") :
+              undefined,
             useFrozenScripts: spec.frozen,
             useFoundationScripts: baseName.indexOf('inventory') >= 0 ||
               baseName.indexOf('manufacturing') >= 0 ||
               baseName.indexOf('distribution') >= 0,
-            registerExtension: !isFoundation && !isLibOrm && !isApplicationCore,
+            registerExtension: isExtension,
             runJsInit: !isFoundation && !isLibOrm,
             wipeViews: isApplicationCore && spec.wipeViews,
             extensionLocation: isCoreExtension ? "/core-extensions" :
@@ -90,8 +95,7 @@ var  async = require('async'),
               isNpmExtension ? "npm" : "not-applicable"
           };
 
-        buildDatabaseUtil.explodeManifest(path.join(dbSourceRoot, "manifest.js"),
-          manifestOptions, extensionCallback);
+        buildDatabaseUtil.explodeManifest(manifestOptions, extensionCallback);
       };
 
       // We also need to get the sql that represents the queries to generate
