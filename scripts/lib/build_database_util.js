@@ -271,9 +271,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         defaultSchema,
         extraManifest,
         extraManifestScripts,
-        alterPaths = dbSourceRoot.indexOf("foundation-database") < 0,
-        extensionName,
-        extensionComment;
+        alterPaths = dbSourceRoot.indexOf("foundation-database") < 0;
 
       try {
         manifest = JSON.parse(manifestString);
