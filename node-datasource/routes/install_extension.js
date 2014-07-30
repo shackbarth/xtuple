@@ -63,8 +63,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     async.series([
       validateInput,
       validateUser,
-      npmLoad,
-      npmInstall,
+      //npmLoad,
+      //npmInstall,
       buildExtension,
       useClientDir
     ], function (err, results) {
