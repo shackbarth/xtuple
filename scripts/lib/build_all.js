@@ -72,7 +72,6 @@ var _ = require('underscore'),
             }
 
           },
-          /*
           function (done) {
             // step 1: npm install extension if necessary
             // an alternate approach would be only npm install these
@@ -102,7 +101,6 @@ var _ = require('underscore'),
               }, done);
             });
           },
-          */
           function (done) {
             // step 2: build the client
             buildClient(specs, done);
