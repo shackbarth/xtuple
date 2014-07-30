@@ -61,7 +61,7 @@ var _ = require('underscore'),
 
     } else {
       extName = path.basename(extPath).replace(/\/$/, ""); // the name of the extension
-      fs.readFile(path.join(__dirname, "build", extName + ".js"), "utf8", function (err, code) {
+      fs.readFile(path.join(__dirname, "build", extName + ".js"), "utf8", function (err, jsCode) {
         if (err) {
           if (err.code === 'ENOENT') {
             // it's not necessarily an error if there's no code here.
@@ -72,27 +72,31 @@ var _ = require('underscore'),
           callback(err);
           return;
         }
-        // get the extension version from the database manifest file
-        fs.readFile(path.join(extPath, "database/source/manifest.js"), "utf8", function (err, manifestContents) {
-          if (err) {
-            callback(err);
-            return;
-          }
-          var manifestDetails = JSON.parse(manifestContents);
-          if (!manifestDetails.version) {
-            // if the extensions don't declare their version, default to the package version
-            fs.readFile(path.join(__dirname, "../../package.json"), "utf8", function (err, packageJson) {
-              if (err) {
-                callback(err);
-                return;
-              }
-              var packageDetails = JSON.parse(packageJson);
-              callback(null, constructQuery(code, extName, packageDetails.version, "js"));
-            });
+        fs.readFile(path.join(__dirname, "build", extName + ".css"), "utf8", function (err, cssCode) {
+          // get the extension version from the database manifest file
+          fs.readFile(path.join(extPath, "database/source/manifest.js"), "utf8", function (err, manifestContents) {
+            if (err) {
+              callback(err);
+              return;
+            }
+            var manifestDetails = JSON.parse(manifestContents);
+            if (!manifestDetails.version) {
+              // if the extensions don't declare their version, default to the package version
+              fs.readFile(path.join(__dirname, "../../package.json"), "utf8", function (err, packageJson) {
+                if (err) {
+                  callback(err);
+                  return;
+                }
+                var packageDetails = JSON.parse(packageJson);
+                callback(null, constructQuery(cssCode, extName, packageDetails.version, "css") +
+                  constructQuery(jsCode, extName, packageDetails.version, "js"));
+              });
 
-          } else {
-            callback(null, constructQuery(code, extName, manifestDetails.version, "js"));
-          }
+            } else {
+              callback(null, constructQuery(cssCode, extName, manifestDetails.version, "css") +
+                constructQuery(jsCode, extName, manifestDetails.version, "js"));
+            }
+          });
         });
       });
     }
@@ -104,6 +108,7 @@ var _ = require('underscore'),
   var buildExtension = function (extPath, callback) {
     // regex: remove trailing slash
     var extName = path.basename(extPath).replace(/\/$/, ""), // the name of the extension
+      cssFilename = extName + ".css",
       jsFilename = extName + ".js";
 
     // create the package file for enyo to use
@@ -130,9 +135,9 @@ var _ = require('underscore'),
           }
           // rename the file with the name of the extension so that we won't need to recreate it
           // in the case of multiple databases wanting the same client code
-          fs.rename(path.join(__dirname, "build/app.js"), path.join(__dirname, "build", jsFilename), function (err) {
-            callback(err);
-          });
+          fs.renameSync(path.join(__dirname, "build/app.js"), path.join(__dirname, "build", jsFilename));
+          fs.renameSync(path.join(__dirname, "build/app.css"), path.join(__dirname, "build", cssFilename));
+          callback();
         }
       );
     });
