@@ -10,9 +10,6 @@ var _ = require('underscore'),
   path = require('path'),
   rimraf = require('rimraf');
 
-  // TODO: relax the assumption that extension builds are js only (i.e. allow extension css)
-  // TODO: right now we just give the latest versions available in the db. This might possibly change.
-
 (function () {
   "use strict";
 
@@ -136,7 +133,9 @@ var _ = require('underscore'),
           // rename the file with the name of the extension so that we won't need to recreate it
           // in the case of multiple databases wanting the same client code
           fs.renameSync(path.join(__dirname, "build/app.js"), path.join(__dirname, "build", jsFilename));
-          fs.renameSync(path.join(__dirname, "build/app.css"), path.join(__dirname, "build", cssFilename));
+          if (fs.existsSync(path.join(__dirname, "build/app.css"))) {
+            fs.renameSync(path.join(__dirname, "build/app.css"), path.join(__dirname, "build", cssFilename));
+          }
           callback();
         }
       );
