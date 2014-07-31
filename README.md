@@ -67,5 +67,5 @@ View the [Release Notes](RELEASE.md) to see a change log.
   * [Building an Extension Tutorial](https://github.com/xtuple/xtuple-extensions/blob/master/docs/TUTORIAL.md)
   * [Developer Wiki](https://github.com/xtuple/xtuple/wiki)
   * xTuple U [Tutorial Videos](https://github.com/xtuple/xtuple/wiki/Tutorial-Videos)
-  * [API documentation](xtuple.github.io/api/current)
+  * [API documentation](http://xtuple.github.io/api/current)
   * [Setting up a non-development demo environment](https://github.com/xtuple/xtuple/wiki/How-to-set-up-xTuple)
