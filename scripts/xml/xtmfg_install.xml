@@ -1,5 +1,5 @@
-<package id        = "manufacturing-install-460-beta"
-         version   = "4.6.0Beta"
+<package id        = "manufacturing-install-460"
+         version   = "4.6.0"
          developer = "xTuple"
          descrip   = "load PostBooks resources"
          updater   = "2.2.4" >
