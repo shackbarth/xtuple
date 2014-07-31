@@ -177,7 +177,7 @@ if (typeof XT === 'undefined') {
       creds.parameters = [destinationLang];
     } // else the user wants a blank template, so no need to search for pre-existing translations
     sql = sql + ";";
-
+    console.log(sql);
     creds.database = database;
     dataSource.query(sql, creds, function (err, res) {
       var processExtension = function (rowMap, extensionCallback) {
@@ -200,6 +200,13 @@ if (typeof XT === 'undefined') {
               key: stringObj.key,
               source: stringObj.value,
               target: preExistingTranslation
+            });
+          } else if (destinationLang.indexOf('en') === 0) {
+            // english is english
+            stringCallback(null, {
+              key: stringObj.key,
+              source: stringObj.value,
+              target: stringObj.value
             });
           } else {
             // ask google (or not)
@@ -224,6 +231,7 @@ if (typeof XT === 'undefined') {
 
       // group together english and foreign strings of the same extension
       var marriedRows = marryLists(res.rows);
+      console.log(marriedRows);
       async.map(marriedRows, processExtension, function (err, extensions) {
         // sort alpha so as to keep diffs under control
         _.each(extensions, function (extension) {
