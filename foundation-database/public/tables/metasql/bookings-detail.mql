@@ -29,6 +29,21 @@ SELECT   coitem_id AS id, coitem_cohead_id AS altId,
                      (coitem_price / coitem_price_invuomratio), 2) AS extpricebalance,
          round((noNeg(coitem_qtyord - coitem_qtyshipped + coitem_qtyreturned) * coitem_qty_invuomratio) *
                      (currtobase(cohead_curr_id, coitem_price, cohead_orderdate) / coitem_price_invuomratio), 2) AS baseextpricebalance,
+         round((coitem_qtyord * coitem_qty_invuomratio) *
+                     (coitem_unitcost / coitem_price_invuomratio), 2) AS extcost,
+         (round((coitem_qtyord * coitem_qty_invuomratio) *
+                     (currtobase(cohead_curr_id, coitem_price, cohead_orderdate) / coitem_price_invuomratio), 2) -
+          round((coitem_qtyord * coitem_qty_invuomratio) *
+                     (coitem_unitcost / coitem_price_invuomratio), 2)) AS margin,
+         CASE WHEN (coitem_price > 0.0) THEN
+           (round((coitem_qtyord * coitem_qty_invuomratio) *
+                       (currtobase(cohead_curr_id, coitem_price, cohead_orderdate) / coitem_price_invuomratio), 2) -
+            round((coitem_qtyord * coitem_qty_invuomratio) *
+                       (coitem_unitcost / coitem_price_invuomratio), 2)) /
+            round((coitem_qtyord * coitem_qty_invuomratio) *
+                       (currtobase(cohead_curr_id, coitem_price, cohead_orderdate) / coitem_price_invuomratio), 2)
+              ELSE 0.0
+         END AS marginpercent,
          curr_abbr AS currAbbr,
 -- TODO - not needed, remove? (very slow)
 --         CASE WHEN (qtyAvailable(itemsite_id, coitem_scheddate) < 0.0) THEN 'error'
@@ -43,7 +58,11 @@ SELECT   coitem_id AS id, coitem_cohead_id AS altId,
        'qty' AS qtyavailable_xtnumericrole,
        'salesprice' AS coitem_price_xtnumericrole,
        'salesprice' AS baseunitprice_xtnumericrole,
+       'cost' AS coitem_unitcost_xtnumericrole,
        'curr' AS extprice_xtnumericrole,
+       'curr' AS extcost_xtnumericrole,
+       'curr' AS margin_xtnumericrole,
+       'percent' AS marginpercent_xtnumericrole,
        'curr' AS baseextprice_xtnumericrole,
        'curr' AS extpricebalance_xtnumericrole,
        'curr' AS baseextpricebalance_xtnumericrole,
