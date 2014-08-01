@@ -21,16 +21,11 @@ SELECT DISTINCT
        firstline(cohead_ordercomments) AS notes,
        calcSalesOrderAmt(cohead_id) AS ordertotal,
        CASE WHEN (calcSalesOrderAmt(cohead_id,'S') != 0.0)
-              THEN calcSalesOrderAmt(cohead_id,'M')
-            ELSE 0.0
-       END AS ordermargin,
-       CASE WHEN (calcSalesOrderAmt(cohead_id,'S') != 0.0)
               THEN (calcSalesOrderAmt(cohead_id,'M') / calcSalesOrderAmt(cohead_id,'S'))
             ELSE 1.0
        END AS ordermarginpercent,
        'percent' AS ordermarginpercent_xtnumericrole,
-       'extprice' AS ordertotal_xtnumericrole,
-       'extprice' AS ordermargin_xtnumericrole
+       'extprice' AS ordertotal_xtnumericrole
 FROM cohead 
      JOIN custinfo ON (cohead_cust_id=cust_id) 
      JOIN custtype ON (cust_custtype_id=custtype_id)

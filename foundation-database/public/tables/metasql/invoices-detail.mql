@@ -30,15 +30,10 @@ SELECT invchead_id, cust_id,
          findCustomerForm(cust_id, 'I') AS reportname,
        <? endif ?>
        CASE WHEN (calcInvoiceAmt(invchead_id,'S') != 0.0)
-              THEN calcInvoiceAmt(invchead_id,'M')
-            ELSE 0.0
-       END AS margin,
-       CASE WHEN (calcInvoiceAmt(invchead_id,'S') != 0.0)
               THEN (calcInvoiceAmt(invchead_id,'M') / calcInvoiceAmt(invchead_id,'S'))
             ELSE 1.0
        END AS marginpercent,
        'percent' AS marginpercent_xtnumericrole,
-       'curr' AS margin_xtnumericrole,
        'curr' AS extprice_xtnumericrole,
        'curr' AS balance_xtnumericrole,
        CASE WHEN (aropen_id IS NULL) THEN 'Unposted' END AS balance_qtdisplayrole
