@@ -7,28 +7,15 @@
 SELECT
        COALESCE(cohead_id,-1) AS cohead_id, cust_id, cohist_ponumber,
        cust_custtype_id, custtype_code,
-       cohist_cust_id, cohist_ordernumber,
-       cust_number, cust_name, currAbbr,
-       CASE WHEN (cohist_invcnumber='-1') THEN  <? value("credit") ?>
-            ELSE cohist_invcnumber
-       END AS invoicenumber,
-       cohist_orderdate, cohist_invcdate,
-       SUM(extprice) AS extprice,
-       SUM(baseextprice) AS baseextprice,
-       SUM(extcost) AS extcost,
-       SUM(margin) AS margin,
-       CASE WHEN (SUM(baseextprice) > 0.0) THEN
-            ROUND(SUM(margin) / SUM(baseextprice), 4)
-            ELSE 0.0
-       END AS marginpercent,
-       'curr' AS extprice_xtnumericrole,
-       'curr' AS baseextprice_xtnumericrole,
+       cohist_cust_id, SUM(extcost) AS extcost,
        'curr' AS extcost_xtnumericrole,
-       'curr' AS margin_xtnumericrole,
-       'percent' AS marginpercent_xtnumericrole,
-       0 AS baseextprice_xttotalrole,
        0 AS extcost_xttotalrole,
-       0 AS margin_xttotalrole
+       cohist_ordernumber,
+       cust_number, cust_name, invoicenumber,
+       cohist_orderdate, cohist_invcdate,
+       SUM(baseextprice) AS extended,
+       'curr' AS extended_xtnumericrole,
+       0 AS extended_xttotalrole
 FROM saleshistory
   LEFT OUTER JOIN cohead ON (cohead_number=cohist_ordernumber)
 WHERE ((cohist_invcdate BETWEEN <? value("startDate") ?> AND  <? value("endDate") ?>)
@@ -73,8 +60,7 @@ WHERE ((cohist_invcdate BETWEEN <? value("startDate") ?> AND  <? value("endDate"
    AND (cohist_salesrep_id=<? value("salesrep_id") ?>)
 <? endif ?>
       )
-GROUP BY cohead_id, cust_id, cust_number, cust_custtype_id,
-         cohist_cust_id, custtype_code, currAbbr,
-         cust_name, cohist_ordernumber, cohist_ponumber,
-         cohist_invcnumber, cohist_orderdate, cohist_invcdate
+GROUP BY cohead_id, cust_id,cust_number,cust_custtype_id,cohist_cust_id,custtype_code,
+         cust_name,cohist_ordernumber, cohist_ponumber,
+         invoicenumber,cohist_orderdate, cohist_invcdate
 ORDER BY cohist_invcdate, cohist_orderdate;
