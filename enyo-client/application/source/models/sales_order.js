@@ -196,6 +196,10 @@ white:true*/
       return defaults;
     },
 
+    /* 
+      The whole purpose here was to throw the popup in the appropriate scenario.
+      Now that's happening in enyo - childWorkspace - deleteItem.
+
     destroy: function (options) {
       var status = this.getParent().get("status"),
         K = XM.SalesOrder,
@@ -220,7 +224,7 @@ white:true*/
       }
 
       this.notify(message, payload);
-    },
+    }, */
 
     isActive: function () {
       return this.get("status") === XM.SalesOrder.OPEN_STATUS;
