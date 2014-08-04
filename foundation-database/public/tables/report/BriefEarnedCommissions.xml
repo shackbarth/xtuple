@@ -3,6 +3,12 @@
  <title>Brief Earned Commissions</title>
  <name>BriefEarnedCommissions</name>
  <description></description>
+ <grid>
+  <snap/>
+  <show/>
+  <x>0.05</x>
+  <y>0.05</y>
+ </grid>
  <size>Letter</size>
  <portrait/>
  <topmargin>50</topmargin>
@@ -22,35 +28,10 @@
        formatDate(&lt;? value("startDate") ?>) AS startdate,
        formatDate(&lt;? value("endDate") ?>) AS enddate;</sql>
  </querysource>
- <querysource>
+ <querysource loadFromDb="true">
   <name>detail</name>
-  <sql>SELECT cohist_salesrep_id, salesrep_number, salesrep_name, cust_number, cust_name,
-       cohist_ordernumber, cohist_invcnumber, formatDate(cohist_invcdate) AS f_invcdate, currAbbr,
-       formatMoney(SUM(baseextprice)) AS f_extprice,
-       formatMoney(SUM(basecommission)) AS f_commission,
-       SUM(baseextprice) AS extprice,
-       SUM(basecommission) AS commission
-&lt;? if exists("includeMisc") ?>
-FROM saleshistorymisc
-&lt;? else ?>
-FROM saleshistory
-&lt;? endif ?>
-WHERE ( (cohist_commission &lt;> 0)
-  AND (cohist_invcdate BETWEEN &lt;? value("startDate") ?> AND &lt;? value("endDate") ?>)
-
-&lt;? if exists("includeMisc") ?>
-  AND (COALESCE(cohist_misc_type, '') &lt;> 'T')
-  AND (COALESCE(cohist_misc_type, '') &lt;> 'F')
-&lt;? endif ?>
-
-&lt;? if exists("salesrep_id") ?>
-  AND (cohist_salesrep_id=&lt;? value("salesrep_id") ?>)
-&lt;? endif ?>
-)
-GROUP BY cohist_salesrep_id, salesrep_number, salesrep_name, cust_number, cust_name,
-         cohist_ordernumber, cohist_invcnumber, cohist_invcdate, currAbbr
-ORDER BY salesrep_number, cust_number, cohist_invcdate
-</sql>
+  <mqlgroup>briefEarnedCommission</mqlgroup>
+  <mqlname>detail</mqlname>
  </querysource>
  <rpthead>
   <height>221</height>
@@ -527,7 +508,7 @@ ORDER BY salesrep_number, cust_number, cohist_invcdate
     <vcenter/>
     <data>
      <query>detail</query>
-     <column>f_extprice</column>
+     <column>f_sumbaseextprice</column>
     </data>
    </field>
    <field>
@@ -546,7 +527,7 @@ ORDER BY salesrep_number, cust_number, cohist_invcdate
     <vcenter/>
     <data>
      <query>detail</query>
-     <column>f_commission</column>
+     <column>f_sumbasecommission</column>
     </data>
    </field>
    <field>
@@ -772,7 +753,7 @@ ORDER BY salesrep_number, cust_number, cohist_invcdate
    <vcenter/>
    <data>
     <query>detail</query>
-    <column>extprice</column>
+    <column>sumbaseextprice</column>
    </data>
    <format builtin="true">money</format>
    <tracktotal/>
@@ -793,7 +774,7 @@ ORDER BY salesrep_number, cust_number, cohist_invcdate
    <vcenter/>
    <data>
     <query>detail</query>
-    <column>commission</column>
+    <column>sumbasecommission</column>
    </data>
    <format builtin="true">money</format>
    <tracktotal/>
