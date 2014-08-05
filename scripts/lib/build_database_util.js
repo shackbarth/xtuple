@@ -488,7 +488,15 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         exec("pg_restore -U " + creds.username + " -h " + creds.hostname + " -p " +
           creds.port + " -d " + databaseName + " -j " + os.cpus().length + " " + spec.backup, function (err, res) {
           if (err) {
-            console.log("ignoring restore db error", err);
+            winston.error("backup database error", err.message, err);
+            if (err.stack.indexOf('language "plpgsql" already exists') >= 0) {
+              // this is the one error that we are okay ignoring
+              done(null, res);
+              return;
+            }
+
+            done(err);
+            return;
           }
           done(null, res);
         });
