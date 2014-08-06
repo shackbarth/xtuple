@@ -38,7 +38,7 @@ Fork us, take a test drive with our [free trial](http://www.xtuple.com/free-tria
 file a github issue. 
 If you want to be a contributor and are looking for a place to
 make your mark, we're keeping a list of issues that are 
-[fair game](https://github.com/xtuple/xtuple/issues?labels=fair+game) 
+[fair game](https://github.com/xtuple/xtuple/labels/fair%20game)
 to pick off and provide
 a convenient, well-documented starting point into our project.
 
