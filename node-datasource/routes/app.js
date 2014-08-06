@@ -110,18 +110,25 @@ var async = require("async"),
               return ext1.name > ext2.name ? 1 : -1;
             }
           });
-          var uuids = _.map(extensions, function (ext) {
-            var sortedModels = _.sortBy(ext.codeInfo, function (codeInfo) {
-              return -1 * getVersionSize(codeInfo.version);
+          var getLatestUuid = function (extensions, language) {
+            var uuids = _.map(extensions, function (ext) {
+              var jsModels = _.filter(ext.codeInfo, function (codeInfo) {
+                return codeInfo.language === language;
+              });
+              var sortedModels = _.sortBy(jsModels, function (codeInfo) {
+                return -1 * getVersionSize(codeInfo.version);
+              });
+              if (sortedModels[0]) {
+                return sortedModels[0].uuid;
+              } else {
+                X.log("Could not find js uuid for extension " + ext.description);
+                return null;
+              }
             });
-            if (sortedModels[0]) {
-              return sortedModels[0].uuid;
-            } else {
-              X.log("Could not find uuid for extension " + ext.description);
-              return null;
-            }
-          });
-          uuids = _.compact(uuids); // eliminate any null values
+            return _.compact(uuids); // eliminate any null values
+          };
+          var extJsUuids = getLatestUuid(extensions, "js");
+          var extCssUuids = getLatestUuid(extensions, "css");
           var extensionPaths = _.compact(_.map(extensions, function (ext) {
             var locationName = ext.location.indexOf("/") === 0 ?
               path.join(ext.location, "source") :
@@ -142,7 +149,8 @@ var async = require("async"),
                 org: req.session.passport.user.organization,
                 coreJs: jsUuid,
                 coreCss: cssUuid,
-                extensions: uuids,
+                extensionJsArray: extJsUuids,
+                extensionCssArray: extCssUuids,
                 extensionPaths: extensionPaths
               });
             });

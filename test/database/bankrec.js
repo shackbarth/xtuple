@@ -590,29 +590,48 @@ var _    = require("underscore"),
     });
 
     it('creates a sales order item', function (done) {
-      var sql = mqlToSql("INSERT INTO coitem (coitem_cohead_id,"               +
-               "    coitem_linenumber, coitem_scheddate, coitem_itemsite_id,"  +
-               "    coitem_taxtype_id, coitem_status,"                         +
-               "    coitem_qtyord, coitem_qtyshipped,  coitem_qtyreturned,"    +
-               "    coitem_unitcost, coitem_price, coitem_custprice,"          +
-               "    coitem_qty_uom_id, coitem_price_uom_id,"                   +
-               "    coitem_qty_invuomratio, coitem_price_invuomratio"          +
-               ") SELECT cohead_id,"                                           +
-               "    1, CURRENT_DATE + itemsite_leadtime, itemsite_id,"         +
-               "    getItemTaxType(item_id, cohead_taxzone_id), 'O',"          +
-               "    123, 0, 0,"                                                +
-               "    itemcost(itemsite_id), item_listprice, item_listprice,"    +
-               "    item_price_uom_id, item_price_uom_id,"                     +
-               "    1, 1"                                                      +
-               "  FROM cohead"                                                 +
-               "  JOIN custinfo ON cohead_cust_id=cust_id"                     +
-               "  JOIN itemsite"                                               +
-               "        ON cust_preferred_warehous_id=itemsite_warehous_id"    +
-               "  JOIN item ON (itemsite_item_id=item_id)"                     +
-               " WHERE cohead_id=<? value('coheadid') ?>"                      +
-               "   AND itemsite_active"                                        +
-               "   AND item_price_uom_id=item_inv_uom_id"                      +
-/* simplify!*/ "  AND item_type != 'K'"                                        +
+      var sql = mqlToSql("INSERT INTO coitem (coitem_cohead_id,"              +
+               "    coitem_linenumber, coitem_scheddate, coitem_itemsite_id," +
+               "    coitem_taxtype_id, coitem_status,"                        +
+               "    coitem_qtyord, coitem_qtyshipped,  coitem_qtyreturned,"   +
+               "    coitem_unitcost, coitem_price, coitem_custprice,"         +
+               "    coitem_qty_uom_id, coitem_price_uom_id,"                  +
+               "    coitem_qty_invuomratio, coitem_price_invuomratio"         +
+               ") SELECT cohead_id,"                                          +
+               "    1, CURRENT_DATE + itemsite_leadtime, itemsite_id,"        +
+               "    getItemTaxType(item_id, cohead_taxzone_id), 'O',"         +
+               "    123, 0, 0,"                                               +
+               "    itemcost(itemsite_id), item_listprice, item_listprice,"   +
+               "    item_price_uom_id, item_price_uom_id,"                    +
+               "    1, 1"                                                     +
+               "  FROM cohead"                                                +
+               "  JOIN custinfo ON cohead_cust_id=cust_id"                    +
+               "  JOIN itemsite"                                              +
+               "        ON cust_preferred_warehous_id=itemsite_warehous_id"   +
+               "  JOIN item ON (itemsite_item_id=item_id)"                    +
+               " WHERE cohead_id=<? value('coheadid') ?>"                     +
+               "   AND itemsite_active"                                       +
+               "   AND item_active"                                           +
+               "   AND item_sold"                                             +
+               "   AND NOT item_exclusive"                                    +
+               "   AND NOT item_exclusive"                                    +
+               "   AND ("                                                     +
+               "         SELECT itemprice_price"                              +
+               "         FROM itemipsprice("                                  +
+               "           item_id,"                                          +
+               "           cohead_cust_id,"                                   +
+               "           cohead_shipto_id,"                                 +
+               "           123,"                                              +
+               "           item_price_uom_id,"                                +
+               "           item_price_uom_id,"                                +
+               "           basecurrid(),"                                     +
+               "           CURRENT_DATE,"                                     +
+               "           CURRENT_DATE,"                                     +
+               "           itemsite_warehous_id"                              +
+               "         )"                                                   +
+               "       ) > 0 "                                                +
+               "   AND item_price_uom_id=item_inv_uom_id"                     +
+/* simplify!*/ "   AND item_type != 'K'"                                      +
                " LIMIT 1 RETURNING *;",
                  { coheadid: cohead.cohead_id, testTag: testTag });
       datasource.query(sql, creds, function (err, res) {
