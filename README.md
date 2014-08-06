@@ -61,7 +61,8 @@ The best way to start coding on our stack is to use our
 
 ### Release Notes
 
-View the [Release Notes](RELEASE.md) to see a change log.
+View the [Release Notes](https://github.com/xtuple/xtuple-documentation/tree/master/release-notes) 
+to see a change log.
 
 ### Additional Resources
   * [Building an Extension Tutorial](https://github.com/xtuple/xtuple-extensions/blob/master/docs/TUTORIAL.md)
