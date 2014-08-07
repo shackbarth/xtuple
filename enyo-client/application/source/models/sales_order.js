@@ -196,36 +196,6 @@ white:true*/
       return defaults;
     },
 
-    /* 
-      The whole purpose here was to throw the popup in the appropriate scenario.
-      Now that's happening in enyo - childWorkspace - deleteItem.
-
-    destroy: function (options) {
-      var status = this.getParent().get("status"),
-        K = XM.SalesOrder,
-        that = this,
-        payload = {
-          type: K.QUESTION,
-        },
-        args = arguments,
-        message;
-
-      if (status !== K.CLOSED_STATUS &&
-        status !== K.CANCELLED_STATUS) {
-        message = "_deleteLine?".loc();
-        payload.callback = function (response) {
-          if (response.answer) {
-            XM.Model.prototype.destroy.apply(that, args);
-          }
-        };
-      } else {
-        // Must be closed, shouldn't have come here.
-        return;
-      }
-
-      this.notify(message, payload);
-    }, */
-
     isActive: function () {
       return this.get("status") === XM.SalesOrder.OPEN_STATUS;
     }
