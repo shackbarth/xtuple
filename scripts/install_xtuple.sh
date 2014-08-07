@@ -158,6 +158,7 @@ install_packages() {
 	npm config set ca ""
 
   log "installing npm modules..."
+  npm install -g npm@~1.4.6
   npm install --unsafe-perm 2>&1 | tee -a $LOG_FILE
 }
 
