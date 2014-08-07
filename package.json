@@ -61,7 +61,8 @@
     "googleapis": "~0.4.6"
   },
   "engines": {
-    "node": "0.8.x"
+    "node": "0.8.x",
+    "npm": "1.4.6"
   },
   "main": "node-datasource/main.js",
   "scripts": {
