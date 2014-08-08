@@ -15,7 +15,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   var fs = require("fs"),
     program = require("commander"),
     path = require("path"),
-    buildDatabaseUtil = require("./lib/build_database_util");
+    explodeManifest = require("./lib/util/explode_manifest");
 
   program
     .option('-m, --manifest [/path/to/manifest.js]', 'Location of manifest file.')
@@ -24,7 +24,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
   var manifestFilename = path.resolve(process.cwd(), program.manifest);
 
-  buildDatabaseUtil.explodeManifest({manifestFilename: manifestFilename}, function (err, contents) {
+  explodeManifest({manifestFilename: manifestFilename}, function (err, contents) {
     var outputFile;
     if (err) {
       console.log("error: ", err);

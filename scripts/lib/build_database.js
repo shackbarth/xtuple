@@ -6,8 +6,8 @@ _ = require('underscore');
 
 var  async = require('async'),
   dataSource = require('../../node-datasource/lib/ext/datasource').dataSource,
-  buildDatabaseUtil = require('./build_database_util'),
   exec = require('child_process').exec,
+  explodeManifest = require("./util/explode_manifest").explodeManifest,
   fs = require('fs'),
   ormInstaller = require('./orm'),
   dictionaryBuilder = require('./build_dictionary'),
@@ -15,6 +15,7 @@ var  async = require('async'),
   path = require('path'),
   pg = require('pg'),
   os = require('os'),
+  sendToDatabase = require("./util/send_to_database").sendToDatabase,
   winston = require('winston');
 
 (function () {
@@ -95,7 +96,7 @@ var  async = require('async'),
               isNpmExtension ? "npm" : "not-applicable"
           };
 
-        buildDatabaseUtil.explodeManifest(manifestOptions, extensionCallback);
+        explodeManifest(manifestOptions, extensionCallback);
       };
 
       // We also need to get the sql that represents the queries to generate
@@ -202,7 +203,7 @@ var  async = require('async'),
 
         winston.info("Applying build to database " + spec.database);
         credsClone.database = spec.database;
-        buildDatabaseUtil.sendToDatabase(allSql, credsClone, spec, function (err, res) {
+        sendToDatabase(allSql, credsClone, spec, function (err, res) {
           if (spec.populateData && creds.encryptionKeyFile) {
             var populateSql = "DO $$ XT.disableLocks = true; $$ language plv8;";
             var encryptionKey = fs.readFileSync(path.resolve(__dirname, "../../node-datasource", creds.encryptionKeyFile), "utf8");

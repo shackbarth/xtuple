@@ -5,15 +5,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 var _ = require('underscore'),
   async = require('async'),
   buildDatabase = require("./build_database"),
-  buildDatabaseUtil = require("./build_database_util"),
   buildClient = require("./build_client").buildClient,
   defaultExtensions = require("./util/default_extensions").extensions,
   dataSource = require('../../node-datasource/lib/ext/datasource').dataSource,
   exec = require('child_process').exec,
   fs = require('fs'),
+  initDatabase = require("./util/init_database").initDatabase,
+  inspectDatabaseExtensions = require("./util/inspect_database").inspectDatabaseExtensions,
   npm = require('npm'),
   path = require('path'),
-  unregister = buildDatabaseUtil.unregister,
+  unregister = require("./util/unregister").unregister,
   winston = require('winston');
 
 /*
@@ -43,7 +44,7 @@ var _ = require('underscore'),
 
           // The user wants to initialize the database first (i.e. Step 0)
           // Do that, then call this function again
-          buildDatabaseUtil.initDatabase(specs[0], creds, function (err, res) {
+          initDatabase(specs[0], creds, function (err, res) {
             specs[0].wasInitialized = true;
             done(err, res);
           });
@@ -115,7 +116,7 @@ var _ = require('underscore'),
       getRegisteredExtensions = function (database, callback) {
         var credsClone = JSON.parse(JSON.stringify(creds));
         credsClone.database = database;
-        buildDatabaseUtil.inspectDatabaseExtensions(credsClone, function (err, paths) {
+        inspectDatabaseExtensions(credsClone, function (err, paths) {
           callback(null, {
             extensions: paths,
             database: database,
