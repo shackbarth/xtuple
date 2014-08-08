@@ -584,6 +584,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       unregisterSql = ["delete from xt.usrext where usrext_id in " +
         "(select usrext_id from xt.usrext inner join xt.ext on usrext_ext_id = ext_id where ext_name = $1);",
 
+        "delete from xt.grpext where grpext_id in " +
+        "(select grpext_id from xt.grpext inner join xt.ext on grpext_ext_id = ext_id where ext_name = $1);",
+
         "delete from xt.clientcode where clientcode_id in " +
         "(select clientcode_id from xt.clientcode inner join xt.ext on clientcode_ext_id = ext_id where ext_name = $1);",
 

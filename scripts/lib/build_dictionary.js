@@ -201,7 +201,14 @@ if (typeof XT === 'undefined') {
               source: stringObj.value,
               target: preExistingTranslation
             });
-          } else {
+	  } else if ( destinationLang.indexOf('en') === 0 ) {
+	     // if locale is en_AU en_GB copy the en_US source: strings to target:
+	     stringCallback(null, {
+                key: stringObj.key,
+                source: stringObj.value,
+                target: stringObj.value
+              });
+	  } else {
             // ask google (or not)
             autoTranslate(stringObj.value, apiKey, destinationLang, function (err, target) {
               stringCallback(null, {
@@ -210,7 +217,7 @@ if (typeof XT === 'undefined') {
                 target: target
               });
             });
-          }
+         };
         };
         async.map(stringsArray, processString, function (err, strings) {
           extensionCallback(null, {

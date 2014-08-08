@@ -10,9 +10,6 @@ var _ = require('underscore'),
   path = require('path'),
   rimraf = require('rimraf');
 
-  // TODO: relax the assumption that extension builds are js only (i.e. allow extension css)
-  // TODO: right now we just give the latest versions available in the db. This might possibly change.
-
 (function () {
   "use strict";
 
@@ -24,6 +21,9 @@ var _ = require('underscore'),
   exports.getClientSql = function (extPath, callback) {
     var extName,
       constructQuery = function (contents, extension, version, language) {
+        if (!contents || contents === "undefined") {
+          return "";
+        }
         return "select xt.js_init();select xt.insert_client($$" + contents +
           "$$, '" + extension +
           "', '" + version +
@@ -61,9 +61,7 @@ var _ = require('underscore'),
 
     } else {
       extName = path.basename(extPath).replace(/\/$/, ""); // the name of the extension
-      fs.readFile(path.join(__dirname, "build", extName + ".js"), "utf8", function (err, code) {
-        var version;
-
+      fs.readFile(path.join(__dirname, "build", extName + ".js"), "utf8", function (err, jsCode) {
         if (err) {
           if (err.code === 'ENOENT') {
             // it's not necessarily an error if there's no code here.
@@ -74,17 +72,20 @@ var _ = require('underscore'),
           callback(err);
           return;
         }
-        // get the extension version from the database manifest file
-        if (fs.existsSync(path.resolve(extPath, "package.json"))) {
-          version = require(path.resolve(extPath, "package.json")).version;
-        } else {
-          version = JSON.parse(fs.readFileSync(path.resolve(extPath, "database/source/manifest.js"))).version;
-        }
-        if (!version) {
-          // if the extensions don't declare their version, default to the package version
-          version = require(path.resolve(__dirname, "../../package.json")).version;
-        }
-        callback(null, constructQuery(code, extName, version, "js"));
+        fs.readFile(path.join(__dirname, "build", extName + ".css"), "utf8", function (err, cssCode) {
+          var version;
+          if (fs.existsSync(path.resolve(extPath, "package.json"))) {
+            version = require(path.resolve(extPath, "package.json")).version;
+          } else {
+            version = JSON.parse(fs.readFileSync(path.resolve(extPath, "database/source/manifest.js"))).version;
+          }
+          if (!version) {
+            // if the extensions don't declare their version, default to the package version
+            version = require(path.resolve(__dirname, "../../package.json")).version;
+          }
+          callback(null, constructQuery(cssCode, extName, version, "css") +
+            constructQuery(jsCode, extName, version, "js"));
+        });
       });
     }
   };
@@ -95,6 +96,7 @@ var _ = require('underscore'),
   var buildExtension = function (extPath, callback) {
     // regex: remove trailing slash
     var extName = path.basename(extPath).replace(/\/$/, ""), // the name of the extension
+      cssFilename = extName + ".css",
       jsFilename = extName + ".js";
 
     // create the package file for enyo to use
@@ -121,9 +123,11 @@ var _ = require('underscore'),
           }
           // rename the file with the name of the extension so that we won't need to recreate it
           // in the case of multiple databases wanting the same client code
-          fs.rename(path.join(__dirname, "build/app.js"), path.join(__dirname, "build", jsFilename), function (err) {
-            callback(err);
-          });
+          fs.renameSync(path.join(__dirname, "build/app.js"), path.join(__dirname, "build", jsFilename));
+          if (fs.existsSync(path.join(__dirname, "build/app.css"))) {
+            fs.renameSync(path.join(__dirname, "build/app.css"), path.join(__dirname, "build", cssFilename));
+          }
+          callback();
         }
       );
     });

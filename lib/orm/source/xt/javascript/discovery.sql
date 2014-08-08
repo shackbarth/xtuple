@@ -795,6 +795,8 @@ select xt.install_js('XT','Discovery','xtuple', $$
         if (typeof method === 'function' && method.description && method.schema) {
           for (var schema in method.schema) {
             schemas[schema] = method.schema[schema];
+            schemas[schema].id = schema;
+            schemas[schema].type = 'object';
           }
         }
       }
