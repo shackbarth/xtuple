@@ -4,6 +4,8 @@ CREATE OR REPLACE FUNCTION convertQuote(INTEGER) RETURNS INTEGER AS $$
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pQuheadid ALIAS FOR $1;
+  _qunumber TEXT;
+  _ponumber TEXT;
   _soheadid INTEGER;
   _soitemid INTEGER;
   _orderid INTEGER;
@@ -62,13 +64,23 @@ BEGIN
     RETURN -5;
   END IF;
 
+  IF (_usespos) THEN
+    SELECT quhead_number INTO _qunumber
+    FROM quhead
+    WHERE (quhead_id=pQuheadid)
+      AND (COALESCE(quhead_custponumber, '') = '');
+    IF (FOUND) THEN
+      RAISE EXCEPTION 'Customer PO required for Quote %', _qunumber;
+    END IF;
+  END IF;
+  
   IF ( (_usespos) AND (NOT _blanketpos) ) THEN
-    PERFORM cohead_id
+    SELECT quhead_number, quhead_custponumber INTO _qunumber, _ponumber
     FROM quhead JOIN cohead ON ( (cohead_cust_id=quhead_cust_id) AND
                                  (UPPER(cohead_custponumber)=UPPER(quhead_custponumber)) )
     WHERE (quhead_id=pQuheadid);
     IF (FOUND) THEN
-      RAISE EXCEPTION 'Duplicate Customer PO';
+      RAISE EXCEPTION 'Duplicate Customer PO % for Quote %', _ponumber, _qunumber;
     END IF;
   END IF;
   
@@ -180,7 +192,7 @@ BEGIN
     AND   (comment_source_id=pQuheadid) );
 
   FOR _r IN SELECT quitem.*,
-                   quhead_number, quhead_prj_id,
+                   quhead_number, quhead_prj_id, quhead_saletype_id,
                    itemsite_item_id, itemsite_leadtime,
                    itemsite_createsopo, itemsite_createsopr,
                    item_type, COALESCE(quitem_itemsrc_id, itemsrc_id, -1) AS itemsrcid
@@ -215,7 +227,8 @@ BEGIN
 
     IF (fetchMetricBool('enablextcommissionission')) THEN
       PERFORM xtcommission.getSalesReps(quhead_cust_id, quhead_shipto_id,
-                                        _r.itemsite_item_id, _r.quitem_price,
+                                        _r.itemsite_item_id, _r.quhead_saletype_id,
+                                        _r.quitem_price, _r.quitem_custprice,
                                         _soitemid, 'SalesItem')
       FROM quhead
       WHERE (quhead_id=pQuheadid);
