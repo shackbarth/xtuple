@@ -11,7 +11,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     winston = require('winston');
 
   var sendToDatabase = function (query, credsClone, options, callback) {
-    var filename = path.join(__dirname, "temp_query_" + credsClone.database + ".sql");
+    var filename = path.join(__dirname, "../../output/build_" + credsClone.database + ".sql");
     fs.writeFile(filename, query, function (err) {
       if (err) {
         winston.error("Cannot write query to file");

@@ -19,13 +19,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     var registerSql = 'do $$ plv8.elog(NOTICE, "About to register extension ' +
       options.name + '"); $$ language plv8;\n';
 
-    registerSql = "select xt.register_extension('%@', '%@', '%@', '', %@);\n"
+    registerSql = registerSql + "select xt.register_extension('%@', '%@', '%@', '', %@);\n"
       .f(options.name, options.description || options.comment, extensionLocation, options.loadOrder || 9999);
 
-    var grantExtToAdmin = "select xt.grant_role_ext('ADMIN', '%@');\n"
+    registerSql = registerSql + "select xt.grant_role_ext('ADMIN', '%@');\n"
       .f(options.name);
-
-    registerSql = grantExtToAdmin + registerSql;
 
     // TODO: infer dependencies from package.json using peerDependencies
     var dependencies = options.dependencies || [];
@@ -35,7 +33,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         grantDependToAdmin = "select xt.grant_role_ext('ADMIN', '%@');\n"
           .f(dependency);
 
-      registerSql = dependencySql + grantDependToAdmin + registerSql;
+      registerSql = registerSql + dependencySql + grantDependToAdmin;
     });
     return registerSql;
   };
