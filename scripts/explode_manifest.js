@@ -15,7 +15,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   var fs = require("fs"),
     program = require("commander"),
     path = require("path"),
-    explodeManifest = require("./lib/util/explode_manifest");
+    explodeManifest = require("./lib/util/process_manifest").explodeManifest;
 
   program
     .option('-m, --manifest [/path/to/manifest.js]', 'Location of manifest file.')

@@ -10,9 +10,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     exec = require('child_process').exec,
     fs = require('fs'),
     path = require('path'),
-    conversionMap = require("./util/convert_specialized").conversionMap,
-    dataSource = require('../../node-datasource/lib/ext/datasource').dataSource,
-    inspectDatabaseExtensions = require("./util/inspect_database").inspectDatabaseExtensions,
+    conversionMap = require("./convert_specialized").conversionMap,
+    dataSource = require('../../../node-datasource/lib/ext/datasource').dataSource,
+    inspectDatabaseExtensions = require("./inspect_database").inspectDatabaseExtensions,
     winston = require('winston');
 
   // register extension and dependencies
