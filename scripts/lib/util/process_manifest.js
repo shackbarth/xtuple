@@ -12,8 +12,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     path = require('path'),
     conversionMap = require("./convert_specialized").conversionMap,
     dataSource = require('../../../node-datasource/lib/ext/datasource').dataSource,
-    inspectDatabaseExtensions = require("./inspect_database").inspectDatabaseExtensions,
-    winston = require('winston');
+    inspectDatabaseExtensions = require("./inspect_database").inspectDatabaseExtensions;
 
   // register extension and dependencies
   var getRegistrationSql = function (options, extensionLocation) {
