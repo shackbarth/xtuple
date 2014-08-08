@@ -1,5 +1,5 @@
 <package id        = "manufacturing-upgrade-460"
-         version   = "4.6.0"
+         version   = "4.7.0Beta"
          developer = "xTuple"
          descrip   = "load PostBooks resources"
          updater   = "2.2.4" >
@@ -30,8 +30,8 @@
 
 <prerequisite type = "query"
                name = "Checking for too-new xTuple ERP database version" >
-<query>SELECT NOT fetchMetricText('ServerVersion') >= '4.6.1';</query>
-    <message>This package may not be applied to a database newer than 4.6.0.
+<query>SELECT NOT fetchMetricText('ServerVersion') >= '4.7.0';</query>
+    <message>This package may not be applied to a database newer than 4.7.0Beta.
     </message>
 </prerequisite>
 
