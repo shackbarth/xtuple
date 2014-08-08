@@ -194,13 +194,6 @@ var  async = require('async'),
         // on the case of error.
         allSql = "\\set ON_ERROR_STOP TRUE;\n" + allSql;
 
-        if (spec.wasInitialized && !_.isEqual(extensions, ["foundation-database"])) {
-          // give the admin user every extension by default
-          allSql = allSql + "insert into xt.usrext (usrext_usr_username, usrext_ext_id) " +
-            "select '" + creds.username +
-            "', ext_id from xt.ext where ext_location = '/core-extensions' and ext_name NOT LIKE 'oauth2';";
-        }
-
         winston.info("Applying build to database " + spec.database);
         credsClone.database = spec.database;
         sendToDatabase(allSql, credsClone, spec, function (err, res) {
