@@ -220,4 +220,9 @@ var async = require("async"),
     req.viewName = "debug";
     serveApp(req, res);
   };
+
+  exports.newBackbone = function (req, res) {
+    req.viewName = "new";
+    serveApp(req, res);
+  };
 }());

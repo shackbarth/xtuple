@@ -51,6 +51,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   //
   exports.app = [ensureLogin, app.serveApp];
   exports.debug = [ensureLogin, app.serveDebug];
+  exports.newBackbone = [ensureLogin, app.newBackbone];
   exports.login = auth.login;
   exports.loginForm = auth.loginForm;
   exports.logout = auth.logout;
