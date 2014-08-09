@@ -82,6 +82,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     passport.authenticate('bearer', { session: false }),
     restRouter.router
   ];
+  exports.restSession = [ensureLogin, restRouter.router];
 
   //
   // Custom routes

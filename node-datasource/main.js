@@ -408,6 +408,7 @@ app.post('/:org/api/v1alpha1/services/:service/:id', routes.restRouter);
 app.all('/:org/api/v1alpha1/resources/:model/:id', routes.restRouter);
 app.all('/:org/api/v1alpha1/resources/:model', routes.restRouter);
 app.all('/:org/api/v1alpha1/resources/*', routes.restRouter);
+app.all('/:org/restapi/:model/:id', routes.restSession);
 
 app.get('/', routes.loginForm);
 app.post('/login', routes.login);
