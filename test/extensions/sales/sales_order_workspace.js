@@ -157,15 +157,15 @@
           assert.notEqual(startModelLength, lineItemBox.liveModels().length);
           done();
         };
+
         model.once("status:DESTROYED_CLEAN", statusChanged);
 
         // Function to keep checking for notifyPopup showing and then tap yes. 
         // This will fire right after the delete below.
         var notifyPopupInterval = setInterval(function () {
           if (!moduleContainer.$.notifyPopup.showing) { return; }
-
           clearInterval(notifyPopupInterval);
-          moduleContainer.notifyTap(null, { originator: { name: "notifyYes" }});
+          moduleContainer.notifyTap(null, {originator: {name: "notifyYes" }});
         }, 100);
         // Delete the item in the workspace
         moduleContainer.getActive().deleteItem();
