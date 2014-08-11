@@ -47,13 +47,10 @@
   },
   "devDependencies": {
     "chai": "1.5.x",
-    "jshint": "2.4.x",
     "mocha": "1.9.x",
-    "require-uncache": "0.0.x",
     "html5": "0.3.13",
     "zombie": "1.4.x",
-    "csslint": "~0.10.0",
-    "nodemon": "~1.0.15"
+    "csslint": "~0.10.0"
   },
   "optionalDependencies": {
     "xtuple-query": "~1.0.0",
