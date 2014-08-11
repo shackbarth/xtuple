@@ -53,7 +53,6 @@
     "html5": "0.3.13",
     "zombie": "1.4.x",
     "csslint": "~0.10.0",
-    "xtuple-documentation": "~0.0.1",
     "nodemon": "~1.0.15"
   },
   "optionalDependencies": {
