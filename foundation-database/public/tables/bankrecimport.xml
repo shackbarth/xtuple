@@ -4,6 +4,8 @@
   <Name>bankrec</Name>
   <Table>public.bankrecimport</Table>
   <Action>Insert</Action>
+  <PreSQL>DELETE FROM bankrecimport;</PreSQL>
+  <PostSQL>SELECT importBankrecCleared(-1);</PostSQL>
   <CSVMapField>
    <Name>bankrecimport_reference</Name>
    <Type>QString</Type>
