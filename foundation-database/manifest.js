@@ -564,6 +564,7 @@
     "public/functions/haspriv.sql",
     "public/functions/hasprivonobject.sql",
     "public/functions/implodewo.sql",
+    "public/functions/importbankreccleared.sql",
     "public/functions/incdt.sql",
     "public/functions/indentedbom.sql",
     "public/functions/indentedwhereused.sql",
