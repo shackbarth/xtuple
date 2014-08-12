@@ -55,7 +55,6 @@ trailing:true, white:true, strict:false*/
       classes: "large-panel",
       workspace: "XV.ProjectTaskWorkspace",
       parentKey: "project",
-      //orderBy: [{attribute: 'number'}],
       title: "_tasks".loc(),
       summary: "XV.ProjectSummaryPanel",
       columns: [
