@@ -73,30 +73,18 @@ var _ = require('underscore'),
           return;
         }
         fs.readFile(path.join(__dirname, "build", extName + ".css"), "utf8", function (err, cssCode) {
-          // get the extension version from the database manifest file
-          fs.readFile(path.join(extPath, "database/source/manifest.js"), "utf8", function (err, manifestContents) {
-            if (err) {
-              callback(err);
-              return;
-            }
-            var manifestDetails = JSON.parse(manifestContents);
-            if (!manifestDetails.version) {
-              // if the extensions don't declare their version, default to the package version
-              fs.readFile(path.join(__dirname, "../../package.json"), "utf8", function (err, packageJson) {
-                if (err) {
-                  callback(err);
-                  return;
-                }
-                var packageDetails = JSON.parse(packageJson);
-                callback(null, constructQuery(cssCode, extName, packageDetails.version, "css") +
-                  constructQuery(jsCode, extName, packageDetails.version, "js"));
-              });
-
-            } else {
-              callback(null, constructQuery(cssCode, extName, manifestDetails.version, "css") +
-                constructQuery(jsCode, extName, manifestDetails.version, "js"));
-            }
-          });
+          var version;
+          if (fs.existsSync(path.resolve(extPath, "package.json"))) {
+            version = require(path.resolve(extPath, "package.json")).version;
+          } else {
+            version = JSON.parse(fs.readFileSync(path.resolve(extPath, "database/source/manifest.js"))).version;
+          }
+          if (!version) {
+            // if the extensions don't declare their version, default to the package version
+            version = require(path.resolve(__dirname, "../../package.json")).version;
+          }
+          callback(null, constructQuery(cssCode, extName, version, "css") +
+            constructQuery(jsCode, extName, version, "js"));
         });
       });
     }

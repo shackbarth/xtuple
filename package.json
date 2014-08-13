@@ -2,7 +2,7 @@
   "author": "xTuple <dev@xtuple.com>",
   "name": "xtuple",
   "description": "xTuple Enterprise Resource Planning Mobile-Web client",
-  "version": "4.6.0",
+  "version": "4.7.0-beta",
   "repository": {
     "type": "git",
     "url": "https://github.com/xtuple/xtuple.git"
@@ -24,7 +24,7 @@
     "less": "1.5.0",
     "moment": "2.4.x",
     "nodemailer": "0.3.x",
-    "npm": "1.4.x",
+    "npm":"1.2.30",
     "node-forge": "0.6.x",
     "oauth2orize": "0.1.x",
     "oauth2orize-jwt-bearer": "0.1.x",
@@ -48,14 +48,10 @@
   },
   "devDependencies": {
     "chai": "1.5.x",
-    "jshint": "2.4.x",
     "mocha": "1.9.x",
-    "require-uncache": "0.0.x",
     "html5": "0.3.13",
     "zombie": "1.4.x",
-    "csslint": "~0.10.0",
-    "xtuple-documentation": "~0.0.1",
-    "nodemon": "~1.0.15"
+    "csslint": "~0.10.0"
   },
   "optionalDependencies": {
     "xtuple-query": "~1.0.0",
