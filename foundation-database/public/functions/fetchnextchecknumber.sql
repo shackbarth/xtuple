@@ -32,5 +32,5 @@ BEGIN
   RETURN _nextChkNumber;
 
 END;
-$$ LANGUAGE 'plpgsql';
+$$ LANGUAGE plpgsql;
 

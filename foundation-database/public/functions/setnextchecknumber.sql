@@ -30,5 +30,5 @@ BEGIN
   RETURN TRUE;
 
 END;
-$$ LANGUAGE 'plpgsql';
+$$ LANGUAGE plpgsql;
 
