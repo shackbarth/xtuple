@@ -1,12 +1,11 @@
-CREATE OR REPLACE FUNCTION updateStdCost(INTEGER, NUMERIC, NUMERIC, TEXT, TEXT) RETURNS BOOLEAN AS $$
+CREATE OR REPLACE FUNCTION updateStdCost(pItemcostid INTEGER,
+                                         pNewcost NUMERIC,
+                                         pOldcost NUMERIC,
+                                         pDocNumber TEXT,
+                                         pNotes TEXT) RETURNS BOOLEAN AS $$
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
-    pItemcostid	ALIAS FOR $1;
-    pNewcost	ALIAS FOR $2;
-    pOldcost	ALIAS FOR $3;
-    pDocNumber	ALIAS FOR $4;
-    pNotes	ALIAS FOR $5;
     _itemcostid	INTEGER;
     _r		RECORD;
     _newcost	NUMERIC;
@@ -32,14 +31,14 @@ BEGIN
   END IF;
 
 --  Distribute to G/L, debit Inventory Asset, credit Inventory Cost Variance
-  FOR _r IN SELECT itemsite_id, (itemsite_qtyonhand + itemsite_nnqoh) AS totalQty,
+  FOR _r IN SELECT itemsite_id, itemsite_qtyonhand AS totalQty,
                    costcat_invcost_accnt_id, costcat_asset_accnt_id,
                    itemsite_costmethod
             FROM itemcost, itemsite, costcat
             WHERE ( (itemsite_item_id=itemcost_item_id)
              AND (itemsite_costcat_id=costcat_id)
              AND (itemsite_costmethod != 'A')
-             AND ((itemsite_qtyonhand + itemsite_nnqoh) <> 0)
+             AND (itemsite_qtyonhand <> 0.0)
              AND (itemcost_id=pItemcostid) ) LOOP
 --    IF (_newcost <> _oldcost) THEN
 --      RAISE NOTICE 'itemcost_id = %, Qty = %, Old Cost = %, New Cost = %', pItemcostid, _r.totalQty, _oldcost, _newcost;
@@ -153,4 +152,4 @@ BEGIN
 
     RETURN -1;
 END;
-$$ LANGUAGE 'plpgsql';
+$$ LANGUAGE plpgsql;

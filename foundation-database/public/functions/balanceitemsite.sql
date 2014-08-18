@@ -1,12 +1,10 @@
-CREATE OR REPLACE FUNCTION balanceItemsite(INTEGER) RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION balanceItemsite(pItemsiteid INTEGER) RETURNS INTEGER AS $$
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
-  pItemsiteid ALIAS FOR $1;
   _itemlocseries INTEGER;
   _balanced NUMERIC;
   _qoh NUMERIC;
-  _nnQoh NUMERIC;
 
 BEGIN
 
@@ -23,13 +21,12 @@ BEGIN
     RETURN -1;
   END IF;
 
---  Calculate the Netable portion
+--  Calculate the qoh
   SELECT COALESCE(SUM(itemloc_qty), 0) INTO _balanced
-  FROM itemloc LEFT OUTER JOIN location ON (itemloc_location_id=location_id)
-  WHERE ( ( (location_id IS NULL) OR (location_netable) )
-   AND (itemloc_itemsite_id=pItemsiteid) );
+  FROM itemloc
+  WHERE (itemloc_itemsite_id=pItemsiteid);
 
---  Post an AD Transaction for the Netable portion
+--  Post an AD Transaction
   SELECT invAdjustment( itemsite_id, (_balanced - itemsite_qtyonhand),
                         'Balance', 'Inventory Balance' ) INTO _itemlocseries
   FROM itemsite
@@ -44,18 +41,7 @@ BEGIN
   DELETE FROM itemlocdist
   WHERE (itemlocdist_series=_itemlocseries);
 
---  Calculate and write the Non-Netable portion directly
-  SELECT COALESCE(SUM(itemloc_qty), 0) INTO _nnQoh
-  FROM itemloc, location
-  WHERE ( (itemloc_location_id=location_id)
-   AND (NOT location_netable)
-   AND (itemloc_itemsite_id=pItemsiteid) );
-
-  UPDATE itemsite
-  SET itemsite_nnqoh = _nnQoh
-  WHERE (itemsite_id=pItemsiteid);
-
   RETURN 1;
 
 END;
-$$ LANGUAGE 'plpgsql';
+$$ LANGUAGE plpgsql;

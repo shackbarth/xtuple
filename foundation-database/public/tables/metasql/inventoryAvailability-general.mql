@@ -37,7 +37,7 @@ FROM (SELECT
              END AS altId,
              item_number, item_descrip1, item_descrip2, item_inv_uom_id,
              warehous_id, warehous_code, itemsite_leadtime,
-             itemsite_qtyonhand AS qoh,
+             qtyNetable(itemsite_id) AS qoh,
              CASE WHEN itemsite_useparams THEN itemsite_reorderlevel
                   ELSE 0.0
              END AS reorderlevel,

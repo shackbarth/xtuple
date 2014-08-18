@@ -159,10 +159,11 @@ SELECT itemsite_id, detail,warehous_code,
        defaultlocation,
        reorderlevel, formatQty(reorderlevel) AS f_reorderlevel,
        qoh, formatQty(qoh) AS f_qoh,
-       nnqoh, formatQty(nnqoh) AS f_nnqoh,
-       CASE WHEN (itemsite_loccntrl) THEN nnqoh END AS f_nnqoh,
+       netqoh, formatQty(netqoh) AS f_netqoh,
+       nonnetqoh, formatQty(netqoh) AS f_nonnetqoh,
        cost, (cost * qoh) AS value,
-       CASE WHEN (itemsite_loccntrl) THEN (cost * nnqoh) END AS nnvalue,
+       (cost * netqoh) AS netvalue,
+       (cost * nonnetqoh) AS nonnetvalue,
        CASE WHEN(itemsite_costmethod='A') THEN 'Average'
             WHEN(itemsite_costmethod='S') THEN 'Standard'
             WHEN(itemsite_costmethod='J') THEN 'Job'
@@ -171,7 +172,8 @@ SELECT itemsite_id, detail,warehous_code,
        END AS costmethod,
   <? if exists("showValue") ?>
        formatMoney(cost) AS f_cost, (cost * qoh) AS f_value,
-       CASE WHEN (itemsite_loccntrl) THEN (cost * nnqoh) END AS f_nnvalue,
+       formatMoney(cost * netqoh) AS f_netvalue,
+       formatMoney(cost * nonnetqoh) AS f_nonnetvalue,
        CASE WHEN(itemsite_costmethod='A') THEN 'Average'
             WHEN(itemsite_costmethod='S') THEN 'Standard'
             WHEN(itemsite_costmethod='J') THEN 'Job'
@@ -181,16 +183,22 @@ SELECT itemsite_id, detail,warehous_code,
   <? endif ?>
        'qty' AS reorderlevel_xtnumericrole,
        'qty' AS qoh_xtnumericrole,
-       'qty' AS f_nnqoh_xtnumericrole,
+       'qty' AS netqoh_xtnumericrole,
+       'qty' AS nonnetqoh_xtnumericrole,
        0 AS qoh_xttotalrole,
-       0 AS nnqoh_xttotalrole,
+       0 AS netqoh_xttotalrole,
+       0 AS nonnetqoh_xttotalrole,
        'cost' AS cost_xtnumericrole,
        'curr' AS value_xtnumericrole,
-       'curr' AS nnvalue_xtnumericrole,
+       'curr' AS netvalue_xtnumericrole,
+       'curr' AS nonnetvalue_xtnumericrole,
        0 AS value_xttotalrole,
-       0 AS nnvalue_xttotalrole,
-       <? value("na") ?> AS nnqoh_xtnullrole,
-       <? value("na") ?> AS nnvalue_xtnullrole,
+       0 AS netvalue_xttotalrole,
+       0 AS nonnetvalue_xttotalrole,
+       <? value("na") ?> AS netqoh_xtnullrole,
+       <? value("na") ?> AS nonnetqoh_xtnullrole,
+       <? value("na") ?> AS netvalue_xtnullrole,
+       <? value("na") ?> AS nonnetvalue_xtnullrole,
        CASE WHEN (qoh < 0) THEN 'error' END AS qoh_qtforegroundrole,
        CASE WHEN (reorderlevel > qoh) THEN 'warning' END AS qoh_qtforegroundrole
 FROM (
@@ -205,10 +213,12 @@ FROM (
              CASE WHEN(itemsite_useparams) THEN itemsite_reorderlevel ELSE 0.0 END AS reorderlevel,
   <? if exists("asOf") ?>
              COALESCE(invbal_qoh_ending,0) AS qoh,
-             COALESCE(invbal_nn_ending,0) AS nnqoh,
+             COALESCE(invbal_qoh_ending,0) AS netqoh,
+             COALESCE(invbal_nn_ending,0) AS nonnetqoh,
   <? else ?>
              itemsite_qtyonhand AS qoh,
-             itemsite_nnqoh AS nnqoh,
+             qtyNetable(itemsite_id) AS netqoh,
+             qtyNetable(itemsite_id, FALSE) AS nonnetqoh,
   <? endif ?>
   <? if exists("useStandardCosts") ?>
              stdcost(item_id) AS cost
@@ -219,8 +229,8 @@ FROM (
              COALESCE((invbal_value_ending / CASE WHEN(invbal_qoh_ending=0) THEN 1
                                                   ELSE invbal_qoh_ending END),0) AS cost
     <? else ?>
-             (itemsite_value / CASE WHEN((itemsite_qtyonhand + itemsite_nnqoh)=0) THEN 1
-                                    ELSE (itemsite_qtyonhand + itemsite_nnqoh) END) AS cost
+             (itemsite_value / CASE WHEN(itemsite_qtyonhand=0) THEN 1
+                                    ELSE itemsite_qtyonhand END) AS cost
     <? endif ?>
   <? endif ?>
       FROM item, whsinfo, classcode, uom, costcat, itemsite

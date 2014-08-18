@@ -7,7 +7,7 @@ DECLARE
 
 BEGIN
 
-  RETURN ( ( SELECT itemsite_qtyonhand
+  RETURN ( ( SELECT qtyNetable(itemsite_id)
              FROM itemsite
              WHERE (itemsite_id=pItemsiteid) ) +
            (SELECT qtyOrdered(pItemsiteid, pLookAheadDays)) -
@@ -25,7 +25,7 @@ DECLARE
 
 BEGIN
 
-  RETURN ( ( SELECT itemsite_qtyonhand
+  RETURN ( ( SELECT qtyNetable(itemsite_id)
              FROM itemsite
              WHERE (itemsite_id=pItemsiteid) ) +
            (SELECT qtyOrdered(pItemsiteid, (pDate - CURRENT_DATE))) -

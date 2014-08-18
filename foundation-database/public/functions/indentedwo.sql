@@ -24,7 +24,7 @@ BEGIN
     --get top level works orders
     FOR _x IN
        SELECT wo_id,wo_number,wo_subnumber,wo_status,wo_startdate,
-         wo_duedate,wo_adhoc,wo_itemsite_id,itemsite_qtyonhand,
+         wo_duedate,wo_adhoc,wo_itemsite_id,qtyNetable(itemsite_id) AS netableqoh,
          wo_qtyord,wo_qtyrcv,wo_prodnotes, item_number,
          item_descrip1, item_descrip2, item_listprice, uom_name
        FROM wo, itemsite, item, uom     
@@ -47,7 +47,7 @@ BEGIN
         _row.wodata_itemsite_id := _x.wo_itemsite_id;
         _row.wodata_custprice := _x.item_listprice;
         _row.wodata_listprice := _x.item_listprice;
-        _row.wodata_qoh := _x.itemsite_qtyonhand;
+        _row.wodata_qoh := _x.netableqoh;
         _row.wodata_short := noneg(_x.wo_qtyord - _x.wo_qtyrcv);
         _row.wodata_qtyrcv := _x.wo_qtyrcv;   
         _row.wodata_qtyordreq := _x.wo_qtyord;   
@@ -149,7 +149,7 @@ BEGIN
     _level := (plevel + 1);    
     --find all WO with the ordid of the next level up
     _qry := 'SELECT wo_id,wo_number,wo_subnumber,wo_status,wo_startdate,wo_duedate,
-         wo_adhoc,wo_itemsite_id,itemsite_qtyonhand,wo_qtyord,wo_qtyrcv, wo_prodnotes,
+         wo_adhoc,wo_itemsite_id,qtyNetable(itemsite_id) AS netableqoh,wo_qtyord,wo_qtyrcv, wo_prodnotes,
          item_number,item_descrip1, item_descrip2, item_listprice, uom_name,
          womatl_qtyiss, womatl_scrap, womatl_wooper_id
        FROM itemsite,  wo, item, uom, womatl 
@@ -184,7 +184,7 @@ BEGIN
         _row.wodata_itemsite_id := _x.wo_itemsite_id;        
         _row.wodata_custprice := _x.item_listprice;
         _row.wodata_listprice := _x.item_listprice;
-        _row.wodata_qoh := _x.itemsite_qtyonhand;
+        _row.wodata_qoh := _x.netableqoh;
         _row.wodata_short := noneg(_x.wo_qtyord - _x.wo_qtyrcv);
         _row.wodata_qtyiss := _x.womatl_qtyiss;  
         _row.wodata_qtyrcv := _x.wo_qtyrcv;   
