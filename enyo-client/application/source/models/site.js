@@ -93,7 +93,16 @@ white:true*/
 
     recordType: 'XM.SiteListItem',
 
-    editableModel: 'XM.Site'
+    editableModel: 'XM.Site',
+
+    couldCreate: function () {
+      // Look to see if there are sites in the sites cache. If so, restrict new for Postbooks.
+      if (XM.sites.length) {
+        return false;
+      } else {
+        XM.Info.prototype.couldCreate.apply(this, arguments);
+      }
+    }
 
   });
 
