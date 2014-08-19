@@ -7,7 +7,8 @@
 (function () {
   "use strict";
 
-  var assert = require("chai").assert;
+  var assert = require("chai").assert,
+    smoke = require("../lib/smoke");
 
   /**
   Sites typically describe physical production and storage facilities. work centers, item sites, and site locations belong to sites.
@@ -58,8 +59,11 @@
       @memberof Site.prototype
       @description Multiple Sites should not be allowed on Postbooks
     */
-    it("Multiple Sites should not be allowed on Postbooks", function () {
+    it("Multiple Sites should not be allowed on Postbooks", function (done) {
       assert.equal(XM.sites.length, 1);
+      smoke.navigateToList(XT.app, "XV.SiteList");
+      assert.isTrue(XT.app.$.postbooks.getActive().$.newButton.disabled);
+      done();
     });
   };
 

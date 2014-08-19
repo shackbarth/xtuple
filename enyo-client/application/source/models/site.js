@@ -100,7 +100,7 @@ white:true*/
       if (XM.sites.length) {
         return false;
       } else {
-        XM.Info.prototype.couldCreate.apply(this, arguments);
+        return XM.Info.prototype.couldCreate.apply(this, arguments);
       }
     }
 
