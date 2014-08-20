@@ -1,5 +1,5 @@
 
-CREATE OR REPLACE FUNCTION importBankrecCleared(pBankrecid INTEGER) RETURNS BOOLEAN AS $$
+CREATE OR REPLACE FUNCTION importBankrecCleared(pBankrecid INTEGER) RETURNS INTEGER AS $$
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
@@ -83,16 +83,17 @@ BEGIN
         SELECT bankadj_id INTO _bankadjid
         FROM bankadj JOIN bankadjtype ON (bankadjtype_id=bankadj_bankadjtype_id)
         WHERE (bankadjtype_id=fetchMetricValue('ImportBankRecDebitAdj'))
-          AND (bankadj_docnumber=_r.bankrecimport_reference);
+          AND (bankadj_docnumber=_r.bankrecimport_reference)
+          AND (bankadj_bankaccnt_id=_b.bankaccnt_id);
         IF (NOT FOUND) THEN
           INSERT INTO bankadj
-            (bankadj_bankaccnt_id, bankadj_bankadjtype_id, bankadj_date, bankadj_docnumber,
-             bankadj_amount, bankadj_notes, bankadj_curr_id)
-          SELECT
-            _b.bankaccnt_id, bankadjtype_id, _r.bankrecimport_effdate, _r.bankrecimport_reference,
-            _r.debit, 'Import Bankrec Adjustment', _b.bankaccnt_curr_id
-          FROM bankadjtype
-          WHERE (bankadjtype_id=fetchMetricValue('ImportBankRecDebitAdj'))
+            (bankadj_bankaccnt_id, bankadj_bankadjtype_id, bankadj_date,
+             bankadj_docnumber, bankadj_amount, bankadj_notes,
+             bankadj_curr_id)
+          VALUES
+            (_b.bankaccnt_id, fetchMetricValue('ImportBankRecDebitAdj'), _r.bankrecimport_effdate,
+             _r.bankrecimport_reference, _r.debit, 'Import Bankrec Adjustment',
+             _b.bankaccnt_curr_id)
           RETURNING bankadj_id INTO _bankadjid;
         END IF;
 
@@ -101,8 +102,9 @@ BEGIN
                                       1.0, _r.debit,
                                       _r.bankrecimport_effdate) INTO _cleared
           FROM bankadj LEFT OUTER JOIN bankrecitem ON (bankrecitem_source='AD' AND
-                                                       bankrecitem_source_id=_bankadjid)
-          WHERE (NOT COALESCE(bankrecitem_cleared, FALSE));
+                                                       bankrecitem_source_id=bankadj_id)
+          WHERE (bankadj_id=_bankadjid)
+            AND (NOT COALESCE(bankrecitem_cleared, FALSE));
         ELSE
           RAISE EXCEPTION 'bankadjtype not found';
         END IF;
