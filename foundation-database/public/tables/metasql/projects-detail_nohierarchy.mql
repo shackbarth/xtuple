@@ -105,8 +105,23 @@ WHERE (true)
 <? if exists("id") ?>
   AND (prj_id=<? value("id") ?>)
 <? endif ?>
-<? literal("charClause") ?>
-<? if exists("prjtype_id") ?>
-   AND (prjtype_id = <? value("prjtype_id") ?>)
+<? if exists("prj_id") ?>
+  AND (prj_id=<? value("prj_id") ?>)
 <? endif ?>
+<? if exists("project_task") ?>
+  AND prj_id IN (SELECT DISTINCT prjtask_prj_id FROM prjtask where ((prjtask_number ~* <? value("project_task") ?>)
+						OR (prjtask_name ~* <? value("project_task") ?>)
+						OR (prjtask_descrip ~* <? value("project_task") ?>)))
+<? endif ?>
+<? if exists("cohead_id") ?>
+  AND prj_id IN (SELECT cohead_prj_id FROM cohead where cohead_id=<? value("cohead_id") ?>)
+<? endif ?>
+<? if exists("wo_id") ?>
+  AND prj_id IN (SELECT wo_prj_id FROM wo WHERE wo_id=<? value("wo_id") ?>)
+<? endif ?>
+<? if exists("pohead_id") ?>
+  AND prj_id IN (SELECT poitem_prj_id FROM pohead JOIN poitem ON (pohead_id=poitem_pohead_id)
+			WHERE pohead_id=<? value("pohead_id") ?>)
+<? endif ?>
+<? literal("charClause") ?>
 ORDER BY prj_number;
