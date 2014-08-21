@@ -28,6 +28,7 @@
     cacheName: "XM.sites",
     listKind: "XV.SiteList",
     instanceOf: "XM.Document",
+    extensions: [], 
     /**
       @member -
       @memberof Sites.prototype

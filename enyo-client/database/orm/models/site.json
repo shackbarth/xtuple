@@ -31,7 +31,8 @@
         "attr": {
           "type": "String",
           "column": "warehous_code",
-          "isNaturalKey":true
+          "isNaturalKey":true,
+          "required": true
         }
       },
       {
@@ -39,14 +40,16 @@
         "toOne": {
           "isNested": true,
           "type": "SiteType",
-          "column": "warehous_sitetype_id"
+          "column": "warehous_sitetype_id",
+          "required": true
         }
       },
       {
         "name": "isActive",
         "attr": {
           "type": "Boolean",
-          "column": "warehous_active"
+          "column": "warehous_active",
+          "required": true
         }
       },
       {
@@ -84,13 +87,6 @@
         "attr": {
           "type": "String",
           "column": "warehous_fob"
-        }
-      },
-      {
-        "name": "notes",
-        "attr": {
-          "type": "String",
-          "column": "warehous_shipcomments"
         }
       },
       {

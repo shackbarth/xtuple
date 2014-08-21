@@ -2779,25 +2779,23 @@ strict: false*/
     title: "_site".loc(),
     model: "XM.Site",
     components: [
-      {kind: "Panels", arrangerKind: "CarouselArranger",
+      {kind: "Panels", name: "panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
         {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
-            {kind: "XV.InputWidget", attr: "code"},
-            {kind: "XV.CheckboxWidget", attr: "isActive"},
-            {kind: "XV.SiteTypePicker", attr: "siteType"},
-            {kind: "XV.InputWidget", attr: "description"},
-            {kind: "XV.ContactWidget", attr: "contact"},
-            {kind: "XV.AddressWidget", attr: "address"},
-            {kind: "XV.TaxZonePicker", attr: "taxZone"},
-            {kind: "XV.InputWidget", attr: "incoterms"},
-            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
-            {kind: "XV.TextArea", attr: "notes", fit: true}
+            {name: "mainSubgroup", components: [ // not a scroller, so we can addBefore
+              {kind: "XV.InputWidget", attr: "code"},
+              {kind: "XV.CheckboxWidget", attr: "isActive"},
+              {kind: "XV.SiteTypePicker", attr: "siteType"},
+              {kind: "XV.InputWidget", attr: "description"},
+              {kind: "XV.ContactWidget", attr: "contact", name: "contactWidget"},
+              {kind: "XV.AddressWidget", attr: "address"}
+            ]}
           ]}
         ]},
-        {kind: "XV.SiteCommentBox", attr: "comments"}
+        {kind: "XV.SiteCommentBox", attr: "comments", name: "commentsPanel"}
       ]}
     ]
   });
