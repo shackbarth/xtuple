@@ -48,9 +48,9 @@ UNION
 SELECT apopen_id, apselect_id,
        (bankaccnt_name || '-' || bankaccnt_descrip) AS f_bank,
        (vend_number || '-' || vend_name) AS f_vendor,
-       apopen_docnumber, apopen_ponumber, apselect_amount,
+       apopen_docnumber, apopen_ponumber, apselect_amount * -1.0 AS apselect_amount,
        apopen_invcnumber, apopen_doctype,
-       currToBase(apselect_curr_id, apselect_amount, CURRENT_DATE) AS apselect_amount_base,
+       currToBase(apselect_curr_id, apselect_amount, CURRENT_DATE) * -1.0 AS apselect_amount_base,
        currToBase(apselect_curr_id, apselect_amount, CURRENT_DATE) * -1.0 AS apselect_running_base,
        currConcat(apselect_curr_id) AS currAbbr
 FROM apopen, apselect, vendinfo, bankaccnt
