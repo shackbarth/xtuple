@@ -38,7 +38,7 @@ SELECT itemsite_id, reorderlevel,
                 ib.*,
                 ((bomdata_qtyreq::NUMERIC * <? value("buildQty") ?>) * (1 + bomdata_scrap::NUMERIC)) AS pendalloc,
                 qtyAllocated(itemsite_id, DATE(<? value("buildDate") ?>)) AS totalalloc,
-                noNeg(qtyNetable(itemsite_id)) AS qoh,
+                noNeg(qtyAvailable(itemsite_id)) AS qoh,
                 qtyOrdered(itemsite_id, DATE(<? value("buildDate") ?>)) AS ordered
            FROM indentedBOM(<? value("item_id") ?>,
                             getActiveRevId('BOM', <? value("item_id") ?>),
@@ -77,7 +77,7 @@ FROM ( SELECT itemsite_id, bomitem_seqnumber, item_number,
               ((itemuomtouom(bomitem_item_id, bomitem_uom_id, NULL,
                             (bomitem_qtyfxd + bomitem_qtyper * <? value("buildQty") ?>) * (1 + bomitem_scrap)))) AS pendalloc,
               qtyAllocated(itemsite_id, DATE(<? value("buildDate") ?>)) AS totalalloc,
-              noNeg(qtyNetable(itemsite_id)) AS qoh,
+              noNeg(qtyAvailable(itemsite_id)) AS qoh,
               qtyOrdered(itemsite_id, DATE(<? value("buildDate") ?>)) AS ordered,
               CASE WHEN(itemsite_useparams) THEN itemsite_reorderlevel ELSE 0.0 END AS reorderlevel
        FROM itemsite, item, bomitem(<? value("item_id") ?>), uom

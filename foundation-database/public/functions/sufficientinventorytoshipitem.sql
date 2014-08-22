@@ -37,7 +37,7 @@ BEGIN
 		      noNeg(coitem_qtyord - coitem_qtyshipped +
 			    coitem_qtyreturned - qtyAtShipping(pordertype, coitem_id)
 			   ))) - coitem_qtyreserved) * coitem_qty_invuomratio
-		      ) <= qtyNetable(itemsite_id))
+		      ) <= qtyAvailable(itemsite_id))
               AND 
              (((COALESCE(pqty, roundQty(item_fractional,
 		      noNeg(coitem_qtyord - coitem_qtyshipped +
@@ -57,7 +57,7 @@ BEGIN
 			              coitem_qtyreturned - qtyAtShipping(pordertype, coitem_id) - coitem_qtyreserved
 			              ) * coitem_qty_invuomratio
 		      )
-              ) <= qtyNetable(itemsite_id))
+              ) <= qtyAvailable(itemsite_id))
         INTO _isqtyavail
         FROM coitem, itemsite, item
        WHERE ((coitem_itemsite_id=itemsite_id) 
@@ -72,7 +72,7 @@ BEGIN
 			            qtyAtShipping(pordertype, toitem_id)
 		                    )
 		    )
-           ) <= qtyNetable(itemsite_id)) INTO _isqtyavail  
+           ) <= qtyAvailable(itemsite_id)) INTO _isqtyavail  
       FROM toitem, tohead, itemsite, item
      WHERE ((toitem_tohead_id=tohead_id)
        AND  (tohead_src_warehous_id=itemsite_warehous_id) 

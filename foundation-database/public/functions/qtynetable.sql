@@ -28,14 +28,14 @@ BEGIN
       FROM itemsite LEFT OUTER JOIN itemloc ON (itemloc_itemsite_id=itemsite_id)
                     LEFT OUTER JOIN location ON (location_id=itemloc_location_id)
      WHERE (itemsite_id=pItemsiteId)
-       AND ((location_id IS NULL) OR (location_netable))
+       AND ((location_id IS NULL) OR (COALESCE(location_netable, true)))
      GROUP BY itemsite_qtyonhand;
   ELSE
     -- Summarize itemloc qty for this itemsite/non-netable locations
     SELECT COALESCE(SUM(itemloc_qty), 0.0) INTO _qty
       FROM itemloc JOIN location ON (location_id=itemloc_location_id)
      WHERE (itemloc_itemsite_id=pItemsiteId)
-       AND (NOT location_netable);
+       AND (NOT COALESCE(location_netable, true));
   END IF;
 
   RETURN _qty;

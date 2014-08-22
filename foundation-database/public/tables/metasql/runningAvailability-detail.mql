@@ -6,7 +6,7 @@
 
 SELECT orderid, altorderid, ordertype, ordernumber, sequence, item_number,
        duedate, amount, qtyordered,  qtyreceived, balance,
-       balance AS runningavail,
+       balance AS runningavail, balance AS runningnetable,
 <? if exists("isReport") ?>
        CASE WHEN duedate = startOfTime() THEN ''
             ELSE formatDate(duedate) END AS f_duedate,
@@ -17,7 +17,9 @@ SELECT orderid, altorderid, ordertype, ordernumber, sequence, item_number,
 <? endif ?>
        notes,
        1 AS runningavail_xtrunningrole,
+       1 AS runningnetable_xtrunningrole,
        <? value("qoh") ?> AS runningavail_xtrunninginit,
+       <? value("netableqoh") ?> AS runningnetable_xtrunninginit,
        CASE WHEN late THEN 'error' END AS duedate_qtforegroundrole,
        CASE WHEN duedate = startOfTime() THEN '' END AS duedate_qtdisplayrole,
        CASE WHEN ordertype ~ <? value("plannedPo") ?> OR
