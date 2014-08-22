@@ -22,6 +22,8 @@ white:true*/
     },
 
     _didValidateSession: function (payload, callback) {
+      var coreVersion;
+
       if (payload.code === 1) {
         // If this is a valid session acquisition, go ahead
         // and store the database config details in
@@ -30,10 +32,28 @@ white:true*/
         this.setConfig(payload);
         this.setDetails(payload.data);
 
-        if (payload.version && XT.setVersion) {
+        if (payload.versions && XT.setVersion) {
           // announce to the client what our version is, if we have
           // a way of doing it.
-          XT.setVersion(payload.version);
+
+          _.each(payload.versions,  function (version, extensionName) {
+            // default to the core version (temp until all core extensions are in npm)
+            if (extensionName === "core") {
+              coreVersion = version;
+              extensionName = "";
+            } else if (version === "none") {
+              version = coreVersion;
+            }
+
+            var aboutVersionLabel = XT.app.$.postbooks.$.navigator.$.aboutVersion,
+              versionText = extensionName + " " + "_version".loc().toLowerCase() + " " + version;
+
+            if (aboutVersionLabel.getContent()) {
+              versionText = aboutVersionLabel.getContent() + "<br>" + versionText;
+            }
+
+            aboutVersionLabel.setContent(versionText);
+          });
         }
 
         // Start the client loading process.

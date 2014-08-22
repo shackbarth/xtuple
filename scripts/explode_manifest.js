@@ -15,19 +15,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   var fs = require("fs"),
     program = require("commander"),
     path = require("path"),
-    buildDatabaseUtil = require("./lib/build_database_util");
+    explodeManifest = require("./lib/util/process_manifest").explodeManifest;
 
   program
     .option('-m, --manifest [/path/to/manifest.js]', 'Location of manifest file.')
     .option('-n, --name [inventory_upgrade.sql]', 'Name of destination file.')
     .parse(process.argv);
 
-  // the path is not relative if it starts with a slash
-  var manifestPath = program.manifest.substring(0, 1) === '/' ?
-    program.manifest :
-    path.join(process.cwd(), program.manifest);
+  var manifestFilename = path.resolve(process.cwd(), program.manifest);
 
-  buildDatabaseUtil.explodeManifest(manifestPath, {}, function (err, contents) {
+  explodeManifest({manifestFilename: manifestFilename}, function (err, contents) {
     var outputFile;
     if (err) {
       console.log("error: ", err);

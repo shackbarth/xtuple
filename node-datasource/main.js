@@ -114,9 +114,15 @@ var app;
     var extensionLocation = extension.location === "npm" ? extension.location : extension.location + "/source";
     useClientDir(extensionLocation + "/" + extension.name + "/client", X.path.join(getExtensionDir(extension), "client"));
   };
-  var loadExtensionRoutes = function (extension) {
-    var manifest = JSON.parse(X.fs.readFileSync(X.path.join(getExtensionDir(extension),
-        "database/source/manifest.js")));
+  var loadExtensionServerside = function (extension) {
+    var packagePath = X.path.join(getExtensionDir(extension), "package.json");
+    var packageJson = X.fs.existsSync(packagePath) ? require(packagePath) : undefined;
+    var manifestPath = X.path.join(getExtensionDir(extension), "database/source/manifest.js");
+    var manifest = X.fs.existsSync(manifestPath) ? JSON.parse(X.fs.readFileSync(manifestPath)) : {};
+    var version = packageJson ? packageJson.version : manifest.version;
+    X.versions[extension.name] = version || "none"; // XXX the "none" is temporary until we have core extensions in npm
+
+    // TODO: be able to define routes in package.json
     _.each(manifest.routes || [], function (routeDetails) {
       var verb = (routeDetails.verb || "all").toLowerCase(),
         func = require(X.path.join(getExtensionDir(extension),
@@ -149,7 +155,7 @@ var app;
           return;
         }
         useClientDir("/client", "../enyo-client/application");
-        _.each(results, loadExtensionRoutes);
+        _.each(results, loadExtensionServerside);
         _.each(results, loadExtensionClientside);
       }
     });
@@ -168,11 +174,9 @@ var app;
  */
 
 var packageJson = X.fs.readFileSync("../package.json");
-try {
-  X.version = JSON.parse(packageJson).version;
-} catch (error) {
-
-}
+X.versions = {
+  core: JSON.parse(packageJson).version
+};
 
 /**
  * Module dependencies.
@@ -638,10 +642,9 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
           data: session.passport.user,
           code: 1,
           debugging: X.options.datasource.debugging,
-          biAvailable: _.isObject(X.options.biServer) && !_.isEmpty(X.options.biServer),
           emailAvailable: _.isString(X.options.datasource.smtpHost) && X.options.datasource.smtpHost !== "",
           printAvailable: _.isString(X.options.datasource.printer) && X.options.datasource.printer !== "",
-          version: X.version
+          versions: X.versions
         });
       callback(callbackObj);
     }, data && data.payload);

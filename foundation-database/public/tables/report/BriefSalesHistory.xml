@@ -95,63 +95,10 @@
        &lt;? endif ?>
          AS docnumber; </sql>
  </querysource>
- <querysource>
+ <querysource loadFromDb="true">
   <name>detail</name>
-  <sql>SELECT cohist_ordernumber AS sonumber,
-       cohist_invcnumber AS invnumber,
-       formatDate(cohist_orderdate) AS orddate,
-       formatDate(cohist_invcdate, 'Return') AS shipdate,
-       SUM(round(cohist_qtyshipped * currtobase(cohist_curr_id,cohist_unitprice,cohist_invcdate),2)) as extended,
-       formatMoney(SUM(round(cohist_qtyshipped * currtobase(cohist_curr_id,cohist_unitprice,cohist_invcdate),2))) as f_total,
-       SUM(round(cohist_qtyshipped * currtobase(cohist_curr_id,cohist_unitprice,cohist_invcdate),2)) as total
-FROM saleshistory
-  LEFT OUTER JOIN cohead ON (cohead_number=cohist_ordernumber)
-WHERE ((cohist_invcdate BETWEEN &lt;? value("startDate") ?> AND  &lt;? value("endDate") ?>)
-&lt;? if exists("cust_id") ?>
-   AND (cohist_cust_id=&lt;? value("cust_id") ?>)
-&lt;? endif ?>
-&lt;? if exists("shipto_id") ?>
-   AND (cohist_shipto_id=&lt;? value("shipto_id") ?>)
-&lt;? endif ?>
-&lt;? if exists("custtype_id") ?>
-   AND (cust_custtype_id=&lt;? value("custtype_id") ?>)
-&lt;? endif ?>
-&lt;? if exists("custtype_pattern") ?>
-   AND (custtype_code ~ &lt;? value("custtype_pattern") ?>)
-&lt;? endif ?>
-&lt;? if exists("custgrp_id") ?>
-  AND (cust_id IN (SELECT DISTINCT custgrpitem_cust_id
-                   FROM custgrpitem
-                   WHERE (custgrpitem_custgrp_id=&lt;? value("custgrp_id") ?>)))
-&lt;? endif ?>
-&lt;? if exists("custgrp_pattern") ?>
-  AND (cust_id IN (SELECT DISTINCT custgrpitem_cust_id
-                   FROM custgrp, custgrpitem
-                   WHERE ( (custgrpitem_custgrp_id=custgrp_id)
-                     AND   (custgrp_name ~ &lt;? value("custgrp_pattern") ?>) )) )
-&lt;? endif ?>
-&lt;? if exists("warehous_id") ?>
-   AND (itemsite_warehous_id=&lt;? value("warehous_id") ?>)
-&lt;? endif ?>
-&lt;? if exists("item_id") ?>
-  AND  (itemsite_item_id=&lt;? value("item_id") ?>)
-&lt;? endif ?>
-&lt;? if exists("prodcat_id") ?>
-   AND (item_prodcat_id=&lt;? value("prodcat_id") ?>)
-&lt;? endif ?>
-&lt;? if exists("prodcat_pattern") ?>
-   AND (item_prodcat_id IN (SELECT prodcat_id
-                            FROM prodcat
-                            WHERE (prodcat_code ~ &lt;? value("prodcat_pattern") ?>)))
-&lt;? endif ?>
-&lt;? if exists("salesrep_id") ?>
-   AND (cohist_salesrep_id=&lt;? value("salesrep_id") ?>)
-&lt;? endif ?>
-      )
-GROUP BY cohead_id, cust_id,cust_number,cust_custtype_id,cohist_cust_id,custtype_code,
-         cust_name,cohist_ordernumber, cohist_ponumber,
-         cohist_invcnumber,cohist_orderdate, cohist_invcdate
-ORDER BY cohist_invcdate, cohist_orderdate;</sql>
+  <mqlgroup>briefSalesHistory</mqlgroup>
+  <mqlname>detail</mqlname>
  </querysource>
  <rpthead>
   <height>221</height>
@@ -185,7 +132,7 @@ ORDER BY cohist_invcdate, cohist_orderdate;</sql>
    </font>
    <hcenter/>
    <vcenter/>
-   <string>Ship Date</string>
+   <string>Invc. Date</string>
   </label>
   <label>
    <rect>
@@ -396,7 +343,7 @@ ORDER BY cohist_invcdate, cohist_orderdate;</sql>
     <vcenter/>
     <data>
      <query>detail</query>
-     <column>sonumber</column>
+     <column>cohist_ordernumber</column>
     </data>
    </field>
    <field>
@@ -415,7 +362,7 @@ ORDER BY cohist_invcdate, cohist_orderdate;</sql>
     <vcenter/>
     <data>
      <query>detail</query>
-     <column>invnumber</column>
+     <column>invoicenumber</column>
     </data>
    </field>
    <field>
@@ -434,7 +381,7 @@ ORDER BY cohist_invcdate, cohist_orderdate;</sql>
     <vcenter/>
     <data>
      <query>detail</query>
-     <column>f_total</column>
+     <column>f_baseextprice</column>
     </data>
    </field>
    <field>
@@ -453,7 +400,7 @@ ORDER BY cohist_invcdate, cohist_orderdate;</sql>
     <vcenter/>
     <data>
      <query>detail</query>
-     <column>shipdate</column>
+     <column>f_invcdate</column>
     </data>
    </field>
    <field>
@@ -472,7 +419,7 @@ ORDER BY cohist_invcdate, cohist_orderdate;</sql>
     <vcenter/>
     <data>
      <query>detail</query>
-     <column>orddate</column>
+     <column>f_orderdate</column>
     </data>
    </field>
   </detail>
@@ -584,7 +531,7 @@ ORDER BY cohist_invcdate, cohist_orderdate;</sql>
    <vcenter/>
    <data>
     <query>detail</query>
-    <column>total</column>
+    <column>baseextprice</column>
    </data>
    <format builtin="true">money</format>
    <tracktotal/>
