@@ -52,9 +52,9 @@
       view: true
     },
     createHash: {
+      isActive: true,
       code: "NewSite" + Math.random(),
-      siteType: {name: "MFG"},
-      isActive: true
+      siteType: {name: "MFG"}
     },
     updatableField: "description"
   };
