@@ -28,7 +28,7 @@
     cacheName: "XM.sites",
     listKind: "XV.SiteList",
     instanceOf: "XM.Document",
-    extensions: [], 
+    extensions: [],
     /**
       @member -
       @memberof Sites.prototype
@@ -43,15 +43,20 @@
     idAttribute: "code",
     enforceUpperKey: false,
     attributes: ["code", "address", "code", "comments", "contact", "description", "incoterms",
-      "isActive", "notes", "siteType", "taxZone"],
+      "isActive", "siteType", "taxZone"],
     /**
       There should be no functionality for mult-site warehouses in Postbooks, thus, no privileges.
      */
+    privileges: {
+      createUpdateDelete: "MaintainWarehouses",
+      view: true
+    },
     createHash: {
       code: "NewSite" + Math.random(),
-      siteType: {name: "MFG"}
+      siteType: {name: "MFG"},
+      isActive: true
     },
-    updatableField: "notes"
+    updatableField: "description"
   };
 
   var additionalTests = function () {
