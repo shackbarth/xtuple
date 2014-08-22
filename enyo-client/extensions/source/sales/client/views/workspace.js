@@ -170,7 +170,7 @@ trailing:true, white:true*/
       {kind: "XV.MoneyWidget",
         attr: {localValue: "authorizedCredit", currency: "currency"},
         label: "_authorizedCredit".loc(), currencyShowing: false,
-        container: "invoiceLineItemBox.summaryPanel.summaryColumnOne",
+        container: "lineItemBox.summaryPanel.summaryColumnOne",
         defer: true},
       {kind: "XV.InputWidget", container: "mainSubgroup", addBefore: "isPosted",
         attr: "orderNumber"},
