@@ -397,6 +397,7 @@ var that = this;
 
 app.use(express.favicon(__dirname + '/views/login/assets/favicon.ico'));
 app.use('/assets', express.static('views/login/assets', { maxAge: 86400000 }));
+app.use('/node_modules/jquery', express.static('../node_modules/jquery/dist', { maxAge: 86400000 }));
 
 app.get('/:org/dialog/authorize', oauth2.authorization);
 app.post('/:org/dialog/authorize/decision', oauth2.decision);
