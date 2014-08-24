@@ -5,14 +5,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 var _ = require('underscore'),
   async = require('async'),
   buildDatabase = require("./build_database"),
-  buildDatabaseUtil = require("./build_database_util"),
   buildClient = require("./build_client").buildClient,
+  defaultExtensions = require("./util/default_extensions").extensions,
   dataSource = require('../../node-datasource/lib/ext/datasource').dataSource,
   exec = require('child_process').exec,
   fs = require('fs'),
+  initDatabase = require("./util/init_database").initDatabase,
+  inspectDatabaseExtensions = require("./util/inspect_database").inspectDatabaseExtensions,
   npm = require('npm'),
   path = require('path'),
-  unregister = buildDatabaseUtil.unregister,
+  unregister = require("./util/unregister").unregister,
   winston = require('winston');
 
 /*
@@ -31,6 +33,81 @@ var _ = require('underscore'),
 
   var creds;
 
+  var buildAll = function (specs, creds, buildAllCallback) {
+    async.series([
+      function (done) {
+        // step 0: init the database, if requested
+
+        if (specs.length === 1 &&
+            specs[0].initialize &&
+            (specs[0].backup || specs[0].source)) {
+
+          // The user wants to initialize the database first (i.e. Step 0)
+          // Do that, then call this function again
+          initDatabase(specs[0], creds, function (err, res) {
+            specs[0].wasInitialized = true;
+            done(err, res);
+          });
+          return;
+        } else {
+          done();
+        }
+
+      },
+      function (done) {
+        // step 1: npm install extension if necessary
+        // an alternate approach would be only npm install these
+        // extensions on an npm install.
+        var allExtensions = _.reduce(specs, function (memo, spec) {
+          memo.push(spec.extensions);
+          return _.flatten(memo);
+        }, []);
+        var npmExtensions = _.filter(allExtensions, function (extName) {
+          return extName && extName.indexOf("node_modules") >= 0;
+        });
+        if (npmExtensions.length === 0) {
+          done();
+          return;
+        }
+        npm.load(function (err, res) {
+          if (err) {
+            done(err);
+            return;
+          }
+          npm.on("log", function (message) {
+            // log the progress of the installation
+            console.log(message);
+          });
+          async.map(npmExtensions, function (extName, next) {
+            npm.commands.install([path.basename(extName)], next);
+          }, done);
+        });
+      },
+      function (done) {
+        // step 2: build the client
+        buildClient(specs, done);
+      },
+      function (done) {
+        // step 3: build the database
+        buildDatabase.buildDatabase(specs, creds, function (databaseErr, databaseRes) {
+          if (databaseErr) {
+            buildAllCallback(databaseErr);
+            return;
+          }
+          var returnMessage = "\n";
+          _.each(specs, function (spec) {
+            returnMessage += "Database: " + spec.database + '\nDirectories:\n';
+            _.each(spec.extensions, function (ext) {
+              returnMessage += '  ' + ext + '\n';
+            });
+          });
+          done(null, "Build succeeded." + returnMessage);
+        });
+      }
+    ], function (err, results) {
+      buildAllCallback(err, results && results[results.length - 1]);
+    });
+  };
 
   exports.build = function (options, callback) {
     var buildSpecs = {},
@@ -39,7 +116,7 @@ var _ = require('underscore'),
       getRegisteredExtensions = function (database, callback) {
         var credsClone = JSON.parse(JSON.stringify(creds));
         credsClone.database = database;
-        buildDatabaseUtil.inspectDatabaseExtensions(credsClone, function (err, paths) {
+        inspectDatabaseExtensions(credsClone, function (err, paths) {
           callback(null, {
             extensions: paths,
             database: database,
@@ -49,81 +126,6 @@ var _ = require('underscore'),
             clientOnly: options.clientOnly,
             databaseOnly: options.databaseOnly
           });
-        });
-      },
-      buildAll = function (specs, creds, buildAllCallback) {
-        async.series([
-          function (done) {
-            // step 0: init the database, if requested
-
-            if (specs.length === 1 &&
-                specs[0].initialize &&
-                (specs[0].backup || specs[0].source)) {
-
-              // The user wants to initialize the database first (i.e. Step 0)
-              // Do that, then call this function again
-              buildDatabaseUtil.initDatabase(specs[0], creds, function (err, res) {
-                specs[0].wasInitialized = true;
-                done(err, res);
-              });
-              return;
-            } else {
-              done();
-            }
-
-          },
-          function (done) {
-            // step 1: npm install extension if necessary
-            // an alternate approach would be only npm install these
-            // extensions on an npm install.
-            var allExtensions = _.reduce(specs, function (memo, spec) {
-              memo.push(spec.extensions);
-              return _.flatten(memo);
-            }, []);
-            var npmExtensions = _.filter(allExtensions, function (extName) {
-              return extName && extName.indexOf("node_modules") >= 0;
-            });
-            if (npmExtensions.length === 0) {
-              done();
-              return;
-            }
-            npm.load(function (err, res) {
-              if (err) {
-                done(err);
-                return;
-              }
-              npm.on("log", function (message) {
-                // log the progress of the installation
-                console.log(message);
-              });
-              async.map(npmExtensions, function (extName, next) {
-                npm.commands.install([path.basename(extName)], next);
-              }, done);
-            });
-          },
-          function (done) {
-            // step 2: build the client
-            buildClient(specs, done);
-          },
-          function (done) {
-            // step 3: build the database
-            buildDatabase.buildDatabase(specs, creds, function (databaseErr, databaseRes) {
-              if (databaseErr) {
-                buildAllCallback(databaseErr);
-                return;
-              }
-              var returnMessage = "\n";
-              _.each(specs, function (spec) {
-                returnMessage += "Database: " + spec.database + '\nDirectories:\n';
-                _.each(spec.extensions, function (ext) {
-                  returnMessage += '  ' + ext + '\n';
-                });
-              });
-              done(null, "Build succeeded." + returnMessage);
-            });
-          }
-        ], function (err, results) {
-          buildAllCallback(err, results && results[results.length - 1]);
         });
       },
       config;
@@ -176,7 +178,7 @@ var _ = require('underscore'),
         // an unmobilized build
         buildSpecs.extensions = options.extension ?
           [options.extension] :
-          buildDatabaseUtil.defaultExtensions;
+          defaultExtensions;
       }
       buildSpecs.initialize = true;
       buildSpecs.keepSql = options.keepSql;
