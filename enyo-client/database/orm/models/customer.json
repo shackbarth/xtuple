@@ -2334,7 +2334,7 @@
         "name": "customerType",
         "toOne": {
           "type": "CustomerType",
-          "column": "type"
+          "column": "cust_custtype_id",
         }
       }
     ],
