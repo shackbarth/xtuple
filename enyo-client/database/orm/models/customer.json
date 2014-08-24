@@ -2329,6 +2329,13 @@
           "type": "ContactRelation",
           "column": "cust_cntct_id"
         }
+      },
+      {
+        "name": "customerType",
+        "toOne": {
+          "type": "CustomerType",
+          "column": "type"
+        }
       }
     ],
     "extensions": [
