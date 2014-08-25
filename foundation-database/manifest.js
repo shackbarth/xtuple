@@ -1014,12 +1014,13 @@
 
     "public/tables/bankrecitem.sql",
     "public/tables/cashrcpt.sql",
+    "public/tables/itemsite.sql",
+    "public/tables/location.sql",
     "public/tables/metric.sql",
     "public/tables/priv.sql",
     "public/tables/tax.sql",
     "public/tables/taxpay.sql",
 
-    "public/tables/location.sql",
     "public/views/address.sql",
     "public/views/apmemo.sql",
     "public/views/armemo.sql",
@@ -1625,6 +1626,8 @@
     "public/tables/report/WarehouseMasterList.xml",
     "public/tables/report/items.xml",
 
-    "public/patches/fixacl.sql"
+    "public/patches/fixacl.sql",
+
+    "public/tables/setVersion.sql"
   ]
 }

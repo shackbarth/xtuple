@@ -14,7 +14,5 @@ do $$
 begin
 if fetchMetricText('ServerVersion') < '4.7.0' then
   update location set location_usable=true;
-  update itemsite set itemsite_qtyonhand=(itemsite_qtyonhand + itemsite_nnqoh);
-  -- drop column itemsite_nnqoh ???
 end if;
 end$$;
