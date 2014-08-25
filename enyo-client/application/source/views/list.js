@@ -696,7 +696,7 @@ trailing:true, white:true, strict: false*/
             {kind: "XV.ListAttr", attr: "billingContact.address"}
           ]},
           {kind: "XV.ListColumn", fit: true, components: [
-            {kind: "XV.ListAttr", attr: "customerType"}
+            {kind: "XV.ListAttr", attr: "customerType.code"}
           ]}
         ]}
       ]}
