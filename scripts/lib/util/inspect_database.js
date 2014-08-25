@@ -36,9 +36,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         return pathFromExtension(row.ext_name, row.ext_location);
       });
 
-      paths.unshift(path.join(__dirname, "../../enyo-client")); // core path
-      paths.unshift(path.join(__dirname, "../../lib/orm")); // lib path
-      paths.unshift(path.join(__dirname, "../../foundation-database")); // foundation path
+      paths.unshift(path.join(__dirname, "../../../enyo-client")); // core path
+      paths.unshift(path.join(__dirname, "../../../lib/orm")); // lib path
+      paths.unshift(path.join(__dirname, "../../../foundation-database")); // foundation path
       done(null, _.compact(paths));
     });
   };
