@@ -53,6 +53,7 @@
     "html5": "0.3.13",
     "jshint": "2.4.x",
     "zombie": "1.4.x",
+    "nodemon": "~1.0.15",
     "csslint": "~0.10.0"
   },
   "optionalDependencies": {
