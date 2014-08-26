@@ -298,6 +298,7 @@ var conditionalExpressSession = function (req, res, next) {
       req.path === "/" ||
       req.path === "/favicon.ico" ||
       req.path === "/forgot-password" ||
+      req.path === '/node_modules/jquery/jquery.js' ||
       req.path === "/recover") {
 
     next();
