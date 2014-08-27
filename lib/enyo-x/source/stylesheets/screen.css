@@ -1523,6 +1523,21 @@ body {
   opacity: 0.8;
   cursor: default;
 }
+a,
+.hyperlink {
+  color: #357ec7;
+  cursor: pointer;
+}
+.xv-invisible-wrapper {
+  padding: 0;
+  border: none;
+}
+.xv-limit-description {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+}
 .xv-app-panel {
   /* Setting this as min-width overrides enyo-narrow 100% */
   width: 320px;
@@ -1627,6 +1642,9 @@ body {
   background: #f8f8f8;
   text-overflow: ellipsis;
   border: 1px solid #d7d7d7;
+  /**
+        Styles relating to workspace widgets
+      */
   color: #070707;
   padding: 7px;
 }
@@ -1651,19 +1669,110 @@ body {
 .xv-popup.xv-groupbox-popup .xv-label,
 .xv-popup.xv-groupbox-popup .xv-decorated-label,
 .xv-popup.xv-groupbox-popup .xv-flexible-label {
-  width: 120px !important;
+  width: 120px;
   max-width: 100%;
-  padding: 0 8px 0 6px;
   text-align: right;
+  padding: 0 8px 0 6px;
   vertical-align: middle;
+}
+.xv-popup.xv-groupbox-popup .xv-label.disabled,
+.xv-popup.xv-groupbox-popup .xv-decorated-label.disabled,
+.xv-popup.xv-groupbox-popup .xv-flexible-label.disabled {
+  color: #777777;
 }
 .xv-popup.xv-groupbox-popup.xv-assignment-box .xv-flexible-label,
 .xv-popup.xv-groupbox-popup.xv-assignment-box .xv-label {
   width: 200px !important;
 }
 .xv-popup.xv-groupbox-popup .xv-input {
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(215, 215, 215, 0.5);
+}
+.xv-popup.xv-groupbox-popup .xv-input .enyo-tool-decorator {
+  max-width: 180px;
+  text-align: left;
+}
+.xv-popup.xv-groupbox-popup .xv-input .enyo-tool-decorator .onyx-icon {
+  display: inline-block;
+  width: 16px;
+  cursor: pointer;
+}
+.xv-popup.xv-groupbox-popup .xv-input.xv-textarea {
+  padding: 0;
+  margin: 8px;
+}
+.xv-popup.xv-groupbox-popup .xv-input.xv-textarea .enyo-tool-decorator {
+  max-width: 320px;
+}
+.xv-popup.xv-groupbox-popup .xv-input input {
+  width: 164px;
+}
+.xv-popup.xv-groupbox-popup .xv-input .xv-icon-decorator input {
+  width: 140px;
+}
+.xv-popup.xv-groupbox-popup .xv-input .xv-icon-decorator .onyx-icon {
+  padding: 4px;
+}
+.xv-popup.xv-groupbox-popup .xv-input .onyx-picker-decorator {
+  padding: 0;
+}
+.xv-popup.xv-groupbox-popup .xv-relationwidget .xv-description {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  max-width: 250px;
+  margin: 5px 5px 5px 80px;
+  font-size: 0.9em;
+}
+.xv-popup.xv-groupbox-popup .xv-relationwidget .xv-description.disabled {
+  color: #777777;
+}
+.xv-popup.xv-groupbox-popup .xv-spinnerwidget .xv-icon-decorator .onyx-icon {
+  display: block;
+  border: none;
+  font-size: 20px;
+  width: 20px;
+  padding: 0 4px 0 4px;
+}
+.xv-popup.xv-groupbox-popup .xv-spinnerwidget .xv-icon-decorator input {
+  width: 136px;
+}
+.xv-popup.xv-groupbox-popup .xv-spinnerwidget .slider {
+  margin: 15px 10px;
+}
+.xv-popup.xv-groupbox-popup .xv-numberwidget input {
+  text-align: right;
+}
+.xv-popup.xv-groupbox-popup .xv-moneywidget .enyo-tool-decorator {
+  min-width: 90px;
+  max-width: 90px;
+}
+.xv-popup.xv-groupbox-popup .xv-moneywidget .enyo-tool-decorator input {
+  width: 90px;
+}
+.xv-popup.xv-groupbox-popup .xv-currency-picker {
+  display: inline-block;
+}
+.xv-popup.xv-groupbox-popup .xv-currency-picker .enyo-tool-decorator {
+  min-width: 65px;
+  max-width: 65px;
+  padding: 10px 4px;
+}
+.xv-popup.xv-groupbox-popup .xv-currency-picker .enyo-tool-decorator .xv-button-text {
+  width: 45px;
+}
+.xv-popup.xv-groupbox-popup .xv-characteristics-widget .xv-characteristic-item {
   border-bottom: 1px solid #d7d7d7;
-  margin: 0px;
+}
+.xv-popup.xv-groupbox-popup .xv-characteristics-widget .xv-characteristic-item .xv-input {
+  border: none;
+}
+.xv-popup.xv-groupbox-popup .xv-characteristics-widget .xv-characteristic-item .xv-input input {
+  width: 135px;
+}
+.xv-popup.xv-groupbox-popup .xv-characteristics-widget .xv-characteristic-button {
+  text-align: center;
 }
 .xv-popup.xv-groupbox-popup .enyo-fittable-columns-layout > * {
   vertical-align: middle;
@@ -1724,9 +1833,12 @@ body {
 }
 .icon-folder-open-alt,
 .icon-calendar,
-.icon-sort {
+.icon-sort,
+.icon-angle-up,
+.icon-angle-down {
   color: #357ec7;
   vertical-align: middle;
+  text-align: center;
 }
 .xv-short-textarea .xv-textarea-input {
   min-height: 0;
@@ -1800,10 +1912,12 @@ body {
 }
 .onyx-toolbar .xv-toolbar-label,
 .onyx-toolbar .xv-search {
-  color: #fdfdfd;
   width: 185px;
   margin: 0;
   margin-left: 6px;
+}
+.onyx-toolbar .xv-search {
+  color: #939393;
 }
 .xv-navigator .xv-header {
   background-color: #fdfdfd;
@@ -1947,6 +2061,9 @@ body {
   background: #f8f8f8;
   text-overflow: ellipsis;
   border: 1px solid #d7d7d7;
+  /**
+        Styles relating to workspace widgets
+      */
 }
 .xv-workspace-container .xv-workspace .xv-workspace-panel .onyx-groupbox-header {
   padding: 6px 10px;
@@ -1969,26 +2086,133 @@ body {
 .xv-workspace-container .xv-workspace .xv-workspace-panel .xv-label,
 .xv-workspace-container .xv-workspace .xv-workspace-panel .xv-decorated-label,
 .xv-workspace-container .xv-workspace .xv-workspace-panel .xv-flexible-label {
-  width: 120px !important;
+  width: 120px;
   max-width: 100%;
-  padding: 0 8px 0 6px;
   text-align: right;
+  padding: 0 8px 0 6px;
   vertical-align: middle;
+}
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-label.disabled,
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-decorated-label.disabled,
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-flexible-label.disabled {
+  color: #777777;
 }
 .xv-workspace-container .xv-workspace .xv-workspace-panel.xv-assignment-box .xv-flexible-label,
 .xv-workspace-container .xv-workspace .xv-workspace-panel.xv-assignment-box .xv-label {
   width: 200px !important;
 }
 .xv-workspace-container .xv-workspace .xv-workspace-panel .xv-input {
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(215, 215, 215, 0.5);
+}
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-input .enyo-tool-decorator {
+  max-width: 180px;
+  text-align: left;
+}
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-input .enyo-tool-decorator .onyx-icon {
+  display: inline-block;
+  width: 16px;
+  cursor: pointer;
+}
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-input.xv-textarea {
+  padding: 0;
+  margin: 8px;
+}
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-input.xv-textarea .enyo-tool-decorator {
+  max-width: 320px;
+}
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-input input {
+  width: 164px;
+}
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-input .xv-icon-decorator input {
+  width: 140px;
+}
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-input .xv-icon-decorator .onyx-icon {
+  padding: 4px;
+}
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-input .onyx-picker-decorator {
+  padding: 0;
+}
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-relationwidget .xv-description {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  max-width: 250px;
+  margin: 5px 5px 5px 80px;
+  font-size: 0.9em;
+}
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-relationwidget .xv-description.disabled {
+  color: #777777;
+}
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-spinnerwidget .xv-icon-decorator .onyx-icon {
+  display: block;
+  border: none;
+  font-size: 20px;
+  width: 20px;
+  padding: 0 4px 0 4px;
+}
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-spinnerwidget .xv-icon-decorator input {
+  width: 136px;
+}
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-spinnerwidget .slider {
+  margin: 15px 10px;
+}
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-numberwidget input {
+  text-align: right;
+}
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-moneywidget .enyo-tool-decorator {
+  min-width: 90px;
+  max-width: 90px;
+}
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-moneywidget .enyo-tool-decorator input {
+  width: 90px;
+}
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-currency-picker {
+  display: inline-block;
+}
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-currency-picker .enyo-tool-decorator {
+  min-width: 65px;
+  max-width: 65px;
+  padding: 10px 4px;
+}
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-currency-picker .enyo-tool-decorator .xv-button-text {
+  width: 45px;
+}
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-characteristics-widget .xv-characteristic-item {
   border-bottom: 1px solid #d7d7d7;
-  margin: 0px;
+}
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-characteristics-widget .xv-characteristic-item .xv-input {
+  border: none;
+}
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-characteristics-widget .xv-characteristic-item .xv-input input {
+  width: 135px;
+}
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-characteristics-widget .xv-characteristic-button {
+  text-align: center;
 }
 .xv-workspace-container .xv-workspace .xv-workspace-panel .enyo-fittable-columns-layout > * {
   vertical-align: middle;
 }
+.xv-workspace-container .xv-workspace .onyx-input-decorator {
+  border: 0;
+}
+.xv-workspace-container .xv-workspace .onyx-input-decorator input {
+  width: 150px;
+}
 .xv-workspace-container .xv-workspace .onyx-input-decorator.onyx-disabled {
   opacity: 0.8;
   cursor: default;
+}
+.xv-workspace-container .xv-workspace .xv-dependency-picker .onyx-picker-decorator .onyx-button {
+  width: 280px;
+  margin-left: 6px;
+}
+.xv-workspace-container .xv-workspace .xv-dependency-button {
+  color: #357ec7;
+  font-size: 24px;
+  border: none;
+  background: transparent;
 }
 .xv-workspace-container .xv-workspace .xv-totals-panel .onyx-input-decorator > input,
 .xv-workspace-container .xv-workspace .xv-totals-panel * {
@@ -1996,509 +2220,6 @@ body {
 }
 .xv-workspace-container .xv-workspace .xv-totals-panel .xv-input {
   border: none;
-}
-/**
- * Default ListItem styles when using a ModelDecorator.
- */
-.xv-list .xv-model-decorator > .xv-list-item .xv-table {
-  display: table;
-  width: 100%;
-  table-layout: fixed;
-}
-.xv-list .xv-model-decorator > .xv-list-item .xv-table .xv-cell {
-  display: table-cell;
-}
-.xv-list .xv-model-decorator > .xv-list-item .xv-list-column.xv-list-attr {
-  /**
-        * Default styling for a model's id (as designated by 'idAttribute')
-        */
-}
-.xv-list .xv-model-decorator > .xv-list-item .xv-list-column.xv-list-attr.xm-attribute-id {
-  color: blue;
-  font-weight: bold;
-  cursor: pointer;
-}
-.xv-list .xv-model-decorator > .xv-list-item .xv-list-column.xv-list-attr.xm-attribute-name {
-  font-weight: bold;
-}
-.xv-list .xv-model-decorator > .xv-list-item .xv-list-column.xv-list-attr.xm-attributetype-number {
-  text-align: right;
-}
-.xv-list .xv-model-decorator > .xv-list-item .xv-list-column.xv-list-attr.xm-attributetype-money {
-  text-align: right;
-}
-.xv-list .xv-model-decorator > .xv-list-item .xv-list-column.xv-list-attr.xm-attributetype-date {
-  text-align: right;
-}
-.xv-list .xv-model-decorator > .xv-list-item.item-selected .xv-list-attr {
-  color: white;
-}
-.xv-list .xv-model-decorator > .xv-list-item.item-selected .xv-list-attr.xm-attribute-id {
-  color: #ff6529;
-}
-/**
-  Styles related to pickers, combo boxes, and relation widgets
-*/
-.onyx-picker-decorator .onyx-button {
-  padding: 12px 8px 12px 8px;
-  width: 150px;
-}
-.onyx-picker .onyx-menu-item {
-  text-align: left;
-  text-overflow: ellipsis;
-}
-.picker-icon {
-  position: absolute;
-  right: 0;
-  margin: 0 10px 0 2px;
-  color: #070707;
-}
-.xv-picker-button {
-  text-align: left;
-}
-.xv-picker-button .picker-content {
-  max-width: 100px;
-  overflow: hidden;
-}
-.xv-picker-button.disabled {
-  color: #777777;
-}
-.xv-picker-label {
-  color: #070707;
-  padding: 20px 8px 8px 8px;
-  text-align: right;
-  width: 130px;
-}
-.xv-picker-label.disabled {
-  color: #777777;
-}
-.xv-combobox .onyx-input-decorator input {
-  width: 145px;
-}
-.xv-combobox .icon-sort {
-  color: #357ec7;
-  vertical-align: middle;
-}
-.xv-combobox-note {
-  padding: 14px 3px 8px 3px;
-  text-align: left;
-}
-/*
-  Styles relating to the grid box
-*/
-/* Entire box including the grid and the summary panel */
-.xv-grid-box {
-  /**
-    This is the most general grid row that
-    is not specific to read-only or selected
-  */
-}
-.xv-grid-box.small-panel {
-  width: 600px;
-}
-.xv-grid-box.medium-panel {
-  width: 700px;
-}
-.xv-grid-box.large-panel {
-  width: 800px;
-}
-.xv-grid-box .enyo-list-page > *:first-child .xv-grid-row {
-  border-top: 0;
-}
-.xv-grid-box .xv-above-grid-list {
-  border: 0;
-}
-.xv-grid-box .xv-scroller {
-  background: #f8f8f8;
-}
-.xv-grid-box .xv-grid-attr {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-}
-.xv-grid-box .xv-grid-attr.bold {
-  font-weight: bold;
-}
-.xv-grid-box .xv-grid-attr.error {
-  color: #ff0000;
-}
-.xv-grid-box .xv-grid-attr.emphasis {
-  color: #009000;
-}
-.xv-grid-box .xv-grid-attr.warn {
-  color: #ff9c00;
-}
-.xv-grid-box .xv-grid-attr.italic {
-  font-style: italic;
-}
-.xv-grid-box .xv-grid-attr.placeholder {
-  font-style: italic;
-  color: #93a1a1;
-}
-.xv-grid-box .xv-grid-attr.hyperlink {
-  color: blue;
-}
-.xv-grid-box .xv-gridbox-button {
-  color: #357ec7;
-  font-size: 18px;
-  border: none;
-  background: transparent;
-}
-.xv-grid-box .xv-grid-row {
-  font-size: 12px;
-  background-color: #d8d8d8;
-  border-bottom: 1px solid #aaaaaa;
-  vertical-align: top;
-  /**
-      This is the grid header row
-    */
-}
-.xv-grid-box .xv-grid-row > * {
-  display: inline-block;
-}
-.xv-grid-box .xv-grid-row .xv-grid-header {
-  background-color: #d7d7d7;
-  color: #0e0e0e;
-  font-size: .8em;
-  font-weight: bold;
-  text-transform: uppercase;
-  padding-top: 4px;
-}
-.xv-grid-box .xv-grid-row .xv-grid-header.last {
-  border-right: none;
-}
-.xv-grid-box .xv-grid-row > * {
-  padding: 6px 4px;
-  border: none;
-}
-.xv-grid-box .xv-grid-row .line-number {
-  vertical-align: top;
-  width: 30px;
-  text-align: right;
-}
-.xv-grid-box .xv-grid-row .grid-actions {
-  display: block;
-  padding-left: 30px;
-  border-radius: 4px;
-  border-width: 0;
-  background: #f3f3f3;
-  margin: 6px;
-}
-.xv-grid-box .xv-grid-row .grid-actions > * {
-  display: inline-block;
-  width: 100%;
-}
-.xv-grid-box .xv-grid-row .grid-item {
-  vertical-align: top;
-  width: 175px;
-}
-.xv-grid-box .xv-grid-row .quantity {
-  vertical-align: top;
-  text-align: right;
-  width: 100px;
-}
-.xv-grid-box .xv-grid-row .percent {
-  vertical-align: top;
-  text-align: right;
-  width: 90px;
-}
-.xv-grid-box .xv-grid-row .price {
-  vertical-align: top;
-  text-align: right;
-  width: 90px;
-}
-.xv-grid-box .xv-grid-row .date {
-  vertical-align: top;
-  width: 105px;
-}
-.xv-grid-box .xv-grid-row .user {
-  vertical-align: top;
-  width: 100px;
-}
-.xv-grid-box .xv-grid-row.readonly {
-  background: #f8f8f8;
-  min-height: 56px;
-}
-.xv-grid-box .xv-grid-row.selected {
-  background-color: #fdfdfd;
-  border: 1px solid #ff6529;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .onyx-input-decorator {
-  padding: 0;
-  width: 100%;
-  margin: 0;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .onyx-input-decorator input {
-  width: 100%;
-  font-size: 13px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .onyx-picker-decorator {
-  padding-top: 6px;
-  width: 100%;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .onyx-picker-decorator .onyx-button {
-  height: 26px;
-  padding-top: 3px;
-  width: 100%;
-  font-size: 13px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-input {
-  border: none;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-picker-label {
-  display: none;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-datewidget {
-  margin-right: 10px;
-  padding-top: 0;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-datewidget .onyx-input-decorator {
-  padding: 0;
-  width: 100%;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-datewidget .onyx-input-decorator input {
-  width: 85%;
-  font-size: 13px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-numberwidget {
-  padding-top: 6px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-numberwidget .onyx-input-decorator {
-  padding: 0;
-  width: 100%;
-  margin: 0;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-numberwidget .onyx-input-decorator input {
-  width: 100%;
-  font-size: 13px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-combobox {
-  padding-left: 0;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-combobox input {
-  padding-top: 3px;
-  width: 80px;
-  font-size: 13px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-moneywidget {
-  padding-bottom: 0;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-moneywidget .onyx-input-decorator {
-  padding: 0;
-  width: 100%;
-  margin: 0;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-moneywidget .onyx-input-decorator input {
-  width: 100%;
-  font-size: 13px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget .onyx-input-decorator {
-  width: 100%;
-  padding-top: 6px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget .onyx-input {
-  width: 85%;
-  padding-right: 4px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-useraccount-widget .xv-subinput {
-  width: 80px;
-  height: 16px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-subinput {
-  width: 100%;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-input {
-  padding-top: 6px;
-  width: 100%;
-  border: none;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-label,
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-flexible-label,
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget-secondarydescription {
-  display: none;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget-description {
-  margin: 0;
-  margin-top: 5px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-private-item-site-widget {
-  border-bottom: 0;
-}
-.xv-grid-box.xv-groupbox .xv-sales-summary-panel {
-  border: none;
-  margin-top: 0;
-  padding-left: 0;
-  padding-right: 0;
-}
-.xv-grid-box.xv-groupbox .xv-sales-summary-panel .xv-sales-summary-total-group {
-  padding: 0;
-  border: none;
-}
-.xv-grid-box.xv-groupbox .xv-sales-summary-panel .xv-sales-summary-total-group .xv-moneywidget {
-  padding-bottom: 0;
-  padding-top: 0;
-}
-.xv-grid-box.xv-groupbox .xv-sales-summary-panel .xv-sales-summary-total-group .xv-moneywidget .xv-input-decorator {
-  padding-bottom: 0;
-  padding-top: 0;
-}
-.xv-grid-box.xv-groupbox .xv-sales-summary-panel .xv-sales-summary-total-group .xv-numberwidget {
-  padding-bottom: 0;
-  padding-top: 0;
-}
-.xv-grid-box.xv-groupbox .xv-sales-summary-panel .xv-sales-summary-total-group .xv-numberwidget .xv-input-decorator {
-  width: 163px;
-  padding-bottom: 0;
-  padding-top: 0;
-}
-.xv-grid-list .xv-list-column {
-  vertical-align: top !important;
-}
-/*
-  Styles relating to the dashboard
-*/
-/*
-  Variables for widths/colors
-*/
-.dashboard {
-  background-color: #d8d8d8;
-  /*
-    These styles will only be used
-    if the chart is in a dashboard
-  */
-}
-.dashboard .charts-panels {
-  overflow-y: auto;
-}
-.dashboard .selectable-chart {
-  width: 500px;
-  height: 250px;
-}
-.dashboard .selectable-chart .chart-title-bar {
-  width: 500px;
-}
-.dashboard .nvtooltip {
-  color: black;
-}
-.selectable-chart {
-  margin: 10px;
-  color: #357ec7;
-  overflow: hidden;
-  /*  The chart-filters may not be need as we are using the class xv-pullout
-      for styles.  Delete when finished hacking the filter styles.
-
-  .chart-filters {
-  	  background-color: @white;
-  	  
-  	  -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
-	  -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
-	  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
-  }
-  
-  .chart-filters .xv-parameter-panel {
-  	  background-color: @ghost;
-  	  border: 1px solid @smoke;
-  	  margin: 0 4px 6px 0;
-  	  width: 100%;
-  }
-  
-  .chart-filters.xv-parameter-panel .onyx-groupbox-header {
-	  padding: 6px 10px;
-	  border-bottom: 1px solid @smoke;
-	  background: @lightest-gray;
-	  color: @near-black;
-  }
-
-  .chart-filters.xv-parameter-panel .enyo-fittable-columns-layout {
-	  border-bottom: 1px solid @smoke;
-	  background: @white;
-    color: @near-black;
-    position: relative;
-    text-align: left;
-    white-space: nowrap;
-  }
-
-  .chart-filters.xv-parameter-panel .enyo-fittable-columns-layout > * {
-    vertical-align: middle;
-  }
-
-  .chart-filters.xv-parameter-panel .xv-label {
-    text-align: right;
-  }
-  
-  */
-}
-.selectable-chart .xv-list-item {
-  border-bottom: 1px solid grey;
-  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
-}
-.selectable-chart .xv-list-item .long {
-  padding-left: 7px;
-  width: 250px;
-}
-.selectable-chart .onyx-popup {
-  margin-top: 40px;
-  margin-left: 200px;
-}
-.selectable-chart .chart-title-bar {
-  height: 48px;
-  background-color: #efefef;
-  text-transform: none;
-  -webkit-border-top-right-radius: 10px;
-  -moz-border-radius-topright: 10px;
-  border-top-right-radius: 10px;
-  -webkit-border-top-left-radius: 10px;
-  -moz-border-radius-topleft: 10px;
-  border-top-left-radius: 10px;
-}
-.selectable-chart .chart-title-bar .chart-title {
-  padding-top: 8px;
-  color: #070707;
-  text-align: center;
-  /*font-size: 2em;*/
-  font-weight: normal;
-  font-family: Helvetica;
-}
-.selectable-chart .chart-title-bar .chart-sub-title {
-  /*padding-top: 8px;*/
-  color: #0000ff;
-  text-align: center;
-  font-size: small;
-  font-weight: normal;
-  font-family: Helvetica;
-}
-.selectable-chart .chart-title-bar .remove-icon {
-  position: absolute;
-  top: 0;
-  right: 0;
-}
-.selectable-chart .chart-title-bar .icon-filter {
-  color: #070707;
-  position: absolute;
-  right: 35px;
-}
-.selectable-chart .chart-bottom {
-  background-color: #fdfdfd;
-  border: 1px solid #444444;
-  border-top: none;
-  -webkit-border-bottom-right-radius: 10px;
-  -moz-border-radius-bottomright: 10px;
-  border-bottom-right-radius: 10px;
-  -webkit-border-bottom-left-radius: 10px;
-  -moz-border-radius-bottomleft: 10px;
-  border-bottom-left-radius: 10px;
-}
-.selectable-chart .chart-bottom .xv-picker-label {
-  width: 100px;
-  color: #070707;
-}
-.selectable-chart .chart-bottom .onyx-button {
-  width: 130px;
-  padding: 10px 10px;
-}
-.selectable-chart .chart-filterDrawer {
-  top: 0px;
 }
 /**
   Styles relating to Lists
@@ -2753,7 +2474,8 @@ body {
   color: #777777;
 }
 .xv-list-attr.hyperlink {
-  color: blue;
+  color: #357ec7;
+  cursor: pointer;
 }
 .xv-list-attr.disabled {
   color: #777777;
@@ -2773,6 +2495,470 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
   padding: 8px 0 0 8px;
+}
+/**
+ * Default ListItem styles when using a ModelDecorator.
+ */
+.xv-list .xv-model-decorator > .xv-list-item .xv-table {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+.xv-list .xv-model-decorator > .xv-list-item .xv-table .xv-cell {
+  display: table-cell;
+}
+.xv-list .xv-model-decorator > .xv-list-item .xv-list-column.xv-list-attr {
+  /**
+        * Default styling for a model's id (as designated by 'idAttribute')
+        */
+}
+.xv-list .xv-model-decorator > .xv-list-item .xv-list-column.xv-list-attr.xm-attribute-id {
+  color: #357ec7;
+  font-weight: bold;
+  cursor: pointer;
+}
+.xv-list .xv-model-decorator > .xv-list-item .xv-list-column.xv-list-attr.xm-attribute-name {
+  font-weight: bold;
+}
+.xv-list .xv-model-decorator > .xv-list-item .xv-list-column.xv-list-attr.xm-attributetype-number {
+  text-align: right;
+}
+.xv-list .xv-model-decorator > .xv-list-item .xv-list-column.xv-list-attr.xm-attributetype-money {
+  text-align: right;
+}
+.xv-list .xv-model-decorator > .xv-list-item .xv-list-column.xv-list-attr.xm-attributetype-date {
+  text-align: right;
+}
+.xv-list .xv-model-decorator > .xv-list-item.item-selected .xv-list-attr {
+  color: white;
+}
+.xv-list .xv-model-decorator > .xv-list-item.item-selected .xv-list-attr.xm-attribute-id {
+  color: #ff6529;
+}
+/**
+  Styles related to pickers, combo boxes, and relation widgets
+*/
+.onyx-picker-decorator .onyx-button {
+  padding: 12px 8px 12px 8px;
+  width: 150px;
+}
+.onyx-picker .onyx-menu-item {
+  text-align: left;
+  text-overflow: ellipsis;
+}
+.picker-icon {
+  position: absolute;
+  right: 0;
+  margin: 0 10px 0 2px;
+  color: #070707;
+}
+.xv-picker-button {
+  text-align: left;
+}
+.xv-picker-button .picker-content {
+  max-width: 100px;
+  overflow: hidden;
+}
+.xv-picker-button.disabled {
+  color: #777777;
+}
+.xv-picker-label {
+  color: #070707;
+  padding: 20px 8px 8px 8px;
+  text-align: right;
+  width: 130px;
+}
+.xv-picker-label.disabled {
+  color: #777777;
+}
+.xv-combobox-note {
+  padding: 14px 3px 8px 3px;
+  text-align: left;
+}
+/*
+  Styles relating to the grid box
+*/
+/* Entire box including the grid and the summary panel */
+.xv-grid-box {
+  /**
+    This is the most general grid row that
+    is not specific to read-only or selected
+  */
+}
+.xv-grid-box.small-panel {
+  width: 600px;
+}
+.xv-grid-box.medium-panel {
+  width: 700px;
+}
+.xv-grid-box.large-panel {
+  width: 800px;
+}
+.xv-grid-box .enyo-list-page > *:first-child .xv-grid-row {
+  border-top: 0;
+}
+.xv-grid-box .xv-above-grid-list {
+  border: 0;
+}
+.xv-grid-box .xv-scroller {
+  background: #f8f8f8;
+}
+.xv-limit-description .xv-grid-box .xv-grid-attr.bold {
+  font-weight: bold;
+}
+.xv-grid-box .xv-grid-attr.error {
+  color: #ff0000;
+}
+.xv-grid-box .xv-grid-attr.emphasis {
+  color: #009000;
+}
+.xv-grid-box .xv-grid-attr.warn {
+  color: #ff9c00;
+}
+.xv-grid-box .xv-grid-attr.italic {
+  font-style: italic;
+}
+.xv-grid-box .xv-grid-attr.placeholder {
+  font-style: italic;
+  color: #93a1a1;
+}
+.xv-grid-box .xv-grid-attr.hyperlink {
+  color: blue;
+}
+.xv-grid-box .xv-gridbox-button {
+  color: #357ec7;
+  font-size: 18px;
+  border: none;
+  background: transparent;
+}
+.xv-grid-box .xv-grid-row {
+  font-size: 12px;
+  background-color: #d8d8d8;
+  border-bottom: 1px solid #aaaaaa;
+  vertical-align: top;
+  /**
+      This is the grid header row
+    */
+}
+.xv-grid-box .xv-grid-row > * {
+  display: inline-block;
+}
+.xv-grid-box .xv-grid-row .xv-grid-header {
+  background-color: #d7d7d7;
+  color: #0e0e0e;
+  font-size: .8em;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding-top: 4px;
+}
+.xv-grid-box .xv-grid-row .xv-grid-header.last {
+  border-right: none;
+}
+.xv-grid-box .xv-grid-row > * {
+  padding: 6px 4px;
+  border: none;
+}
+.xv-grid-box .xv-grid-row .line-number {
+  vertical-align: top;
+  width: 30px;
+  text-align: right;
+}
+.xv-grid-box .xv-grid-row .grid-actions {
+  display: block;
+  padding-left: 30px;
+  border-radius: 4px;
+  border-width: 0;
+  background: #f3f3f3;
+  margin: 6px;
+}
+.xv-grid-box .xv-grid-row .grid-actions > * {
+  display: inline-block;
+  width: 100%;
+}
+.xv-grid-box .xv-grid-row .grid-item {
+  vertical-align: top;
+  width: 175px;
+}
+.xv-grid-box .xv-grid-row .quantity {
+  vertical-align: top;
+  text-align: right;
+  width: 100px;
+}
+.xv-grid-box .xv-grid-row .percent {
+  vertical-align: top;
+  text-align: right;
+  width: 90px;
+}
+.xv-grid-box .xv-grid-row .price {
+  vertical-align: top;
+  text-align: right;
+  width: 90px;
+}
+.xv-grid-box .xv-grid-row .date {
+  vertical-align: top;
+  width: 105px;
+}
+.xv-grid-box .xv-grid-row .user {
+  vertical-align: top;
+  width: 100px;
+}
+.xv-grid-box .xv-grid-row.readonly {
+  background: #f8f8f8;
+  min-height: 56px;
+}
+.xv-grid-box .xv-grid-row.selected {
+  background-color: #fdfdfd;
+  border: 1px solid #ff6529;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .onyx-input-decorator {
+  padding: 0;
+  width: 100%;
+  margin: 0;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .onyx-input-decorator input {
+  width: 100%;
+  font-size: 13px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .onyx-picker-decorator {
+  padding-top: 6px;
+  width: 100%;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .onyx-picker-decorator .onyx-button {
+  height: 26px;
+  padding-top: 3px;
+  width: 100%;
+  font-size: 13px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-input {
+  padding-top: 6px;
+  width: 100%;
+  border: none;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-label,
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-flexible-label,
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-picker-label {
+  display: none;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget .xv-description {
+  margin: 0;
+  margin-top: 5px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget.xv-private-item-site-widget {
+  border-bottom: 0;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget .onyx-input-decorator {
+  padding: 0;
+  width: 100%;
+  margin: 0;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget .onyx-input-decorator input {
+  width: 76%;
+  font-size: 13px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-datewidget .onyx-input-decorator {
+  padding: 0;
+  width: 100%;
+  margin: 0;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-datewidget .onyx-input-decorator input {
+  width: 76%;
+  font-size: 13px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-combobox .onyx-input-decorator {
+  padding: 0;
+  width: 100%;
+  margin: 0;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-combobox .onyx-input-decorator input {
+  width: 76%;
+  font-size: 13px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-useraccount-widget .xv-input {
+  width: 80px;
+  height: 16px;
+}
+.xv-grid-box.xv-groupbox .xv-sales-summary-panel {
+  border: none;
+  margin-top: 0;
+  padding-left: 0;
+  padding-right: 0;
+}
+.xv-grid-box.xv-groupbox .xv-sales-summary-panel .xv-sales-summary-total-group {
+  padding: 0;
+  border: none;
+}
+.xv-grid-box.xv-groupbox .xv-sales-summary-panel .xv-sales-summary-total-group .xv-moneywidget {
+  padding-bottom: 0;
+  padding-top: 0;
+}
+.xv-grid-box.xv-groupbox .xv-sales-summary-panel .xv-sales-summary-total-group .xv-moneywidget .xv-input-decorator {
+  padding-bottom: 0;
+  padding-top: 0;
+}
+.xv-grid-box.xv-groupbox .xv-sales-summary-panel .xv-sales-summary-total-group .xv-numberwidget {
+  padding-bottom: 0;
+  padding-top: 0;
+}
+.xv-grid-box.xv-groupbox .xv-sales-summary-panel .xv-sales-summary-total-group .xv-numberwidget .xv-input-decorator {
+  width: 163px;
+  padding-bottom: 0;
+  padding-top: 0;
+}
+.xv-grid-list .xv-list-column {
+  vertical-align: top !important;
+}
+/*
+  Styles relating to the dashboard
+*/
+/*
+  Variables for widths/colors
+*/
+.dashboard {
+  background-color: #d8d8d8;
+  /*
+    These styles will only be used
+    if the chart is in a dashboard
+  */
+}
+.dashboard .charts-panels {
+  overflow-y: auto;
+}
+.dashboard .selectable-chart {
+  width: 500px;
+  height: 250px;
+}
+.dashboard .selectable-chart .chart-title-bar {
+  width: 500px;
+}
+.dashboard .nvtooltip {
+  color: black;
+}
+.selectable-chart {
+  margin: 10px;
+  color: #357ec7;
+  overflow: hidden;
+  /*  The chart-filters may not be need as we are using the class xv-pullout
+      for styles.  Delete when finished hacking the filter styles.
+
+  .chart-filters {
+  	  background-color: @white;
+  	  
+  	  -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+	  -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+	  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .chart-filters .xv-parameter-panel {
+  	  background-color: @ghost;
+  	  border: 1px solid @smoke;
+  	  margin: 0 4px 6px 0;
+  	  width: 100%;
+  }
+  
+  .chart-filters.xv-parameter-panel .onyx-groupbox-header {
+	  padding: 6px 10px;
+	  border-bottom: 1px solid @smoke;
+	  background: @lightest-gray;
+	  color: @near-black;
+  }
+
+  .chart-filters.xv-parameter-panel .enyo-fittable-columns-layout {
+	  border-bottom: 1px solid @smoke;
+	  background: @white;
+    color: @near-black;
+    position: relative;
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  .chart-filters.xv-parameter-panel .enyo-fittable-columns-layout > * {
+    vertical-align: middle;
+  }
+
+  .chart-filters.xv-parameter-panel .xv-label {
+    text-align: right;
+  }
+  
+  */
+}
+.selectable-chart .xv-list-item {
+  border-bottom: 1px solid grey;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+}
+.selectable-chart .xv-list-item .long {
+  padding-left: 7px;
+  width: 250px;
+}
+.selectable-chart .onyx-popup {
+  margin-top: 40px;
+  margin-left: 200px;
+}
+.selectable-chart .chart-title-bar {
+  height: 48px;
+  background-color: #efefef;
+  text-transform: none;
+  -webkit-border-top-right-radius: 10px;
+  -moz-border-radius-topright: 10px;
+  border-top-right-radius: 10px;
+  -webkit-border-top-left-radius: 10px;
+  -moz-border-radius-topleft: 10px;
+  border-top-left-radius: 10px;
+}
+.selectable-chart .chart-title-bar .chart-title {
+  padding-top: 8px;
+  color: #070707;
+  text-align: center;
+  /*font-size: 2em;*/
+  font-weight: normal;
+  font-family: Helvetica;
+}
+.selectable-chart .chart-title-bar .chart-sub-title {
+  /*padding-top: 8px;*/
+  color: #0000ff;
+  text-align: center;
+  font-size: small;
+  font-weight: normal;
+  font-family: Helvetica;
+}
+.selectable-chart .chart-title-bar .remove-icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.selectable-chart .chart-title-bar .icon-filter {
+  color: #070707;
+  position: absolute;
+  top: 0;
+  right: 35px;
+}
+.selectable-chart .chart-bottom {
+  background-color: #fdfdfd;
+  border: 1px solid #444444;
+  border-top: none;
+  -webkit-border-bottom-right-radius: 10px;
+  -moz-border-radius-bottomright: 10px;
+  border-bottom-right-radius: 10px;
+  -webkit-border-bottom-left-radius: 10px;
+  -moz-border-radius-bottomleft: 10px;
+  border-bottom-left-radius: 10px;
+}
+.selectable-chart .chart-bottom .xv-picker-label {
+  width: 100px;
+  color: #070707;
+}
+.selectable-chart .chart-bottom .onyx-button {
+  width: 130px;
+  padding: 10px 10px;
+}
+.selectable-chart .chart-filterDrawer {
+  top: 0px;
+}
+.selectable-chart .map-cluster {
+  width: 40px;
+  height: 40px;
+  background-color: greenyellow;
+  text-align: center;
+  font-size: 24px;
 }
 /**
   Styles relating to widgets in the pullout
@@ -2830,6 +3016,9 @@ body {
   background: #f8f8f8;
   text-overflow: ellipsis;
   border: 1px solid #d7d7d7;
+  /**
+        Styles relating to workspace widgets
+      */
   width: 100%;
   margin: 0 4px 6px 0;
 }
@@ -2854,22 +3043,117 @@ body {
 .xv-pullout .xv-parameter-panel .xv-label,
 .xv-pullout .xv-parameter-panel .xv-decorated-label,
 .xv-pullout .xv-parameter-panel .xv-flexible-label {
-  width: 120px !important;
+  width: 120px;
   max-width: 100%;
-  padding: 0 8px 0 6px;
   text-align: right;
+  padding: 0 8px 0 6px;
   vertical-align: middle;
+}
+.xv-pullout .xv-parameter-panel .xv-label.disabled,
+.xv-pullout .xv-parameter-panel .xv-decorated-label.disabled,
+.xv-pullout .xv-parameter-panel .xv-flexible-label.disabled {
+  color: #777777;
 }
 .xv-pullout .xv-parameter-panel.xv-assignment-box .xv-flexible-label,
 .xv-pullout .xv-parameter-panel.xv-assignment-box .xv-label {
   width: 200px !important;
 }
 .xv-pullout .xv-parameter-panel .xv-input {
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(215, 215, 215, 0.5);
+}
+.xv-pullout .xv-parameter-panel .xv-input .enyo-tool-decorator {
+  max-width: 180px;
+  text-align: left;
+}
+.xv-pullout .xv-parameter-panel .xv-input .enyo-tool-decorator .onyx-icon {
+  display: inline-block;
+  width: 16px;
+  cursor: pointer;
+}
+.xv-pullout .xv-parameter-panel .xv-input.xv-textarea {
+  padding: 0;
+  margin: 8px;
+}
+.xv-pullout .xv-parameter-panel .xv-input.xv-textarea .enyo-tool-decorator {
+  max-width: 320px;
+}
+.xv-pullout .xv-parameter-panel .xv-input input {
+  width: 164px;
+}
+.xv-pullout .xv-parameter-panel .xv-input .xv-icon-decorator input {
+  width: 140px;
+}
+.xv-pullout .xv-parameter-panel .xv-input .xv-icon-decorator .onyx-icon {
+  padding: 4px;
+}
+.xv-pullout .xv-parameter-panel .xv-input .onyx-picker-decorator {
+  padding: 0;
+}
+.xv-pullout .xv-parameter-panel .xv-relationwidget .xv-description {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  max-width: 250px;
+  margin: 5px 5px 5px 80px;
+  font-size: 0.9em;
+}
+.xv-pullout .xv-parameter-panel .xv-relationwidget .xv-description.disabled {
+  color: #777777;
+}
+.xv-pullout .xv-parameter-panel .xv-spinnerwidget .xv-icon-decorator .onyx-icon {
+  display: block;
+  border: none;
+  font-size: 20px;
+  width: 20px;
+  padding: 0 4px 0 4px;
+}
+.xv-pullout .xv-parameter-panel .xv-spinnerwidget .xv-icon-decorator input {
+  width: 136px;
+}
+.xv-pullout .xv-parameter-panel .xv-spinnerwidget .slider {
+  margin: 15px 10px;
+}
+.xv-pullout .xv-parameter-panel .xv-numberwidget input {
+  text-align: right;
+}
+.xv-pullout .xv-parameter-panel .xv-moneywidget .enyo-tool-decorator {
+  min-width: 90px;
+  max-width: 90px;
+}
+.xv-pullout .xv-parameter-panel .xv-moneywidget .enyo-tool-decorator input {
+  width: 90px;
+}
+.xv-pullout .xv-parameter-panel .xv-currency-picker {
+  display: inline-block;
+}
+.xv-pullout .xv-parameter-panel .xv-currency-picker .enyo-tool-decorator {
+  min-width: 65px;
+  max-width: 65px;
+  padding: 10px 4px;
+}
+.xv-pullout .xv-parameter-panel .xv-currency-picker .enyo-tool-decorator .xv-button-text {
+  width: 45px;
+}
+.xv-pullout .xv-parameter-panel .xv-characteristics-widget .xv-characteristic-item {
   border-bottom: 1px solid #d7d7d7;
-  margin: 0px;
+}
+.xv-pullout .xv-parameter-panel .xv-characteristics-widget .xv-characteristic-item .xv-input {
+  border: none;
+}
+.xv-pullout .xv-parameter-panel .xv-characteristics-widget .xv-characteristic-item .xv-input input {
+  width: 135px;
+}
+.xv-pullout .xv-parameter-panel .xv-characteristics-widget .xv-characteristic-button {
+  text-align: center;
 }
 .xv-pullout .xv-parameter-panel .enyo-fittable-columns-layout > * {
   vertical-align: middle;
+}
+.xv-pullout .xv-parameter-panel .xv-input .onyx-input-decorator,
+.xv-pullout .xv-parameter-panel .xv-pickerwidget .onyx-input-decorator {
+  border: none;
 }
 .xv-pullout .xv-parameter-panel .xv-buttons {
   text-align: center;
@@ -2894,101 +3178,6 @@ body {
   border-bottom: 2px solid #d8d8d8;
 }
 /**
-  Styles relating to misc widgets
-*/
-.onyx-input-decorator {
-  border: 0;
-}
-.onyx-input-decorator input {
-  width: 150px;
-}
-.xv-relationwidget input,
-.xv-datewidget input {
-  width: 135px;
-}
-.xv-numberwidget input {
-  text-align: right;
-  width: 150px;
-}
-.xv-moneywidget {
-  padding-top: 6px;
-  padding-bottom: 2px;
-}
-.xv-moneywidget .onyx-input-decorator {
-  font-family: "Lucida Sans Unicode", "Lucida Grande", arial, sans-serif;
-  margin-right: 5px;
-}
-.xv-moneywidget .onyx-input-decorator input,
-.xv-moneywidget .onyx-input-decorator .xv-money-label {
-  width: 85px;
-  text-align: right;
-}
-.xv-moneywidget .onyx-input-decorator.xv-currency-label {
-  width: 65px;
-}
-.xv-moneywidget .xv-picker-button {
-  width: 65px;
-  padding: 10px 4px;
-}
-.spinner .enyo-fittable-columns-layout > * {
-  vertical-align: middle;
-}
-.spinner .buttons {
-  display: block;
-  padding: 0;
-  margin: 1px 0 1px 10px;
-  width: 20px;
-  height: 20px;
-  background: transparent;
-  color: #357ec7;
-  font-size: 20px;
-  border: none;
-}
-.spinner .slider {
-  margin: 15px 10px;
-}
-.spinner.xv-numberwidget input {
-  width: 120px;
-}
-.xv-dependency-picker .onyx-picker-decorator .onyx-button {
-  width: 280px;
-  margin-left: 6px;
-}
-.xv-dependency-button {
-  color: #357ec7;
-  font-size: 24px;
-  border: none;
-  background: transparent;
-}
-/**
-  Characteristics
-*/
-.xv-characteristic-picker {
-  border: none;
-}
-.xv-characteristic-picker .onyx-picker-decorator .onyx-button {
-  width: 130px;
-}
-.xv-characteristic-item {
-  border-bottom: 1px solid #d7d7d7;
-}
-.xv-characteristic-item .onyx-input-decorator > input {
-  width: 115px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-.xv-characteristic-item > .xv-input {
-  border: none;
-}
-.xv-characteristic-buttons {
-  margin: 8px;
-}
-.xv-characteristic-button {
-  margin-left: 4px;
-  color: #357ec7;
-  font-size: 24px;
-}
-/**
   Styles relating to RelationWidgets
 */
 .xv-relationwidget-completer {
@@ -2998,37 +3187,11 @@ body {
 .xv-completer-sidecar {
   color: #93a1a1;
 }
-.xv-relationwidget-column.left {
-  padding-right: 18px;
-  color: #070707;
-  width: 140px;
-}
 .xv-relationwidget-icon {
   top: 1px;
   left: 8px;
   height: 30px;
   position: relative;
-}
-.xv-relationwidget-description {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  max-width: 250px;
-  margin: 5px 5px 5px 80px;
-}
-.xv-relationwidget-description.disabled {
-  color: #777777;
-}
-.xv-relationwidget-description.label {
-  text-indent: 0;
-  text-align: right;
-}
-.xv-relationwidget-description.hasLabel {
-  text-indent: 0;
-}
-.xv-relationwidget-description.hyperlink {
-  color: blue;
 }
 .xv-private-item-site-widget {
   border-bottom-color: #aaaaaa;
@@ -3063,9 +3226,6 @@ body {
 .xv-addresswidget .xv-addresswidget-viewer.placeholder {
   font-style: italic;
   color: #93a1a1;
-}
-.xv-addresswidget .xv-addresswidget-viewer.hyperlink {
-  color: #0000ff;
 }
 .xv-addresswidget .xv-addresswidget-viewer.disabled {
   color: #777777;
@@ -3138,6 +3298,9 @@ body {
   background: #f8f8f8;
   text-overflow: ellipsis;
   border: 1px solid #d7d7d7;
+  /**
+        Styles relating to workspace widgets
+      */
   width: 100%;
   margin: 0 4px 6px 0;
 }
@@ -3162,22 +3325,117 @@ body {
 .xv-search .xv-search-container .xv-label,
 .xv-search .xv-search-container .xv-decorated-label,
 .xv-search .xv-search-container .xv-flexible-label {
-  width: 120px !important;
+  width: 120px;
   max-width: 100%;
-  padding: 0 8px 0 6px;
   text-align: right;
+  padding: 0 8px 0 6px;
   vertical-align: middle;
+}
+.xv-search .xv-search-container .xv-label.disabled,
+.xv-search .xv-search-container .xv-decorated-label.disabled,
+.xv-search .xv-search-container .xv-flexible-label.disabled {
+  color: #777777;
 }
 .xv-search .xv-search-container.xv-assignment-box .xv-flexible-label,
 .xv-search .xv-search-container.xv-assignment-box .xv-label {
   width: 200px !important;
 }
 .xv-search .xv-search-container .xv-input {
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(215, 215, 215, 0.5);
+}
+.xv-search .xv-search-container .xv-input .enyo-tool-decorator {
+  max-width: 180px;
+  text-align: left;
+}
+.xv-search .xv-search-container .xv-input .enyo-tool-decorator .onyx-icon {
+  display: inline-block;
+  width: 16px;
+  cursor: pointer;
+}
+.xv-search .xv-search-container .xv-input.xv-textarea {
+  padding: 0;
+  margin: 8px;
+}
+.xv-search .xv-search-container .xv-input.xv-textarea .enyo-tool-decorator {
+  max-width: 320px;
+}
+.xv-search .xv-search-container .xv-input input {
+  width: 164px;
+}
+.xv-search .xv-search-container .xv-input .xv-icon-decorator input {
+  width: 140px;
+}
+.xv-search .xv-search-container .xv-input .xv-icon-decorator .onyx-icon {
+  padding: 4px;
+}
+.xv-search .xv-search-container .xv-input .onyx-picker-decorator {
+  padding: 0;
+}
+.xv-search .xv-search-container .xv-relationwidget .xv-description {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  max-width: 250px;
+  margin: 5px 5px 5px 80px;
+  font-size: 0.9em;
+}
+.xv-search .xv-search-container .xv-relationwidget .xv-description.disabled {
+  color: #777777;
+}
+.xv-search .xv-search-container .xv-spinnerwidget .xv-icon-decorator .onyx-icon {
+  display: block;
+  border: none;
+  font-size: 20px;
+  width: 20px;
+  padding: 0 4px 0 4px;
+}
+.xv-search .xv-search-container .xv-spinnerwidget .xv-icon-decorator input {
+  width: 136px;
+}
+.xv-search .xv-search-container .xv-spinnerwidget .slider {
+  margin: 15px 10px;
+}
+.xv-search .xv-search-container .xv-numberwidget input {
+  text-align: right;
+}
+.xv-search .xv-search-container .xv-moneywidget .enyo-tool-decorator {
+  min-width: 90px;
+  max-width: 90px;
+}
+.xv-search .xv-search-container .xv-moneywidget .enyo-tool-decorator input {
+  width: 90px;
+}
+.xv-search .xv-search-container .xv-currency-picker {
+  display: inline-block;
+}
+.xv-search .xv-search-container .xv-currency-picker .enyo-tool-decorator {
+  min-width: 65px;
+  max-width: 65px;
+  padding: 10px 4px;
+}
+.xv-search .xv-search-container .xv-currency-picker .enyo-tool-decorator .xv-button-text {
+  width: 45px;
+}
+.xv-search .xv-search-container .xv-characteristics-widget .xv-characteristic-item {
   border-bottom: 1px solid #d7d7d7;
-  margin: 0px;
+}
+.xv-search .xv-search-container .xv-characteristics-widget .xv-characteristic-item .xv-input {
+  border: none;
+}
+.xv-search .xv-search-container .xv-characteristics-widget .xv-characteristic-item .xv-input input {
+  width: 135px;
+}
+.xv-search .xv-search-container .xv-characteristics-widget .xv-characteristic-button {
+  text-align: center;
 }
 .xv-search .xv-search-container .enyo-fittable-columns-layout > * {
   vertical-align: middle;
+}
+.xv-search .xv-search-container .xv-input .onyx-input-decorator,
+.xv-search .xv-search-container .xv-pickerwidget .onyx-input-decorator {
+  border: none;
 }
 .xv-search .xv-search-container .xv-buttons {
   text-align: center;

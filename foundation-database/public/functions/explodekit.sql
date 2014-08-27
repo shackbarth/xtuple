@@ -124,32 +124,6 @@ BEGIN
              '', pMemo,
              0);
 
-      IF (_item.itemsite_createsopr) THEN
-        SELECT createPR(cohead_number::INTEGER, 'S', _coitemid) INTO _orderid
-        FROM cohead
-        WHERE (cohead_id=pSoheadid);
-        IF (_orderid > 0) THEN
-          UPDATE coitem SET coitem_order_id=_orderid
-          WHERE (coitem_id=_coitemid);
-        ELSE
-          RAISE EXCEPTION 'Could not explode kit. CreatePR failed, result=%', _orderid; 
-        END IF;
-      END IF;
-
-      IF (_item.itemsite_createsopo) THEN
-        SELECT itemsrc_id INTO _itemsrcid
-        FROM itemsrc
-        WHERE ((itemsrc_item_id=_item.item_id)
-        AND (itemsrc_default));
-
-        GET DIAGNOSTICS _count = ROW_COUNT;
-        IF (_count > 0) THEN
-          PERFORM createPurchaseToSale(_coitemid, _itemsrcid, _item.itemsite_dropship);
-        ELSE
-          RAISE WARNING 'One or more Kit items are flagged as purchase-to-order for this site, but no default item source is defined.';
-        END IF;
-      END IF;
-     
     END IF;
   END LOOP;
 

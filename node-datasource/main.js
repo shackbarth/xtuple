@@ -10,6 +10,7 @@ _ = require("underscore");
 jsonpatch = require("json-patch");
 SYS = {};
 XT = { };
+var express = require('express');
 var app;
 
 (function () {
@@ -94,46 +95,38 @@ var app;
   XT.session = Object.create(XT.Session);
   XT.session.schemas.SYS = false;
 
-
-//
-// Load all extension-defined routes. By convention the paths,
-// filenames, and functions to be used
-// for the routes should be described in a file called routes.js
-// in the routes directory.
-//
-/*
-if (X.options.extensionRoutes && X.options.extensionRoutes.length > 0) {
-  _.each(X.options.extensionRoutes, function (route) {
-    "use strict";
-    var routes = require(__dirname + "/" + route + "/routes");
-
-    _.each(routes, function (routeDetails) {
-      var verb = (routeDetails.verb || "all").toLowerCase();
-      if (_.contains(["all", "get", "post", "patch", "delete"], verb)) {
-        app[verb]('/:org/' + routeDetails.path, routeDetails.function);
-      } else {
-        console.log("Invalid verb for extension-defined route " + routeDetails.path);
-      }
+  var getExtensionDir = function (extension) {
+    var dirMap = {
+      "/private-extensions": X.path.join(__dirname, "../..", extension.location, "source", extension.name),
+      "/xtuple-extensions": X.path.join(__dirname, "../..", extension.location, "source", extension.name),
+      "/core-extensions": X.path.join(__dirname, "../enyo-client/extensions/source", extension.name),
+      "npm": X.path.join(__dirname, "../node_modules", extension.name)
+    };
+    return dirMap[extension.location];
+  };
+  var useClientDir = X.useClientDir = function (path, dir) {
+    path = path.indexOf("npm") === 0 ? "/" + path : path;
+    _.each(X.options.datasource.databases, function (orgValue, orgKey, orgList) {
+      app.use("/" + orgValue + path, express.static(dir, { maxAge: 86400000 }));
     });
-  });
-}
-*/
+  };
+  var loadExtensionClientside = function (extension) {
+    var extensionLocation = extension.location === "npm" ? extension.location : extension.location + "/source";
+    useClientDir(extensionLocation + "/" + extension.name + "/client", X.path.join(getExtensionDir(extension), "client"));
+  };
+  var loadExtensionServerside = function (extension) {
+    var packagePath = X.path.join(getExtensionDir(extension), "package.json");
+    var packageJson = X.fs.existsSync(packagePath) ? require(packagePath) : undefined;
+    var manifestPath = X.path.join(getExtensionDir(extension), "database/source/manifest.js");
+    var manifest = X.fs.existsSync(manifestPath) ? JSON.parse(X.fs.readFileSync(manifestPath)) : {};
+    var version = packageJson ? packageJson.version : manifest.version;
+    X.versions[extension.name] = version || "none"; // XXX the "none" is temporary until we have core extensions in npm
 
-  var loadExtensionRoutes = function (extension) {
-    if (!_.contains(["/private-extensions", "/xtuple-extensions"], extension.location)) {
-      return;
-    }
-    if (!app) {
-      // XXX time bomb: assuming app has been initialized, below, by now
-      XT.log("Could not load extension routes");
-      return;
-    }
-    var manifest = JSON.parse(X.fs.readFileSync(X.path.join(__dirname, "../..", extension.location, "source",
-        extension.name, "database/source/manifest.js")));
+    // TODO: be able to define routes in package.json
     _.each(manifest.routes || [], function (routeDetails) {
       var verb = (routeDetails.verb || "all").toLowerCase(),
-        func = require(X.path.join(__dirname, "../..", extension.location, "source",
-          extension.name, "node-datasource", routeDetails.filename))[routeDetails.functionName];
+        func = require(X.path.join(getExtensionDir(extension),
+          "node-datasource", routeDetails.filename))[routeDetails.functionName];
 
       if (_.contains(["all", "get", "post", "patch", "delete"], verb)) {
         app[verb]('/:org/' + routeDetails.path, func);
@@ -155,7 +148,15 @@ if (X.options.extensionRoutes && X.options.extensionRoutes.length > 0) {
     extensions.fetch({
       database: X.options.datasource.databases[0],
       success: function (coll, results, options) {
-        _.each(results, loadExtensionRoutes);
+        if (!app) {
+          // XXX time bomb: assuming app has been initialized, below, by now
+          XT.log("Could not load extension routes or client-side code because the app has not started");
+          process.exit(1);
+          return;
+        }
+        useClientDir("/client", "../enyo-client/application");
+        _.each(results, loadExtensionServerside);
+        _.each(results, loadExtensionClientside);
       }
     });
   };
@@ -173,24 +174,21 @@ if (X.options.extensionRoutes && X.options.extensionRoutes.length > 0) {
  */
 
 var packageJson = X.fs.readFileSync("../package.json");
-try {
-  X.version = JSON.parse(packageJson).version;
-} catch (error) {
-
-}
+X.versions = {
+  core: JSON.parse(packageJson).version
+};
 
 /**
  * Module dependencies.
  */
-var express = require('express'),
-    passport = require('passport'),
-    oauth2 = require('./oauth2/oauth2'),
-    routes = require('./routes/routes'),
-    socketio = require('socket.io'),
-    url = require('url'),
-    utils = require('./oauth2/utils'),
-    user = require('./oauth2/user'),
-    destroySession;
+var passport = require('passport'),
+  oauth2 = require('./oauth2/oauth2'),
+  routes = require('./routes/routes'),
+  socketio = require('socket.io'),
+  url = require('url'),
+  utils = require('./oauth2/utils'),
+  user = require('./oauth2/user'),
+  destroySession;
 
 // TODO - for testing. remove...
 //http://stackoverflow.com/questions/13091037/node-js-heap-snapshots-and-google-chrome-snapshot-viewer
@@ -398,17 +396,8 @@ require('./oauth2/passport');
 var that = this;
 
 app.use(express.favicon(__dirname + '/views/login/assets/favicon.ico'));
-if (X.options.datasource.debugging) {
-  _.each(X.options.datasource.databases, function (orgValue, orgKey, orgList) {
-    "use strict";
-    app.use("/" + orgValue + '/client', express.static('../enyo-client/application', { maxAge: 86400000 }));
-    app.use("/" + orgValue + '/core-extensions', express.static('../enyo-client/extensions', { maxAge: 86400000 }));
-    app.use("/" + orgValue + '/private-extensions', express.static('../../private-extensions', { maxAge: 86400000 }));
-    app.use("/" + orgValue + '/xtuple-extensions', express.static('../../xtuple-extensions', { maxAge: 86400000 }));
-    app.use("/" + orgValue + '/npm', express.static('../node_modules', { maxAge: 86400000 }));
-  });
-}
 app.use('/assets', express.static('views/login/assets', { maxAge: 86400000 }));
+app.use('/node_modules/jquery', express.static('../node_modules/jquery/dist', { maxAge: 86400000 }));
 
 app.get('/:org/dialog/authorize', oauth2.authorization);
 app.post('/:org/dialog/authorize/decision', oauth2.decision);
@@ -438,7 +427,6 @@ app.get('/:org/logout', routes.logout);
 app.get('/:org/app', routes.app);
 app.get('/:org/debug', routes.debug);
 
-app.get('/:org/analysis', routes.analysis);
 app.all('/:org/credit-card', routes.creditCard);
 app.all('/:org/change-password', routes.changePassword);
 app.all('/:org/client/build/client-code', routes.clientCode);
@@ -655,10 +643,9 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
           data: session.passport.user,
           code: 1,
           debugging: X.options.datasource.debugging,
-          biAvailable: _.isObject(X.options.biServer) && !_.isEmpty(X.options.biServer),
           emailAvailable: _.isString(X.options.datasource.smtpHost) && X.options.datasource.smtpHost !== "",
           printAvailable: _.isString(X.options.datasource.printer) && X.options.datasource.printer !== "",
-          version: X.version
+          versions: X.versions
         });
       callback(callbackObj);
     }, data && data.payload);

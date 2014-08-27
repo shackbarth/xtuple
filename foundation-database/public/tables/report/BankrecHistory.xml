@@ -39,8 +39,8 @@
   <name>Subtotal</name>
   <sql>SELECT 
    formatMoney(COALESCE(MAX(selrec.bankrec_endbal) +
---   SUM(currtolocal(bankaccnt_curr_id,gltrans_amount,gltrans_date) * -1),0)) AS amount
-   SUM(currtolocal(bankaccnt_curr_id,gltrans_amount,gltrans_date)),0)) AS amount
+   SUM(currtolocal(bankaccnt_curr_id,gltrans_amount,gltrans_date) * -1),0)) AS amount
+--   SUM(currtolocal(bankaccnt_curr_id,gltrans_amount,gltrans_date)),0)) AS amount
  FROM gltrans
    JOIN bankaccnt ON (bankaccnt_accnt_id = gltrans_accnt_id)
    JOIN bankrec selrec ON ((selrec.bankrec_bankaccnt_id = bankaccnt_id)
@@ -55,8 +55,8 @@
   <name>ActualAmount</name>
   <sql>SELECT 
    formatMoney(COALESCE(MAX(selrec.bankrec_endbal) +
---   SUM(currtolocal(bankaccnt_curr_id,gltrans_amount,gltrans_date) * -1),0)) AS amount
-   SUM(currtolocal(bankaccnt_curr_id,gltrans_amount,gltrans_date)),0)) AS amount
+   SUM(currtolocal(bankaccnt_curr_id,gltrans_amount,gltrans_date) * -1),0)) AS amount
+--   SUM(currtolocal(bankaccnt_curr_id,gltrans_amount,gltrans_date)),0)) AS amount
  FROM gltrans
    JOIN bankaccnt ON (bankaccnt_accnt_id = gltrans_accnt_id)
    JOIN bankrec selrec ON ((selrec.bankrec_bankaccnt_id = bankaccnt_id)
@@ -683,8 +683,8 @@
     <height>136.499</height>
     <label>
      <rect>
-      <x>454</x>
-      <y>41.4985</y>
+      <x>450</x>
+      <y>43</y>
       <width>162</width>
       <height>15</height>
      </rect>
@@ -695,7 +695,7 @@
      </font>
      <right/>
      <vcenter/>
-     <string>Add: Checks in Circulation:</string>
+     <string>Checks in Circulation:</string>
     </label>
     <label>
      <rect>
@@ -715,8 +715,8 @@
     </label>
     <label>
      <rect>
-      <x>453</x>
-      <y>73.5</y>
+      <x>450</x>
+      <y>73</y>
       <width>163</width>
       <height>15</height>
      </rect>
@@ -727,12 +727,12 @@
      </font>
      <right/>
      <vcenter/>
-     <string>Deduct: Deposits in Circulation:</string>
+     <string>Deposits in Circulation:</string>
     </label>
     <label>
      <rect>
-      <x>396</x>
-      <y>105</y>
+      <x>395</x>
+      <y>103</y>
       <width>219</width>
       <height>15</height>
      </rect>
@@ -747,8 +747,8 @@
     </label>
     <label>
      <rect>
-      <x>454</x>
-      <y>25.5</y>
+      <x>450</x>
+      <y>28</y>
       <width>162</width>
       <height>15</height>
      </rect>
@@ -763,8 +763,8 @@
     </label>
     <field>
      <rect>
-      <x>642</x>
-      <y>25.4985</y>
+      <x>640</x>
+      <y>28</y>
       <width>100</width>
       <height>15</height>
      </rect>
@@ -782,8 +782,8 @@
     </field>
     <field>
      <rect>
-      <x>642</x>
-      <y>41.5</y>
+      <x>640</x>
+      <y>43</y>
       <width>100</width>
       <height>15</height>
      </rect>
@@ -803,8 +803,8 @@
     </field>
     <label>
      <rect>
-      <x>559</x>
-      <y>57.4985</y>
+      <x>555</x>
+      <y>58</y>
       <width>56</width>
       <height>15</height>
      </rect>
@@ -819,8 +819,8 @@
     </label>
     <field>
      <rect>
-      <x>641</x>
-      <y>57.5</y>
+      <x>640</x>
+      <y>58</y>
       <width>100</width>
       <height>15</height>
      </rect>
@@ -838,8 +838,8 @@
     </field>
     <field>
      <rect>
-      <x>642</x>
-      <y>73.5</y>
+      <x>640</x>
+      <y>73</y>
       <width>100</width>
       <height>15</height>
      </rect>
@@ -859,8 +859,8 @@
     </field>
     <field>
      <rect>
-      <x>641</x>
-      <y>89.5</y>
+      <x>640</x>
+      <y>88</y>
       <width>100</width>
       <height>15</height>
      </rect>
@@ -880,8 +880,8 @@
     </field>
     <field>
      <rect>
-      <x>641</x>
-      <y>105</y>
+      <x>640</x>
+      <y>103</y>
       <width>100</width>
       <height>15</height>
      </rect>
@@ -899,8 +899,8 @@
     </field>
     <label>
      <rect>
-      <x>439</x>
-      <y>89.499</y>
+      <x>435</x>
+      <y>88</y>
       <width>177</width>
       <height>15</height>
      </rect>
@@ -911,7 +911,7 @@
      </font>
      <right/>
      <vcenter/>
-     <string>Add: Adjustments in Circulation:</string>
+     <string>Adjustments in Circulation:</string>
     </label>
    </foot>
   </group>

@@ -183,7 +183,6 @@ label.login-message-box.error {
   display: block;
   width: 97%;
   margin: 0;
-  text-transform: lowercase;
   outline: none;
   color: #666666;
   font-smoothing: antialiased;

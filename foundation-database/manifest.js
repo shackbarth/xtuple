@@ -7,10 +7,13 @@
   "databaseScripts": [
     "../lib/orm/source/create_xt_schema.sql",
     "../lib/orm/source/xt/functions/add_column.sql",
+    "../lib/orm/source/xt/functions/add_comment_type.sql",
     "../lib/orm/source/xt/functions/add_constraint.sql",
     "../lib/orm/source/xt/functions/add_index.sql",
     "../lib/orm/source/xt/functions/add_primary_key.sql",
     "../lib/orm/source/xt/functions/create_table.sql",
+
+    "public/patches/fixflcol.sql",
 
     "public/indexes/apopentax.sql",
     "public/indexes/aropentax.sql",
@@ -81,6 +84,7 @@
     "public/functions/averagesalesprice.sql",
     "public/functions/avgcost.sql",
     "public/functions/balanceitemsite.sql",
+    "public/functions/bankreconciliation.sql",
     "public/functions/basecurrid.sql",
     "public/functions/bomcontains.sql",
     "public/functions/bomhistsequence.sql",
@@ -740,6 +744,7 @@
     "public/functions/releaseinvcnumber.sql",
     "public/functions/releasenumber.sql",
     "public/functions/releaseponumber.sql",
+    "public/functions/releasepr.sql",
     "public/functions/releaseprnumber.sql",
     "public/functions/releasepurchaseorder.sql",
     "public/functions/releasequnumber.sql",
@@ -1016,6 +1021,7 @@
     "public/tables/cashrcpt.sql",
     "public/tables/ccpay.sql",
     "public/tables/ccbank.sql",
+    "public/tables/checkhead.sql",
     "public/tables/metric.sql",
     "public/tables/payco.sql",
     "public/tables/priv.sql",

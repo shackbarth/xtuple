@@ -32,8 +32,8 @@ select xt.install_js('XM','ItemSite','xtuple', $$
     @private
 
     This function supports the XM.ItemSiteListItem.fetch() and XM.ItemSiteRelation.fetch(),
-    but also xDruple extension XM.XdrupleCommerceProduct.xdCommerceProductFetch() call like this:
-    XM.ItemSitePrivate.fetch("XM.XdrupleCommerceProduct", "xdruple.xd_commerce_product", query, 'product_id', 'id');
+    but also xDruple extension XM.XdProduct.xdProductFetch() call like this:
+    XM.ItemSitePrivate.fetch("XM.XdProduct", "xdruple.xd_commerce_product", query, 'product_id', 'id');
   */
   XM.ItemSitePrivate.fetch = function (recordType, backingType, query, backingTypeJoinColumn, idColumn) {
     query = query || {};
