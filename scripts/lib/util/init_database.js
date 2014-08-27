@@ -36,19 +36,19 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         winston.info("Building schema for database " + databaseName);
 
         var process = proc.spawn('psql', [
-          '-U', creds.username, '-h', creds.hostname, '--single-transaction', '-p',
+          '-q', '-U', creds.username, '-h', creds.hostname, '--single-transaction', '-p',
           creds.port, '-d', databaseName, '-f', schemaPath
-        ]);
-        process.on('close', done);
+        ], { stdio: 'inherit' });
+        process.on('exit', done);
         
       },
       populateData = function (done) {
         winston.info("Populating data for database " + databaseName + " from " + spec.source);
         var process = proc.spawn('psql', [
-          '-U', creds.username, '-h', creds.hostname, '--single-transaction', '-p',
+          '-q', '-U', creds.username, '-h', creds.hostname, '--single-transaction', '-p',
           creds.port, '-d', databaseName, '-f', spec.source
-        ]);
-        process.on('close', done);
+        ], { stdio: 'inherit'});
+        process.on('exit', done);
       },
       // use exec to restore the backup. The alternative, reading the backup file into a string to query
       // doesn't work because the backup file is binary.
@@ -56,8 +56,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         var process = proc.spawn('pg_restore', [
           '-U', creds.username, '-h', creds.hostname, '-p', creds.port, '-d', databaseName,
           '-j', os.cpus().length, spec.backup
-        ]);
-        process.on('close', function (err, res) {
+        ], { stdio: 'inherit' });
+        process.on('exit', function (err, res) {
           if (err) {
             console.log("ignoring restore db error", err);
           }
