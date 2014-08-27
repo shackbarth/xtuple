@@ -308,7 +308,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
      */
     var responsePrint = function (res, data, done) {
 
-    var print = 'lp -d ' + X.options.datasource.printer + ' ' + reportPath;
+    var printer = X.options.datasource.printer; //for now defined in config.js conincides with name of printer in CUPS interface
+    var print = 'lp -d ' + printer + ' ' + reportPath;
 
     child_process.exec(print, function (error, stdout, stderr) {
     if (error !== null) {
