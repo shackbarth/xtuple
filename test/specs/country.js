@@ -7,6 +7,8 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
 (function () {
   "use strict";
 
+  var assert = require("chai").assert;
+
   /**
     @class
     @alias Country
