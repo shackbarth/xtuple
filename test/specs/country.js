@@ -70,7 +70,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     updatableField: "name"
   };
   var additionalTests = function () {
-    describe("Incident status behavior", function () {
+    describe("Country field validation", function () {
       var countryModel;
 
       beforeEach(function () {
