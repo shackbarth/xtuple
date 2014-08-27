@@ -70,18 +70,37 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     updatableField: "name"
   };
   var additionalTests = function () {
-    /**
-      @member -
-      @memberof Country.prototype
-      @description Length of Abbreviation field should not exceed 2, Currency Abbreviation
-      and Currency Number should not exceed 3 and Currency Number value should be an integer
-    */
-    it.skip("Abbreviation length should not exceed 2", function () {
-    });
-    it.skip("Length of Currency Abbreviation should not exceed 3", function () {
-    });
-    it.skip("Currency Number value should be an integer and its length should not" +
-    " exceed 3 ", function () {
+    describe("Incident status behavior", function () {
+      var countryModel;
+
+      beforeEach(function () {
+        countryModel = new XM.Country();
+        countryModel.initialize(null, {isNew: true});
+      });
+      /**
+        @member -
+        @memberof Country.prototype
+        @description Length of Abbreviation field should not exceed 2, Currency Abbreviation
+        and Currency Number should not exceed 3 and Currency Number value should be an integer
+      */
+      it.skip("Abbreviation length should not exceed 2", function () {
+        countryModel.set("abbreviation", "22");
+        assert.isUndefined(countryModel.validate(countryModel.attributes));
+        countryModel.set("abbreviation", "333");
+        assert.isObject(countryModel.validate(countryModel.attributes));
+      });
+      it.skip("Length of Currency Abbreviation should not exceed 3", function () {
+        countryModel.set("abbreviation", "333");
+        assert.isUndefined(countryModel.validate(countryModel.attributes));
+        countryModel.set("abbreviation", "4444");
+        assert.isObject(countryModel.validate(countryModel.attributes));
+      });
+      it.skip("Currency Number length should not exceed 3 ", function () {
+        countryModel.set("abbreviation", "333");
+        assert.isUndefined(countryModel.validate(countryModel.attributes));
+        countryModel.set("abbreviation", "4444");
+        assert.isObject(countryModel.validate(countryModel.attributes));
+      });
     });
   };
   exports.spec = spec;

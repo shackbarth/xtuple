@@ -641,12 +641,12 @@ strict: false*/
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup",
             classes: "in-panel", components: [
-            {kind: "XV.InputWidget", attr: "abbreviation"},
+            {kind: "XV.InputWidget", attr: "abbreviation", maxlength: 2},
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.InputWidget", attr: "currencyName"},
             {kind: "XV.InputWidget", attr: "currencySymbol"},
-            {kind: "XV.InputWidget", attr: "currencyAbbreviation"},
-            {kind: "XV.InputWidget", attr: "currencyNumber"}
+            {kind: "XV.InputWidget", attr: "currencyAbbreviation", maxlength: 3},
+            {kind: "XV.InputWidget", attr: "currencyNumber", maxlength: 3}
           ]}
         ]}
       ]}
