@@ -127,7 +127,7 @@ white:true*/
       }
 
       if (attributes.currencyNumber &&
-          attributes.currencyNumber.length > 3) {
+          attributes.currencyNumber.length !== 3) {
         params.attr = "_currencyNumber".loc();
         params.length = "3";
         return XT.Error.clone('xt1006', { params: params });
