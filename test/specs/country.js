@@ -83,22 +83,22 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
         @description Length of Abbreviation field should not exceed 2, Currency Abbreviation
         and Currency Number should not exceed 3 and Currency Number value should be an integer
       */
-      it.skip("Abbreviation length should not exceed 2", function () {
+      it("Abbreviation length should not exceed 2", function () {
         countryModel.set("abbreviation", "22");
         assert.isUndefined(JSON.stringify(countryModel.validate(countryModel.attributes)));
         countryModel.set("abbreviation", "333");
         assert.isObject(countryModel.validate(countryModel.attributes));
       });
-      it.skip("Length of Currency Abbreviation should not exceed 3", function () {
-        countryModel.set("abbreviation", "333");
+      it("Length of Currency Abbreviation should not exceed 3", function () {
+        countryModel.set("currencyAbbreviation", "333");
         assert.isUndefined(JSON.stringify(countryModel.validate(countryModel.attributes)));
-        countryModel.set("abbreviation", "4444");
+        countryModel.set("currencyAbbreviation", "4444");
         assert.isObject(countryModel.validate(countryModel.attributes));
       });
-      it.skip("Currency Number length should not exceed 3 ", function () {
-        countryModel.set("abbreviation", "333");
+      it("Currency Number length should not exceed 3 ", function () {
+        countryModel.set("currencyNumber", "333");
         assert.isUndefined(JSON.stringify(countryModel.validate(countryModel.attributes)));
-        countryModel.set("abbreviation", "4444");
+        countryModel.set("currencyNumber", "4444");
         assert.isObject(countryModel.validate(countryModel.attributes));
       });
     });
