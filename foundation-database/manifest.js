@@ -7,6 +7,7 @@
   "databaseScripts": [
     "../lib/orm/source/create_xt_schema.sql",
     "../lib/orm/source/xt/functions/add_column.sql",
+    "../lib/orm/source/xt/functions/add_comment_type.sql",
     "../lib/orm/source/xt/functions/add_constraint.sql",
     "../lib/orm/source/xt/functions/add_index.sql",
     "../lib/orm/source/xt/functions/add_primary_key.sql",
