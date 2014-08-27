@@ -864,9 +864,9 @@ TODO deferred to later sprint:
         @description When currency or invoice date is changed outstanding credit should be
           recalculated.
       */
-      it.skip("When currency or invoice date is changed outstanding credit should be recalculated",
+      it.("When currency or invoice date is changed outstanding credit should be recalculated",
           function (done) {
-        // frustratingly nondeterministic
+
         this.timeout(9000);
         var outstandingCreditChanged = function () {
           if (invoiceModel.get("outstandingCredit")) {
