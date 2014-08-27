@@ -29,17 +29,17 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     /**
     @member -
     @memberof Shift
-    @description Used in the CRM and Time & Expense modules
+    @description Used in the Time & Expense modules
     */
-    extensions: ["crm", "time_expense"],
+    extensions: ["time_expense"],
     /**
       @member -
       @memberof Shift
       @description Shifts can be read by all users and can be created, updated,
-        or deleted by users with the "MaintainEmployees" privilege.
+        or deleted by users with the "MaintainShifts" privilege.
     */
     privileges: {
-      createUpdateDelete: "MaintainShifts",
+      createUpdateDelete: true,
       read: true
     },
     createHash: {
