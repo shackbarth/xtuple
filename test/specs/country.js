@@ -85,19 +85,19 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
       */
       it.skip("Abbreviation length should not exceed 2", function () {
         countryModel.set("abbreviation", "22");
-        assert.isUndefined(countryModel.validate(countryModel.attributes));
+        assert.isUndefined(JSON.stringify(countryModel.validate(countryModel.attributes)));
         countryModel.set("abbreviation", "333");
         assert.isObject(countryModel.validate(countryModel.attributes));
       });
       it.skip("Length of Currency Abbreviation should not exceed 3", function () {
         countryModel.set("abbreviation", "333");
-        assert.isUndefined(countryModel.validate(countryModel.attributes));
+        assert.isUndefined(JSON.stringify(countryModel.validate(countryModel.attributes)));
         countryModel.set("abbreviation", "4444");
         assert.isObject(countryModel.validate(countryModel.attributes));
       });
       it.skip("Currency Number length should not exceed 3 ", function () {
         countryModel.set("abbreviation", "333");
-        assert.isUndefined(countryModel.validate(countryModel.attributes));
+        assert.isUndefined(JSON.stringify(countryModel.validate(countryModel.attributes)));
         countryModel.set("abbreviation", "4444");
         assert.isObject(countryModel.validate(countryModel.attributes));
       });
