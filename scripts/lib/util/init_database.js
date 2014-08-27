@@ -38,8 +38,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         var process = proc.spawn('psql', [
           '-U', creds.username, '-h', creds.hostname, '--single-transaction', '-p',
           creds.port, '-d', databaseName, '-f', schemaPath
-        ], { stdio: 'inherit' });
-        process.on('exit', done);
+        ]);
+        process.on('close', done);
         
       },
       populateData = function (done) {
@@ -47,8 +47,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         var process = proc.spawn('psql', [
           '-U', creds.username, '-h', creds.hostname, '--single-transaction', '-p',
           creds.port, '-d', databaseName, '-f', spec.source
-        ], { stdio: 'inherit'});
-        process.on('exit', done);
+        ]);
+        process.on('close', done);
       },
       // use exec to restore the backup. The alternative, reading the backup file into a string to query
       // doesn't work because the backup file is binary.
@@ -56,8 +56,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         var process = proc.spawn('pg_restore', [
           '-U', creds.username, '-h', creds.hostname, '-p', creds.port, '-d', databaseName,
           '-j', os.cpus().length, spec.backup
-        ], { stdio: 'inherit' });
-        process.on('exit', function (err, res) {
+        ]);
+        process.on('close', function (err, res) {
           if (err) {
             console.log("ignoring restore db error", err);
           }
