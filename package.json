@@ -43,7 +43,8 @@
     "underscore": "1.4.x",
     "winston": "0.7.x",
     "underscore.string": "~2.3.3",
-    "ursa":"0.8.x"
+    "ursa": "0.8.x",
+    "jquery": "~2.1.1"
   },
   "devDependencies": {
     "chai": "1.5.x",

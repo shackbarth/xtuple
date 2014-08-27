@@ -22,10 +22,11 @@
     <section id="main">
       <div style="transform: translateZ(0px); opacity: 1;" id="form-fields">
         <form name="loginForm" action="/login" method="post">
+          <input type="hidden" id="hash" name="hash">
           <div class="login-label" id="form-fields_idLabel">Username</div>
-          <input class="login-input" id="form-fields_id" name="id" placeholder="Username">
+          <input class="login-input" id="form-fields_id" name="id" placeholder="username">
           <div class="login-label" id="form-fields_passwordLabel">Password</div>
-          <input class="login-input" id="form-fields_password" placeholder="Password" name="password" type="password">
+          <input class="login-input" id="form-fields_password" placeholder="password" name="password" type="password" autocapitalize="off" autocorrect="off">
           <div class="login-label" id="form-fields_databaseLabel">Database</div>
           <select class="login-input" id="form-fields_database" name="database">
           <% for(var i = 0; i < databases.length; i++) { %>
@@ -43,29 +44,9 @@
     <% } %>
   </section>
 
-  <!-- <div class="footer">
-    <div class="footer-container">
-      <p>
-        Visit the <a href='http://www.xtuple.org/docs/mobile-web-demo-guide'>Mobile Web Demo Guide</a>,
-        or send email to <a href='mailto:demo@xtuple.com'>demo@xtuple.com</a> for help.
-      </p>
-
-      <p>
-        This MOBILE WEB CLIENT provides access the CRM, Project and Sales modules of xTuple.
-        You must use the DESKTOP CLIENT to access the full application, including CRM, Projects, Sales, Purchasing, Inventory, Manufacturing, Scheduling and Accounting modules.
-      </p>
-
-      <p>
-        Download the xTuple Desktop client here: <a href=''>Windows</a>,
-        <a href=''>Mac</a>, <a href=''>Linux</a>
-      </p>
-
-      <p>v1.4.5</p>
-    </div>
-  </div> -->
-
   <script>
     document.loginForm.id.focus();
+    document.loginForm.hash.value = window.location.hash;
   </script>
   </body>
 </html>

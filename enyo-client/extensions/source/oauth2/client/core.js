@@ -6,10 +6,6 @@ white:true*/
 (function () {
   "use strict";
 
-  XT.extensions.oauth2 = {
-    setVersion: function () {
-      XT.setVersion("4.4.0", "oauth2");
-    }
-  };
+  XT.extensions.oauth2 = {};
 
 }());

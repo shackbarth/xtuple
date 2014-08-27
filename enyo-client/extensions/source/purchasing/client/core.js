@@ -6,10 +6,6 @@ white:true*/
 (function () {
   "use strict";
 
-  XT.extensions.purchasing = {
-    setVersion: function () {
-      XT.setVersion("", "purchasing");
-    }
-  };
+  XT.extensions.purchasing = {};
 
 }());
