@@ -83,7 +83,8 @@
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "shift_name"
+          "column": "shift_name",
+          "required": true
         }
       }
     ],
