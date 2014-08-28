@@ -1628,14 +1628,14 @@ a,
 */
 .xv-popup {
   background: #505050;
-  max-height: 500px;
   min-width: 320px;
-  max-width: 500px;
   padding: 10px;
   text-align: center;
 }
 .xv-popup .message {
   margin-bottom: 10px;
+  max-height: 500px;
+  max-width: 500px;
 }
 .xv-popup.xv-groupbox-popup {
   width: 320px;
@@ -2224,281 +2224,6 @@ a,
   border: none;
 }
 /**
-  Styles relating to Lists
-*/
-.xv-list-header {
-  background-color: #d8d8d8;
-  color: #fdfdfd;
-  font-size: .6em;
-  font-weight: bold;
-  text-transform: uppercase;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  border-bottom: 1px solid #aaaaaa;
-}
-.xv-list-header .xv-list-column.last {
-  border-right: none;
-}
-.xv-list-header .xv-list-column.name-column,
-.xv-list-header .xv-list-column.first,
-.xv-list-header .xv-list-column.second,
-.xv-list-header .xv-list-column.third,
-.xv-list-header .xv-list-column.short,
-.xv-list-header .xv-list-column.small,
-.xv-list-header .xv-list-column.medium,
-.xv-list-header .xv-list-column.descr {
-  padding-left: 7px;
-}
-/* List */
-.xv-list-column.line-number {
-  width: 30px;
-  text-align: right;
-}
-.xv-list-column.name-column {
-  width: 200px;
-}
-.xv-list-column.right-column {
-  width: 100px;
-  text-align: right;
-}
-.xv-list-column.short {
-  width: 100px;
-}
-.xv-list-column.small {
-  width: 125px;
-}
-.xv-list-column.medium {
-  width: 150px;
-}
-.xv-list-column.first {
-  width: 300px;
-}
-.xv-list-column.second {
-  width: 200px;
-}
-.xv-list-column.third {
-  width: 100px;
-}
-.xv-list-column.money,
-.xv-list-column.quantity {
-  width: 75px;
-  text-align: right;
-}
-.xv-list-column.descr {
-  width: 200px;
-}
-.xv-list-column.icon {
-  width: 10px;
-}
-.xv-list {
-  background: #f8f8f8;
-}
-.xv-list .xv-list-item > * {
-  display: inline-block;
-  vertical-align: middle;
-}
-.xv-list .xv-list-item {
-  background-color: #fdfdfd;
-  border-bottom: 1px solid #d7d7d7;
-  min-height: 32px;
-}
-.xv-list .xv-list-item.header {
-  padding-top: 0;
-}
-.xv-list .xv-list-item.inactive {
-  background-color: #d8d8d8;
-  color: #070707;
-}
-.xv-list .xv-list-item.inactive .xv-list-column .xv-list-attr {
-  background: transparent;
-}
-.xv-list .xv-list-item.inactive .xv-list-column .xv-list-attr.placeholder {
-  color: #d8d8d8;
-}
-.xv-list .xv-list-item .xv-list-column .list-icon {
-  padding: 2px;
-  color: #666666;
-  vertical-align: sub;
-  border: 1px solid #efefef;
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  border-radius: 2px;
-}
-.xv-list .xv-list-item.item-selected {
-  background: #226b9a;
-  background-color: #1f608c;
-  background-image: -moz-linear-gradient(top, #226b9a, #1a4f77);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#226b9a), to(#1a4f77));
-  background-image: -webkit-linear-gradient(top, #226b9a, #1a4f77);
-  background-image: -o-linear-gradient(top, #226b9a, #1a4f77);
-  background-image: linear-gradient(to bottom, #226b9a, #1a4f77);
-  background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff226b9a', endColorstr='#ff1a4f77', GradientType=0);
-}
-.xv-list .xv-list-item.item-selected .xv-list-attr {
-  color: #fdfdfd;
-}
-.xv-list .xv-list-item.item-selected .xv-list-attr.placeholder {
-  font-style: italic;
-  color: #99ccff;
-}
-.xv-list .xv-list-item.item-selected .xv-list-attr.hyperlink {
-  color: #ff6529;
-}
-.xv-list .xv-list-item.item-selected .xv-list-attr.header {
-  background: #99ccff;
-}
-.xv-list .xv-list-item .xv-list-item-gear {
-  position: absolute;
-  right: 0px;
-  z-index: 999;
-}
-.xv-list.xv-grid-list {
-  background: #f8f8f8;
-}
-.xv-list.xv-grid-list .xv-list-item > * {
-  vertical-align: top;
-}
-.xv-list.xv-grid-list .xv-list-item {
-  padding-top: 7px !important;
-  padding-bottom: 9px !important;
-  border-bottom: 1px solid #aaaaaa !important;
-  background: #f8f8f8;
-}
-.xv-list.xv-grid-list .xv-list-item.item-selected {
-  background: #226b9a;
-  background-color: #1f608c;
-  background-image: -moz-linear-gradient(top, #226b9a, #1a4f77);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#226b9a), to(#1a4f77));
-  background-image: -webkit-linear-gradient(top, #226b9a, #1a4f77);
-  background-image: -o-linear-gradient(top, #226b9a, #1a4f77);
-  background-image: linear-gradient(to bottom, #226b9a, #1a4f77);
-  background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff226b9a', endColorstr='#ff1a4f77', GradientType=0);
-}
-.xv-list.xv-grid-list .xv-list-item.item-selected .xv-list-attr {
-  color: #fdfdfd;
-}
-.xv-list.xv-grid-list .xv-list-item.item-selected .xv-list-attr.placeholder {
-  font-style: italic;
-  color: #99ccff;
-}
-.xv-list.xv-grid-list .xv-list-item.item-selected .xv-list-attr.hyperlink {
-  color: #ff6529;
-}
-.xv-list.xv-grid-list .xv-list-item.item-selected .xv-list-attr.header {
-  background: #99ccff;
-}
-.xv-list.xv-grid-list .xv-list-item .xv-list-column {
-  vertical-align: top;
-}
-.xv-list.xv-grid-list .xv-list-item .xv-list-column .xv-list-attr {
-  font-size: 12px;
-}
-.xv-list.xv-grid-list .xv-list-item .xv-list-column.last {
-  border-right: none;
-}
-.xv-list.xv-grid-list .xv-list-item .xv-list-column.name-column {
-  padding-left: 7px;
-}
-.xv-list.xv-grid-list .xv-list-item .xv-list-column.first {
-  padding-left: 7px;
-}
-.xv-list.xv-grid-list .xv-list-item .xv-list-column.second {
-  padding-left: 7px;
-}
-.xv-list.xv-grid-list .xv-list-item .xv-list-column.third {
-  padding-left: 7px;
-}
-.xv-list.xv-grid-list .xv-list-item .xv-list-column.short {
-  padding-left: 7px;
-}
-.xv-list.xv-grid-list .xv-list-item .xv-list-column.small {
-  padding-left: 7px;
-}
-.xv-list.xv-grid-list .xv-list-item .xv-list-column.medium {
-  padding-left: 7px;
-}
-.xv-list.xv-grid-list .xv-list-item .xv-list-column.descr {
-  padding-left: 7px;
-}
-.xv-list.xv-grid-list .xv-list-item .xv-list-column .xv-list-attr {
-  padding: 0px;
-}
-.xv-list-attr {
-  padding: 5px;
-  font-size: .8em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: #070707;
-}
-.xv-list-attr.header {
-  padding: 4px;
-  background: #d8d8d8;
-  font-size: .7em;
-  font-weight: bold;
-  text-transform: uppercase;
-  color: #fdfdfd;
-}
-.xv-list-attr.footer {
-  padding: 4px;
-  background: #d8d8d8;
-  font-size: .7em;
-  font-weight: bold;
-  text-transform: uppercase;
-  color: #070707;
-}
-.xv-list-attr.right {
-  position: absolute;
-  right: 10px;
-}
-.xv-list-attr.text-align-right {
-  text-align: right;
-}
-.xv-list-attr.bold {
-  font-weight: bold;
-}
-.xv-list-attr.error {
-  color: #ff0000;
-}
-.xv-list-attr.emphasis {
-  color: #009000;
-}
-.xv-list-attr.warn {
-  color: #ff9c00;
-}
-.xv-list-attr.italic {
-  font-style: italic;
-}
-.xv-list-attr.placeholder {
-  font-style: italic;
-  color: #777777;
-}
-.xv-list-attr.hyperlink {
-  color: #357ec7;
-  cursor: pointer;
-}
-.xv-list-attr.disabled {
-  color: #777777;
-}
-/* Navigator */
-.xv-navigator-header {
-  font-size: small;
-  font-weight: bold;
-  text-transform: uppercase;
-  color: #ff6600;
-  padding-left: 20px;
-  border-bottom: 1px solid #0e0e0e;
-}
-.xv-workspace-header {
-  color: #fdfdfd;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding: 8px 0 0 8px;
-}
-/**
  * Default ListItem styles when using a ModelDecorator.
  */
 .xv-list .xv-model-decorator > .xv-list-item .xv-table {
@@ -2961,6 +2686,281 @@ a,
   background-color: greenyellow;
   text-align: center;
   font-size: 24px;
+}
+/**
+  Styles relating to Lists
+*/
+.xv-list-header {
+  background-color: #d8d8d8;
+  color: #fdfdfd;
+  font-size: .6em;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #aaaaaa;
+}
+.xv-list-header .xv-list-column.last {
+  border-right: none;
+}
+.xv-list-header .xv-list-column.name-column,
+.xv-list-header .xv-list-column.first,
+.xv-list-header .xv-list-column.second,
+.xv-list-header .xv-list-column.third,
+.xv-list-header .xv-list-column.short,
+.xv-list-header .xv-list-column.small,
+.xv-list-header .xv-list-column.medium,
+.xv-list-header .xv-list-column.descr {
+  padding-left: 7px;
+}
+/* List */
+.xv-list-column.line-number {
+  width: 30px;
+  text-align: right;
+}
+.xv-list-column.name-column {
+  width: 200px;
+}
+.xv-list-column.right-column {
+  width: 100px;
+  text-align: right;
+}
+.xv-list-column.short {
+  width: 100px;
+}
+.xv-list-column.small {
+  width: 125px;
+}
+.xv-list-column.medium {
+  width: 150px;
+}
+.xv-list-column.first {
+  width: 300px;
+}
+.xv-list-column.second {
+  width: 200px;
+}
+.xv-list-column.third {
+  width: 100px;
+}
+.xv-list-column.money,
+.xv-list-column.quantity {
+  width: 75px;
+  text-align: right;
+}
+.xv-list-column.descr {
+  width: 200px;
+}
+.xv-list-column.icon {
+  width: 10px;
+}
+.xv-list {
+  background: #f8f8f8;
+}
+.xv-list .xv-list-item > * {
+  display: inline-block;
+  vertical-align: middle;
+}
+.xv-list .xv-list-item {
+  background-color: #fdfdfd;
+  border-bottom: 1px solid #d7d7d7;
+  min-height: 32px;
+}
+.xv-list .xv-list-item.header {
+  padding-top: 0;
+}
+.xv-list .xv-list-item.inactive {
+  background-color: #d8d8d8;
+  color: #070707;
+}
+.xv-list .xv-list-item.inactive .xv-list-column .xv-list-attr {
+  background: transparent;
+}
+.xv-list .xv-list-item.inactive .xv-list-column .xv-list-attr.placeholder {
+  color: #d8d8d8;
+}
+.xv-list .xv-list-item .xv-list-column .list-icon {
+  padding: 2px;
+  color: #666666;
+  vertical-align: sub;
+  border: 1px solid #efefef;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+}
+.xv-list .xv-list-item.item-selected {
+  background: #226b9a;
+  background-color: #1f608c;
+  background-image: -moz-linear-gradient(top, #226b9a, #1a4f77);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#226b9a), to(#1a4f77));
+  background-image: -webkit-linear-gradient(top, #226b9a, #1a4f77);
+  background-image: -o-linear-gradient(top, #226b9a, #1a4f77);
+  background-image: linear-gradient(to bottom, #226b9a, #1a4f77);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff226b9a', endColorstr='#ff1a4f77', GradientType=0);
+}
+.xv-list .xv-list-item.item-selected .xv-list-attr {
+  color: #fdfdfd;
+}
+.xv-list .xv-list-item.item-selected .xv-list-attr.placeholder {
+  font-style: italic;
+  color: #99ccff;
+}
+.xv-list .xv-list-item.item-selected .xv-list-attr.hyperlink {
+  color: #ff6529;
+}
+.xv-list .xv-list-item.item-selected .xv-list-attr.header {
+  background: #99ccff;
+}
+.xv-list .xv-list-item .xv-list-item-gear {
+  position: absolute;
+  right: 0px;
+  z-index: 999;
+}
+.xv-list.xv-grid-list {
+  background: #f8f8f8;
+}
+.xv-list.xv-grid-list .xv-list-item > * {
+  vertical-align: top;
+}
+.xv-list.xv-grid-list .xv-list-item {
+  padding-top: 7px !important;
+  padding-bottom: 9px !important;
+  border-bottom: 1px solid #aaaaaa !important;
+  background: #f8f8f8;
+}
+.xv-list.xv-grid-list .xv-list-item.item-selected {
+  background: #226b9a;
+  background-color: #1f608c;
+  background-image: -moz-linear-gradient(top, #226b9a, #1a4f77);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#226b9a), to(#1a4f77));
+  background-image: -webkit-linear-gradient(top, #226b9a, #1a4f77);
+  background-image: -o-linear-gradient(top, #226b9a, #1a4f77);
+  background-image: linear-gradient(to bottom, #226b9a, #1a4f77);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff226b9a', endColorstr='#ff1a4f77', GradientType=0);
+}
+.xv-list.xv-grid-list .xv-list-item.item-selected .xv-list-attr {
+  color: #fdfdfd;
+}
+.xv-list.xv-grid-list .xv-list-item.item-selected .xv-list-attr.placeholder {
+  font-style: italic;
+  color: #99ccff;
+}
+.xv-list.xv-grid-list .xv-list-item.item-selected .xv-list-attr.hyperlink {
+  color: #ff6529;
+}
+.xv-list.xv-grid-list .xv-list-item.item-selected .xv-list-attr.header {
+  background: #99ccff;
+}
+.xv-list.xv-grid-list .xv-list-item .xv-list-column {
+  vertical-align: top;
+}
+.xv-list.xv-grid-list .xv-list-item .xv-list-column .xv-list-attr {
+  font-size: 12px;
+}
+.xv-list.xv-grid-list .xv-list-item .xv-list-column.last {
+  border-right: none;
+}
+.xv-list.xv-grid-list .xv-list-item .xv-list-column.name-column {
+  padding-left: 7px;
+}
+.xv-list.xv-grid-list .xv-list-item .xv-list-column.first {
+  padding-left: 7px;
+}
+.xv-list.xv-grid-list .xv-list-item .xv-list-column.second {
+  padding-left: 7px;
+}
+.xv-list.xv-grid-list .xv-list-item .xv-list-column.third {
+  padding-left: 7px;
+}
+.xv-list.xv-grid-list .xv-list-item .xv-list-column.short {
+  padding-left: 7px;
+}
+.xv-list.xv-grid-list .xv-list-item .xv-list-column.small {
+  padding-left: 7px;
+}
+.xv-list.xv-grid-list .xv-list-item .xv-list-column.medium {
+  padding-left: 7px;
+}
+.xv-list.xv-grid-list .xv-list-item .xv-list-column.descr {
+  padding-left: 7px;
+}
+.xv-list.xv-grid-list .xv-list-item .xv-list-column .xv-list-attr {
+  padding: 0px;
+}
+.xv-list-attr {
+  padding: 5px;
+  font-size: .8em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #070707;
+}
+.xv-list-attr.header {
+  padding: 4px;
+  background: #d8d8d8;
+  font-size: .7em;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #fdfdfd;
+}
+.xv-list-attr.footer {
+  padding: 4px;
+  background: #d8d8d8;
+  font-size: .7em;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #070707;
+}
+.xv-list-attr.right {
+  position: absolute;
+  right: 10px;
+}
+.xv-list-attr.text-align-right {
+  text-align: right;
+}
+.xv-list-attr.bold {
+  font-weight: bold;
+}
+.xv-list-attr.error {
+  color: #ff0000;
+}
+.xv-list-attr.emphasis {
+  color: #009000;
+}
+.xv-list-attr.warn {
+  color: #ff9c00;
+}
+.xv-list-attr.italic {
+  font-style: italic;
+}
+.xv-list-attr.placeholder {
+  font-style: italic;
+  color: #777777;
+}
+.xv-list-attr.hyperlink {
+  color: #357ec7;
+  cursor: pointer;
+}
+.xv-list-attr.disabled {
+  color: #777777;
+}
+/* Navigator */
+.xv-navigator-header {
+  font-size: small;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #ff6600;
+  padding-left: 20px;
+  border-bottom: 1px solid #0e0e0e;
+}
+.xv-workspace-header {
+  color: #fdfdfd;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 8px 0 0 8px;
 }
 /**
   Styles relating to widgets in the pullout
