@@ -2,7 +2,7 @@
   "author": "xTuple <dev@xtuple.com>",
   "name": "xtuple",
   "description": "xTuple Enterprise Resource Planning Mobile-Web client",
-  "version": "4.6.0-beta",
+  "version": "4.7.0-beta",
   "repository": {
     "type": "git",
     "url": "https://github.com/xtuple/xtuple.git"
@@ -24,7 +24,7 @@
     "less": "1.5.0",
     "moment": "2.4.x",
     "nodemailer": "0.3.x",
-    "npm":"1.4.x",
+    "npm":"1.2.30",
     "node-forge": "0.6.x",
     "oauth2orize": "0.1.x",
     "oauth2orize-jwt-bearer": "0.1.x",
@@ -43,17 +43,16 @@
     "underscore": "1.4.x",
     "winston": "0.7.x",
     "underscore.string": "~2.3.3",
-    "ursa":"0.8.x"
+    "ursa": "0.8.x",
+    "jquery": "~2.1.1"
   },
   "devDependencies": {
     "chai": "1.5.x",
-    "jshint": "2.4.x",
     "mocha": "1.9.x",
-    "require-uncache": "0.0.x",
     "html5": "0.3.13",
+    "jshint": "2.4.x",
     "zombie": "1.4.x",
-    "csslint": "~0.10.0",
-    "nodemon": "~1.0.15"
+    "csslint": "~0.10.0"
   },
   "optionalDependencies": {
     "xtuple-query": "~1.0.0",
@@ -69,6 +68,8 @@
     "build-basic-postbooks-demo": "./scripts/build_app.js -d postbooks_demo --databaseonly -e foundation-database -i -s foundation-database/postbooks_demo_data.sql",
     "build-basic-quickstart": "./scripts/build_app.js -d quickstart --databaseonly -e foundation-database -i -s foundation-database/quickstart_data.sql",
     "jshint": "./node_modules/.bin/jshint --exclude node-datasource/lib/query/node_modules lib/backbone-x/source lib/enyo-x/source lib/tools/source enyo-client/application/source/ enyo-client/extensions node-datasource",
+    "jsdoc-api": "rm -rf scripts/output;./node_modules/xtuple-documentation/node_modules/jsdoc/jsdoc -t ./node_modules/xtuple-documentation/jsdoc-setup/api-templates -c ./node_modules/xtuple-documentation/jsdoc-setup/jsdoc.conf.json -d ./scripts/output -r ./lib/backbone-x/source ./lib/tools/source ./lib/enyo-x/source/widgets ./lib/enyo-x/source/views ./lib/enyo-x/source/app.js ./lib/enyo-x/source/core.js ./node_modules/xtuple-documentation/jsdoc-setup/api-readme.md",
+    "jsdoc-specs": "rm -rf scripts/output/*;mkdir scripts/output/tech-specs;./node_modules/xtuple-documentation/node_modules/jsdoc/jsdoc -t ./node_modules/xtuple-documentation/jsdoc-setup/spec-templates -c ./node_modules/xtuple-documentation/jsdoc-setup/jsdoc.conf.json -d ./scripts/output/tech-specs/ -r ./test/specs ./node_modules/xtuple-documentation/jsdoc-setup/tech-specs-readme.md;mkdir scripts/output/user-specs;./node_modules/xtuple-documentation/node_modules/jsdoc/jsdoc -t ./node_modules/xtuple-documentation/jsdoc-setup/spec-templates -c ./node_modules/xtuple-documentation/jsdoc-setup/jsdoc-user.conf.json -d ./scripts/output/user-specs/ -r ./test/specs ./node_modules/xtuple-documentation/jsdoc-setup/user-specs-readme.md;",
     "preinstall": "cd node-datasource/lib/query ; npm install",
     "start": "node_modules/.bin/nodemon node-datasource/main.js --debug --watch node-datasource",
     "test-build": "./node_modules/.bin/mocha -R spec test/build/build_app.js",

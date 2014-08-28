@@ -1,5 +1,5 @@
-<package id        = "distribution-upgrade-460-beta"
-         version   = "4.6.0Beta"
+<package id        = "distribution-upgrade-460"
+         version   = "4.7.0Beta"
          developer = "xTuple"
          descrip   = "load PostBooks resources"
          updater   = "2.2.4" >
@@ -11,16 +11,16 @@
   </prerequisite>
 
   <prerequisite type = "query"
-                name = "Checking xTuple ERP database version" >
+                name = "Checking for too-old xTuple ERP database version" >
     <query>SELECT fetchMetricText('ServerVersion') > '4.4.';</query>
     <message>This package must be applied to a 4.4+ Distribution database.
     </message>
   </prerequisite>
 
- <prerequisite type = "query"
-               name = "Checking for bad xTuple ERP database version" >
-<query>SELECT NOT fetchMetricText('ServerVersion') >= '4.6.0' AND fetchMetricText('ServerVersion')!='4.6.0-beta' AND fetchMetricText('ServerVersion')!='4.6.0RC';</query>
-    <message>This package may not be applied to a 4.6.0+ Distribution database.
+  <prerequisite type = "query"
+                name = "Checking for too-new xTuple ERP database version" >
+    <query>SELECT NOT fetchMetricText('ServerVersion') >= '4.7.0';</query>
+    <message>This package may not be applied to a database newer than 4.7.0Beta.
     </message>
   </prerequisite>
 
