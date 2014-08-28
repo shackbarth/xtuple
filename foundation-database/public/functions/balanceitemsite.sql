@@ -32,10 +32,8 @@ BEGIN
   FROM itemsite
   WHERE (itemsite_id=pItemsiteid);
 
---  Post the invtrans records associated with the itemlocdist records
-  PERFORM postInvhist(itemlocdist_invhist_id)
-     FROM itemlocdist
-    WHERE(itemlocdist_series=_itemlocseries);
+--  Post the itemloc series which will postIntoTrialBalance and postInvHist
+  PERFORM postItemlocSeries(_itemlocseries);
 
 --  Kill the resultant distribution records
   DELETE FROM itemlocdist

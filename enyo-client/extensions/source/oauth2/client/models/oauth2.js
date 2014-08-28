@@ -1,7 +1,7 @@
 /*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
-/*global XT:true, XM:true, Backbone:true, _:true, window:true */
+/*global XT:true, XM:true, XV:true, Backbone:true, _:true, window:true */
 
 (function () {
   "use strict";
@@ -34,6 +34,7 @@ white:true*/
       bindEvents: function () {
         XM.Model.prototype.bindEvents.apply(this, arguments);
         this.on('statusChange', this.statusDidChange);
+        this.on('change:clientType', this.clientTypeDidChange);
       },
 
       // clientType must not be editable once first saved.
@@ -51,6 +52,10 @@ white:true*/
         }
       },
 
+      clientTypeDidChange: function () {
+        this.set("delegatedAccess", this.get("clientType") === 'jwt bearer');
+      },
+
       save: function (key, value, options) {
         // Handle both `"key", value` and `{key: value}` -style arguments.
         if (_.isObject(key) || _.isEmpty(key)) {
@@ -64,9 +69,8 @@ white:true*/
 
         options.success = function (model, resp, options) {
           if (status === XM.Model.READY_NEW && that.get("clientType") === 'jwt bearer') {
-            // download the private key
-            window.open(XT.getOrganizationPath() + '/oauth/generate-key?id=' + that.id,
-              '_newtab');
+            // Download the private key.
+            XV.downloadURL(XT.getOrganizationPath() + '/oauth/generate-key?id=' + that.id);
           }
 
           if (success) { success(model, resp, options); }

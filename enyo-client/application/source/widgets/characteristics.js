@@ -90,7 +90,7 @@ white:true, strict:false*/
     name: "XV.OrderCharacteristicItem",
     kind: "XV.CharacteristicItem",
     components: [
-      {kind: "XV.ComboboxWidget", name: "combobox", attr: "value", style: "width: 300px"}
+      {kind: "XV.ComboboxWidget", name: "combobox", attr: "value"}
     ],
     disabledChanged: function (oldValue) {
       this.$.combobox.setDisabled(this.disabled);

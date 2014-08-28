@@ -656,6 +656,9 @@ trailing:true, white:true, strict: false*/
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
             {kind: "XV.ListAttr", attr: "name"}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "isBase"}
           ]}
         ]}
       ]}
@@ -687,10 +690,13 @@ trailing:true, white:true, strict: false*/
             {kind: "XV.ListAttr", attr: "billingContact.phone", },
             {kind: "XV.ListAttr", attr: "billingContact.primaryEmail"}
           ]},
-          {kind: "XV.ListColumn", fit: true, components: [
+          {kind: "XV.ListColumn", classes: "descr", components: [
             {kind: "XV.ListAttr", attr: "billingContact.name",
               placeholder: "_noContact".loc()},
             {kind: "XV.ListAttr", attr: "billingContact.address"}
+          ]},
+          {kind: "XV.ListColumn", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "customerType.code"}
           ]}
         ]}
       ]}
@@ -2528,6 +2534,8 @@ trailing:true, white:true, strict: false*/
       ]}
     ]
   });
+
+  XV.registerModelList("XM.UserAccountRelation", "XV.UserAccountList");
 
   // ..........................................................
   // STATES AND COUNTRIES
