@@ -48,8 +48,7 @@
         "name": "isActive",
         "attr": {
           "type": "Boolean",
-          "column": "warehous_active",
-          "required": true
+          "column": "warehous_active"
         }
       },
       {

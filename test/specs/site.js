@@ -44,9 +44,6 @@
     enforceUpperKey: false,
     attributes: ["code", "address", "code", "comments", "contact", "description", "incoterms",
       "isActive", "siteType", "taxZone"],
-    /**
-      There should be no functionality for mult-site warehouses in Postbooks, thus, no privileges.
-     */
     privileges: {
       createUpdateDelete: "MaintainWarehouses",
       view: true
