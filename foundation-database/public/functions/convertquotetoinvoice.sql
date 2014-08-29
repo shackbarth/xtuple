@@ -76,7 +76,8 @@ BEGIN
     WHERE (quhead_id=pQuheadid)
       AND (COALESCE(quhead_custponumber, '') = '');
     IF (FOUND) THEN
-      RAISE EXCEPTION 'Customer PO required for Quote %', _qunumber;
+      RAISE EXCEPTION 'Customer PO required for Quote % [xtuple: convertQuote, -7, %]',
+                      _qunumber, _qunumber;
     END IF;
   END IF;
   
@@ -86,7 +87,9 @@ BEGIN
                                    (UPPER(invchead_ponumber)=UPPER(quhead_custponumber)) )
     WHERE (quhead_id=pQuheadid);
     IF (FOUND) THEN
-      RAISE EXCEPTION 'Duplicate Customer PO % for Quote %', _ponumber, _qunumber;
+      RAISE EXCEPTION 'Duplicate Customer PO % for Quote % [xtuple: convertQuote, -8, %, %]',
+                      _ponumber, _qunumber,
+                      _ponumber, _qunumber;
     END IF;
   END IF;
   
