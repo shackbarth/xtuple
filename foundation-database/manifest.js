@@ -565,6 +565,7 @@
     "public/functions/haspriv.sql",
     "public/functions/hasprivonobject.sql",
     "public/functions/implodewo.sql",
+    "public/functions/importbankreccleared.sql",
     "public/functions/incdt.sql",
     "public/functions/indentedbom.sql",
     "public/functions/indentedwhereused.sql",
@@ -1019,6 +1020,7 @@
     "public/trigger_functions/wo.sql",
     "public/trigger_functions/womatl.sql",
 
+    "public/tables/bankrecimport.sql",
     "public/tables/bankrecitem.sql",
     "public/tables/cashrcpt.sql",
     "public/tables/ccpay.sql",
