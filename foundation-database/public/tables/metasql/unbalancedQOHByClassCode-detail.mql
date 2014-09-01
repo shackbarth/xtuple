@@ -8,19 +8,14 @@ SELECT itemsite_id, warehous_code, item_number,
        (item_descrip1 || ' ' || item_descrip2) AS itemdescrip, uom_name,
        itemsite_qtyonhand,
        detailedQOH(itemsite_id, FALSE) AS detailedqoh,
-       itemsite_nnqoh,
-       detailedNNQOH(itemsite_id, FALSE) AS detailednnqoh,
        'qty' AS itemsite_qtyonhand_xtnumericrole,
-       'qty' AS detailedqoh_xtnumericrole,
-       'qty' AS itemsite_nnqoh_xtnumericrole,
-       'qty' AS detailednnqoh_xtnumericrole
+       'qty' AS detailedqoh_xtnumericrole
 FROM whsinfo, item, itemsite, uom
 WHERE ( (itemsite_item_id=item_id)
     AND (item_inv_uom_id=uom_id)
     AND (itemsite_warehous_id=warehous_id)
     AND ((itemsite_loccntrl) OR (itemsite_controlmethod IN ('L', 'S')))
-    AND ((itemsite_qtyonhand <> detailedQOH(itemsite_id, FALSE))
-      OR (itemsite_nnqoh <> detailedNNQOH(itemsite_id, FALSE)))
+    AND (itemsite_qtyonhand <> detailedQOH(itemsite_id, FALSE))
 <? if exists("classcode_id") ?>
     AND (item_classcode_id=<? value("classcode_id") ?>)
 <? elseif exists("classcode_pattern") ?>

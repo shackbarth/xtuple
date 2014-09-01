@@ -1,6 +1,9 @@
 CREATE OR REPLACE FUNCTION detailedNNQOH(INTEGER, BOOLEAN) RETURNS NUMERIC AS '
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
+--
+-- Deprecated
+--
 DECLARE
   pItemsiteid ALIAS FOR $1;
   pABS ALIAS FOR $2;

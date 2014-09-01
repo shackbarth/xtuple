@@ -725,10 +725,12 @@
     "public/functions/purgepostedcounttags.sql",
     "public/functions/purgeshipments.sql",
     "public/functions/qtyallocated.sql",
+    "public/functions/qtyatlocation.sql",
     "public/functions/qtyatshipping.sql",
     "public/functions/qtyavailable.sql",
     "public/functions/qtyinshipment.sql",
     "public/functions/qtylocation.sql",
+    "public/functions/qtynetable.sql",
     "public/functions/qtyordered.sql",
     "public/functions/qtypr.sql",
     "public/functions/qtyreserved.sql",
@@ -1024,13 +1026,14 @@
     "public/tables/ccpay.sql",
     "public/tables/ccbank.sql",
     "public/tables/checkhead.sql",
+    "public/tables/itemsite.sql",
+    "public/tables/location.sql",
     "public/tables/metric.sql",
     "public/tables/payco.sql",
     "public/tables/priv.sql",
     "public/tables/tax.sql",
     "public/tables/taxpay.sql",
 
-    "public/tables/location.sql",
     "public/views/address.sql",
     "public/views/apmemo.sql",
     "public/views/armemo.sql",
@@ -1638,6 +1641,8 @@
     "public/tables/report/items.xml",
 
     "public/patches/fixacl.sql",
-    "public/patches/populate_ccpay_card_type.sql"
+    "public/patches/populate_ccpay_card_type.sql",
+
+    "public/tables/setVersion.sql"
   ]
 }

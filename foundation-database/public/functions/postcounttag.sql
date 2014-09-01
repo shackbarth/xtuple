@@ -1,11 +1,10 @@
 SELECT dropIfExists('FUNCTION', 'postCountTag(integer, boolean, text)', 'public');
 
-CREATE OR REPLACE FUNCTION postCountTag(INTEGER, BOOLEAN) RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION postCountTag(pInvcntid INTEGER,
+                                        pThaw BOOLEAN) RETURNS INTEGER AS $$
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
-  pInvcntid ALIAS FOR $1;
-  pThaw ALIAS FOR $2;
   _avgCostingMethod TEXT;
   _invhistid INTEGER;
   _postDate TIMESTAMP;
@@ -243,8 +242,8 @@ BEGIN
 --  Avoid negative value when average cost item
     UPDATE itemsite
     SET itemsite_qtyonhand=_p.invcnt_qoh_after,
-        itemsite_nnqoh = 0,
-        itemsite_value = CASE WHEN ((itemsite_costmethod='A') AND (_p.itemsite_value + (_p.cost * (_p.invcnt_qoh_after - itemsite_qtyonhand))) < 0.0) THEN 0.0
+        itemsite_value = CASE WHEN ((itemsite_costmethod='A') AND
+                                    (_p.itemsite_value + (_p.cost * (_p.invcnt_qoh_after - itemsite_qtyonhand))) < 0.0) THEN 0.0
                               ELSE (_p.itemsite_value + (_p.cost * (_p.invcnt_qoh_after - itemsite_qtyonhand)))
                          END,
         itemsite_datelastcount=_postDate
@@ -263,7 +262,8 @@ BEGIN
     END IF;
 
 --  Distribute to G/L
-    PERFORM insertGLTransaction( 'I/M', 'CT', _p.invcnt_tagnumber, ('Post Count Tag #' || _p.invcnt_tagnumber || ' for Item ' || _p.item_number),
+    PERFORM insertGLTransaction( 'I/M', 'CT', _p.invcnt_tagnumber,
+                                 ('Post Count Tag #' || _p.invcnt_tagnumber || ' for Item ' || _p.item_number),
                                  costcat_adjustment_accnt_id, costcat_asset_accnt_id, _invhistid,
                                  ( (_p.invcnt_qoh_after - _p.itemsite_qtyonhand) * _p.cost), _postDate::DATE )
     FROM invcnt, itemsite, costcat
@@ -278,4 +278,4 @@ BEGIN
   END IF;
 
 END;
-$$ LANGUAGE 'plpgsql';
+$$ LANGUAGE plpgsql;

@@ -31,21 +31,21 @@
        item_number,
        item_descrip1,
        item_descrip2,
-       formatQty(sub.itemsite_qtyonhand) AS f_qtyonhand,
+       formatQty(qtyAvailable(sub.itemsite_id)) AS f_qtyonhand,
        formatQty(CASE WHEN(sub.itemsite_useparams) THEN sub.itemsite_reorderlevel ELSE 0.0 END) AS f_reorderlevel,
        sub.itemsite_leadtime as leadtime,
 &lt;? if exists(&quot;byDays&quot;) ?>
        formatQty(qtyAllocated(sub.itemsite_id, &lt;? value(&quot;byDays&quot;) ?>)) AS f_allocated,
        formatQty(qtyOrdered(sub.itemsite_id, &lt;? value(&quot;byDays&quot;) ?>)) AS f_ordered,
-       formatQty(sub.itemsite_qtyonhand + qtyOrdered(sub.itemsite_id, &lt;? value(&quot;byDays&quot;) ?>) - qtyAllocated(sub.itemsite_id, &lt;? value(&quot;byDays&quot;) ?>)) as f_avail
+       formatQty(qtyAvailable(sub.itemsite_id) + qtyOrdered(sub.itemsite_id, &lt;? value(&quot;byDays&quot;) ?>) - qtyAllocated(sub.itemsite_id, &lt;? value(&quot;byDays&quot;) ?>)) as f_avail
 &lt;? elseif exists(&quot;byDate&quot;) ?>
        formatQty(qtyAllocated(sub.itemsite_id, (&lt;? value(&quot;byDate&quot;) ?> - CURRENT_DATE))) AS f_allocated,
        formatQty(qtyOrdered(sub.itemsite_id, (&lt;? value(&quot;byDate&quot;) ?> - CURRENT_DATE))) AS f_ordered,
-       formatQty(sub.itemsite_qtyonhand + qtyOrdered(sub.itemsite_id, (&lt;? value(&quot;byDate&quot;) ?> - CURRENT_DATE)) - qtyAllocated(sub.itemsite_id, (&lt;? value(&quot;byDate&quot;) ?> - CURRENT_DATE))) as f_avail
+       formatQty(qtyAvailable(sub.itemsite_id) + qtyOrdered(sub.itemsite_id, (&lt;? value(&quot;byDate&quot;) ?> - CURRENT_DATE)) - qtyAllocated(sub.itemsite_id, (&lt;? value(&quot;byDate&quot;) ?> - CURRENT_DATE))) as f_avail
 &lt;? else ?>
        formatQty(qtyAllocated(sub.itemsite_id, sub.itemsite_leadtime)) AS f_allocated,
        formatQty(qtyOrdered(sub.itemsite_id, sub.itemsite_leadtime)) AS f_ordered,
-       formatQty(sub.itemsite_qtyonhand + qtyOrdered(sub.itemsite_id, sub.itemsite_leadtime) - qtyAllocated(sub.itemsite_id, sub.itemsite_leadtime)) as f_avail
+       formatQty(qtyAvailable(sub.itemsite_id) + qtyOrdered(sub.itemsite_id, sub.itemsite_leadtime) - qtyAllocated(sub.itemsite_id, sub.itemsite_leadtime)) as f_avail
 &lt;? endif ?>
   FROM item, itemsite AS sub, itemsite AS root, whsinfo, itemsub
  WHERE ((sub.itemsite_item_id=item_id)
