@@ -63,9 +63,12 @@
       @description Multiple Sites should not be allowed on Postbooks
     */
     it("Multiple Sites should not be allowed on Postbooks", function (done) {
-      assert.equal(XM.sites.length, 1);
-      smoke.navigateToList(XT.app, "XV.SiteList");
-      assert.isTrue(XT.app.$.postbooks.getActive().$.newButton.disabled);
+      if (!XT.extensions.inventory) {
+        assert.equal(XM.sites.length, 1);
+        smoke.navigateToList(XT.app, "XV.SiteList");
+        assert.isTrue(XT.app.$.postbooks.getActive().$.newButton.disabled);
+        return done();
+      }
       done();
     });
   };
