@@ -6,10 +6,6 @@ white:true*/
 (function () {
   "use strict";
 
-  XT.extensions.crm = {
-    setVersion: function () {
-      XT.setVersion("", "crm");
-    }
-  };
+  XT.extensions.crm = {};
 
 }());

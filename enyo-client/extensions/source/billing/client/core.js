@@ -7,10 +7,7 @@ white:true*/
   "use strict";
 
   XT.extensions.billing = {
-    name: "billing",
-    setVersion: function () {
-      XT.setVersion("", XT.extensions.billing.name);
-    }
+    name: "billing"
   };
 
 }());

@@ -7,6 +7,7 @@
   "databaseScripts": [
     "../lib/orm/source/create_xt_schema.sql",
     "../lib/orm/source/xt/functions/add_column.sql",
+    "../lib/orm/source/xt/functions/add_comment_type.sql",
     "../lib/orm/source/xt/functions/add_constraint.sql",
     "../lib/orm/source/xt/functions/add_index.sql",
     "../lib/orm/source/xt/functions/add_primary_key.sql",
@@ -564,6 +565,7 @@
     "public/functions/haspriv.sql",
     "public/functions/hasprivonobject.sql",
     "public/functions/implodewo.sql",
+    "public/functions/importbankreccleared.sql",
     "public/functions/incdt.sql",
     "public/functions/indentedbom.sql",
     "public/functions/indentedwhereused.sql",
@@ -1016,6 +1018,7 @@
     "public/trigger_functions/wo.sql",
     "public/trigger_functions/womatl.sql",
 
+    "public/tables/bankrecimport.sql",
     "public/tables/bankrecitem.sql",
     "public/tables/cashrcpt.sql",
     "public/tables/ccpay.sql",
