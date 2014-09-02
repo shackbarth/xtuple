@@ -65,22 +65,16 @@ BEGIN
   END IF;
 
   IF (_usespos) THEN
-    SELECT quhead_number INTO _qunumber
-    FROM quhead
-    WHERE (quhead_id=pQuheadid)
-      AND (COALESCE(quhead_custponumber, '') = '');
-    IF (FOUND) THEN
+    SELECT quhead_number, COALESCE(quhead_custponumber, ''), cohead_id INTO _qunumber, _ponumber, _soheadid
+    FROM quhead LEFT OUTER JOIN cohead ON ( (cohead_cust_id=quhead_cust_id) AND
+                                            (UPPER(cohead_custponumber)=UPPER(quhead_custponumber)) )
+    WHERE (quhead_id=pQuheadid);
+    IF (_ponumber = '') THEN
       RAISE EXCEPTION 'Customer PO required for Quote % [xtuple: convertQuote, -7, %]',
                       _qunumber, _qunumber;
     END IF;
-  END IF;
   
-  IF ( (_usespos) AND (NOT _blanketpos) ) THEN
-    SELECT quhead_number, quhead_custponumber INTO _qunumber, _ponumber
-    FROM quhead JOIN cohead ON ( (cohead_cust_id=quhead_cust_id) AND
-                                 (UPPER(cohead_custponumber)=UPPER(quhead_custponumber)) )
-    WHERE (quhead_id=pQuheadid);
-    IF (FOUND) THEN
+    IF ( (NOT _blanketpos) AND (_soheadid IS NOT NULL) ) THEN
       RAISE EXCEPTION 'Duplicate Customer PO % for Quote % [xtuple: convertQuote, -8, %, %]',
                       _ponumber, _qunumber,
                       _ponumber, _qunumber;

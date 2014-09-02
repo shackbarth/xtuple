@@ -69,6 +69,23 @@ BEGIN
   END IF;
 
 -- PO/blanket PO checks
+  IF (_usespos) THEN
+    SELECT quhead_number, COALESCE(quhead_custponumber, ''), invchead_id INTO _qunumber, _ponumber, _iheadid
+    FROM quhead LEFT OUTER JOIN invchead ON ( (invchead_cust_id=quhead_cust_id) AND
+                                              (UPPER(invchead_ponumber)=UPPER(quhead_custponumber)) )
+    WHERE (quhead_id=pQuheadid);
+    IF (_ponumber = '') THEN
+      RAISE EXCEPTION 'Customer PO required for Quote % [xtuple: convertQuote, -7, %]',
+                      _qunumber, _qunumber;
+    END IF;
+  
+    IF ( (NOT _blanketpos) AND (_iheadid IS NOT NULL) ) THEN
+      RAISE EXCEPTION 'Duplicate Customer PO % for Quote % [xtuple: convertQuote, -8, %, %]',
+                      _ponumber, _qunumber,
+                      _ponumber, _qunumber;
+    END IF;
+  END IF;
+  
 
   IF (_usespos) THEN
     SELECT quhead_number INTO _qunumber
