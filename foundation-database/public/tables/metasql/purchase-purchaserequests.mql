@@ -5,6 +5,7 @@
 -- See www.xtuple.com/CPAL for the full text of the software license.
 
 SELECT pr_id, itemsite_id, itemsite_qtyonhand, itemsite_reorderlevel,
+       qtyNetable(itemsite_id) AS netableqoh, qtyNetable(itemsite_id, FALSE) AS nonnetableqoh,
        item_number, (item_descrip1 || ' ' || item_descrip2) AS description,
        pr.*,
        CASE WHEN (pr_order_type='W') THEN ('W/O ' || ( SELECT formatWoNumber(womatl_wo_id)

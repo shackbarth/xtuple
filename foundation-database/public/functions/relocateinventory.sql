@@ -4,18 +4,18 @@ CREATE OR REPLACE FUNCTION relocateInventory(INTEGER, INTEGER, INTEGER, NUMERIC,
 BEGIN
   RETURN relocateInventory($1, $2, $3, $4, $5, CURRENT_TIMESTAMP);
 END;
-$$ LANGUAGE 'plpgsql';
+$$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION relocateInventory(INTEGER, INTEGER, INTEGER, NUMERIC, TEXT, TIMESTAMP WITH TIME ZONE) RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION relocateInventory(pSourceItemlocid INTEGER,
+                                             pTargetLocationid INTEGER,
+                                             pItemsiteid INTEGER,
+                                             pQty NUMERIC,
+                                             pComments TEXT,
+                                             pGLDistTS TIMESTAMP WITH TIME ZONE) RETURNS INTEGER AS $$
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
-  pSourceItemlocid      ALIAS FOR $1;
-  pTargetLocationid     ALIAS FOR $2;
-  pItemsiteid           ALIAS FOR $3;
-  pQty                  ALIAS FOR $4;
-  pComments             ALIAS FOR $5;
-  _GlDistTS             TIMESTAMP WITH TIME ZONE := $6;
+  _GlDistTS             TIMESTAMP WITH TIME ZONE;
   _targetItemlocid      INTEGER;
   _invhistid            INTEGER;
   _p                    RECORD;
@@ -28,8 +28,10 @@ DECLARE
 
 BEGIN
 
-    IF ((_GlDistTS IS NULL) OR (CAST(_GlDistTS AS date)=CURRENT_DATE)) THEN
+    IF ((pGlDistTS IS NULL) OR (CAST(pGlDistTS AS date)=CURRENT_DATE)) THEN
       _GlDistTS := CURRENT_TIMESTAMP;
+    ELSE
+      _GLDistTS := pGLDistTS;
     END IF;
 
 --  Make sure the passed itemsite points to a real item
@@ -45,13 +47,9 @@ BEGIN
          itemloc_itemsite_id AS itemsiteid,
          itemloc_expiration,
          itemloc_warrpurc,
-         itemloc_qty,
-         sourceloc.location_netable AS sourcenet,
-         targetloc.location_netable AS targetnet INTO _p
-  FROM itemloc, location AS sourceloc, location AS targetloc
-  WHERE ( (itemloc_location_id=sourceloc.location_id)
-   AND (targetloc.location_id=pTargetLocationid)
-   AND (itemloc_id=pSourceItemlocid) );
+         itemloc_qty INTO _p
+  FROM itemloc
+  WHERE (itemloc_id=pSourceItemlocid);
 
 --  Check to make sure the qty being transfered exists
   IF (_p.itemloc_qty < pQty) THEN
@@ -141,42 +139,6 @@ BEGIN
   SET invhist_hasdetail=TRUE
   WHERE (invhist_id=_invhistid);
 
---  Post in incomming or outgoing NN transaction if required
-  IF (_p.sourcenet <> _p.targetnet) THEN
-    IF (_p.targetnet) THEN
-      _qty = (pQty * -1);
-    ELSE
-      _qty = pQty;
-    END IF;
-
-    INSERT INTO invhist
-    ( invhist_itemsite_id,
-      invhist_transtype, invhist_invqty,
-      invhist_qoh_before, invhist_qoh_after,
-      invhist_docnumber, invhist_comments, invhist_transdate,
-      invhist_invuom, invhist_unitcost, invhist_costmethod,
-      invhist_value_before, invhist_value_after, invhist_series) 
-    SELECT itemsite_id,
-           'NN', (_qty * -1),
-           itemsite_qtyonhand, (itemsite_qtyonhand - _qty),
-           '', '', _GlDistTS,
-           uom_name,
-           CASE WHEN (itemsite_costmethod='A') THEN avgcost(itemsite_id)
-                ELSE stdCost(item_id)
-           END, itemsite_costmethod,
-           itemsite_value, itemsite_value, _itemlocSeries
-    FROM item, itemsite, uom
-    WHERE ( (itemsite_item_id=item_id)
-     ANd (item_inv_uom_id=uom_id)
-     AND (itemsite_controlmethod <> 'N')
-     AND (itemsite_id=_p.itemsiteid) );
-
-    UPDATE itemsite
-    SET itemsite_qtyonhand = (itemsite_qtyonhand - _qty),
-        itemsite_nnqoh = (itemsite_nnqoh + _qty)
-    WHERE (itemsite_id=_p.itemsiteid);
-  END IF;
-
 --  Check to see if there is anything left at the target Itemloc and delete if not
 --  Could be zero if relocate increased a negative quantity to zero
   DELETE FROM itemloc
@@ -237,4 +199,4 @@ BEGIN
   RETURN _invhistid;
 
 END;
-$$ LANGUAGE 'plpgsql';
+$$ LANGUAGE plpgsql;
