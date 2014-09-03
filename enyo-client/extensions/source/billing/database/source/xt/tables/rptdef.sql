@@ -1,4 +1,4 @@
-select xt.add_report_definition('XM.Invoice', 0, $${
+﻿select xt.add_report_definition('XM.Invoice', 0, $${
   "settings": {
     "detailAttribute": "lineItems",
     "defaultFontSize": 12,
@@ -151,12 +151,31 @@ select xt.add_report_definition('XM.Invoice', 0, $${
     },
     {"element": "bandLine", "size": 2},
     {
+      "element": "band",
       "definition": [
-        {"attr": "subtotal", "label": true},
-        {"attr": "taxTotal", "label": true},
-        {"attr": "total", "label": true}
+        {"text": "_subtotal", "width": 70, "align": "left"},
+        {"attr": "subtotal", "width": 100, "align": "right"}
       ],
-      "options": {"width": 525, "align": "right"}
+      "options": {"border": 0, "x": 360}
+    },
+    {
+      "element": "band",
+      "definition": [
+        {"text": "_taxTotal", "width": 70, "align": "left"},
+        {"attr": "taxTotal", "width": 100, "align": "right"}
+      ],
+      "options": {"border": 0, "x": 360}
+    },
+    {
+      "element": "band",
+      "definition": [
+        {"text": "_total", "width": 70, "align": "left"},
+        {"attr": "total", "width": 100, "align": "right"}
+      ],
+      "options": {"border": 0, "x": 360}
+    },
+    {
+      "definition": []
     }
   ],
   "pageFooterElements": [
