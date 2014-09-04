@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION cntctmerge(integer, integer, boolean) RETURNS boolean AS $$
+CREATE OR REPLACE FUNCTION public.cntctmerge(integer, integer, boolean) RETURNS boolean AS $$
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
