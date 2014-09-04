@@ -535,6 +535,11 @@ strict: false*/
           {kind: "XV.ScrollableGroupbox", name: "mainGroup",
             classes: "in-panel", components: [
           ]}
+        ]},
+        {kind: "XV.Groupbox", name: "printingSettings", components: [
+          {kind: "onyx.GroupboxHeader", content: "_printing".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "printingSettingsGroup", classes: "in-panel",
+            components: [{kind: "XV.InputWidget", attr: "PreferredWarehouse"}]}
         ]}
       ]}
     ]
