@@ -134,6 +134,7 @@
     "xt/tables/salesemlprofile.sql",
     "xt/tables/saletypeext.sql",
     "xt/tables/filter.sql",
+    "xt/tables/form.sql",
     "xt/tables/localeext.sql",
     "xt/tables/incdtemlprofile.sql",
     "xt/tables/incdtcatemlprofile.sql",

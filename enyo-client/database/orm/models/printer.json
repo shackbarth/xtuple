@@ -47,10 +47,17 @@
           "type": "String",
           "column": "form_key"
         }
+      },
+      {
+        "name": "defaultPrinter",
+        "toOne": {
+          "type": "Printer",
+          "column": "form_printer_id"
+        }
       }
     ],
     "isSystem": true,
-    "sourceCode": "Printer"
+    "sourceCode": "Form"
   },
   {
     "context": "xtuple",
