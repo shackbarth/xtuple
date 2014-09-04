@@ -8,7 +8,8 @@ DECLARE
 BEGIN
 
   -- Cache some information
-  SELECT item_type INTO _r
+  -- Added item_number as part of feature request 21645
+  SELECT item_type, item_number INTO _r
   FROM item
   WHERE (item_id=NEW.itemsite_item_id);
  
@@ -44,11 +45,11 @@ BEGIN
     END IF;
   END IF;
 
+-- Added item_number to error messages displayed to fulfill Feature Request 21645
   IF (NEW.itemsite_qtyonhand < 0 AND NEW.itemsite_costmethod = 'A') THEN
-    RAISE EXCEPTION 'Itemsite (%) is set to use average costing and is not allowed to have a negative quantity on hand.', NEW.itemsite_id;
+    RAISE EXCEPTION 'Itemsite (%) is set to use average costing and is not allowed to have a negative quantity on hand.', 'ID: ' || NEW.itemsite_id || ', Item: ' || _r.item_number;
   ELSIF (NEW.itemsite_value < 0 AND NEW.itemsite_costmethod = 'A') THEN
-    RAISE EXCEPTION 'This transaction results in a negative itemsite value.  Itemsite (%) is set to use average costing and is not allowed to have a negative value.', NEW.itemsite_id;
-  END IF;
+    RAISE EXCEPTION 'This transaction results in a negative itemsite value.  Itemsite (%) is set to use average costing and is not allowed to have a negative value.', 'ID: ' || NEW.itemsite_id || ', Item: ' || _r.item_number;  END IF;
 
 --  Handle the ChangeLog
   IF ( SELECT (metric_value='t')
