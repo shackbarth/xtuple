@@ -124,6 +124,7 @@ white:true*/
   XT.cacheCollection("XM.itemGroups", "XM.ItemGroupRelationCollection", "name");
   XT.cacheCollection("XM.languages", "XM.LanguageCollection");
   XT.cacheCollection("XM.locales", "XM.LocaleCollection");
+  XT.cacheCollection("XM.printers", "XM.PrinterCollection", "code");
   XT.cacheCollection("XM.priorities", "XM.PriorityCollection");
   XT.cacheCollection("XM.privileges", "XM.PrivilegeCollection");
   XT.cacheCollection("XM.projectTypes", "XM.ProjectTypeCollection", "code");
