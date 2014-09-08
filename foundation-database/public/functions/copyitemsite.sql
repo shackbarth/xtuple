@@ -1,24 +1,22 @@
-CREATE OR REPLACE FUNCTION copyItemSite(pitemsiteid INTEGER,
-                                        pdestwhsid INTEGER) RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION copyItemSite(pItemsiteid INTEGER,
+                                        pDestWhsid INTEGER) RETURNS INTEGER AS $$
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 
 BEGIN
 
-  RETURN copyItemSite(pitemsiteid, pdestwhsid, NULL);
+  RETURN copyItemSite(pItemsiteid, pDestWhsid, NULL);
 
 END;
-$$ LANGUAGE 'plpgsql';
+$$ LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION copyItemSite(pitemsiteid INTEGER,
-                                        pdestwhsid INTEGER,
-                                        pdestitemid INTEGER) RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION copyItemSite(pItemsiteid INTEGER,
+                                        pDestWhsid INTEGER,
+                                        pDestItemid INTEGER) RETURNS INTEGER AS $$
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
-  pitemsiteid ALIAS FOR $1;
-  pdestwhsid  ALIAS FOR $2;
   _destwhs  whsinfo%ROWTYPE;
   _new    itemsite%ROWTYPE;
   _supplywarehousid INTEGER := NULL;
@@ -27,16 +25,16 @@ BEGIN
   -- make a copy of the old itemsite
   SELECT * INTO _new
   FROM itemsite
-  WHERE (itemsite_id=pitemsiteid);
+  WHERE (itemsite_id=pItemsiteid);
   IF (NOT FOUND) THEN
     RETURN -1;
   END IF;
 
   -- if there is no dest warehouse then perhaps the user is manually copying it
-  IF (pdestwhsid IS NOT NULL) THEN
+  IF (pDestWhsid IS NOT NULL) THEN
     SELECT * INTO _destwhs
     FROM whsinfo
-    WHERE (warehous_id=pdestwhsid);
+    WHERE (warehous_id=pDestWhsid);
     IF (NOT FOUND) THEN
       RETURN -2;
     END IF;
@@ -48,9 +46,9 @@ BEGIN
 
   SELECT itemsite_id INTO _new.itemsite_id
   FROM itemsite
-  WHERE ((itemsite_item_id=COALESCE(pdestitemid, _new.itemsite_item_id))
-    AND  (itemsite_warehous_id=pdestwhsid OR
-    (itemsite_warehous_id IS NULL AND pdestwhsid IS NULL)));
+  WHERE ((itemsite_item_id=COALESCE(pDestItemid, _new.itemsite_item_id))
+    AND  (itemsite_warehous_id=pDestWhsid OR
+    (itemsite_warehous_id IS NULL AND pDestWhsid IS NULL)));
   IF (FOUND) THEN
     RETURN _new.itemsite_id;
   END IF;
@@ -64,18 +62,17 @@ BEGIN
       SELECT itemsite_id INTO _new.itemsite_supply_itemsite_id
       FROM itemsite
       WHERE (itemsite_warehous_id=_supplywarehousid)
-        AND (itemsite_item_id=pdestitemid);
+        AND (itemsite_item_id=pDestItemid);
     END IF;
   END IF;
 
   -- now override the things we know have to change
   _new.itemsite_id                   := NEXTVAL('itemsite_itemsite_id_seq');
-  _new.itemsite_warehous_id          := pdestwhsid;
+  _new.itemsite_warehous_id          := pDestWhsid;
   _new.itemsite_qtyonhand            := 0;
   _new.itemsite_value                := 0;
   _new.itemsite_datelastcount        := NULL;
   _new.itemsite_datelastused         := NULL;
-  _new.itemsite_nnqoh                := 0;
   _new.itemsite_location_id          := -1;
   _new.itemsite_recvlocation_id      := -1;
   _new.itemsite_issuelocation_id     := -1;
@@ -111,7 +108,6 @@ BEGIN
     _new.itemsite_location           := NULL;
     _new.itemsite_location_comments  := NULL;
     _new.itemsite_notes              := 'Transit Warehouse';
-    _new.itemsite_nnqoh              := 0;
     _new.itemsite_createwo           := FALSE;
     _new.itemsite_costcat_id         := _destwhs.warehous_costcat_id;
     _new.itemsite_supply_itemsite_id := NULL;
@@ -138,7 +134,7 @@ BEGIN
     itemsite_soldranking,            itemsite_createpr,
     itemsite_location,               itemsite_location_comments,
     itemsite_notes,                  itemsite_perishable,
-    itemsite_nnqoh,                  itemsite_autoabcclass,
+    itemsite_autoabcclass,
     itemsite_ordergroup,             itemsite_disallowblankwip,
     itemsite_maxordqty,              itemsite_mps_timefence,
     itemsite_createwo,               itemsite_warrpurc,
@@ -150,7 +146,7 @@ BEGIN
     itemsite_location_dist,          itemsite_recvlocation_dist,
     itemsite_issuelocation_dist
   ) VALUES (
-    _new.itemsite_id,                COALESCE(pdestitemid, _new.itemsite_item_id),
+    _new.itemsite_id,                COALESCE(pDestItemid, _new.itemsite_item_id),
     _new.itemsite_warehous_id,         _new.itemsite_qtyonhand,
     _new.itemsite_costmethod,        _new.itemsite_value,
     _new.itemsite_reorderlevel,      _new.itemsite_ordertoqty,
@@ -170,7 +166,7 @@ BEGIN
     _new.itemsite_soldranking,         _new.itemsite_createpr,
     _new.itemsite_location,          _new.itemsite_location_comments,
     _new.itemsite_notes,             _new.itemsite_perishable,
-    _new.itemsite_nnqoh,             _new.itemsite_autoabcclass,
+    _new.itemsite_autoabcclass,
     _new.itemsite_ordergroup,        _new.itemsite_disallowblankwip,
     _new.itemsite_maxordqty,         _new.itemsite_mps_timefence,
     _new.itemsite_createwo,          _new.itemsite_warrpurc,
@@ -185,4 +181,4 @@ BEGIN
 
   RETURN _new.itemsite_id;
 END;
-$$ LANGUAGE 'plpgsql';
+$$ LANGUAGE plpgsql;

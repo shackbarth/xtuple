@@ -6,10 +6,6 @@ white:true*/
 (function () {
   "use strict";
 
-  XT.extensions.project = {
-    setVersion: function () {
-      XT.setVersion("", "project");
-    }
-  };
+  XT.extensions.project = {};
 
 }());

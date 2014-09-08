@@ -364,19 +364,6 @@ BEGIN
 
         RAISE NOTICE 'Deleting item site detail records,';
 
-        SELECT SUM(itemloc_qty) INTO _qty
-        FROM itemloc, location
-        WHERE ((itemloc_location_id=location_id)
-        AND (NOT location_netable) 
-        AND (itemloc_itemsite_id=OLD.itemsite_id));
-
-        IF (_qty != 0) THEN
-          UPDATE itemsite
-          SET itemsite_qtyonhand = itemsite_qtyonhand + _qty,
-            itemsite_nnqoh = itemsite_nnqoh - _qty
-          WHERE (itemsite_id=OLD.itemsite_id);
-        END IF;
-
         DELETE FROM itemloc
         WHERE (itemloc_itemsite_id=OLD.itemsite_id);
       END IF;

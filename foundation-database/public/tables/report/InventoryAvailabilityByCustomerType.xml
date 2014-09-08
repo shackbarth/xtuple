@@ -73,7 +73,7 @@
                      cohead_id, cohead_number, cust_number, cust_name,
                      item_number, (item_descrip1 || ' ' || item_descrip2) AS item_description,
                      uom_name, item_picklist,
-                     noNeg(itemsite_qtyonhand) AS qoh,
+                     noNeg(qtyAvailable(itemsite_id)) AS qoh,
                      noNeg(coitem_qtyord - coitem_qtyshipped + coitem_qtyreturned) AS sobalance,
                      qtyAllocated(itemsite_id, coitem_scheddate) AS allocated,
                      qtyOrdered(itemsite_id, coitem_scheddate) AS ordered,
@@ -95,7 +95,7 @@
                   AND (wo_status IN ('E','R','I'))
                   AND (wo_qtyord-wo_qtyrcv > 0)
                   AND (noNeg(coitem_qtyord - coitem_qtyshipped + coitem_qtyreturned-qtyatshipping(coitem_id)) > 
-                        (SELECT itemsite_qtyonhand FROM itemsite WHERE (itemsite_id=coitem_itemsite_id))))
+                        (SELECT qtyAvailable(itemsite_id) AS availableqoh FROM itemsite WHERE (itemsite_id=coitem_itemsite_id))))
 &lt;? endif ?>
                 WHERE((coitem_cohead_id=cohead_id)
                   AND (cohead_cust_id=cust_id)

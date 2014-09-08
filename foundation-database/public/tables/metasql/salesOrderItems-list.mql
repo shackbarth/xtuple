@@ -59,8 +59,8 @@ SELECT coitem_id, coitem_altid, groupby,
             ELSE 1
        END AS xtindentrole,
        spplytype, ordrnumbr,
-       itemsite_qtyonhand,
-       'qty' AS itemsite_qtyonhand_xtnumericrole
+       availableqoh,
+       'qty' AS availableqoh_xtnumericrole
 <? if exists("includeReservations") ?>
        ,
        reserved,
@@ -123,11 +123,11 @@ SELECT coitem_id,
             WHEN coitem_order_type='R' THEN (pr_number || '-' || pr_subnumber)
             ELSE TEXT (' ')
        END AS ordrnumbr,
-       itemsite_qtyonhand
+       qtyAvailable(itemsite_id) AS availableqoh
 <? if exists("includeReservations") ?>
        ,
        coitem_qtyreserved AS reserved,
-       itemsite_qtyonhand - qtyreserved(itemsite_id) AS reservable
+       qtyAvailable(itemsite_id) - qtyReserved(itemsite_id) AS reservable
 <? endif?>
   FROM cohead
        JOIN coitem ON (coitem_cohead_id=cohead_id)
