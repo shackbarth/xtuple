@@ -113,9 +113,5 @@ XT = { };
     // give any running process the opportunity to save state
     // or log as gracefully as possible
     process.once('exit', _.bind(X.cleanup, X));
-
-    _.forEach(["SIGINT", "SIGHUP", "SIGQUIT", "SIGKILL", "SIGSEGV", "SIGILL"], function (sig) {
-      process.once(sig, _.bind(sighandler, X, sig));
-    });
   });
 }());

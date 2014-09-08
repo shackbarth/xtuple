@@ -45,6 +45,11 @@
     autoRegex = XM.Document.AUTO_NUMBER + "|" + XM.Document.AUTO_OVERRIDE_NUMBER;
     if (model instanceof XM.Document && model.numberPolicy.match(autoRegex)) {
       // wait for the model to fetch its id if appropriate
+      if (model.id) {
+        // the id is already defined? No need to wait for it from the server, then.
+        done(workspaceContainer);
+        return;
+      }
       eventName = "change:" + model.idAttribute;
       idChanged = function () {
         if (model.id) {
@@ -184,6 +189,12 @@
 
     // back up to list
     app.$.postbooks.previous();
+    if (app.$.postbooks.getActive().kind === "XV.WorkspaceContainer") {
+      console.log("Ok, we want to be in the navigator by now");
+      console.log("Model status is", model.getStatusString());
+      console.log("Notify popup showing?", XT.app.$.postbooks.$.notifyPopup.showing);
+      console.log("Notify popup message", XT.app.$.postbooks.$.notifyMessage.getContent());
+    }
     assert.equal(app.$.postbooks.getActive().kind, "XV.Navigator");
 
     // here's the list
@@ -213,7 +224,7 @@
 
   exports.updateFirstModel = function (test) {
     it('should allow a trivial update to the first model of ' + test.kind, function (done) {
-      this.timeout(20 * 1000);
+      this.timeout(60 * 1000);
       navigateToExistingWorkspace(XT.app, test.kind, function (workspaceContainer) {
         var updateObj,
           statusChanged,
@@ -246,7 +257,7 @@
     var workspaceContainer,
       workspace;
     it('can get to a new workspace', function (done) {
-      this.timeout(10 * 1000);
+      this.timeout(60 * 1000);
       navigateToNewWorkspace(XT.app, spec.listKind, function (_workspaceContainer) {
         workspaceContainer = _workspaceContainer;
         done();
@@ -259,23 +270,29 @@
     });
     _.each(spec.beforeSaveUIActions || [], function (spec) {
       it(spec.it, function (done) {
-        this.timeout(20 * 1000);
+        this.timeout(60 * 1000);
         spec.action(workspace, done);
       });
     });
     it('can save the workspace', function (done) {
-      this.timeout(20 * 1000);
+      this.timeout(60 * 1000);
       if (spec.captureObject) {
         XG = XG || {};
         XG.capturedId = workspace.value.id;
       }
       saveWorkspace(workspace, done);
     });
+    _.each(spec.afterSaveUIActions || [], function (spec) {
+      it(spec.it, function (done) {
+        this.timeout(60 * 1000);
+        spec.action(workspace, done);
+      });
+    });
     if (spec.captureObject) {
       return;
     }
     it('can delete the item from the list', function (done) {
-      this.timeout(20 * 1000);
+      this.timeout(60 * 1000);
       deleteFromList(XT.app, workspace.value, done);
     });
   };

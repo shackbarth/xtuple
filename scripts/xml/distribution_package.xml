@@ -1,5 +1,5 @@
-<package id        = "distribution-upgrade-450"
-         version   = "4.5.0"
+<package id        = "distribution-upgrade-460"
+         version   = "4.7.0Beta"
          developer = "xTuple"
          descrip   = "load PostBooks resources"
          updater   = "2.2.4" >
@@ -11,24 +11,49 @@
   </prerequisite>
 
   <prerequisite type = "query"
-                name = "Checking xTuple ERP database version" >
+                name = "Checking for too-old xTuple ERP database version" >
     <query>SELECT fetchMetricText('ServerVersion') > '4.4.';</query>
     <message>This package must be applied to a 4.4+ Distribution database.
     </message>
   </prerequisite>
 
- <prerequisite type = "query"
-               name = "Checking for bad xTuple ERP database version" >
-    <query>SELECT fetchMetricText('ServerVersion') &lt; '4.5.0';</query>
-    <message>This package may not be applied to a 4.5+ Distribution database.
+  <prerequisite type = "query"
+                name = "Checking for too-new xTuple ERP database version" >
+    <query>SELECT NOT fetchMetricText('ServerVersion') >= '4.7.0';</query>
+    <message>This package may not be applied to a database newer than 4.7.0Beta.
     </message>
   </prerequisite>
 
  <prerequisite type = "query"
                name = "Checking for mobile-enabled schemas" >
-    <query>SELECT TRUE FROM pg_namespace WHERE nspname = 'xm';</query>
+    <query>SELECT NOT EXISTS(SELECT 1 FROM pg_namespace WHERE nspname = 'xm');</query>
     <message>This package may not be applied to a mobile-enabled database. Please see your system administrator or contact xTuple.
     </message>
+  </prerequisite>
+
+ <prerequisite type = "query"
+               name = "Checking for xwd schema" >
+    <query>SELECT EXISTS(SELECT 1 FROM pg_namespace WHERE nspname = 'xwd');</query>
+    <message>This package requires that XWD 240 package to be installed before continuing.</message>
+  </prerequisite>
+
+ <prerequisite type = "query"
+               name = "Checking for duplicate Credit Card payments on Sales Orders" >
+    <query>
+      WITH counter AS (SELECT COUNT(*) AS freq
+                        FROM payco
+                        GROUP BY payco_ccpay_id, payco_cohead_id
+                        ORDER BY 1)
+      SELECT (COALESCE(MAX(freq), 1) = 0 OR COALESCE(MAX(freq), 1) = 1)
+      FROM counter;
+    </query>
+    <message>There are duplicate payco_ccpay_id and payco_cohead_id on the payco table. Please see your system administrator or contact xTuple.
+    </message>
+  </prerequisite>
+
+ <prerequisite type="query" name="Checking xwd Package Version">
+     <query>SELECT TRUE FROM pkghead WHERE pkghead_name = 'xwd' AND (pkghead_version >= '2.4');</query>
+    <message>This package must be applied against the 2.4.0 version of the xwd package.</message>
   </prerequisite>
 
   <script file="postbooks_upgrade.sql" />

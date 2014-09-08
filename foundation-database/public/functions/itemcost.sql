@@ -18,7 +18,7 @@ DECLARE
   _cost NUMERIC := 0.0;
 BEGIN
   -- cache item info
-  SELECT * INTO _r
+  SELECT *, itemInvPriceRat(item_id) AS itempriceinvrat INTO _r
   FROM itemsite, item
   WHERE (itemsite_item_id=pItemid)
     AND (itemsite_warehous_id=pSiteid)
@@ -33,7 +33,7 @@ BEGIN
       AND (bomitem_rev_id=getActiveRevid('BOM', _r.item_id))
       AND (pEffective BETWEEN bomitem_effective AND (bomitem_expires - 1));
   ELSEIF (fetchMetricBool('WholesalePriceCosting')) THEN
-    _cost := _r.item_listcost;
+    _cost := _r.item_listcost / _r.itempriceinvrat;
   ELSE
     SELECT itemcost(_r.itemsite_id) INTO _cost;
   END IF;

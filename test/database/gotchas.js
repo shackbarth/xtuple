@@ -62,5 +62,3 @@ var _ = require("underscore"),
 
   });
 }());
-
-

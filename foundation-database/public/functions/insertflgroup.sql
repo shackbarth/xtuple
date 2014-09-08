@@ -1,52 +1,24 @@
+SELECT dropIfExists('FUNCTION', 'insertFlGroup(INTEGER, INTEGER, INTEGER, INTEGER, BOOLEAN)');
+SELECT dropIfExists('FUNCTION', 'insertFlGroup(INTEGER, INTEGER, INTEGER, INTEGER, BOOLEAN, CHAR)');
+SELECT dropIfExists('FUNCTION', 'insertFlGroup(INTEGER, INTEGER, INTEGER, INTEGER, BOOLEAN, CHAR, INTEGER)');
 
-
-CREATE OR REPLACE FUNCTION insertFlGroup(INTEGER, INTEGER, INTEGER, INTEGER, BOOLEAN) RETURNS BOOLEAN AS $$
+CREATE OR REPLACE FUNCTION insertflgroup(pFlheadid INTEGER
+                                       , pPeriodid INTEGER
+                                       , pFlgrpid INTEGER
+                                       , pLevel INTEGER
+                                       , pSummarize BOOLEAN
+                                       , pInterval CHAR DEFAULT NULL
+                                       , pPrjid INTEGER DEFAULT NULL) RETURNS BOOLEAN AS $$
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
+
+/* see the "performance vs. history" comment in financialreport() */
 DECLARE
-  pFlheadid  ALIAS FOR $1;
-  pPeriodid  ALIAS FOR $2;
-  pFlgrpid   ALIAS FOR $3;
-  pLevel     ALIAS FOR $4;
-  pSummarize ALIAS FOR $5;
-
-BEGIN
-  RETURN insertFlGroup(pFlheadid, pPeriodid, pFlgrpid, pLevel, pSummarize, NULL);
-END;
-$$ LANGUAGE 'plpgsql';
-
-CREATE OR REPLACE FUNCTION insertFlGroup(INTEGER, INTEGER, INTEGER, INTEGER, BOOLEAN, CHAR) RETURNS BOOLEAN AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
--- See www.xtuple.com/CPAL for the full text of the software license.
-DECLARE
-  pFlheadid  ALIAS FOR $1;
-  pPeriodid  ALIAS FOR $2;
-  pFlgrpid   ALIAS FOR $3;
-  pLevel     ALIAS FOR $4;
-  pSummarize ALIAS FOR $5;
-  pInterval  ALIAS FOR $6;
-
-BEGIN
-  RETURN insertFlGroup(pFlheadid, pPeriodid, pFlgrpid, pLevel, pSummarize, pInterval, NULL);
-END;
-$$ LANGUAGE 'plpgsql';
-
-CREATE OR REPLACE FUNCTION insertflgroup(INTEGER, INTEGER, INTEGER, INTEGER, BOOLEAN, CHAR, INTEGER) RETURNS BOOLEAN AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
--- See www.xtuple.com/CPAL for the full text of the software license.
-DECLARE
-  pFlheadid  ALIAS FOR $1;
-  pPeriodid  ALIAS FOR $2;
-  pFlgrpid   ALIAS FOR $3;
-  pLevel     ALIAS FOR $4;
-  pSummarize ALIAS FOR $5;
-  pInterval  ALIAS FOR $6;
-  pPrjid     ALIAS FOR $7;
-
   _subtotal BOOLEAN;
   _r RECORD;
   _g RECORD;
   _all BOOLEAN;
+  _username TEXT := getEffectiveXtUser();
 
 BEGIN
 
@@ -293,13 +265,14 @@ BEGIN
               flrpt_beginningprcnt, flrpt_endingprcnt,
               flrpt_debitsprcnt, flrpt_creditsprcnt, flrpt_budgetprcnt, flrpt_diffprcnt, flrpt_customprcnt,
               flrpt_parent_id, flrpt_interval)
-      VALUES (pFlheadid, pPeriodid, getEffectiveXtUser(),
+      VALUES (pFlheadid, pPeriodid, _username,
               (COALESCE(( SELECT MAX(flrpt_order)
                             FROM flrpt
                            WHERE ((flrpt_flhead_id=pFlheadid)
                              AND  (flrpt_period_id=pPeriodid)
                              AND (flrpt_interval=pInterval)
-                             AND  (flrpt_username=getEffectiveXtUser()))
+--                           AND  (flrpt_username=_username)
+                             )
                         ), 1) + 1),
               pLevel, _r.type, _r.type_id,
               _r.beginning, _r.ending,
@@ -322,7 +295,7 @@ BEGIN
        WHERE ((flrpt_flhead_id=pFlheadid)
          AND  (flrpt_period_id=pPeriodid)
           AND (flrpt_interval=pInterval)
-         AND  (flrpt_username=getEffectiveXtUser())
+--       AND  (flrpt_username=_username)
          AND  (flrpt_type=_r.type)
          AND  (flrpt_type_id=_r.type_id));
       IF (_r.subtract) THEN
@@ -337,7 +310,7 @@ BEGIN
          WHERE ((flrpt_flhead_id=pFlheadid)
            AND  (flrpt_period_id=pPeriodid)
            AND  (flrpt_interval=pInterval)
-           AND  (flrpt_username=getEffectiveXtUser())
+--         AND  (flrpt_username=_username)
            AND  (flrpt_type='G')
            AND  (flrpt_type_id=pFlgrpid));
       ELSE
@@ -352,7 +325,7 @@ BEGIN
          WHERE ((flrpt_flhead_id=pFlheadid)
            AND  (flrpt_period_id=pPeriodid)
            AND  (flrpt_interval=pInterval)
-           AND  (flrpt_username=getEffectiveXtUser())
+--         AND  (flrpt_username=_username)
            AND  (flrpt_type='G')
            AND  (flrpt_type_id=pFlgrpid));
       END IF;
@@ -363,7 +336,7 @@ BEGIN
          WHERE ((flrpt_flhead_id=pFlheadid)
           AND  (flrpt_period_id=pPeriodid)
           AND  (flrpt_interval=pInterval)
-          AND  (flrpt_username=getEffectiveXtUser())
+--        AND  (flrpt_username=_username)
           AND  (flrpt_type=_r.type)
           AND  (flrpt_type_id=_r.type_id));
       END IF;
@@ -382,13 +355,14 @@ BEGIN
                   flrpt_beginningprcnt, flrpt_endingprcnt,
                   flrpt_debitsprcnt, flrpt_creditsprcnt, flrpt_budgetprcnt, flrpt_diffprcnt, flrpt_customprcnt,
                   flrpt_parent_id,flrpt_accnt_id,flrpt_interval)
-          VALUES (pFlheadid, pPeriodid, getEffectiveXtUser(),
+          VALUES (pFlheadid, pPeriodid, _username,
                   (COALESCE(( SELECT MAX(flrpt_order)
                                FROM flrpt
                               WHERE ((flrpt_flhead_id=pFlheadid)
                                 AND  (flrpt_period_id=pPeriodid)
                                 AND  (flrpt_interval=pInterval)
-                                AND  (flrpt_username=getEffectiveXtUser()))
+--                              AND  (flrpt_username=_username)
+                                )
                             ), 1) + 1),
                   pLevel, _r.type, _r.type_id,
                   _r.beginning, _r.ending,
@@ -411,7 +385,7 @@ BEGIN
            WHERE ((flrpt_flhead_id=pFlheadid)
              AND  (flrpt_period_id=pPeriodid)
              AND  (flrpt_interval=pInterval)
-             AND  (flrpt_username=getEffectiveXtUser())
+--           AND  (flrpt_username=_username)
              AND  (flrpt_type='G')
              AND  (flrpt_type_id=pFlgrpid));
         ELSE
@@ -426,7 +400,7 @@ BEGIN
            WHERE ((flrpt_flhead_id=pFlheadid)
              AND  (flrpt_interval=pInterval)
              AND  (flrpt_period_id=pPeriodid)
-             AND  (flrpt_username=getEffectiveXtUser())
+--           AND  (flrpt_username=_username)
              AND  (flrpt_type='G')
              AND  (flrpt_type_id=pFlgrpid));
         END IF;
@@ -448,13 +422,14 @@ BEGIN
               flrpt_beginningprcnt, flrpt_endingprcnt,
               flrpt_debitsprcnt, flrpt_creditsprcnt, flrpt_budgetprcnt, flrpt_diffprcnt, flrpt_customprcnt,
               flrpt_parent_id, flrpt_altname,flrpt_interval )
-      SELECT pFlheadid, pPeriodid, getEffectiveXtUser(),
+      SELECT pFlheadid, pPeriodid, _username,
              (COALESCE(( SELECT MAX(flrpt_order)
                            FROM flrpt
                           WHERE ((flrpt_flhead_id=pFlheadid)
                             AND  (flrpt_period_id=pPeriodid)
                             AND  (flrpt_interval=pInterval)
-                            AND  (flrpt_username=getEffectiveXtUser()))
+--                          AND  (flrpt_username=_username)
+                                )
                        ), 1) + 1),
              pLevel, 'T', -1,
              CASE WHEN (flgrp_showstart) THEN flrpt_beginning
@@ -509,7 +484,7 @@ BEGIN
          AND  (flrpt_flhead_id=pFlheadid)
          AND  (flrpt_period_id=pPeriodid)
          AND  (flrpt_interval=pInterval)
-         AND  (flrpt_username=getEffectiveXtUser())
+--       AND  (flrpt_username=_username)
          AND  (flrpt_type='G')
          AND  (flrpt_type_id=pFlgrpid));
     END IF;

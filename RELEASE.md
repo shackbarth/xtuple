@@ -1,18 +1,313 @@
-4.5.0 (Beta 2014/05/22)
+4.6.0-beta (2014/07/21)
+=======================
+
+Features and bugfixes
+---------------------
+
+- Fixed
+  issue #[18401](http://www.xtuple.org/xtincident/view/bugs/18401)
+  _Relation autocompleter menu gets in the way_
+- Fixed
+  issue #[18409](http://www.xtuple.org/xtincident/view/bugs/18409)
+  _blank screen after login, selecting DB_
+- Fixed
+  issue #[18505](http://www.xtuple.org/xtincident/view/bugs/18505)
+  _Advanced search panel is blank on iPad_
+- Fixed
+  issue #[18521](http://www.xtuple.org/xtincident/view/bugs/18521)
+  _Automatically-added comments have "admin" as the name_
+- Fixed
+  issue #[18635](http://www.xtuple.org/xtincident/view/bugs/18635)
+  _Creating a user account in the mobile client does not create a CRM Account_
+- Implemented
+  issue #[18637](http://www.xtuple.org/xtincident/view/bugs/18637)
+  _Extend "Personal" privilege methodology to any property that can be tied back to a UserAccount ID_
+- Fixed
+  issue #[18640](http://www.xtuple.org/xtincident/view/bugs/18640)
+  _error in CRM Acct Merge_
+- Fixed
+  issue #[18692](http://www.xtuple.org/xtincident/view/bugs/18692)
+  _List Relation Box should be disabled for new records_
+- Fixed
+  issue #[18695](http://www.xtuple.org/xtincident/view/bugs/18695)
+  _Comments don't work on iPad_
+- Fixed
+  issue #[18698](http://www.xtuple.org/xtincident/view/bugs/18698)
+  _iPad sorts strings as numbers_
+- Fixed
+  issue #[18699](http://www.xtuple.org/xtincident/view/bugs/18699)
+  _iPad does not scroll smoothly_
+- Fixed
+  issue #[18707](http://www.xtuple.org/xtincident/view/bugs/18707)
+  _Can't switch databases on iPad_
+- Fixed
+  issue #[18730](http://www.xtuple.org/xtincident/view/bugs/18730)
+  _Task number read only status is erratic_
+- Fixed
+  issue #[18731](http://www.xtuple.org/xtincident/view/bugs/18731)
+  _Address placeholders are not translated_
+- Fixed
+  issue #[18732](http://www.xtuple.org/xtincident/view/bugs/18732)
+  _All postgres users are showing up in user list_
+- Fixed
+  issue #[18769](http://www.xtuple.org/xtincident/view/bugs/18769)
+  _Cookies are not being deleted in any test-cases_
+- Completed
+  issue #[18770](http://www.xtuple.org/xtincident/view/bugs/18770)
+  _Integrate node-router into node-datasource_
+- Fixed
+  issue #[19199](http://www.xtuple.org/xtincident/view/bugs/19199)
+  _Security on reset password._
+- Implemented
+  issue #[20689](http://www.xtuple.org/xtincident/view/bugs/20689)
+  _Support for Barcode_
+- Implemented
+  issue #[20962](http://www.xtuple.org/xtincident/view/bugs/20962)
+  _Add support to enter Receipt transactions_
+- Implemented
+  issue #[21038](http://www.xtuple.org/xtincident/view/bugs/21038)
+  _Complete Issue to Shipping_
+- Fixed
+  issue #[21476](http://www.xtuple.org/xtincident/view/bugs/21476)
+  _*Unable to select back 'External' option as the Gateway for Credit cards in System Configuration screen_
+- Implemented
+  issue #[21584](http://www.xtuple.org/xtincident/view/bugs/21584)
+  _Organize pentaho properties in config.js_
+- Fixed
+  issue #[21686](http://www.xtuple.org/xtincident/view/bugs/21686)
+  _*Toolbar overlaps the Export icon making it unable to select in mobile devices_
+- Fixed
+  issue #[21889](http://www.xtuple.org/xtincident/view/bugs/21889)
+  _Mobile Web Client List View Items Overlap_
+- Fixed
+  issue #[21909](http://www.xtuple.org/xtincident/view/bugs/21909)
+  _ErpBI configuration not production ready_
+- Fixed
+  issue #[21978](http://www.xtuple.org/xtincident/view/bugs/21978)
+  _Item auto-populates on Sales Order when it should not_
+- Implemented
+  issue #[22067](http://www.xtuple.org/xtincident/view/bugs/22067)
+  _Implement returns(credit memo)_
+- Implemented
+  issue #[22072](http://www.xtuple.org/xtincident/view/bugs/22072)
+  _Add support for Transfer Order_
+- Implemented
+  issue #[22129](http://www.xtuple.org/xtincident/view/bugs/22129)
+  _Support system printers for reports_
+- Fixed
+  issue #[22151](http://www.xtuple.org/xtincident/view/bugs/22151)
+  _Selecting ITEM-GROUP produces internal server error_
+- Fixed
+  issue #[22152](http://www.xtuple.org/xtincident/view/bugs/22152)
+  _Site is required in PostBooks_
+- Fixed
+  issue #[22172](http://www.xtuple.org/xtincident/view/bugs/22172)
+  _Item Group does not appear in Postbooks_
+- Implemented
+  issue #[22175](http://www.xtuple.org/xtincident/view/bugs/22175)
+  _Add the ability to issue to shipping and ship from Sales Order_
+- Fixed
+  issue #[22214](http://www.xtuple.org/xtincident/view/bugs/22214)
+  _Inventory gear options not showing on small devices_
+- Fixed
+  issue #[22224](http://www.xtuple.org/xtincident/view/bugs/22224)
+  _*Selecting 'Issue to Shipping' displays a JS console error and does not displays any response_
+- No Change Required
+  issue #[22227](http://www.xtuple.org/xtincident/view/bugs/22227)
+  _*Selecting to open an existing shipment hangs the application_
+- Fixed
+  issue #[22298](http://www.xtuple.org/xtincident/view/bugs/22298)
+  _*Selecting to add an address to a record displays an irrelevant dialog_
+- Fixed
+  issue #[22355](http://www.xtuple.org/xtincident/view/bugs/22355)
+  _Toolbar height changed_
+- Fixed
+  issue #[22368](http://www.xtuple.org/xtincident/view/bugs/22368)
+  _*Date format is displayed incorrectly in Transfer order list and Issue to shipping screens_
+- Fixed
+  issue #[22407](http://www.xtuple.org/xtincident/view/bugs/22407)
+  _*Selecting 'Issue to Shipping' without saving the Sales order and then selecting 'Save', doesn't populate the Sales order number_
+- Fixed
+  issue #[22408](http://www.xtuple.org/xtincident/view/bugs/22408)
+  _*Selecting Express Checkout without saving the Sales order and then selecting 'No' in the confirmation dialog displays a console_
+
+
+
+4.5.2 (2014/07/15)
 ==================
 
 Features and bugfixes
 ---------------------
-TODO: document
+- Fixed
+  issue #[23636](http://www.xtuple.org/xtincident/view/bugs/23636) 
+  _Error when running Inventory Availability_ 
+- Fixed 
+  issue #[23714](http://www.xtuple.org/xtincident/view/bugs/23714) 
+  _*Quantity 'At Shipping' gets doubled on selecting 'Issue All' or 'Issue Line' multiple times_ 
+- Fixed 
+  issue #[23979](http://www.xtuple.org/xtincident/view/bugs/23979) 
+  _*Unable to build Mobile Web client on empty databases_ 
+- Fixed 
+  issue #[24098](http://www.xtuple.org/xtincident/view/bugs/24098) 
+  _Icons only displaying when debugging = true_ 
 
+
+4.5.1 (2014/06/25)
+==================
+
+Features and bugfixes
+---------------------
+- Fixed 
+  issue #[21772](http://www.xtuple.org/xtincident/view/bugs/21772) 
+  _*Error message is displayed in JS console on selecting to open a configure screen_ 
+- Implemented 
+  issue #[22128](http://www.xtuple.org/xtincident/view/bugs/22128) 
+  _Support filters for dashboards._ 
+- Fixed 
+  issue #[22218](http://www.xtuple.org/xtincident/view/bugs/22218) 
+  _Add support to print and email Sales Order acknowledgements_ 
+- Fixed 
+  issue #[22926](http://www.xtuple.org/xtincident/view/bugs/22926) 
+  _*'Backflush' option is available in the Post production screen for work orders with materials issued_ 
+- Implemented 
+  issue #[22996](http://www.xtuple.org/xtincident/view/bugs/22996) 
+  _signature capture_ 
+- Fixed 
+  issue #[23288](http://www.xtuple.org/xtincident/view/bugs/23288) 
+  _Can not open item work bench from Sales Order_ 
+- Implemented 
+  issue #[23796](http://www.xtuple.org/xtincident/view/bugs/23796) 
+  _Export grid list to csv_ 
+- Implemented 
+  issue #[23852](http://www.xtuple.org/xtincident/view/bugs/23852) 
+  _inventory component of invoice_ 
+- Implemented 
+  issue #[23853](http://www.xtuple.org/xtincident/view/bugs/23853) 
+  _refactor xv.input and xv.inputwidget_ 
+- Fixed 
+  issue #[23860](http://www.xtuple.org/xtincident/view/bugs/23860) 
+  _Handle "no data" case from dashboard filter_ 
+- Fixed 
+  issue #[23867](http://www.xtuple.org/xtincident/view/bugs/23867) 
+  _Add support to XT.Data for x.y.naturalKeyOfY queries_ 
+- Fixed 
+  issue #[23868](http://www.xtuple.org/xtincident/view/bugs/23868) 
+  _*Unable to edit sale order line item after opening item site from line item screen_ 
+- Fixed 
+  issue #[23876](http://www.xtuple.org/xtincident/view/bugs/23876) 
+  _update xwd and xtmfg pkghead_ 
+- Implemented 
+  issue #[23894](http://www.xtuple.org/xtincident/view/bugs/23894) 
+  _Support install of third-party extensions using npm_ 
+- Implemented 
+  issue #[23965](http://www.xtuple.org/xtincident/view/bugs/23965) 
+  _dashboards-lite_ 
+
+4.5.0 (Beta 2014/05/22, Final 2014/06/06)
+==================
+
+Critical deployment changes
+---------------------------
+- If you installed 4.5.0 beta on your database, and want to upgrade it from the beta
+  to 4.5.0 final, you'll need to update the column type of the `taxpay.taxpay_id`
+  column from `integer` to `serial`.
+
+  If you're going straight to 4.5 final, you don't have to worry about this.
+
+  In general, of course, it's best not to put your production database through a beta.
+  You can pilot on a beta, but then to get to the final, you should pilot straight
+  from your production version to the final.
+
+
+Features and bugfixes
+---------------------
+- Implemented 
+  issue #[23243](http://www.xtuple.org/xtincident/view/bugs/23243) 
+  _unified build: bring in xwd_ 
+- Fixed 
+  issue #[23279](http://www.xtuple.org/xtincident/view/bugs/23279) 
+  _Can't open order on issue to shipping screen_ 
+- Fixed 
+  issue #[23411](http://www.xtuple.org/xtincident/view/bugs/23411) 
+  _Need a way to set Base Currency_ 
+- Fixed 
+  issue #[23559](http://www.xtuple.org/xtincident/view/bugs/23559) 
+  _Syntax error on Sales Orders_ 
+- Fixed 
+  issue #[23588](http://www.xtuple.org/xtincident/view/bugs/23588) 
+  _Item on Sales Order copies irrelevantly_ 
+- Fixed 
+  issue #[23602](http://www.xtuple.org/xtincident/view/bugs/23602) 
+  _Rescheduling Sales Order does not reschedule all lines_ 
+- Fixed 
+  issue #[23607](http://www.xtuple.org/xtincident/view/bugs/23607) 
+  _Description cut off on item site widget_ 
+- Fixed 
+  issue #[23649](http://www.xtuple.org/xtincident/view/bugs/23649) 
+  _Filters on Work Orders do not work_ 
+- Fixed 
+  issue #[23760](http://www.xtuple.org/xtincident/view/bugs/23760) 
+  _error in itemsite list_ 
 
 4.4.1 (2014/05/09)
 ==================
 
 Features and bugfixes
 ---------------------
-TODO: document
-
+- Fixed 
+  issue #[21728](http://www.xtuple.org/xtincident/view/bugs/21728) 
+  _Worksheet (Timesheet) sets rate to 0 on Expense line when Billable unchecked_ 
+- Fixed 
+  issue #[21973](http://www.xtuple.org/xtincident/view/bugs/21973) 
+  _Web client does not work on IE 11_ 
+- Fixed 
+  issue #[23111](http://www.xtuple.org/xtincident/view/bugs/23111) 
+  _Time Expense settings on tasks missing_ 
+- Implemented 
+  issue #[23165](http://www.xtuple.org/xtincident/view/bugs/23165) 
+  _Apply XT.Data buildClause refactor to three implementations_ 
+- Fixed 
+  issue #[23234](http://www.xtuple.org/xtincident/view/bugs/23234) 
+  _Can not enter work sheets without view items privilege_ 
+- Implemented 
+  issue #[23241](http://www.xtuple.org/xtincident/view/bugs/23241) 
+  _Unified build: get data to match in commercial databases_ 
+- Implemented 
+  issue #[23242](http://www.xtuple.org/xtincident/view/bugs/23242) 
+  _unified build: build reports, uiforms, metasql, etc._ 
+- Fixed 
+  issue #[23250](http://www.xtuple.org/xtincident/view/bugs/23250) 
+  _Can not enter a worksheet without unit privileges_ 
+- Fixed 
+  issue #[23323](http://www.xtuple.org/xtincident/view/bugs/23323) 
+  _Errors on search_ 
+- Implemented 
+  issue #[23340](http://www.xtuple.org/xtincident/view/bugs/23340) 
+  _Unified build: move in reports_ 
+- Implemented 
+  issue #[23357](http://www.xtuple.org/xtincident/view/bugs/23357) 
+  _unified build: standard and mfg dbscripts need not be frozen_ 
+- Implemented 
+  issue #[23359](http://www.xtuple.org/xtincident/view/bugs/23359) 
+  _production windows vagrant dry run_ 
+- Fixed 
+  issue #[23370](http://www.xtuple.org/xtincident/view/bugs/23370) 
+  _Can not open documents after "Apply" clicked_ 
+- Fixed 
+  issue #[23402](http://www.xtuple.org/xtincident/view/bugs/23402) 
+  _Cannot create some New things in Empty Database_ 
+- Fixed 
+  issue #[23406](http://www.xtuple.org/xtincident/view/bugs/23406) 
+  _various work order bugs_ 
+- Fixed 
+  issue #[23414](http://www.xtuple.org/xtincident/view/bugs/23414) 
+  _Installing Inventory throws error_ 
+- Fixed 
+  issue #[23560](http://www.xtuple.org/xtincident/view/bugs/23560) 
+  _Sales Order Line items do not default to header site_ 
+- Fixed 
+  issue #[23597](http://www.xtuple.org/xtincident/view/bugs/23597) 
+  _Lazy load does not work on Inventory Availability_ 
 
 
 4.4.0 (2014/04/04)

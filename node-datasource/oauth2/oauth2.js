@@ -274,8 +274,7 @@ server.exchange(oauth2orize.exchange.refreshToken(function (client, refreshToken
 // signature parts and a done callback. If these values are valid, the
 // application issues an access token on behalf of the user in the JWT `prn`
 // property.
-
-server.exchange('assertion', jwtBearer(function (client, header, claimSet, signature, done) {
+var jwtExchange = function (client, header, claimSet, signature, done) {
   "use strict";
 
   var data = header + "." + claimSet,
@@ -297,10 +296,12 @@ server.exchange('assertion', jwtBearer(function (client, header, claimSet, signa
         expires = new Date(today.getTime() + (60 * 60 * 1000)), // One hour from now.
         token = new SYS.Oauth2token();
 
+
     // Verify JWT was formed correctly.
     if (!decodedHeader || !decodedHeader.alg || !decodedHeader.typ) {
       return done(new Error("Invalid JWT header."));
     }
+
     if (!decodedClaimSet || decodedClaimSet.length < 5 || !decodedClaimSet.iss ||
       !decodedClaimSet.scope || !decodedClaimSet.aud || !decodedClaimSet.exp ||
       !decodedClaimSet.iat) {
@@ -417,16 +418,19 @@ server.exchange('assertion', jwtBearer(function (client, header, claimSet, signa
         token.initialize(null, {isNew: true, database: scopes[0]});
       });
     } else {
-      // No prn, throw error for now.
-      return done(new Error("Invalid JWT. No delegate user."));
-
-      // TODO - Handle public scopes with no delegatedAccess users if we ever need to.
+      // Either there is no prn, OR client.delegatedAccess is not enabled.
+      // TODO: Right now, if you create a service account and uncheck the "delegatedAccess"
+      //   field, then you will see this error. We need to handle public scopes with no
+      //   delegated users here.
+      return done(new Error("Invalid JWT. No delegated user or delegated access is not enabled for this client."));
     }
   } else {
     return done(new Error("Invalid JWT. Signature verification failed"));
   }
-}));
-
+};
+// Support both known grant types.
+server.exchange('assertion', jwtBearer(jwtExchange));
+server.exchange('urn:ietf:params:oauth:grant-type:jwt-bearer', jwtBearer(jwtExchange));
 
 // TODO - We need a token revoke endpoint some day.
 //https://developers.google.com/accounts/docs/OAuth2WebServer#tokenrevoke
