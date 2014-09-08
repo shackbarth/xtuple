@@ -44,7 +44,8 @@
       });
     };
 
-  describe('Sales Order Workspace', function () {
+  // TODO: move to sales order spec
+  describe.skip('Sales Order Workspace', function () {
     this.timeout(30 * 1000);
 
     //
@@ -142,7 +143,7 @@
           moduleContainer = XT.app.$.postbooks;
 
         /** Open the first model's salesOrderLineWorkspace...
-            Copied from gridBox buttonTapped function (expandGridRowButton) 
+            Copied from gridBox buttonTapped function (expandGridRowButton)
         */
         lineItemBox.doChildWorkspace({
           workspace: lineItemBox.getWorkspace(),
@@ -150,7 +151,7 @@
           index: lineItemBox.getValue().indexOf(model)
         });
 
-        /** The line item's workspace model has been deleted (DESTROYED_CLEAN). 
+        /** The line item's workspace model has been deleted (DESTROYED_CLEAN).
             Client is now in SalesOrderWorkspace.
         */
         var statusChanged = function () {
@@ -160,7 +161,7 @@
 
         model.once("status:DESTROYED_CLEAN", statusChanged);
 
-        // Function to keep checking for notifyPopup showing and then tap yes. 
+        // Function to keep checking for notifyPopup showing and then tap yes.
         // This will fire right after the delete below.
         var notifyPopupInterval = setInterval(function () {
           if (!moduleContainer.$.notifyPopup.showing) { return; }
