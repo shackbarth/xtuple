@@ -153,7 +153,7 @@
     {
       "element": "band",
       "definition": [
-        {"text": "_subtotal", "width": 70, "align": "left"},
+        {"text": "_subtotal", "label": true, "width": 70, "align": "left"},
         {"attr": "subtotal", "width": 100, "align": "right"}
       ],
       "options": {"border": 0, "x": 360}
@@ -161,7 +161,7 @@
     {
       "element": "band",
       "definition": [
-        {"text": "_taxTotal", "width": 70, "align": "left"},
+        {"text": "_taxTotal", "label": true, "width": 70, "align": "left"},
         {"attr": "taxTotal", "width": 100, "align": "right"}
       ],
       "options": {"border": 0, "x": 360}
@@ -169,7 +169,7 @@
     {
       "element": "band",
       "definition": [
-        {"text": "_total", "width": 70, "align": "left"},
+        {"text": "_total", "label": true, "width": 70, "align": "left"},
         {"attr": "total", "width": 100, "align": "right"}
       ],
       "options": {"border": 0, "x": 360}
