@@ -308,6 +308,19 @@ trailing:true, white:true*/
   });
 
   // ..........................................................
+  // FORM PRINTING SETUP
+  //
+
+  enyo.kind({
+    name: "XV.FormPrintingRelationsBox",
+    kind: "XV.ListRelationsBox",
+    title: "_formPrintingSettings".loc(),
+    listRelations: "XV.FormPrintingListRelations",
+    canOpen: false,
+    parentKey: "FormPrinting"
+  });
+
+  // ..........................................................
   // INCIDENT HISTORY
   //
 

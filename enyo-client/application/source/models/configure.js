@@ -21,7 +21,64 @@ white:true*/
 
     dispatchFetchFunction: 'preferences',
 
-    dispatchCommitFunction: 'commitPreferences'
+    dispatchCommitFunction: 'commitPreferences',
+
+    initialize: function (attributes, options) {
+      var that = this;
+      XM.Document.prototype.initialize.apply(this, arguments);
+      this.meta = new Backbone.Model({
+        "Invoice": "",
+        "PurchaseOrder": "",
+        "Location": "",
+        "EnterReceipt": "",
+        "Shipment": ""
+      });
+
+      this.meta.on("change", this.metaChanged, this);
+    },
+
+    handlers: {
+      "statusChange": "statusReadyClean"
+    },
+
+    /*fetch: function (option) {
+      //XM.Model.prototype.fetch.apply(this, arguments);
+      this.statusReadyClean(this);
+    },*/
+
+    /*bindEvents: function () {
+      XM.Model.prototype.bindEvents.apply(this, arguments);
+      this.on('statusChange', this.statusReadyClean);
+      this.on("change:" + this.idAttribute, "statusReadyClean");
+    },*/
+
+    metaChanged: function (model, changed, options) {
+      // XXX - Inefficient here. Only update the meta attribute changed.
+      //this.set("FormPrintSettings", model.changedAttributes());
+      this.set("FormPrintSettings", JSON.stringify(model.attributes));
+    },
+
+    statusReadyClean: function (model) {
+      console.log("statusReadyClean!!!!");
+
+      var that = model || this;
+
+      var formPrintSettingsUserPrefs = XT.session.preferences.getValue("FormPrintSettings"),
+        formPrintSettingsCache = JSON.parse(XT.session.preferences.getValue("FormPrintSettings"));
+
+      that.setValue(formPrintSettingsCache);
+
+      /*_.each(formPrintSettingsPrefs, function (val, key) {
+        return model.setValue(key, val);
+      });*/
+      // First time settings
+      /*if (!this.get("FormPrintSettings")) {
+        var that = this;
+        _.each(XM.forms.models, function (form) {
+          return that.setValue(form.get("name"), form.getValue("defaultPrinter.code"));
+        });
+      }*/
+    }
 
   });
 

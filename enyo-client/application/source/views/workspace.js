@@ -536,14 +536,47 @@ strict: false*/
             classes: "in-panel", components: [
           ]}
         ]},
-        {kind: "XV.Groupbox", name: "printingSettings", components: [
-          {kind: "onyx.GroupboxHeader", content: "_printing".loc()},
-          {kind: "XV.ScrollableGroupbox", name: "printingSettingsGroup", classes: "in-panel",
-            components: [{kind: "XV.InputWidget", attr: "PreferredWarehouse"}]}
+        {kind: "XV.Groupbox", name: "formPrintSettings", components: [
+          {kind: "onyx.GroupboxHeader", content: "_formPrintSettings".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "formPrintSettingsGroup",
+            classes: "in-panel", components: [
+          ]}
         ]}
       ]}
-    ]
+    ],
+    create: function () {
+      this.inherited(arguments);
+      var forms = XM.forms.models, //JSON.parse(XT.session.preferences.getValue("FormPrintSettings")), //XM.forms.models,
+        that = this;
+
+      /*_.each(forms, function (val, key) {
+        that.$.formPrintSettingsGroup.createComponents([
+            {kind: "XV.PrinterPicker", attr: key//, name: val, value: val // XXXTODO - GET THESE TO POPULATE CORRECTLY UPON OPENING OF WORKSPACE
+              //name: "routingsPanel", title: "_routings".loc(), addBefore: this.$.commentsBox, classes: "medium-panel"
+            }
+          ], {owner: that});
+      });*/
+
+      _.each(forms, function (form) {
+        that.$.formPrintSettingsGroup.createComponents([
+            {kind: "XV.PrinterPicker", attr: form.get("name") // XXXTODO - GET THESE TO POPULATE CORRECTLY UPON OPENING OF WORKSPACE
+              //name: "routingsPanel", title: "_routings".loc(), addBefore: this.$.commentsBox, classes: "medium-panel"
+            }
+          ], {owner: that});
+      });
+    },
+    attributesChanged: function (model, options) {
+      this.inherited(arguments);
+      //if (this.getValue().getStatus() === XM.Model.READY_CLEAN ||
+      //  this.getValue().getStatus() === XM.Model.READY_NEW) {
+      
+      this.value.statusReadyClean();
+      //}
+    }
   });
+
+  XV.registerModelWorkspace("XM.UserPreference", "XV.UserPreferenceWorkspace");
+  XV.registerModelWorkspace("XM.forms", "XV.UserPreferenceWorkspace");
 
   // ..........................................................
   // CONTACT
@@ -1088,6 +1121,33 @@ strict: false*/
   });
 
   XV.registerModelWorkspace("XM.FileRelation", "XV.FileWorkspace");
+
+  // ..........................................................
+  // FORMS
+  //
+
+  enyo.kind({
+    name: "XV.FormWorkspace",
+    kind: "XV.Workspace",
+    title: "_forms".loc(),
+    model: "XM.Form",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.InputWidget", attr: "description"},
+            {kind: "XV.PrinterPicker", attr: "defaultPrinter"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.Form", "XV.FormWorkspace");
 
   // ..........................................................
   // FREIGHT CLASS

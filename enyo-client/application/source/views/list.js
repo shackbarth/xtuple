@@ -1065,20 +1065,18 @@ trailing:true, white:true, strict: false*/
     kind: "XV.List",
     label: "_forms".loc(),
     collection: "XM.FormCollection",
+    parameterWidget: null,
     query: {orderBy: [
       {attribute: 'name'}
     ]},
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
-          {kind: "XV.ListColumn", classes: "short", components: [
+          {kind: "XV.ListColumn", components: [
             {kind: "XV.ListAttr", attr: "name", isKey: true}
           ]},
-          {kind: "XV.ListColumn", classes: "short", components: [
+          {kind: "XV.ListColumn", components: [
             {kind: "XV.ListAttr", attr: "description"}
-          ]},
-          {kind: "XV.ListColumn", classes: "short", components: [
-            {kind: "XV.PrinterPicker", attr: "defaultPrinter"}
           ]}
         ]}
       ]}
