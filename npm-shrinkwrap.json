@@ -1856,10 +1856,6 @@
       "version": "2.3.3",
       "from": "underscore.string@~2.3.3"
     },
-    "ursa": {
-      "version": "0.8.0",
-      "from": "ursa@0.8.x"
-    },
     "winston": {
       "version": "0.7.3",
       "from": "winston@0.7.x",
