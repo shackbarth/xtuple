@@ -1967,7 +1967,7 @@
       }
     },
     "xtuple-linguist": {
-      "version": "0.1.0",
+      "version": "0.1.1",
       "from": "xtuple-linguist@0.1.x"
     },
     "xtuple-query": {
