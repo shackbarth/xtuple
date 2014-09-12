@@ -85,5 +85,4 @@ trailing:true, white:true*/
       });
     }
   });
-
 }());
