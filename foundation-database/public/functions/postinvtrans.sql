@@ -127,7 +127,7 @@ BEGIN
     (itemsite_qtyonhand + (_sense * pQty)),
     itemsite_costmethod, itemsite_value,
     -- sanity check to ensure that value = 0 when qtyonhand = 0
-    CASE WHEN ((itemsite_qtyonhand + (_sense * pQty)) + itemsite_nnqoh) = 0.0 THEN 0.0
+    CASE WHEN ((itemsite_qtyonhand + (_sense * pQty))) = 0.0 THEN 0.0
          ELSE itemsite_value + (_r.cost * _sense * pQty)
     END,
     pOrderType, pOrderNumber, pDocNumber, pComments,

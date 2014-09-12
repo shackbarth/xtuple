@@ -5,9 +5,9 @@
 --        See www.xtuple.com/CPAL for the full text of the software license.
 
 SELECT s_itemsite_id, warehous_code, item_number, itemdescrip,
-       qtyonhand, reorderlevel, leadtime, itemsub_rank,
+       availableqoh, reorderlevel, leadtime, itemsub_rank,
        allocated, ordered, available,
-       'qty' AS qtyonhand_xtnumericrole,
+       'qty' AS availableqoh_xtnumericrole,
        'qty' AS allocated_xtnumericrole,
        'qty' AS ordered_xtnumericrole,
        'qty' AS reorderlevel_xtnumericrole,
@@ -17,14 +17,14 @@ FROM (SELECT sub.itemsite_id AS s_itemsite_id,
              warehous_code, item_number,
              (item_descrip1 || ' ' || item_descrip2) AS itemdescrip,
 <? if exists("normalize") ?>
-             (sub.itemsite_qtyonhand * itemsub_uomratio) AS qtyonhand,
+             (qtyAvailable(sub.itemsite_id) * itemsub_uomratio) AS availableqoh,
              (CASE WHEN(sub.itemsite_useparams)
                    THEN sub.itemsite_reorderlevel
                 ELSE 0.0
              END * itemsub_uomratio) AS reorderlevel,
              sub.itemsite_leadtime AS leadtime, itemsub_rank,
 <? else ?>
-             (sub.itemsite_qtyonhand) AS qtyonhand,
+             (qtyAvailable(sub.itemsite_id)) AS availableqoh,
              CASE WHEN(sub.itemsite_useparams) THEN sub.itemsite_reorderlevel
                ELSE 0.0
              END AS reorderlevel,
@@ -34,37 +34,37 @@ FROM (SELECT sub.itemsite_id AS s_itemsite_id,
   <? if exists("normalize") ?>
              (qtyAllocated(sub.itemsite_id, sub.itemsite_leadtime) * itemsub_uomratio) AS allocated,
              (qtyOrdered(sub.itemsite_id, sub.itemsite_leadtime) * itemsub_uomratio) AS ordered,
-             ((sub.itemsite_qtyonhand * itemsub_uomratio)
+             ((qtyAvailable(sub.itemsite_id) * itemsub_uomratio)
               + (qtyOrdered(sub.itemsite_id, sub.itemsite_leadtime) * itemsub_uomratio)
               - (qtyAllocated(sub.itemsite_id, sub.itemsite_leadtime) * itemsub_uomratio)) AS available
   <? else ?>
              (qtyAllocated(sub.itemsite_id, sub.itemsite_leadtime)) AS allocated,
              (qtyOrdered(sub.itemsite_id, sub.itemsite_leadtime)) AS ordered,
-             (sub.itemsite_qtyonhand + qtyOrdered(sub.itemsite_id, sub.itemsite_leadtime)
+             (qtyAvailable(sub.itemsite_id) + qtyOrdered(sub.itemsite_id, sub.itemsite_leadtime)
               - qtyAllocated(sub.itemsite_id, sub.itemsite_leadtime)) AS available
   <? endif ?>
 <? elseif exists("byDays") ?>
   <? if exists("normalize") ?>
              (qtyAllocated(sub.itemsite_id, <? value("days") ?>) * itemsub_uomratio) AS allocated,
              (qtyOrdered(sub.itemsite_id, <? value("days") ?>) * itemsub_uomratio) AS ordered,
-             ((sub.itemsite_qtyonhand * itemsub_uomratio) + (qtyOrdered(sub.itemsite_id, <? value("days") ?>) * itemsub_uomratio)
+             ((qtyAvailable(sub.itemsite_id) * itemsub_uomratio) + (qtyOrdered(sub.itemsite_id, <? value("days") ?>) * itemsub_uomratio)
               - (qtyAllocated(sub.itemsite_id, <? value("days") ?>) * itemsub_uomratio)) AS available
   <? else ?>
              (qtyAllocated(sub.itemsite_id, <? value("days") ?>)) AS allocated,
              (qtyOrdered(sub.itemsite_id, <? value("days") ?>)) AS ordered,
-             (sub.itemsite_qtyonhand + qtyOrdered(sub.itemsite_id, <? value("days") ?>)
+             (qtyAvailable(sub.itemsite_id) + qtyOrdered(sub.itemsite_id, <? value("days") ?>)
               - qtyAllocated(sub.itemsite_id, <? value("days") ?>)) AS available
   <? endif ?>
 <? elseif exists("byDate") ?>
   <? if exists("normalize") ?>
              (qtyAllocated(sub.itemsite_id, (<? value("date") ?> - CURRENT_DATE)) * itemsub_uomratio) AS allocated,
              (qtyOrdered(sub.itemsite_id, (<? value("date") ?> - CURRENT_DATE)) * itemsub_uomratio) AS ordered,
-             ((sub.itemsite_qtyonhand * itemsub_uomratio) + (qtyOrdered(sub.itemsite_id, (<? value("date") ?> - CURRENT_DATE)) * itemsub_uomratio)
+             ((qtyAvailable(sub.itemsite_id) * itemsub_uomratio) + (qtyOrdered(sub.itemsite_id, (<? value("date") ?> - CURRENT_DATE)) * itemsub_uomratio)
               - (qtyAllocated(sub.itemsite_id, (<? value("date") ?> - CURRENT_DATE)) * itemsub_uomratio)) AS available
   <? else ?>
              (qtyAllocated(sub.itemsite_id, (<? value("date") ?> - CURRENT_DATE))) AS allocated,
              (qtyOrdered(sub.itemsite_id, (<? value("date") ?> - CURRENT_DATE))) AS ordered,
-             (sub.itemsite_qtyonhand + qtyOrdered(sub.itemsite_id,
+             (qtyAvailable(sub.itemsite_id) + qtyOrdered(sub.itemsite_id,
              (<? value("date") ?> - CURRENT_DATE)) - qtyAllocated(sub.itemsite_id, (<? value("date") ?> - CURRENT_DATE))) AS available
   <? endif ?>
 <? endif ?>

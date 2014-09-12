@@ -6,8 +6,8 @@ _ = require('underscore');
 
 var  async = require('async'),
   dataSource = require('../../node-datasource/lib/ext/datasource').dataSource,
-  buildDatabaseUtil = require('./build_database_util'),
   exec = require('child_process').exec,
+  explodeManifest = require("./util/process_manifest").explodeManifest,
   fs = require('fs'),
   ormInstaller = require('./orm'),
   dictionaryBuilder = require('./build_dictionary'),
@@ -15,6 +15,7 @@ var  async = require('async'),
   path = require('path'),
   pg = require('pg'),
   os = require('os'),
+  sendToDatabase = require("./util/send_to_database").sendToDatabase,
   winston = require('winston');
 
 (function () {
@@ -44,29 +45,6 @@ var  async = require('async'),
         host: 'localhost' }
   */
   var buildDatabase = exports.buildDatabase = function (specs, creds, masterCallback) {
-    if (specs.length === 1 &&
-        specs[0].initialize &&
-        (specs[0].backup || specs[0].source)) {
-
-      // The user wants to initialize the database first (i.e. Step 0)
-      // Do that, then call this function again
-      buildDatabaseUtil.initDatabase(specs[0], creds, function (err, res) {
-        if (err) {
-          winston.error("Init database error: ", err);
-          masterCallback(err);
-          return;
-        }
-        // recurse to do the build step. Of course we don't want to initialize a second
-        // time, so destroy those flags.
-        specs[0].initialize = false;
-        specs[0].wasInitialized = true;
-        specs[0].backup = undefined;
-        specs[0].source = undefined;
-        buildDatabase(specs, creds, masterCallback);
-      });
-      return;
-    }
-
     //
     // The function to generate all the scripts for a database
     //
@@ -82,7 +60,6 @@ var  async = require('async'),
           extensionCallback(null, "");
           return;
         }
-        //winston.info("Installing extension", databaseName, extension);
         // deal with directory structure quirks
         var baseName = path.basename(extension),
           isFoundation = extension.indexOf("foundation-database") >= 0,
@@ -96,24 +73,30 @@ var  async = require('async'),
             extension.indexOf("extension") >= 0,
           isPublicExtension = extension.indexOf("xtuple-extensions") >= 0,
           isPrivateExtension = extension.indexOf("private-extensions") >= 0,
+          isNpmExtension = baseName.indexOf("xtuple-") >= 0,
+          isExtension = !isFoundation && !isLibOrm && !isApplicationCore,
           dbSourceRoot = (isFoundation || isFoundationExtension) ? extension :
             isLibOrm ? path.join(extension, "source") :
             path.join(extension, "database/source"),
           manifestOptions = {
+            manifestFilename: path.resolve(dbSourceRoot, "manifest.js"),
+            extensionPath: isExtension ?
+              path.resolve(dbSourceRoot, "../../") :
+              undefined,
             useFrozenScripts: spec.frozen,
             useFoundationScripts: baseName.indexOf('inventory') >= 0 ||
               baseName.indexOf('manufacturing') >= 0 ||
               baseName.indexOf('distribution') >= 0,
-            registerExtension: !isFoundation && !isLibOrm && !isApplicationCore,
+            registerExtension: isExtension,
             runJsInit: !isFoundation && !isLibOrm,
             wipeViews: isApplicationCore && spec.wipeViews,
             extensionLocation: isCoreExtension ? "/core-extensions" :
               isPublicExtension ? "/xtuple-extensions" :
-              isPrivateExtension ? "/private-extensions" : "not-applicable"
+              isPrivateExtension ? "/private-extensions" :
+              isNpmExtension ? "npm" : "not-applicable"
           };
 
-        buildDatabaseUtil.explodeManifest(path.join(dbSourceRoot, "manifest.js"),
-          manifestOptions, extensionCallback);
+        explodeManifest(manifestOptions, extensionCallback);
       };
 
       // We also need to get the sql that represents the queries to generate
@@ -211,17 +194,23 @@ var  async = require('async'),
         // on the case of error.
         allSql = "\\set ON_ERROR_STOP TRUE;\n" + allSql;
 
-        if (spec.wasInitialized && !_.isEqual(extensions, ["foundation-database"])) {
-          // give the admin user every extension by default
-          allSql = allSql + "insert into xt.usrext (usrext_usr_username, usrext_ext_id) " +
-            "select '" + creds.username +
-            "', ext_id from xt.ext where ext_location = '/core-extensions' and ext_name NOT LIKE 'oauth2';";
-        }
-
         winston.info("Applying build to database " + spec.database);
         credsClone.database = spec.database;
-        buildDatabaseUtil.sendToDatabase(allSql, credsClone, spec, function (err, res) {
-          databaseCallback(err, res);
+        sendToDatabase(allSql, credsClone, spec, function (err, res) {
+          if (spec.populateData && creds.encryptionKeyFile) {
+            var populateSql = "DO $$ XT.disableLocks = true; $$ language plv8;";
+            var encryptionKey = fs.readFileSync(path.resolve(__dirname, "../../node-datasource", creds.encryptionKeyFile), "utf8");
+            var patches = require(path.join(__dirname, "../../enyo-client/database/source/populate_data")).patches;
+            _.each(patches, function (patch) {
+              patch.encryptionKey = encryptionKey;
+              patch.username = creds.username;
+              populateSql += "select xt.patch(\'" + JSON.stringify(patch) + "\');";
+            });
+            populateSql += "DO $$ XT.disableLocks = undefined; $$ language plv8;";
+            dataSource.query(populateSql, credsClone, databaseCallback);
+          } else {
+            databaseCallback(err, res);
+          }
         });
       });
     };

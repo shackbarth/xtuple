@@ -4,21 +4,57 @@
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 
-SELECT
-       COALESCE(cohead_id,-1) AS cohead_id, cust_id, cohist_ponumber,
-       cust_custtype_id, custtype_code,
-       cohist_cust_id, SUM(extcost) AS extcost,
-       'curr' AS extcost_xtnumericrole,
-       0 AS extcost_xttotalrole,
-       cohist_ordernumber,
-       cust_number, cust_name, invoicenumber,
+SELECT cohead_id, cust_id, cohist_ponumber,
+       custtype_id, custtype_code,
+       cohist_cust_id, cohist_ordernumber,
+       cust_number, cust_name, currAbbr,
        cohist_orderdate, cohist_invcdate,
-       SUM(baseextprice) AS extended,
-       'curr' AS extended_xtnumericrole,
-       0 AS extended_xttotalrole
-FROM saleshistory
-  LEFT OUTER JOIN cohead ON (cohead_number=cohist_ordernumber)
-WHERE ((cohist_invcdate BETWEEN <? value("startDate") ?> AND  <? value("endDate") ?>)
+       CASE WHEN (COALESCE(cohist_invcnumber, '-1') IN ('', '-1')) THEN  <? value("credit") ?>
+            ELSE cohist_invcnumber
+       END AS invoicenumber,
+       SUM(extprice) AS extprice,
+       SUM(baseextprice) AS baseextprice,
+       SUM(extcost) AS extcost,
+       SUM(margin) AS margin,
+       CASE WHEN (SUM(baseextprice) > 0.0) THEN
+            ROUND(SUM(margin) / SUM(baseextprice), 4)
+            ELSE 0.0
+       END AS marginpercent,
+<? if exists("isReport") ?>
+       formatDate(cohist_orderdate) AS f_orderdate,
+       formatDate(cohist_invcdate) AS f_invcdate,
+       formatMoney(SUM(extprice)) AS f_extprice,
+       formatMoney(SUM(baseextprice)) AS f_baseextprice,
+       formatMoney(SUM(extcost)) AS f_extcost,
+       formatMoney(SUM(margin)) AS f_margin,
+<? endif ?>
+       <? value("return") ?> AS cohist_invcdate_xtnullrole,
+       'curr' AS extprice_xtnumericrole,
+       'curr' AS baseextprice_xtnumericrole,
+       'curr' AS extcost_xtnumericrole,
+       'curr' AS margin_xtnumericrole,
+       'percent' AS marginpercent_xtnumericrole,
+       0 AS baseextprice_xttotalrole,
+       0 AS extcost_xttotalrole,
+       0 AS margin_xttotalrole
+<? if exists("includeMisc") ?>
+  FROM saleshistorymisc
+<? else ?>
+  FROM saleshistory
+<? endif ?>
+WHERE ( (true)
+<? if exists("startDate") ?>
+  AND  (cohist_invcdate >= <? value("startDate") ?>)
+<? endif ?>
+<? if exists("endDate") ?>
+  AND  (cohist_invcdate <= <? value("endDate") ?>)
+<? endif ?>
+<? if exists("shipStartDate") ?>
+  AND  (cohist_shipdate >= <? value("shipStartDate") ?>)
+<? endif ?>
+<? if exists("shipEndDate") ?>
+  AND  (cohist_shipdate <= <? value("shipEndDate") ?>)
+<? endif ?>
 <? if exists("cust_id") ?>
    AND (cohist_cust_id=<? value("cust_id") ?>)
 <? endif ?>
@@ -26,7 +62,7 @@ WHERE ((cohist_invcdate BETWEEN <? value("startDate") ?> AND  <? value("endDate"
    AND (cohist_shipto_id=<? value("shipto_id") ?>)
 <? endif ?>
 <? if exists("custtype_id") ?>
-   AND (cust_custtype_id=<? value("custtype_id") ?>)
+   AND (custtype_id=<? value("custtype_id") ?>)
 <? endif ?>
 <? if exists("custtype_pattern") ?>
    AND (custtype_code ~ <? value("custtype_pattern") ?>)
@@ -43,24 +79,31 @@ WHERE ((cohist_invcdate BETWEEN <? value("startDate") ?> AND  <? value("endDate"
                      AND   (custgrp_name ~ <? value("custgrp_pattern") ?>) )) )
 <? endif ?>
 <? if exists("warehous_id") ?>
-   AND (itemsite_warehous_id=<? value("warehous_id") ?>)
+   AND (warehous_id=<? value("warehous_id") ?>)
 <? endif ?>
 <? if exists("item_id") ?>
-  AND  (itemsite_item_id=<? value("item_id") ?>)
+  AND  (item_id=<? value("item_id") ?>)
 <? endif ?>
 <? if exists("prodcat_id") ?>
-   AND (item_prodcat_id=<? value("prodcat_id") ?>)
+   AND (prodcat_id=<? value("prodcat_id") ?>)
 <? endif ?>
 <? if exists("prodcat_pattern") ?>
-   AND (item_prodcat_id IN (SELECT prodcat_id
-                            FROM prodcat
-                            WHERE (prodcat_code ~ <? value("prodcat_pattern") ?>)))
+   AND (prodcat_id IN (SELECT prodcat_id
+                       FROM prodcat
+                       WHERE (prodcat_code ~ <? value("prodcat_pattern") ?>)))
 <? endif ?>
 <? if exists("salesrep_id") ?>
    AND (cohist_salesrep_id=<? value("salesrep_id") ?>)
 <? endif ?>
+<? if exists("shipzone_id") ?>
+  AND (cohist_shipzone_id=<? value("shipzone_id") ?>)
+<? endif ?>
+<? if exists("saletype_id") ?>
+  AND (cohist_saletype_id=<? value("saletype_id") ?>)
+<? endif ?>
       )
-GROUP BY cohead_id, cust_id,cust_number,cust_custtype_id,cohist_cust_id,custtype_code,
-         cust_name,cohist_ordernumber, cohist_ponumber,
-         invoicenumber,cohist_orderdate, cohist_invcdate
+GROUP BY cohead_id, cust_id, cust_number, custtype_id,
+         cohist_cust_id, custtype_code, currAbbr,
+         cust_name, cohist_ordernumber, cohist_ponumber,
+         cohist_invcnumber, cohist_orderdate, cohist_invcdate
 ORDER BY cohist_invcdate, cohist_orderdate;

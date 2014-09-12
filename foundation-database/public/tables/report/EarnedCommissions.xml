@@ -3,6 +3,12 @@
  <title>Earned Commissions</title>
  <name>EarnedCommissions</name>
  <description></description>
+ <grid>
+  <snap/>
+  <show/>
+  <x>0.05</x>
+  <y>0.05</y>
+ </grid>
  <size>Letter</size>
  <portrait/>
  <topmargin>50</topmargin>
@@ -22,7 +28,7 @@
        formatDate(&lt;? value("startDate") ?>) AS startdate,
        formatDate(&lt;? value("endDate") ?>) AS enddate;</sql>
  </querysource>
- <querysource loadFromDb="true" >
+ <querysource loadFromDb="true">
   <name>detail</name>
   <mqlgroup>salesHistory</mqlgroup>
   <mqlname>detail</mqlname>
@@ -515,7 +521,7 @@
     <vcenter/>
     <data>
      <query>detail</query>
-     <column>item_number</column>
+     <column>itemnumber</column>
     </data>
    </field>
    <field>
@@ -800,7 +806,8 @@
     <query>detail</query>
     <column>baseextprice</column>
    </data>
-   <tracktotal builtin="true" >qty</tracktotal>
+   <format builtin="true">qty</format>
+   <tracktotal/>
   </field>
   <field>
    <rect>
@@ -820,7 +827,8 @@
     <query>detail</query>
     <column>basecommission</column>
    </data>
-   <tracktotal builtin="true" >qty</tracktotal>
+   <format builtin="true">qty</format>
+   <tracktotal/>
   </field>
  </rptfoot>
 </report>

@@ -38,9 +38,21 @@ Fork us, take a test drive with our [free trial](http://www.xtuple.com/free-tria
 file a github issue. 
 If you want to be a contributor and are looking for a place to
 make your mark, we're keeping a list of issues that are 
-[fair game](https://github.com/xtuple/xtuple/issues?labels=fair+game) 
+[fair game](https://github.com/xtuple/xtuple/labels/fair%20game)
 to pick off and provide
 a convenient, well-documented starting point into our project.
+
+In the month of August, we will be running haxTuple 2014. As in previous incarnations, 
+we will open up our bug-shooting derby for the Qt client to our community, with prizes 
+for the most effective bugsquashers! In this year's event, we will also introduce our 
+new technologies by opening up our webapp for haxxing. Those who write the best 
+JavaScript extensions or REST clients will get prizes. More details 
+[here](https://github.com/xtuple/xtuple/wiki/haxTuple-2014).
+
+Also, don't miss the xTuple event of the year! 
+[xTupleCon 2014](http://www.xtuple.com/xtuple-conference-2014)
+is going to be held October 13-18 in Norfolk, VA. With six days of events and a kickoff
+speech by Steve Wozniak, it promises to the be the biggest xTupleCon yet.
 
 ### Installing this project
 
@@ -49,11 +61,12 @@ The best way to start coding on our stack is to use our
 
 ### Release Notes
 
-View the [Release Notes](RELEASE.md) to see a change log.
+View the [Release Notes](https://github.com/xtuple/xtuple-documentation/tree/master/release-notes) 
+to see a change log.
 
 ### Additional Resources
-
-  * [Setting up a non-development demo environment](https://github.com/xtuple/xtuple/wiki/How-to-set-up-xTuple)
   * [Building an Extension Tutorial](https://github.com/xtuple/xtuple-extensions/blob/master/docs/TUTORIAL.md)
-  * [API documentation](http://xtuple.com/jsdoc)
   * [Developer Wiki](https://github.com/xtuple/xtuple/wiki)
+  * xTuple U [Tutorial Videos](https://github.com/xtuple/xtuple/wiki/Tutorial-Videos)
+  * [API documentation](http://xtuple.github.io/api/current)
+  * [Setting up a non-development demo environment](https://github.com/xtuple/xtuple/wiki/How-to-set-up-xTuple)

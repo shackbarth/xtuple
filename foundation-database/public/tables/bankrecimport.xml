@@ -1,0 +1,40 @@
+<!DOCTYPE openCSVAtlasDef>
+<CSVAtlas>
+ <CSVMap>
+  <Name>bankrec</Name>
+  <Table>public.bankrecimport</Table>
+  <Action>Insert</Action>
+  <PreSQL>DELETE FROM bankrecimport;</PreSQL>
+  <PostSQL>SELECT importBankrecCleared(-1);</PostSQL>
+  <CSVMapField>
+   <Name>bankrecimport_reference</Name>
+   <Type>QString</Type>
+   <Column>8</Column>
+  </CSVMapField>
+  <CSVMapField>
+   <Name>bankrecimport_descrip</Name>
+   <Type>QString</Type>
+   <Column>4</Column>
+  </CSVMapField>
+  <CSVMapField>
+   <Name>bankrecimport_comment</Name>
+   <Type>QString</Type>
+   <Column>9</Column>
+  </CSVMapField>
+  <CSVMapField>
+   <Name>bankrecimport_debit_amount</Name>
+   <Type>double</Type>
+   <Column>5</Column>
+  </CSVMapField>
+  <CSVMapField>
+   <Name>bankrecimport_credit_amount</Name>
+   <Type>double</Type>
+   <Column>6</Column>
+  </CSVMapField>
+  <CSVMapField>
+   <Name>bankrecimport_effdate</Name>
+   <Type>QDate</Type>
+   <Column>1</Column>
+  </CSVMapField>
+ </CSVMap>
+</CSVAtlas>

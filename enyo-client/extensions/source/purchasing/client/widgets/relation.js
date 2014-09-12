@@ -31,71 +31,32 @@ white:true, strict:false*/
         showDetail: true,
         vendorItemNumber: null,
       },
-      components: [
-        {kind: "FittableColumns", components: [
-          {name: "label", content: "", fit: true, classes: "xv-flexible-label"},
-          {kind: "onyx.InputDecorator", name: "decorator",
-            classes: "xv-input-decorator", components: [
-            {name: "input", kind: "onyx.Input", classes: "xv-subinput",
-              onkeyup: "keyUp", onkeydown: "keyDown", onblur: "receiveBlur",
-              onfocus: "receiveFocus"
-            },
-            {kind: "onyx.MenuDecorator", onSelect: "itemSelected", components: [
-              {kind: "onyx.IconButton", classes: "icon-folder-open-alt"},
-              {name: "popupMenu", floating: true, kind: "onyx.Menu",
-                components: [
-                {kind: "XV.MenuItem", name: "searchItem", content: "_search".loc()},
-                {kind: "XV.MenuItem", name: "openItem", content: "_open".loc(),
-                  disabled: true},
-                {kind: "XV.MenuItem", name: "newItem", content: "_new".loc(),
-                  disabled: true}
-              ]}
-            ]},
-            {name: "completer", kind: "XV.Completer", onSelect: "itemSelected"}
-          ]}
-        ]},
-        {kind: "FittableColumns", name: "detailColumns", components: [
-          {name: "labels", classes: "xv-relationwidget-column left",
-            components: [
-            {name: "contractLabel", content: "_contract".loc() + ":",
-              classes: "xv-relationwidget-description label",
-              showing: false},
-            {name: "minimumQtyLabel", content: "_minimumOrderQuantity".loc() + ":",
-              classes: "xv-relationwidget-description label",
-              showing: false},
-            {name: "multipleQtyLabel", content: "_multipleOrderQuantity".loc() + ":",
-              classes: "xv-relationwidget-description label",
-              showing: false},
-            {name: "earliestDateLabel", content: "_earliestDate".loc() + ":",
-              classes: "xv-relationwidget-description label",
-              showing: false}
+      descriptionComponents: [
+        {controlClasses: 'enyo-inline', components: [
+          {name: "nameRow", controlClasses: "enyo-inline", components: [
+            {name: "name", classes: "xv-description"}
           ]},
-          {name: "data", fit: true, components: [
-            {name: "name", classes: "xv-relationwidget-description hasLabel",
-              showing: false},
-            {name: "description", classes: "xv-relationwidget-description hasLabel",
-              showing: false},
-            {name: "minimumQty", classes: "xv-relationwidget-description hasLabel",
-              showing: false},
-            {name: "multipleQty", classes: "xv-relationwidget-description hasLabel",
-              showing: false},
-            {name: "earliestDate", classes: "xv-relationwidget-description hasLabel",
-              showing: false}
+          {name: "contractRow", controlClasses: "enyo-inline", components: [
+            {classes: 'xv-label', content: "_contract".loc() + ":"},
+            {name: "description", classes: "xv-description"}
+          ]},
+          {name: "minimumQtyRow", controlClasses: "enyo-inline", components: [
+            {classes: 'xv-label', content: "_minimumOrderQuantity".loc() + ":"},
+            {name: "minimumQty", classes: "xv-description"}
+          ]},
+          {name: "multipleQtyRow", controlClasses: "enyo-inline", components: [
+            {classes: 'xv-label', content: "_multipleOrderQuantity".loc() + ":"},
+            {name: "multipleQty", classes: "xv-description"}
+          ]},
+          {name: "earliestDateRow", controlClasses: "enyo-inline", components: [
+            {classes: 'xv-label', content: "_earliestDate".loc() + ":"},
+            {name: "earliestDate", classes: "xv-description"}
           ]}
         ]}
       ],
       create: function () {
         this.inherited(arguments);
-        if (!this.getShowDetail()) {
-          this.$.detailColumns.setStyle("display: none");
-        }
-      },
-      disabledChanged: function () {
-        this.inherited(arguments);
-        var disabled = this.getDisabled();
-        this.$.minimumQty.addRemoveClass("disabled", disabled);
-        this.$.multipleQty.addRemoveClass("disabled", disabled);
-        this.$.earliestDate.addRemoveClass("disabled", disabled);
+        this.$.descriptionContainer.setShowing(this.getShowDetail());
       },
       /**
         Can accept a two property object with an item source and vendor item number
@@ -176,9 +137,10 @@ white:true, strict:false*/
 
         // Handle menu actions
         that.$.openItem.setShowing(true);
-        that.$.newItem.setShowing(true);
         that.$.openItem.setDisabled(true);
+        that.$.newItem.setShowing(true);
         that.$.newItem.setDisabled(_couldNotCreate.apply(this) || this.disabled);
+
         if (Model) { setPrivileges(); }
 
         if (this.getShowDetail()) {
@@ -187,15 +149,17 @@ white:true, strict:false*/
             multipleQty = value ? value.get("multipleOrderQuantity") : 0,
             earliestDate = value ? XT.date.applyTimezoneOffset(value.get("earliestDate"), true) : null,
             scale = XT.QTY_SCALE;
-          this.$.contractLabel.setShowing(contract);
-          this.$.minimumQtyLabel.setShowing(minimumQty);
-          this.$.minimumQty.setShowing(minimumQty);
+
+          this.$.contractRow.setShowing(!!contract);
+          this.$.description.setContent(contract);
+
+          this.$.minimumQtyRow.setShowing(!!minimumQty);
           this.$.minimumQty.setContent(Globalize.format(minimumQty, "n" + scale));
-          this.$.multipleQtyLabel.setShowing(multipleQty);
-          this.$.multipleQty.setShowing(multipleQty);
+
+          this.$.multipleQtyRow.setShowing(!!multipleQty);
           this.$.multipleQty.setContent(Globalize.format(multipleQty, "n" + scale));
-          this.$.earliestDateLabel.setShowing(earliestDate);
-          this.$.earliestDate.setShowing(earliestDate);
+
+          this.$.earliestDateRow.setShowing(!!earliestDate);
           this.$.earliestDate.setContent(Globalize.format(earliestDate, "d"));
         }
       },

@@ -7,7 +7,7 @@
 SELECT itemsite_id, itemtype, warehous_code, item_number,
        (item_descrip1 || ' ' || item_descrip2) AS itemdescrip,
        reorderdate, reorderlevel,
-       (itemsite_qtyonhand - qtyAllocated(itemsite_id, reorderdate) +
+       (qtyNetable(itemsite_id) - qtyAllocated(itemsite_id, reorderdate) +
          qtyOrdered(itemsite_id, reorderdate)) AS projavail,
        'qty' AS reorderlevel_xtnumericrole,
        'qty' AS projavail_xtnumericrole
@@ -22,9 +22,9 @@ FROM (SELECT itemsite_id,
                          <? value("lookAheadDays") ?>,
                          <? value("includePlannedOrders") ?>)
              AS reorderdate,
-             itemsite_qtyonhand, reorderlevel
+             reorderlevel
       FROM (SELECT itemsite_id, itemsite_item_id,
-                   itemsite_warehous_id, itemsite_qtyonhand,
+                   itemsite_warehous_id,
                    CASE WHEN(itemsite_useparams) THEN itemsite_reorderlevel
                      ELSE 0.0
                    END AS reorderlevel

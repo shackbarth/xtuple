@@ -26,20 +26,8 @@ XT = typeof XT !== 'undefined' ? XT : {};
   };
 
   XT.setVersion = function (version, qualifier) {
-    // default to the core version
-    version = version || XT.session.config.version;
-
-    var aboutVersionLabel = XT.app.$.postbooks.$.navigator.$.aboutVersion,
-      versionText = "_version".loc() + " " + version;
-
-    if (qualifier) {
-      versionText = ("_" + qualifier).loc() + " " + versionText;
-    }
-    if (aboutVersionLabel.getContent()) {
-      versionText = aboutVersionLabel.getContent() + "<br>" + versionText;
-    }
-
-    aboutVersionLabel.setContent(versionText);
+    XT.log("XT.setVersion is now deprecated. The app now reads extension versions from " +
+      "package.json or manifest.js (" + qualifier + ")");
   };
 
 }());
