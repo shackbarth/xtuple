@@ -23,10 +23,16 @@ white:true*/
 
     dispatchCommitFunction: 'commitPreferences',
 
+    // Components added in enyo using XM.forms. The same attributes are here in meta. 
+    // At READY_CLEAN, setValue to set meta and enyo components according to user preference form
+    // print settings if they exist (have been set previously), otherwise, set them according to 
+    // the values in XM.forms.
+
     initialize: function (attributes, options) {
       var that = this;
       XM.Document.prototype.initialize.apply(this, arguments);
       this.meta = new Backbone.Model({
+        "SalesOrder": "",
         "Invoice": "",
         "PurchaseOrder": "",
         "Location": "",
@@ -38,46 +44,52 @@ white:true*/
     },
 
     handlers: {
-      "statusChange": "statusReadyClean"
+      "status:READY_CLEAN": "statusReadyClean"
     },
-
-    /*fetch: function (option) {
-      //XM.Model.prototype.fetch.apply(this, arguments);
-      this.statusReadyClean(this);
-    },*/
 
     /*bindEvents: function () {
       XM.Model.prototype.bindEvents.apply(this, arguments);
-      this.on('statusChange', this.statusReadyClean);
+      this.on('status:READY_CLEAN', this.statusReadyClean);
       this.on("change:" + this.idAttribute, "statusReadyClean");
     },*/
 
     metaChanged: function (model, changed, options) {
       // XXX - Inefficient here. Only update the meta attribute changed.
       //this.set("FormPrintSettings", model.changedAttributes());
-      this.set("FormPrintSettings", JSON.stringify(model.attributes));
+      this.set("FormPrintSettings", JSON.stringify(this.meta.attributes));
     },
 
-    statusReadyClean: function (model) {
-      console.log("statusReadyClean!!!!");
+    statusReadyClean: function () {
+      if (this.getStatus() === XM.Model.READY_CLEAN) {
+        console.log("statusReadyClean!!!!");
+        var that = this,
+          userPrefFormPrintSettings = XT.session.preferences.getValue("FormPrintSettings") ? JSON.parse(XT.session.preferences.getValue("FormPrintSettings")) : null,
+          formsCache = XM.forms.models;
 
-      var that = model || this;
+        if (userPrefFormPrintSettings) {
+          _.each(userPrefFormPrintSettings, function (val, key) {
+            that.setValue(key, val);
+          });
+        } else if (formsCache) {
+          _.each(formsCache, function (val, key) {
+            var attr = val.getValue("name"),
+              value = val.getValue("defaultPrinter.code");
 
-      var formPrintSettingsUserPrefs = XT.session.preferences.getValue("FormPrintSettings"),
-        formPrintSettingsCache = JSON.parse(XT.session.preferences.getValue("FormPrintSettings"));
+            that.setValue(attr, value);
+          });
+        }
 
-      that.setValue(formPrintSettingsCache);
-
-      /*_.each(formPrintSettingsPrefs, function (val, key) {
-        return model.setValue(key, val);
-      });*/
-      // First time settings
-      /*if (!this.get("FormPrintSettings")) {
-        var that = this;
-        _.each(XM.forms.models, function (form) {
-          return that.setValue(form.get("name"), form.getValue("defaultPrinter.code"));
-        });
-      }*/
+        /*_.each(formPrintSettingsPrefs, function (val, key) {
+          return model.setValue(key, val);
+        });*/
+        // First time settings
+        /*if (!this.get("FormPrintSettings")) {
+          var that = this;
+          _.each(XM.forms.models, function (form) {
+            return that.setValue(form.get("name"), form.getValue("defaultPrinter.code"));
+          });
+        }*/
+      }
     }
 
   });

@@ -559,19 +559,44 @@ strict: false*/
 
       _.each(forms, function (form) {
         that.$.formPrintSettingsGroup.createComponents([
-            {kind: "XV.PrinterPicker", attr: form.get("name") // XXXTODO - GET THESE TO POPULATE CORRECTLY UPON OPENING OF WORKSPACE
+            {kind: "XV.PrinterPicker", attr: form.get("name"), name: form.get("name"), onValueChange: "metaChanged" // XXXTODO - GET THESE TO POPULATE CORRECTLY UPON OPENING OF WORKSPACE
               //name: "routingsPanel", title: "_routings".loc(), addBefore: this.$.commentsBox, classes: "medium-panel"
             }
           ], {owner: that});
       });
     },
-    attributesChanged: function (model, options) {
+    metaChanged: function (inSender, inEvent) {
+      var model = this.getValue();
+      //model.set("toReceive", inSender.value);
+      model.metaChanged(model);
+    },
+    /**
+      Overload: Some special handling for start up.
+      */
+    attributesChanged: function () {
       this.inherited(arguments);
-      //if (this.getValue().getStatus() === XM.Model.READY_CLEAN ||
-      //  this.getValue().getStatus() === XM.Model.READY_NEW) {
-      
-      this.value.statusReadyClean();
-      //}
+      var model = this.getValue();
+
+      // Focus and select qty on start up.
+      if (!this._started && model &&
+        model.getStatus() === XM.Model.READY_CLEAN) {
+        //model.statusReadyClean();
+        //model.metaChanged(model);
+        console.log("attributesChanged");
+      }
+    },
+    /**
+      Overload: Some special handling for start up.
+      */
+    recordIdChanged: function () {
+      this.inherited(arguments);
+      var model = this.getValue();
+
+      // Focus and select qty on start up.
+      if (!this._started && model &&
+        model.getStatus() === XM.Model.READY_CLEAN) {
+        model.statusReadyClean();
+      }
     }
   });
 
