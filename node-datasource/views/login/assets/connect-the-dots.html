@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- Load the Paper.js library -->
+
+<!-- <script src="/node_modules/jquery/jquery.js"></script> -->
+<script src="../../../../node_modules/jquery/dist/jquery.js"></script>
+<script type="text/javascript" src="paper-full.min.js"></script>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<!-- Define inlined PaperScript associate it with myCanvas -->
+<script type="text/paperscript" canvas="myCanvas">
+	// Create a Paper.js Path to draw a line into it:
+	var path = new Path();
+	// Give the stroke a color
+	path.strokeColor = 'black';
+</script>
+</head>
+<body>
+  <div style="position:relative;width:800px;height:800px" class="container">
+	<canvas id="myCanvas" resize></canvas>
+    <div class="starter-template">
+      <div style="border: 1px solid black;position:absolute;left:100px;top:100px;opacity:1;background-color:white;">
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" id="billing"> <strong>Sales/Billing</strong>
+          </label>
+        </div>
+        <ul>
+          <li>Create sales orders</li>
+          <li>Invoice your customers</li>
+        </ul>
+      </div>
+    </div>
+    <div class="starter-template">
+      <div style="border: 1px solid black;position:absolute;left:400px;top:100px;opacity:1;background-color:white;">
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" id="ecommerce"> <strong>eCommerce</strong>
+          </label>
+        </div>
+        <ul>
+          <li>Provide a B2B storefront</li>
+          <li>Provide a B2C storefront</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+  <script type="text/javascript">
+    var modules = ["#billing", "#ecommerce"];
+    var drawDots = function() {
+      var checkedBoxes = modules.filter(function (module) {
+        return $(module).prop("checked");
+      });
+      checkedBoxes.map(function (firstBox) {
+        checkedBoxes.map(function (secondBox) {
+          if(firstBox === secondBox) {
+            return;
+          }
+          var firstCoords = $(firstBox).offset();
+          var secondCoords = $(secondBox).offset();
+          var myPath = new paper.Path();
+          myPath.strokeColor = 'black';
+          myPath.add(new paper.Point(firstCoords.left, firstCoords.top), new paper.Point(secondCoords.left, secondCoords.top));
+        });
+      });
+      /*
+      var n = $( "input:checked" ).map(function (index, checkedBox) {
+        console.log(arguments, checkedBox);
+      });
+      */
+    };
+
+    modules.map(function (module) {
+      $(module).click(drawDots);
+    });
+  </script>
+</body>
+</html>
