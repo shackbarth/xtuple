@@ -21,12 +21,25 @@
 	// Give the stroke a color
 	path.strokeColor = 'black';
 </script>
+
+<style>
+  .module-box {
+    border: 3px solid blue;
+    position:absolute;
+    opacity:1;
+    background-color:white;
+    padding: 10px;
+    border-radius: 5px;
+  }
+</style>
+
 </head>
 <body>
   <div style="position:relative;width:800px;height:800px" class="container">
+    <h1>Connect the dots. Grow Your World <sup>&#174;</sup></h1>
 	<canvas id="myCanvas" resize></canvas>
     <div class="starter-template">
-      <div style="border: 1px solid black;position:absolute;left:100px;top:100px;opacity:1;background-color:white;">
+      <div class="module-box" style="left:100px; top:100px;">
         <div class="checkbox">
           <label>
             <input type="checkbox" id="billing"> <strong>Sales/Billing</strong>
@@ -39,7 +52,7 @@
       </div>
     </div>
     <div class="starter-template">
-      <div style="border: 1px solid black;position:absolute;left:400px;top:100px;opacity:1;background-color:white;">
+      <div class="module-box" style="left:400px;top:100px;">
         <div class="checkbox">
           <label>
             <input type="checkbox" id="ecommerce"> <strong>eCommerce</strong>
@@ -51,26 +64,98 @@
         </ul>
       </div>
     </div>
+    <div class="starter-template">
+      <div class="module-box" style="left:10px;top:260px;">
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" id="bi"> <strong>BI</strong>
+          </label>
+        </div>
+        <ul>
+          <li>Review dashboards</li>
+          <li>Use analytics engine</li>
+        </ul>
+      </div>
+    </div>
+    <div class="starter-template">
+      <div class="module-box" style="left:250px;top:250px;">
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" id="accounting"> <strong>Accounting</strong>
+          </label>
+        </div>
+        <ul>
+          <li>Keep track of your debits and credits</li>
+          <li>Financial reporting</li>
+          <li>Reconcile your bank statements</li>
+        </ul>
+      </div>
+    </div>
+    <div class="starter-template">
+      <div class="module-box" style="left:50px;top:400px;">
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" id="crm"> <strong>CRM</strong>
+          </label>
+        </div>
+        <ul>
+          <li>Manage your leads</li>
+          <li>Keep track of incidents</li>
+          <li>Contact your customers and vendors</li>
+        </ul>
+      </div>
+    </div>
+    <div class="starter-template">
+      <div class="module-box" style="left:250px;top:550px;">
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" id="inventory"> <strong>Inventory</strong>
+          </label>
+        </div>
+        <ul>
+          <li>Ship and receive inventory</li>
+          <li>Use trace and location control</li>
+        </ul>
+      </div>
+    </div>
+    <div class="starter-template">
+      <div class="module-box" style="left:450px;top:400px;">
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" id="manufacturing"> <strong>Manufacturing</strong>
+          </label>
+        </div>
+        <ul>
+          <li>Create work orders</li>
+          <li>Post production and operations</li>
+        </ul>
+      </div>
+    </div>
+
+    <button style="position:absolute;left:550px;top:550px;">Start free trial</button>
 
   </div>
   <script type="text/javascript">
-    var modules = ["#billing", "#ecommerce"];
+    var modules = ["accounting", "bi", "billing", "crm", "ecommerce", "inventory", "manufacturing"];
     var drawDots = function() {
+      paper.project.activeLayer.removeChildren();
       var checkedBoxes = modules.filter(function (module) {
-        return $(module).prop("checked");
+        return $("#" + module).prop("checked");
       });
       checkedBoxes.map(function (firstBox) {
         checkedBoxes.map(function (secondBox) {
           if(firstBox === secondBox) {
             return;
           }
-          var firstCoords = $(firstBox).offset();
-          var secondCoords = $(secondBox).offset();
+          var firstCoords = $("#" + firstBox).offset();
+          var secondCoords = $("#" + secondBox).offset();
           var myPath = new paper.Path();
-          myPath.strokeColor = 'black';
+          myPath.strokeColor = 'orange';
+          myPath.strokeWidth = 5;
           myPath.add(new paper.Point(firstCoords.left, firstCoords.top), new paper.Point(secondCoords.left, secondCoords.top));
         });
       });
+      paper.view.draw();
       /*
       var n = $( "input:checked" ).map(function (index, checkedBox) {
         console.log(arguments, checkedBox);
@@ -79,7 +164,7 @@
     };
 
     modules.map(function (module) {
-      $(module).click(drawDots);
+      $("#" + module).click(drawDots);
     });
   </script>
 </body>
