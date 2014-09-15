@@ -40,7 +40,10 @@ white:true*/
         "Shipment": ""
       });
 
-      this.meta.on("change", this.metaChanged, this);
+      this.meta.on("change", this.metaChanged(this));
+      this.meta.on("all", function () {
+        console.log(arguments);
+      });
     },
 
     handlers: {

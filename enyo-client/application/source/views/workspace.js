@@ -567,7 +567,7 @@ strict: false*/
     },
     metaChanged: function (inSender, inEvent) {
       var model = this.getValue();
-      //model.set("toReceive", inSender.value);
+      model.set(inSender.attr, inSender.value);
       model.metaChanged(model);
     },
     /**
@@ -596,6 +596,7 @@ strict: false*/
       if (!this._started && model &&
         model.getStatus() === XM.Model.READY_CLEAN) {
         model.statusReadyClean();
+        this.attributesChanged();
       }
     }
   });
