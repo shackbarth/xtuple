@@ -154,7 +154,7 @@ install_packages() {
   sudo nvm alias xtuple $NODE_VERSION
 
   # use latest npm
-  npm install -fg npm@1.4.25
+  sudo npm install -fg npm@1.4.25
 	# npm no longer supports its self-signed certificates
 	log "telling npm to use known registrars..."
 	npm config set ca ""
