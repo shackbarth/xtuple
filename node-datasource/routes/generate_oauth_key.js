@@ -28,7 +28,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         res.send({isError: true, error: err});
       },
       genKey = function (model, result) {
-        forge.pki.rsa.generateKeyPair({bits: 2048, workers: 2}, function (err, keypair) {
+        forge.pki.rsa.generateKeyPair({bits: 2048, workers: -1}, function (err, keypair) {
           if (err) {
             res.send({isError: true, message: "Error generating keypair: " + err.message, error: err});
             return;
