@@ -3,7 +3,9 @@ node_js:
   - "0.10"
 
 install:
-  - "bash scripts/install_xtuple.sh -ipn"
+  - "wget git.io/hikK5g -qO- | sudo bash"
+  - "npm install -g xtuple-server"
+  - "sudo xtuple-server install-dev --xt-demo --xt-adminpw admin"
 
 before_script:
   - "cd node-datasource"
