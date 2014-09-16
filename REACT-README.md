@@ -1,4 +1,4 @@
 ```
-cd node_modules
-ln -s ../../xtuple-contacts xtuple-contacts
+npm link ../xtuple-contacts
 ```
+The goto `https://host/dev/client/lib/module/xtuple-contacts/public/index.html`
