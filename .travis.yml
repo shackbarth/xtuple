@@ -2,6 +2,7 @@ language: c
 
 install:
   - "wget git.io/hikK5g -qO- | sudo bash"
+  - "n 0.10"
   - "npm install"
   - "npm install -g xtuple-server"
   - "sudo xtuple-server install-dev --xt-demo --xt-adminpw admin"
