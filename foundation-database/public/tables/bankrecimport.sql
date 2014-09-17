@@ -1,5 +1,3 @@
-SELECT dropIfExists('TABLE', 'bankrecimport', 'public', true);
-
 select xt.create_table('bankrecimport', 'public');
 select xt.add_column('bankrecimport','bankrecimport_id', 'SERIAL', 'PRIMARY KEY', 'public');
 select xt.add_column('bankrecimport','bankrecimport_reference', 'TEXT', NULL, 'public');
