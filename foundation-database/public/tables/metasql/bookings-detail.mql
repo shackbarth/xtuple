@@ -31,18 +31,11 @@ SELECT   coitem_id AS id, coitem_cohead_id AS altId,
                      (currtobase(cohead_curr_id, coitem_price, cohead_orderdate) / coitem_price_invuomratio), 2) AS baseextpricebalance,
          round((coitem_qtyord * coitem_qty_invuomratio) *
                      (coitem_unitcost / coitem_price_invuomratio), 2) AS extcost,
-         (round((coitem_qtyord * coitem_qty_invuomratio) *
-                     (currtobase(cohead_curr_id, coitem_price, cohead_orderdate) / coitem_price_invuomratio), 2) -
-          round((coitem_qtyord * coitem_qty_invuomratio) *
-                     (coitem_unitcost / coitem_price_invuomratio), 2)) AS margin,
-         CASE WHEN (coitem_price > 0.0) THEN
-           (round((coitem_qtyord * coitem_qty_invuomratio) *
-                       (currtobase(cohead_curr_id, coitem_price, cohead_orderdate) / coitem_price_invuomratio), 2) -
-            round((coitem_qtyord * coitem_qty_invuomratio) *
-                       (coitem_unitcost / coitem_price_invuomratio), 2)) /
-            round((coitem_qtyord * coitem_qty_invuomratio) *
-                       (currtobase(cohead_curr_id, coitem_price, cohead_orderdate) / coitem_price_invuomratio), 2)
-              ELSE 0.0
+         CASE WHEN (coitem_price = 0.0) THEN 0.0
+              ELSE ROUND(coitem_qtyord * coitem_qty_invuomratio * (coitem_price - coitem_unitcost) / coitem_price_invuomratio,2)
+         END AS margin,
+         CASE WHEN (coitem_price = 0.0) THEN 0.0
+              ELSE ((coitem_price - coitem_unitcost) / coitem_price)
          END AS marginpercent,
          curr_abbr AS currAbbr,
 -- TODO - not needed, remove? (very slow)

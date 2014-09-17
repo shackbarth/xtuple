@@ -21,6 +21,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     function (req, res, next) {
       var pathName = "/app";
       if (req && req.session && !req.session.oauth2 && req.session.passport && req.session.passport.user && req.session.passport.user.organization) {
+        if (req.body.extensions) {
+          pathName = pathName + "?extensions=" + req.body.extensions;
+        }
         if (req.body.hash && req.body.hash.charAt(0) === "#") {
           pathName = pathName + req.body.hash;
         }

@@ -89,7 +89,8 @@ var  async = require('async'),
               baseName.indexOf('distribution') >= 0,
             registerExtension: isExtension,
             runJsInit: !isFoundation && !isLibOrm,
-            wipeViews: isApplicationCore && spec.wipeViews,
+            wipeViews: isFoundation && spec.wipeViews,
+            wipeOrms: isApplicationCore && spec.wipeViews,
             extensionLocation: isCoreExtension ? "/core-extensions" :
               isPublicExtension ? "/xtuple-extensions" :
               isPrivateExtension ? "/private-extensions" :
