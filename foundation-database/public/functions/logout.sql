@@ -5,7 +5,7 @@ CREATE OR REPLACE FUNCTION logout() RETURNS integer AS $$
 BEGIN
   IF (compareversion('9.2.0') <= 0)
   THEN
-    PERFORM pg_try_advisory_unlock(datid::integer, pid)
+    PERFORM pg_advisory_unlock(datid::integer, pid)
      FROM pg_stat_activity
     WHERE(pid = pg_backend_pid());
   ELSE
