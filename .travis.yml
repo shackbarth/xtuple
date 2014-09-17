@@ -15,7 +15,3 @@ script:
   - "npm run-script test-datasource"
   - "npm run-script test"
   - "npm run-script jshint"
-
-  # test an upgrade from 4.4.0
-  - "wget http://sourceforge.net/projects/postbooks/files/03%20PostBooks-databases/4.4.0/postbooks_demo-4.4.0.backup"
-  - "./scripts/build_app.js -d upgrade_test -i -b ./postbooks_demo-4.4.0.backup"
