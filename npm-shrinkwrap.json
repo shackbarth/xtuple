@@ -2021,11 +2021,6 @@
       "from": "underscore.string@~2.3.3",
       "resolved": "https://registry.npmjs.org/underscore.string/-/underscore.string-2.3.3.tgz"
     },
-    "ursa": {
-      "version": "0.8.0",
-      "from": "ursa@0.8.x",
-      "resolved": "https://registry.npmjs.org/ursa/-/ursa-0.8.0.tgz"
-    },
     "winston": {
       "version": "0.7.3",
       "from": "winston@0.7.x",
