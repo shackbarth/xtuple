@@ -13,7 +13,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     async = require("async"),
     fs = require("fs"),
     path = require("path"),
-    ipp = require("ipp"),
+    child_process = require("child_process"),
     Report = require('fluentreports').Report,
     queryForData = require("./export").queryForData;
 
@@ -307,6 +307,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       Silent-print to a printer registered in the node-datasource.
      */
     var responsePrint = function (res, data, done) {
+      /*
       res.send({message: "res:" + res});
       res.send({message: "data:" + data});
       console.log("res:" + res);
@@ -321,17 +322,23 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           },
           data: data
         };
+      */
 
-      printer.execute("Print-Job", msg, function (error, result) {
-        if (error) {
-          X.log("Print error", error);
+      var printer = X.options.datasource.printer; //for now defined in config.js conincides with name of printer in CUPS interface
+      var print = 'lp -d ' + printer + ' ' + reportPath;
+
+      child_process.exec(print, function (error, stdout, stderr) {
+        if (error !== null) {
+          console.log('exec error: ' + error);
           res.send({isError: true, message: "Error printing"});
           done();
-        } else {
+        }
+        else {
           res.send({message: "Print Success"});
           done();
         }
       });
+
     };
 
     // Convenience hash to avoid if-else
