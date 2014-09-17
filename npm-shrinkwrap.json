@@ -2138,9 +2138,8 @@
       }
     },
     "xtuple-linguist": {
-      "version": "0.1.0",
-      "from": "xtuple-linguist@0.1.x",
-      "resolved": "https://registry.npmjs.org/xtuple-linguist/-/xtuple-linguist-0.1.0.tgz"
+      "version": "0.1.1",
+      "from": "xtuple-linguist@0.1.x"
     },
     "xtuple-query": {
       "version": "1.0.2",

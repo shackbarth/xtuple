@@ -103,6 +103,15 @@ var async = require("async"),
       },
       fetchSuccess = function (model, result) {
         var sendExtensions = function (res, extensions) {
+          var filteredExtensions;
+          if (req.query.extensions) {
+            // the user is requesting to only see a certain set of extensions
+            filteredExtensions = JSON.parse(req.query.extensions);
+            extensions = extensions.filter(function (ext) {
+              return _.contains(filteredExtensions, ext.name);
+            });
+          }
+
           extensions.sort(function (ext1, ext2) {
             if (ext1.loadOrder !== ext2.loadOrder) {
               return ext1.loadOrder - ext2.loadOrder;
