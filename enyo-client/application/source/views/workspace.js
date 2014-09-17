@@ -544,65 +544,48 @@ strict: false*/
         ]}
       ]}
     ],
+    /**
+      On create, cycle through the XM.forms.models cache and create the enyo (PrinterPicker)
+      components.
+      */
     create: function () {
       this.inherited(arguments);
-      var forms = XM.forms.models, //JSON.parse(XT.session.preferences.getValue("FormPrintSettings")), //XM.forms.models,
+      var forms = XM.forms.models,
         that = this;
-
-      /*_.each(forms, function (val, key) {
-        that.$.formPrintSettingsGroup.createComponents([
-            {kind: "XV.PrinterPicker", attr: key//, name: val, value: val // XXXTODO - GET THESE TO POPULATE CORRECTLY UPON OPENING OF WORKSPACE
-              //name: "routingsPanel", title: "_routings".loc(), addBefore: this.$.commentsBox, classes: "medium-panel"
-            }
-          ], {owner: that});
-      });*/
 
       _.each(forms, function (form) {
         that.$.formPrintSettingsGroup.createComponents([
-            {kind: "XV.PrinterPicker", attr: form.get("name"), name: form.get("name"), onValueChange: "metaChanged" // XXXTODO - GET THESE TO POPULATE CORRECTLY UPON OPENING OF WORKSPACE
-              //name: "routingsPanel", title: "_routings".loc(), addBefore: this.$.commentsBox, classes: "medium-panel"
-            }
+            {kind: "XV.PrinterPicker", attr: form.get("name"), name: form.get("name"),
+              onValueChange: "metaChanged"}
           ], {owner: that});
       });
     },
+    /** 
+      PrintPicker value changed, call model's metaChanged for some special handling.
+      */
     metaChanged: function (inSender, inEvent) {
       var model = this.getValue();
       model.set(inSender.attr, inSender.value);
-      model.metaChanged(model);
+      model.metaChanged();
     },
     /**
-      Overload: Some special handling for start up.
-      */
-    attributesChanged: function () {
-      this.inherited(arguments);
-      var model = this.getValue();
-
-      // Focus and select qty on start up.
-      if (!this._started && model &&
-        model.getStatus() === XM.Model.READY_CLEAN) {
-        //model.statusReadyClean();
-        //model.metaChanged(model);
-        console.log("attributesChanged");
-      }
-    },
-    /**
-      Overload: Some special handling for start up.
+      Overload: Some special handling for start up. Go and set PrinterPicker value's based on
+      XM.forms cache and/or Current User Form Print Settings.
       */
     recordIdChanged: function () {
       this.inherited(arguments);
       var model = this.getValue();
 
-      // Focus and select qty on start up.
       if (!this._started && model &&
         model.getStatus() === XM.Model.READY_CLEAN) {
         model.statusReadyClean();
+        // Repaint workspace
         this.attributesChanged();
       }
     }
   });
 
   XV.registerModelWorkspace("XM.UserPreference", "XV.UserPreferenceWorkspace");
-  XV.registerModelWorkspace("XM.forms", "XV.UserPreferenceWorkspace");
 
   // ..........................................................
   // CONTACT

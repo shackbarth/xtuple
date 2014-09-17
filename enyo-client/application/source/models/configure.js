@@ -23,48 +23,44 @@ white:true*/
 
     dispatchCommitFunction: 'commitPreferences',
 
-    // Components added in enyo using XM.forms. The same attributes are here in meta. 
-    // At READY_CLEAN, setValue to set meta and enyo components according to user preference form
-    // print settings if they exist (have been set previously), otherwise, set them according to 
-    // the values in XM.forms.
+    /** Components added in enyo using XM.forms. The same attributes are here in meta. 
+        At READY_CLEAN, setValue to set meta and enyo components according to user preference form
+        print settings if they exist (have been set previously), otherwise, set them according to 
+        the values in XM.forms.
+      */
 
+    // XXX - These should not be hard coded. Since XM.forms cache has not been created yet can we
+    // do a call to the server to return this list of Forms?
     initialize: function (attributes, options) {
       var that = this;
       XM.Document.prototype.initialize.apply(this, arguments);
       this.meta = new Backbone.Model({
-        "SalesOrder": "",
-        "Invoice": "",
-        "PurchaseOrder": "",
-        "Location": "",
         "EnterReceipt": "",
+        "Invoice": "",
+        "Location": "",
+        "PurchaseOrder": "",
+        "SalesOrder": "",
         "Shipment": ""
       });
 
-      this.meta.on("change", this.metaChanged(this));
-      this.meta.on("all", function () {
-        console.log(arguments);
-      });
+      this.meta.on("change", this.metaChanged());
     },
 
     handlers: {
       "status:READY_CLEAN": "statusReadyClean"
     },
-
-    /*bindEvents: function () {
-      XM.Model.prototype.bindEvents.apply(this, arguments);
-      this.on('status:READY_CLEAN', this.statusReadyClean);
-      this.on("change:" + this.idAttribute, "statusReadyClean");
-    },*/
-
-    metaChanged: function (model, changed, options) {
-      // XXX - Inefficient here. Only update the meta attribute changed.
-      //this.set("FormPrintSettings", model.changedAttributes());
+    /**
+      Set this model's FormPrintSettings attribute (User Form Print Settings preference).
+      */
+    metaChanged: function () {
       this.set("FormPrintSettings", JSON.stringify(this.meta.attributes));
     },
-
+    /**
+      Set the meta components (Printer) according to User Form Print Settings saved preferences if
+      exist, else use the defaults from XM.forms. 
+      */
     statusReadyClean: function () {
       if (this.getStatus() === XM.Model.READY_CLEAN) {
-        console.log("statusReadyClean!!!!");
         var that = this,
           userPrefFormPrintSettings = XT.session.preferences.getValue("FormPrintSettings") ? JSON.parse(XT.session.preferences.getValue("FormPrintSettings")) : null,
           formsCache = XM.forms.models;
@@ -81,17 +77,6 @@ white:true*/
             that.setValue(attr, value);
           });
         }
-
-        /*_.each(formPrintSettingsPrefs, function (val, key) {
-          return model.setValue(key, val);
-        });*/
-        // First time settings
-        /*if (!this.get("FormPrintSettings")) {
-          var that = this;
-          _.each(XM.forms.models, function (form) {
-            return that.setValue(form.get("name"), form.getValue("defaultPrinter.code"));
-          });
-        }*/
       }
     }
 

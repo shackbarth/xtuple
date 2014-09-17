@@ -25,7 +25,7 @@ white:true*/
 
     @extends XM.Model
   */
-  XM.Printer = XM.Info.extend({
+  XM.Printer = XM.Model.extend({
     /** @scope XM.Printer.prototype */
 
     recordType: 'XM.Printer',

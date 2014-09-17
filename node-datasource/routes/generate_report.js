@@ -307,6 +307,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       Silent-print to a printer registered in the node-datasource.
      */
     var responsePrint = function (res, data, done) {
+      res.send({message: "res:" + res});
+      res.send({message: "data:" + data});
+      console.log("res:" + res);
+      console.log("data:" + data);
+      // XXX - get this to be dynamic off of user preferences/defaults.
+      console.log(X.options.datasource.printer);
       var printer = ipp.Printer(X.options.datasource.printer),
         msg = {
           "operation-attributes-tag": {
