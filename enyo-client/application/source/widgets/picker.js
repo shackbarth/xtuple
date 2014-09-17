@@ -469,6 +469,17 @@ regexp:true, undef:true, trailing:true, white:true, strict:false */
   });
 
   // ..........................................................
+  // PRINTER
+  //
+
+  enyo.kind({
+    name: "XV.PrinterPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.printers",
+    nameAttribute: "code"
+  });
+
+  // ..........................................................
   // PRIORITY
   //
 

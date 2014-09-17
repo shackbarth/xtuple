@@ -535,10 +535,57 @@ strict: false*/
           {kind: "XV.ScrollableGroupbox", name: "mainGroup",
             classes: "in-panel", components: [
           ]}
+        ]},
+        {kind: "XV.Groupbox", name: "formPrintSettings", components: [
+          {kind: "onyx.GroupboxHeader", content: "_formPrintSettings".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "formPrintSettingsGroup",
+            classes: "in-panel", components: [
+          ]}
         ]}
       ]}
-    ]
+    ],
+    /**
+      On create, cycle through the XM.forms.models cache and create the enyo (PrinterPicker)
+      components.
+      */
+    create: function () {
+      this.inherited(arguments);
+      var forms = XM.forms.models,
+        that = this;
+
+      _.each(forms, function (form) {
+        that.$.formPrintSettingsGroup.createComponents([
+            {kind: "XV.PrinterPicker", attr: form.get("name"), name: form.get("name"),
+              onValueChange: "metaChanged"}
+          ], {owner: that});
+      });
+    },
+    /** 
+      PrintPicker value changed, call model's metaChanged for some special handling.
+      */
+    metaChanged: function (inSender, inEvent) {
+      var model = this.getValue();
+      model.set(inSender.attr, inSender.value);
+      model.metaChanged();
+    },
+    /**
+      Overload: Some special handling for start up. Go and set PrinterPicker value's based on
+      XM.forms cache and/or Current User Form Print Settings.
+      */
+    recordIdChanged: function () {
+      this.inherited(arguments);
+      var model = this.getValue();
+
+      if (!this._started && model &&
+        model.getStatus() === XM.Model.READY_CLEAN) {
+        model.statusReadyClean();
+        // Repaint workspace
+        this.attributesChanged();
+      }
+    }
   });
+
+  XV.registerModelWorkspace("XM.UserPreference", "XV.UserPreferenceWorkspace");
 
   // ..........................................................
   // CONTACT
@@ -1083,6 +1130,33 @@ strict: false*/
   });
 
   XV.registerModelWorkspace("XM.FileRelation", "XV.FileWorkspace");
+
+  // ..........................................................
+  // FORMS
+  //
+
+  enyo.kind({
+    name: "XV.FormWorkspace",
+    kind: "XV.Workspace",
+    title: "_forms".loc(),
+    model: "XM.Form",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.InputWidget", attr: "description"},
+            {kind: "XV.PrinterPicker", attr: "defaultPrinter"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.Form", "XV.FormWorkspace");
 
   // ..........................................................
   // FREIGHT CLASS

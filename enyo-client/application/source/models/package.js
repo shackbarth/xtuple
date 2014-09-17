@@ -18,6 +18,7 @@ enyo.depends(
   "item_site.js",
   "ledger_account.js",
   "opportunity.js",
+  "printer.js",
   "priority.js",
   "project.js",
   "prospect.js",

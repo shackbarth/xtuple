@@ -473,6 +473,31 @@ trailing:true, white:true, strict:false*/
   });
 
   // ..........................................................
+  // FORMS
+  //
+
+  enyo.kind({
+    name: "XV.FormPrintingListRelations",
+    kind: "XV.ListRelations",
+    parentKey: "FormPrinting",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableRows", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "name"},
+              {kind: "XV.ListAttr", attr: "description", fit: true, classes: "right"}
+            ]}/*,
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "description"}
+            ]}*/
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  // ..........................................................
   // INCIDENT
   //
 

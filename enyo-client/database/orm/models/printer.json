@@ -1,0 +1,143 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "Form",
+    "table": "xt.form",
+    "isRest": true,
+    "idSequenceName": "form_form_id_seq",
+    "lockable": true,
+    "comment": "Mobile Form Setup Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "form_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "form_name",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "form_description",
+          "required": true
+        }
+      },
+      {
+        "name": "key",
+        "attr": {
+          "type": "String",
+          "column": "form_key"
+        }
+      },
+      {
+        "name": "defaultPrinter",
+        "toOne": {
+          "type": "Printer",
+          "column": "form_printer_id"
+        }
+      }
+    ],
+    "isSystem": true,
+    "sourceCode": "Form"
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "Printer",
+    "table": "xt.printer",
+    "isRest": true,
+    "idSequenceName": "printer_printer_id_seq",
+    "lockable": true,
+    "comment": "Printer Setup Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "printer_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "code",
+        "attr": {
+          "type": "String",
+          "column": "printer_code",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "printer_description",
+          "required": true
+        }
+      },
+      {
+        "name": "isDefault",
+        "attr": {
+          "type": "Boolean",
+          "column": "printer_default"
+        }
+      },
+      {
+        "name": "charset",
+        "attr": {
+          "type": "String",
+          "column": "printer_charset"
+        }
+      },
+      {
+        "name": "language",
+        "attr": {
+          "type": "String",
+          "column": "printer_language"
+        }
+      },
+      {
+        "name": "uri",
+        "attr": {
+          "type": "String",
+          "column": "printer_uri"
+        }
+      },
+      {
+        "name": "version",
+        "attr": {
+          "type": "Number",
+          "column": "printer_version"
+        }
+      }
+    ],
+    "isSystem": true,
+    "sourceCode": "Printer"
+  }
+]
