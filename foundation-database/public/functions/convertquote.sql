@@ -252,8 +252,10 @@ BEGIN
     IF (_r.quitem_createorder) THEN
 
       IF (_r.item_type IN ('M')) THEN
-        SELECT createWo( CAST(_r.quhead_number AS INTEGER), supply.itemsite_id, 1, (_r.quitem_qtyord * _r.quitem_qty_invuomratio),
-                         _r.itemsite_leadtime, _r.quitem_scheddate, _r.quitem_memo, 'S', _soitemid, _r.quhead_prj_id ) INTO _orderId
+        SELECT createWo( CAST(_soNum AS INTEGER), supply.itemsite_id, 1,
+                         (_r.quitem_qtyord * _r.quitem_qty_invuomratio),
+                         _r.itemsite_leadtime, _r.quitem_scheddate, _r.quitem_memo,
+                         'S', _soitemid, _r.quhead_prj_id ) INTO _orderId
         FROM itemsite sold, itemsite supply
         WHERE ((sold.itemsite_item_id=supply.itemsite_item_id)
          AND (supply.itemsite_warehous_id=_r.quitem_order_warehous_id)
@@ -268,7 +270,8 @@ BEGIN
            AND  (charass_target_id=_r.quitem_id));
 
       ELSIF ( (_r.item_type IN ('P', 'O')) AND (_r.itemsite_createsopr) ) THEN
-        SELECT createPr( CAST(_r.quhead_number AS INTEGER), _r.quitem_itemsite_id, (_r.quitem_qtyord * _r.quitem_qty_invuomratio),
+        SELECT createPr( CAST(_soNum AS INTEGER), _r.quitem_itemsite_id,
+                         (_r.quitem_qtyord * _r.quitem_qty_invuomratio),
                          _r.quitem_scheddate, '', 'S', _soitemid ) INTO _orderId;
         _orderType := 'R';
         UPDATE pr SET pr_prj_id=_r.quhead_prj_id WHERE pr_id=_orderId;
