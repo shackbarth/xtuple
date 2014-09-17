@@ -2431,13 +2431,15 @@ select xt.install_js('XT','Data','xtuple', $$
                  "from pg_stat_activity " +
                  "where datname=current_database() " +
                  " and usename=$1 " +
-                 " and procpid=$2;".replace("{pidcol}", pidcol),
+                 " and {pidcol}=$2;",
         query,
         selectSql = "select * " +
                     "from xt.lock " +
                     "where lock_table_oid = $1 " +
                     " and lock_record_id = $2;",
         username = XT.username;
+
+      pidSql = pidSql.replace(/{pidcol}/g, pidcol);
 
       /* If passed a table name, look up the oid. */
       oid = typeof table === "string" ? this.getTableOid(table) : table;
