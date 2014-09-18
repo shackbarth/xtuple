@@ -191,9 +191,8 @@ var  async = require('async'),
           return memo + script;
         }, "");
 
-        // Without this, when we delegate to exec psql the err var will not be set even
-        // on the case of error.
-        allSql = "\\set ON_ERROR_STOP TRUE;\n" + allSql;
+        // Without this, psql runs all input and returns success even if errors occurred
+        allSql = "\\set ON_ERROR_STOP TRUE\n" + allSql;
 
         winston.info("Applying build to database " + spec.database);
         credsClone.database = spec.database;
