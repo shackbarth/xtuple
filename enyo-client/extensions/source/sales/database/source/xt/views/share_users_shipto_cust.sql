@@ -5,7 +5,7 @@
  * a shared access that has been specifically granted.
  *
  * This view can be used to determine which users have personal privilege
- * access to a Contact that is on a Ship To based on what CRM Account the
+ * access to a Customer that a Ship To is on based on what CRM Account the
  * Ship To belongs to.
  */
 
