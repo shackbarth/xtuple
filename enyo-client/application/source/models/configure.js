@@ -72,7 +72,7 @@ white:true*/
         } else if (formsCache) {
           _.each(formsCache, function (val, key) {
             var attr = val.getValue("name"),
-              value = val.getValue("defaultPrinter.code");
+              value = val.getValue("defaultPrinter.name");
 
             that.setValue(attr, value);
           });

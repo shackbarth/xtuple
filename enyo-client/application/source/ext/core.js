@@ -194,6 +194,34 @@ white:true*/
     },
 
     /**
+      Returns the (user pref) default printer if profiled, otherwise returns
+      the system default printer.
+    */
+    defaultPrinter: function (modelName) {
+      var formPrintPref = XT.session.preferences.get("FormPrintSettings"),
+        foundSite;
+
+      formPrintPref = formPrintPref ? JSON.parse(formPrintPref) : null;
+
+      _.find(formPrintPref)
+
+      if (preferredSite) {
+        foundSite = _.find(XM.siteRelations.models, function (site) {
+          return site.get("code") === preferredSite;
+        });
+      }
+
+      if (!foundSite) {
+        // either there is no preference or the preference is miswired somehow
+        foundSite = _.find(XM.siteRelations.models, function (site) {
+          return site.get("isActive");
+        });
+      }
+
+      return foundSite;
+    },
+
+    /**
       Returns the default site if profiled, otherwise returns
       the first alpha active selling site
     */

@@ -45,7 +45,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       workingDir = path.join(__dirname, "../temp", databaseName),
       reportPath = path.join(workingDir, reportName),
       imageFilenameMap = {},
-      translations;
+      translations,
+      printer = req.query.printer;
 
     //
     // HELPER FUNCTIONS FOR DATA TRANSFORMATION
@@ -324,12 +325,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         };
       */
 
-      var printer = X.options.datasource.printer; //for now defined in config.js conincides with name of printer in CUPS interface
+      //var printer = X.options.datasource.printer; //for now defined in config.js conincides with name of printer in CUPS interface
       var print = 'lp -d ' + printer + ' ' + reportPath;
 
       child_process.exec(print, function (error, stdout, stderr) {
         if (error !== null) {
-          console.log('exec error: ' + error);
           res.send({isError: true, message: "Error printing"});
           done();
         }

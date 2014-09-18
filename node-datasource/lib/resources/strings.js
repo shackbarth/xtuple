@@ -131,6 +131,7 @@ function getStrings () {
     "_filter": "Filter",
     "_firstName": "First Name",
     "_for": "For",
+    "_forms": "Forms",
     "_fractional": "Fractional",
     "_frequency": "Frequency",
     "_futureColor": "Future Color",

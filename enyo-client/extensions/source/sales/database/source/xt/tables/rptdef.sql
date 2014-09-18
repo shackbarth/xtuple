@@ -1,4 +1,4 @@
-select xt.add_report_definition('XM.SalesOrder', 0, $${
+select xt.add_report_definition('PickList', 'XM.SalesOrder', 0, $${
   "settings": {
     "detailAttribute": "lineItems",
     "defaultFontSize": 12,

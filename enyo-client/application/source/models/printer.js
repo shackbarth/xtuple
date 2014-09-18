@@ -16,7 +16,20 @@ white:true*/
 
     recordType: 'XM.Form',
 
-    numberKey: 'name'
+    numberKey: 'name',
+
+    // Add meta for Report and call function to return object.
+    initialize: function (attributes, options) {
+      var that = this,
+        reports;
+      XM.Model.prototype.initialize.apply(this, arguments);
+
+      // Call function on server to get object. reports = 
+
+      this.meta = new Backbone.Model(reports);
+
+      this.meta.on("change", this.metaChanged());
+    },
 
   });
 

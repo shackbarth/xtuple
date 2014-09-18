@@ -10,10 +10,10 @@
     "comment": "Mobile Form Setup Map",
     "privileges": {
       "all": {
-        "create": true,
+        "create": "MaintainForms",
         "read": true,
-        "update": true,
-        "delete": true
+        "update": "MaintainForms",
+        "delete": "MaintainForms"
       }
     },
     "properties": [
@@ -37,7 +37,14 @@
         "name": "description",
         "attr": {
           "type": "String",
-          "column": "form_description",
+          "column": "form_description"
+        }
+      },
+      {
+        "name": "modelName",
+        "attr": {
+          "type": "String",
+          "column": "form_model_name",
           "required": true
         }
       },
@@ -52,7 +59,8 @@
         "name": "defaultPrinter",
         "toOne": {
           "type": "Printer",
-          "column": "form_printer_id"
+          "column": "form_printer_id",
+          "inverse": "id"
         }
       }
     ],
@@ -70,10 +78,10 @@
     "comment": "Printer Setup Map",
     "privileges": {
       "all": {
-        "create": true,
+        "create": "MaintainPrinters",
         "read": true,
-        "update": true,
-        "delete": true
+        "update": "MaintainPrinters",
+        "delete": "MaintainPrinters"
       }
     },
     "properties": [
@@ -86,10 +94,10 @@
         }
       },
       {
-        "name": "code",
+        "name": "name",
         "attr": {
           "type": "String",
-          "column": "printer_code",
+          "column": "printer_name",
           "isNaturalKey": true
         }
       },

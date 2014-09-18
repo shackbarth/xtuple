@@ -134,7 +134,6 @@
     "xt/tables/salesemlprofile.sql",
     "xt/tables/saletypeext.sql",
     "xt/tables/filter.sql",
-    "xt/tables/form.sql",
     "xt/tables/localeext.sql",
     "xt/tables/incdtemlprofile.sql",
     "xt/tables/incdtcatemlprofile.sql",
@@ -146,10 +145,13 @@
     "xt/tables/pkgreport.sql",
     "xt/tables/pkgscript.sql",
     "xt/tables/pkguiform.sql",
+
+    "xt/tables/form.sql",
     "xt/tables/printer.sql",
+    "xt/tables/rptdef.sql",
+
     "xt/tables/prjext.sql",
     "xt/tables/prjtypewf.sql",
-    "xt/tables/rptdef.sql",
     "xt/tables/objtype.sql",
     "xt/tables/ordtype.sql",
     "xt/tables/userpref.sql",
