@@ -1,8 +1,8 @@
 -- Group: billingSelections
 -- Name: detail
 -- Notes: used by dspBillingSelections
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
--- See www.xtuple.com/CPAL for the full text of the software license.
+--        Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+--        See www.xtuple.com/CPAL for the full text of the software license.
 
 SELECT cobmisc_id, cohead_id,
        cohead_number, cust_number, cust_name,
@@ -21,7 +21,7 @@ FROM cobmisc, cohead, custinfo, coitem, cobill
 WHERE ((cobmisc_cohead_id=cohead_id)
    AND (cohead_cust_id=cust_id)
    AND (coitem_cohead_id=cohead_id)
-   AND (cobill_coitem_id=coitem_id)
+   AND (cobill_coitem_id=coitem_id) AND (COALESCE(cobill_invcnum,0) = 0)
    AND (NOT cobmisc_posted))
 GROUP BY cobmisc_id, cohead_id, cohead_number, cust_number,
          cust_name, cobmisc_misc, cobmisc_freight, cobmisc_tax, cobmisc_payment
