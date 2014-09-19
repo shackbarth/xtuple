@@ -7,6 +7,19 @@ XT = typeof XT !== 'undefined' ? XT : {};
 
 (function () {
 
+  window.onkeypress = function (e)  {
+    console.log("keypress event detected!", arguments);
+    var text = e.keyCode + "_" + e.which;
+    var field = XT.app.$.postbooks.$.navigator.$.loginInfo;
+    alert(field.getContent() + text);
+    field.setContent(field.getContent() + text);
+  };
+
+  window.compositionend = function (e) {
+    console.log("ce", e);
+    alert("ce");
+  };
+
   XT.getBaseUrl = function () {
     return location.protocol + "//" + location.hostname + (location.port && ":" + location.port);
   };
