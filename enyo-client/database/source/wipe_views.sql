@@ -4,7 +4,7 @@ do $$
 declare
   sqlstring text;
 begin
-  select string_agg('drop view ' || t.oid::regclass || ';', ' ') into sqlstring
+  select string_agg('drop view if exists ' || t.oid::regclass || ' cascade;', ' ') into sqlstring
     from pg_class t
     join pg_namespace n on n.oid = relnamespace
    where relkind = 'v'
