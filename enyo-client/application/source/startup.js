@@ -122,7 +122,6 @@ white:true*/
   XT.cacheCollection("XM.countries", "XM.CountryCollection", "name");
   XT.cacheCollection("XM.currencyRates", "XM.CurrencyRateCollection");
   XT.cacheCollection("XM.departments", "XM.DepartmentCollection", "number");
-  XT.cacheCollection("XM.forms", "XM.FormCollection", "name");
   XT.cacheCollection("XM.honorifics", "XM.HonorificCollection", "code");
   XT.cacheCollection("XM.itemGroups", "XM.ItemGroupRelationCollection", "name");
   XT.cacheCollection("XM.languages", "XM.LanguageCollection");
@@ -146,6 +145,19 @@ white:true*/
   XT.cacheCollection("XM.filters", "XM.FilterCollection");
   XT.cacheCollection("XM.reasonCodes", "XM.ReasonCodeCollection");
   XT.cacheCollection("XM.vendorTypes", "XM.VendorTypeCollection");
+
+  /** 
+    Printable 'objects' for enyo UserPreferenceWorkspace to build PrintPicker components in create.
+    UserPreference backbone model also uses this to set meta attributes.
+  */
+  XM.printableObjects = {
+    "SalesOrder": "Browser",
+    "Invoice": "Browser",
+    "PurchaseOrder": "Browser",
+    "Location": "Browser",
+    "EnterReceipt": "Browser",
+    "Shipment": "Browser"
+  };
 
   /**
     These ones are a little custom and need to be done longhand.

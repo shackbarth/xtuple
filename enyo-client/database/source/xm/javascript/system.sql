@@ -79,12 +79,6 @@ select xt.install_js('XM','System','xtuple', $$
     return data.commitMetrics(metrics);
   }
 
-  XM.System.reports = function () {
-    var sql;
-
-    sql = 
-  }
-
 }());
 
 $$ );

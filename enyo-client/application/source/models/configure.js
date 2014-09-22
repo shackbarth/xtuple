@@ -24,59 +24,51 @@ white:true*/
     dispatchCommitFunction: 'commitPreferences',
 
     /** Components added in enyo using XM.forms. The same attributes are here in meta. 
-        At READY_CLEAN, setValue to set meta and enyo components according to user preference form
-        print settings if they exist (have been set previously), otherwise, set them according to 
-        the values in XM.forms.
-      */
-
-    // XXX - These should not be hard coded. Since XM.forms cache has not been created yet can we
-    // do a call to the server to return this list of Forms?
+        At READY_CLEAN, set meta and enyo components according to user preference form
+        print settings if they exist (have been set previously).
+    */
     initialize: function (attributes, options) {
-      var that = this;
-      XM.Document.prototype.initialize.apply(this, arguments);
-      this.meta = new Backbone.Model({
-        "EnterReceipt": "",
-        "Invoice": "",
-        "Location": "",
-        "PurchaseOrder": "",
-        "SalesOrder": "",
-        "Shipment": ""
-      });
-
+      XM.Model.prototype.initialize.apply(this, arguments);
+      
+      this.meta = new Backbone.Model();
+      this.meta.set(XM.printableObjects);
       this.meta.on("change", this.metaChanged());
     },
 
     handlers: {
-      "status:READY_CLEAN": "statusReadyClean"
+      //"status:READY_CLEAN": "statusReadyClean"
     },
     /**
       Set this model's FormPrintSettings attribute (User Form Print Settings preference).
-      */
+    */
     metaChanged: function () {
-      this.set("FormPrintSettings", JSON.stringify(this.meta.attributes));
+      this.setStatus(XM.Model.READY_DIRTY);
+    },
+    save: function (key, value, options) {
+      var printSettings = this.meta.attributes; //[this.meta.attributes];
+      this.set("PrintSettings", printSettings);
+      XM.Settings.prototype.save.apply(this, arguments);
     },
     /**
-      Set the meta components (Printer) according to User Form Print Settings saved preferences if
-      exist, else use the defaults from XM.forms. 
-      */
+      Set the meta components (Printer) according to User Print Settings preferences (if existent). 
+    */
     statusReadyClean: function () {
       if (this.getStatus() === XM.Model.READY_CLEAN) {
         var that = this,
-          userPrefFormPrintSettings = XT.session.preferences.getValue("FormPrintSettings") ? JSON.parse(XT.session.preferences.getValue("FormPrintSettings")) : null,
-          formsCache = XM.forms.models;
+          userPrintPref = XT.session.preferences.getValue("PrintSettings"),
+          formsObject = XM.printableObjects;
 
-        if (userPrefFormPrintSettings) {
-          _.each(userPrefFormPrintSettings, function (val, key) {
+        if (userPrintPref && _.isObject(userPrintPref)) {
+          _.each(userPrintPref.attributes, function (val, key) {
             that.setValue(key, val);
           });
-        } else if (formsCache) {
-          _.each(formsCache, function (val, key) {
-            var attr = val.getValue("name"),
-              value = val.getValue("defaultPrinter.name");
-
-            that.setValue(attr, value);
+        } else if (formsObject) { // reset the meta object.
+          _.each(formsObject, function (val, key) {
+            that.setValue(key, val);
           });
         }
+
+
       }
     }
 

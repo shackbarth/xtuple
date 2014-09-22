@@ -20,7 +20,6 @@ trailing:true, white:true*/
       ]},
       {name: "setup", label: "_setup".loc(), sortAlpha: true, panels: [
         {name: "configureList", kind: "XV.ConfigurationsList", toggleSelected: false},
-        {name: "formList", kind: "XV.FormList"},
         {name: "printerList", kind: "XV.PrinterList"},
         {name: "userAccountList", kind: "XV.UserAccountList", toggleSelected: false},
         {name: "userAccountRoleList", kind: "XV.UserAccountRoleList"}

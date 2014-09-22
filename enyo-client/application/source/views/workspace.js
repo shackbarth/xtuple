@@ -545,17 +545,17 @@ strict: false*/
       ]}
     ],
     /**
-      On create, cycle through the XM.forms.models cache and create the enyo (PrinterPicker)
+      On create, cycle through the XM.printableObjects cache and create the enyo (PrinterPicker)
       components.
       */
     create: function () {
       this.inherited(arguments);
-      var forms = XM.forms.models,
+      var printableObjects = XM.printableObjects,
         that = this;
 
-      _.each(forms, function (form) {
+      _.each(printableObjects, function (val, key) {
         that.$.formPrintSettingsGroup.createComponents([
-            {kind: "XV.PrinterPicker", attr: form.get("name"), name: form.get("name"),
+            {kind: "XV.PrinterPicker", attr: key, name: key, label: key.loc(),
               onValueChange: "metaChanged"}
           ], {owner: that});
       });
@@ -564,13 +564,14 @@ strict: false*/
       PrintPicker value changed, call model's metaChanged for some special handling.
       */
     metaChanged: function (inSender, inEvent) {
-      var model = this.getValue();
-      model.set(inSender.attr, inSender.value);
+      var model = this.getValue(),
+        val = inSender.value ? inSender.value.id : null;
+      model.meta.set(inSender.attr, val);
       model.metaChanged();
     },
     /**
       Overload: Some special handling for start up. Go and set PrinterPicker value's based on
-      XM.forms cache and/or Current User Form Print Settings.
+      Current User Form Print Settings.
       */
     recordIdChanged: function () {
       this.inherited(arguments);
@@ -1130,33 +1131,6 @@ strict: false*/
   });
 
   XV.registerModelWorkspace("XM.FileRelation", "XV.FileWorkspace");
-
-  // ..........................................................
-  // FORMS
-  //
-
-  enyo.kind({
-    name: "XV.FormWorkspace",
-    kind: "XV.Workspace",
-    title: "_forms".loc(),
-    model: "XM.Form",
-    components: [
-      {kind: "Panels", arrangerKind: "CarouselArranger",
-        fit: true, components: [
-        {kind: "XV.Groupbox", name: "mainPanel", components: [
-          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
-            classes: "in-panel", components: [
-            {kind: "XV.InputWidget", attr: "name"},
-            {kind: "XV.InputWidget", attr: "description"},
-            {kind: "XV.PrinterPicker", attr: "defaultPrinter"}
-          ]}
-        ]}
-      ]}
-    ]
-  });
-
-  XV.registerModelWorkspace("XM.Form", "XV.FormWorkspace");
 
   // ..........................................................
   // FREIGHT CLASS

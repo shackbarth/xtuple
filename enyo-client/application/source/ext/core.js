@@ -194,31 +194,21 @@ white:true*/
     },
 
     /**
-      Returns the (user pref) default printer if profiled, otherwise returns
-      the system default printer.
+      Returns the (user pref) default printer if profiled. Some day, when Forms object exists, 
+      go look up those if no user preferences here.
     */
     defaultPrinter: function (modelName) {
-      var formPrintPref = XT.session.preferences.get("FormPrintSettings"),
-        foundSite;
+      var userPrintPref = XT.session.preferences.get("PrintSettings"),
+        foundPrinter = "Browser"; // Default if nothing exists in PrintSettings prefs.
 
-      formPrintPref = formPrintPref ? JSON.parse(formPrintPref) : null;
-
-      _.find(formPrintPref)
-
-      if (preferredSite) {
-        foundSite = _.find(XM.siteRelations.models, function (site) {
-          return site.get("code") === preferredSite;
+      if (userPrintPref) {
+        foundPrinter = _.find(userPrintPref, function (val, key) {
+          // PrintSettings object uses names, not model names i.e. SalesOrders, Invoices, etc.
+          return ("XM." + key) === modelName;
         });
       }
 
-      if (!foundSite) {
-        // either there is no preference or the preference is miswired somehow
-        foundSite = _.find(XM.siteRelations.models, function (site) {
-          return site.get("isActive");
-        });
-      }
-
-      return foundSite;
+      return foundPrinter;
     },
 
     /**

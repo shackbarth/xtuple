@@ -145,8 +145,6 @@
     "xt/tables/pkgreport.sql",
     "xt/tables/pkgscript.sql",
     "xt/tables/pkguiform.sql",
-
-    "xt/tables/form.sql",
     "xt/tables/printer.sql",
     "xt/tables/rptdef.sql",
 

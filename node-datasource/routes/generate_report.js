@@ -42,11 +42,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       // TODO: introduce pseudorandomness (maybe a timestamp) to avoid collisions
       reportName = req.query.type.toLowerCase() + req.query.id + ".pdf",
       auxilliaryInfo = req.query.auxilliaryInfo,
+      printer = req.query.printer,
       workingDir = path.join(__dirname, "../temp", databaseName),
       reportPath = path.join(workingDir, reportName),
       imageFilenameMap = {},
-      translations,
-      printer = req.query.printer;
+      translations;
 
     //
     // HELPER FUNCTIONS FOR DATA TRANSFORMATION
@@ -308,24 +308,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       Silent-print to a printer registered in the node-datasource.
      */
     var responsePrint = function (res, data, done) {
-      /*
-      res.send({message: "res:" + res});
-      res.send({message: "data:" + data});
-      console.log("res:" + res);
-      console.log("data:" + data);
-      // XXX - get this to be dynamic off of user preferences/defaults.
-      console.log(X.options.datasource.printer);
-      var printer = ipp.Printer(X.options.datasource.printer),
-        msg = {
-          "operation-attributes-tag": {
-            "job-name": "Silent Print",
-            "document-format": "application/pdf"
-          },
-          data: data
-        };
-      */
-
-      //var printer = X.options.datasource.printer; //for now defined in config.js conincides with name of printer in CUPS interface
       var print = 'lp -d ' + printer + ' ' + reportPath;
 
       child_process.exec(print, function (error, stdout, stderr) {

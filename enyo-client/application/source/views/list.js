@@ -1057,38 +1057,6 @@ trailing:true, white:true, strict: false*/
   });
 
   // ..........................................................
-  // FORM
-  //
-
-  enyo.kind({
-    name: "XV.FormList",
-    kind: "XV.List",
-    label: "_forms".loc(),
-    collection: "XM.FormCollection",
-    parameterWidget: null,
-    query: {orderBy: [
-      {attribute: 'name'}
-    ]},
-    components: [
-      {kind: "XV.ListItem", components: [
-        {kind: "FittableColumns", components: [
-          {kind: "XV.ListColumn", components: [
-            {kind: "XV.ListAttr", attr: "name", isKey: true}
-          ]},
-          {kind: "XV.ListColumn", components: [
-            {kind: "XV.ListAttr", attr: "description"}
-          ]},
-          {kind: "XV.ListColumn", components: [
-            {kind: "XV.ListAttr", attr: "defaultPrinter.name"}
-          ]}
-        ]}
-      ]}
-    ]
-  });
-
-  XV.registerModelList("XM.Form", "XV.FormList");
-
-  // ..........................................................
   // FREIGHT CLASS
   //
 

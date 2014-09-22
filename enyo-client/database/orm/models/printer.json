@@ -2,74 +2,6 @@
   {
     "context": "xtuple",
     "nameSpace": "XM",
-    "type": "Form",
-    "table": "xt.form",
-    "isRest": true,
-    "idSequenceName": "form_form_id_seq",
-    "lockable": true,
-    "comment": "Mobile Form Setup Map",
-    "privileges": {
-      "all": {
-        "create": "MaintainForms",
-        "read": true,
-        "update": "MaintainForms",
-        "delete": "MaintainForms"
-      }
-    },
-    "properties": [
-      {
-        "name": "id",
-        "attr": {
-          "type": "Number",
-          "column": "form_id",
-          "isPrimaryKey": true
-        }
-      },
-      {
-        "name": "name",
-        "attr": {
-          "type": "String",
-          "column": "form_name",
-          "isNaturalKey": true
-        }
-      },
-      {
-        "name": "description",
-        "attr": {
-          "type": "String",
-          "column": "form_description"
-        }
-      },
-      {
-        "name": "modelName",
-        "attr": {
-          "type": "String",
-          "column": "form_model_name",
-          "required": true
-        }
-      },
-      {
-        "name": "key",
-        "attr": {
-          "type": "String",
-          "column": "form_key"
-        }
-      },
-      {
-        "name": "defaultPrinter",
-        "toOne": {
-          "type": "Printer",
-          "column": "form_printer_id",
-          "inverse": "id"
-        }
-      }
-    ],
-    "isSystem": true,
-    "sourceCode": "Form"
-  },
-  {
-    "context": "xtuple",
-    "nameSpace": "XM",
     "type": "Printer",
     "table": "xt.printer",
     "isRest": true,
@@ -114,34 +46,6 @@
         "attr": {
           "type": "Boolean",
           "column": "printer_default"
-        }
-      },
-      {
-        "name": "charset",
-        "attr": {
-          "type": "String",
-          "column": "printer_charset"
-        }
-      },
-      {
-        "name": "language",
-        "attr": {
-          "type": "String",
-          "column": "printer_language"
-        }
-      },
-      {
-        "name": "uri",
-        "attr": {
-          "type": "String",
-          "column": "printer_uri"
-        }
-      },
-      {
-        "name": "version",
-        "attr": {
-          "type": "Number",
-          "column": "printer_version"
         }
       }
     ],
