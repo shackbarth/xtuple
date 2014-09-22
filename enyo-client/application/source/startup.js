@@ -28,7 +28,6 @@ white:true*/
         "MaintainPreferencesSelf",
         "MaintainWorkflowsSelf",
         "MaintainAllWorkflows",
-        "MaintainForms",
         "MaintainPrinters"
       ];
       XT.session.addRelevantPrivileges("core", relevantPrivileges);
@@ -148,7 +147,10 @@ white:true*/
 
   /** 
     Printable 'objects' for enyo UserPreferenceWorkspace to build PrintPicker components in create.
-    UserPreference backbone model also uses this to set meta attributes.
+    UserPreference backbone model also uses this to set meta attributes. 
+
+    XXX: Avoid the need for this. Maybe XT.rptdef (currently SYS.ReportDefinition model) should be
+    made into an ORM/cached collection.
   */
   XM.printableObjects = {
     "SalesOrder": "Browser",

@@ -519,6 +519,10 @@ strict: false*/
     ]
   });
 
+  // ..........................................................
+  // USER PREFERENCES
+  //
+
   enyo.kind({
     name: "XV.UserPreferenceWorkspace",
     kind: "XV.Workspace",
@@ -536,25 +540,25 @@ strict: false*/
             classes: "in-panel", components: [
           ]}
         ]},
-        {kind: "XV.Groupbox", name: "formPrintSettings", components: [
-          {kind: "onyx.GroupboxHeader", content: "_formPrintSettings".loc()},
-          {kind: "XV.ScrollableGroupbox", name: "formPrintSettingsGroup",
+        {kind: "XV.Groupbox", components: [
+          {kind: "onyx.GroupboxHeader", content: "_printSettings".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "printSettingsGroup",
             classes: "in-panel", components: [
           ]}
         ]}
       ]}
     ],
     /**
-      On create, cycle through the XM.printableObjects cache and create the enyo (PrinterPicker)
+      On create, cycle through the XM.printableObjects cache and create the enyo PrinterPickers
       components.
-      */
+    */
     create: function () {
       this.inherited(arguments);
       var printableObjects = XM.printableObjects,
         that = this;
 
       _.each(printableObjects, function (val, key) {
-        that.$.formPrintSettingsGroup.createComponents([
+        that.$.printSettingsGroup.createComponents([
             {kind: "XV.PrinterPicker", attr: key, name: key, label: key.loc(),
               onValueChange: "metaChanged"}
           ], {owner: that});
@@ -562,7 +566,7 @@ strict: false*/
     },
     /** 
       PrintPicker value changed, call model's metaChanged for some special handling.
-      */
+    */
     metaChanged: function (inSender, inEvent) {
       var model = this.getValue(),
         val = inSender.value ? inSender.value.id : null;
@@ -571,14 +575,13 @@ strict: false*/
     },
     /**
       Overload: Some special handling for start up. Go and set PrinterPicker value's based on
-      Current User Form Print Settings.
-      */
+      User's Print Settings preferences.
+    */
     recordIdChanged: function () {
       this.inherited(arguments);
       var model = this.getValue();
 
-      if (!this._started && model &&
-        model.getStatus() === XM.Model.READY_CLEAN) {
+      if (!this._started && model && model.getStatus() === XM.Model.READY_CLEAN) {
         model.statusReadyClean();
         // Repaint workspace
         this.attributesChanged();

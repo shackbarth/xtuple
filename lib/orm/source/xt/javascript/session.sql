@@ -138,6 +138,11 @@ select xt.install_js('XT','Session','xtuple', $$
       resultObj = {};
 
     result.map(function (res) {
+      /*if (res.userpref_name === "PrintSettings" && typeof res.userpref_value === "string") {
+        plv8.elog(NOTICE, res.userpref_value);
+        var obj = JSON.stringify(res.userpref_value);
+        plv8.elog(NOTICE, JSON.parse(obj));
+      }*/
       resultObj[res.userpref_name] = res.userpref_value;
     });
     return resultObj;
@@ -157,6 +162,16 @@ select xt.install_js('XT','Session','xtuple', $$
 
     /* Compose our commit settings by applying the patch to what we already have */
     patches.map(function (patch) {
+      plv8.elog(NOTICE, "patch.value: " + patch.value);
+      plv8.elog(NOTICE, "typeof patch.value: " + typeof patch.value);
+      plv8.elog(NOTICE, "JSON.stringify(patch.value): " + JSON.stringify(patch.value));
+      plv8.elog(NOTICE, "JSON.parse(patch.value): " + JSON.parse(patch.value));
+      if (name === "PrintSettings" && typeof patch.value === "object") {
+        plv8.elog(NOTICE, "JSON.stringify(patch.value): " + JSON.stringify(patch.value));
+        plv8.elog(NOTICE, "JSON.parse(patch.value): " + JSON.parse(patch.value));
+        patch.value = JSON.stringify(patch.value);
+        plv8.elog(NOTICE, "patch.value: " + patch.value);
+      }
       var sql,
         name = patch.path.substring(1),
         updateSql = "UPDATE xt.userpref SET userpref_value = $1 WHERE userpref_usr_username = $2 AND userpref_name = $3;",

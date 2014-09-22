@@ -304,8 +304,6 @@
     "_flag": "Flag",
     "_fob": "F.O.B.",
     "_for": "For",
-    "_forms": "Forms",
-    "_formPrintSettings": "Form Print Settings",
     "_fractional": "Fractional",
     "_freightClass": "Freight Class",
     "_frequency": "Frequency",

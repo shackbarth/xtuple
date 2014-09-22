@@ -146,10 +146,9 @@
     "xt/tables/pkgscript.sql",
     "xt/tables/pkguiform.sql",
     "xt/tables/printer.sql",
-    "xt/tables/rptdef.sql",
-
     "xt/tables/prjext.sql",
     "xt/tables/prjtypewf.sql",
+    "xt/tables/rptdef.sql",
     "xt/tables/objtype.sql",
     "xt/tables/ordtype.sql",
     "xt/tables/userpref.sql",

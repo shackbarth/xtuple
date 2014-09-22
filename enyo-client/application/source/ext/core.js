@@ -199,7 +199,7 @@ white:true*/
     */
     defaultPrinter: function (modelName) {
       var userPrintPref = XT.session.preferences.get("PrintSettings"),
-        foundPrinter = "Browser"; // Default if nothing exists in PrintSettings prefs.
+        foundPrinter;
 
       if (userPrintPref) {
         foundPrinter = _.find(userPrintPref, function (val, key) {

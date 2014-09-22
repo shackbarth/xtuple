@@ -36,7 +36,7 @@ white:true*/
     },
 
     handlers: {
-      //"status:READY_CLEAN": "statusReadyClean"
+      "status:READY_CLEAN": "statusReadyClean"
     },
     /**
       Set this model's FormPrintSettings attribute (User Form Print Settings preference).
@@ -45,7 +45,7 @@ white:true*/
       this.setStatus(XM.Model.READY_DIRTY);
     },
     save: function (key, value, options) {
-      var printSettings = this.meta.attributes; //[this.meta.attributes];
+      var printSettings = JSON.stringify(this.meta.attributes); //[this.meta.attributes];
       this.set("PrintSettings", printSettings);
       XM.Settings.prototype.save.apply(this, arguments);
     },
@@ -55,11 +55,14 @@ white:true*/
     statusReadyClean: function () {
       if (this.getStatus() === XM.Model.READY_CLEAN) {
         var that = this,
-          userPrintPref = XT.session.preferences.getValue("PrintSettings"),
+          // This looks ugly!
+          userPrintPref = _.isString(XT.session.preferences.getValue("PrintSettings")) ?
+            JSON.parse(XT.session.preferences.getValue("PrintSettings")) :
+            XT.session.preferences.getValue("PrintSettings"),
           formsObject = XM.printableObjects;
 
-        if (userPrintPref && _.isObject(userPrintPref)) {
-          _.each(userPrintPref.attributes, function (val, key) {
+        if (userPrintPref) {
+          _.each(userPrintPref, function (val, key) {
             that.setValue(key, val);
           });
         } else if (formsObject) { // reset the meta object.
@@ -67,11 +70,8 @@ white:true*/
             that.setValue(key, val);
           });
         }
-
-
       }
     }
-
   });
 
   /**
