@@ -1800,8 +1800,7 @@ strict: false*/
           {kind: "XV.ScrollableGroupbox", name: "mainGroup",
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "name"},
-            {kind: "XV.InputWidget", attr: "description"},
-            {kind: "XV.CheckboxWidget", attr: "isDefaultPrinter", label: "_defaultPrinter".loc()}
+            {kind: "XV.InputWidget", attr: "description"}
           ]}
         ]}
       ]}

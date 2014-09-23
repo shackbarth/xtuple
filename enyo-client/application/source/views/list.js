@@ -1598,9 +1598,6 @@ trailing:true, white:true, strict: false*/
           ]},
           {kind: "XV.ListColumn", components: [
             {kind: "XV.ListAttr", attr: "description"}
-          ]},
-          {kind: "XV.ListColumn", components: [
-            {kind: "XV.ListAttr", attr: "isDefault"}
           ]}
         ]}
       ]}

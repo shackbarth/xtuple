@@ -40,13 +40,6 @@
           "column": "printer_description",
           "required": true
         }
-      },
-      {
-        "name": "isDefault",
-        "attr": {
-          "type": "Boolean",
-          "column": "printer_default"
-        }
       }
     ],
     "isSystem": true,
