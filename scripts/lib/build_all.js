@@ -57,6 +57,7 @@ var _ = require('underscore'),
       },
       function (done) {
         if (specs[0].npmDev) {
+          done();
           return;
         }
         // step 1: npm install extension if necessary
