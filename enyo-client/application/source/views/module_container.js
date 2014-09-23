@@ -84,7 +84,5 @@ trailing:true, white:true*/
         }
       });
     }
-
   });
-
 }());

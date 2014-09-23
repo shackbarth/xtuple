@@ -2,7 +2,7 @@
   "author": "xTuple <dev@xtuple.com>",
   "name": "xtuple",
   "description": "xTuple Enterprise Resource Planning Mobile-Web client",
-  "version": "4.7.0-beta",
+  "version": "4.7.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/xtuple/xtuple.git"
@@ -36,6 +36,7 @@
     "passport-oauth2-jwt-bearer": "0.1.x",
     "paynode": "0.3.6",
     "pg": "0.14.x",
+    "qr-image": "1.1.x",
     "request": "2.14.x",
     "rimraf": "2.2.x",
     "rjson": "~0.2.4",
@@ -43,7 +44,6 @@
     "underscore": "1.4.x",
     "winston": "0.7.x",
     "underscore.string": "~2.3.3",
-    "ursa": "0.8.x",
     "xtuple-linguist": "0.1.x",
     "jquery": "~2.1.1"
   },
