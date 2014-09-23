@@ -224,7 +224,7 @@
 
   exports.updateFirstModel = function (test) {
     it('should allow a trivial update to the first model of ' + test.kind, function (done) {
-      this.timeout(20 * 1000);
+      this.timeout(60 * 1000);
       navigateToExistingWorkspace(XT.app, test.kind, function (workspaceContainer) {
         var updateObj,
           statusChanged,
@@ -257,7 +257,7 @@
     var workspaceContainer,
       workspace;
     it('can get to a new workspace', function (done) {
-      this.timeout(20 * 1000);
+      this.timeout(60 * 1000);
       navigateToNewWorkspace(XT.app, spec.listKind, function (_workspaceContainer) {
         workspaceContainer = _workspaceContainer;
         done();
@@ -270,12 +270,12 @@
     });
     _.each(spec.beforeSaveUIActions || [], function (spec) {
       it(spec.it, function (done) {
-        this.timeout(20 * 1000);
+        this.timeout(60 * 1000);
         spec.action(workspace, done);
       });
     });
     it('can save the workspace', function (done) {
-      this.timeout(20 * 1000);
+      this.timeout(60 * 1000);
       if (spec.captureObject) {
         XG = XG || {};
         XG.capturedId = workspace.value.id;
@@ -284,7 +284,7 @@
     });
     _.each(spec.afterSaveUIActions || [], function (spec) {
       it(spec.it, function (done) {
-        this.timeout(20 * 1000);
+        this.timeout(60 * 1000);
         spec.action(workspace, done);
       });
     });
@@ -292,7 +292,7 @@
       return;
     }
     it('can delete the item from the list', function (done) {
-      this.timeout(20 * 1000);
+      this.timeout(60 * 1000);
       deleteFromList(XT.app, workspace.value, done);
     });
   };

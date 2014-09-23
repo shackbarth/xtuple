@@ -24,7 +24,7 @@
   <name>head</name>
   <sql>SELECT (bankaccnt_name || '-' || bankaccnt_descrip) AS f_bankaccnt,
        (formatDate(bankrec_opendate) || '-' || formatDate(bankrec_enddate)) AS f_bankrec,
-       bankrec_username AS f_username, formatDate(bankrec_created) AS f_created,
+       bankrec_username AS f_username, formatDate(bankrec_postdate) AS f_postdate,
        formatDate(bankrec_opendate) AS f_opendate,
        formatDate(bankrec_enddate) AS f_enddate,
        formatMoney(bankrec_openbal) AS f_openbal,
@@ -218,7 +218,7 @@
    <vcenter/>
    <data>
     <query>head</query>
-    <column>f_created</column>
+    <column>f_postdate</column>
    </data>
   </field>
   <label>
