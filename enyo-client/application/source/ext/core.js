@@ -198,12 +198,18 @@ white:true*/
       go look up those if no user preferences here.
     */
     defaultPrinter: function (modelName) {
-      var userPrintPref = XT.session.preferences.get("PrintSettings"),
+      var userPrintPref = _.isString(XT.session.preferences.getValue("PrintSettings")) ?
+            JSON.parse(XT.session.preferences.getValue("PrintSettings")) :
+            XT.session.preferences.getValue("PrintSettings"),
         foundPrinter;
 
       if (userPrintPref) {
         foundPrinter = _.find(userPrintPref, function (val, key) {
-          // PrintSettings object uses names, not model names i.e. SalesOrders, Invoices, etc.
+          /** 
+            PrintSettings object uses names, not model names i.e. SalesOrders, Invoices, etc.
+            TODO: What if the printer name doesn't match a real printer in CUPS? Return notify
+            popup error message and print in browser. Somehow need to go look at CUPS printers.
+          */
           return ("XM." + key) === modelName;
         });
       }
