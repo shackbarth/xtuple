@@ -1,8 +1,4 @@
 create or replace function xt.pg_advisory_unlock(oid integer, id integer) returns boolean as $$
-  var sql = "select pg_catalog.pg_advisory_unlock($1, $2) as result;";
-  return plv8.execute(sql, [oid, id])[0].result;
-  /* temporary: let qt client use advisory locks but web client use xt.lock */
-
   var pid = plv8.execute("select pg_backend_pid() as pid;")[0].pid,
     username = plv8.execute("select geteffectivextuser() as username;")[0].username,
     sql = "select * from xt.lock where lock_table_oid = $1 and lock_record_id = $2 and lock_username = $3 and lock_pid = $4;",
