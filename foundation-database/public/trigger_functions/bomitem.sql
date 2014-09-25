@@ -9,6 +9,7 @@ DECLARE
   _bomworkid INTEGER;
   _seqNumber INTEGER;
   _parentItem RECORD;
+  _bomheadid INTEGER;
 BEGIN
 
   -- Privilege Checks
