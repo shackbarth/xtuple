@@ -525,6 +525,7 @@
     "_priceUnitRatio": "Price Unit Ratio",
     "_primaryContact": "Primary Contact",
     "_primaryEmail": "Primary Email",
+    "_printSettings": "Print Settings",
     "_printed": "Printed",
     "_printer": "Printer",
     "_printers": "Printers",

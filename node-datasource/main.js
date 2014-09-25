@@ -645,6 +645,11 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
           code: 1,
           debugging: X.options.datasource.debugging,
           emailAvailable: _.isString(X.options.datasource.smtpHost) && X.options.datasource.smtpHost !== "",
+          /** 
+            printAvailable is deprecated. TODO - remove all references to this and replace with a
+            call to the defaultPrinter dispatch function which looks at the UserPreference Printer 
+            Settings for the particular model.
+          */
           printAvailable: _.isString(X.options.datasource.printer) && X.options.datasource.printer !== "",
           versions: X.versions
         });

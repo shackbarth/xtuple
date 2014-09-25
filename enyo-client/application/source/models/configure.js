@@ -39,7 +39,7 @@ white:true*/
       "status:READY_CLEAN": "statusReadyClean"
     },
     /**
-      Set this model's FormPrintSettings attribute (User Form Print Settings preference).
+      Set this model's PrintSettings attribute (User Form Print Settings preference).
     */
     metaChanged: function () {
       this.setStatus(XM.Model.READY_DIRTY);
