@@ -24,7 +24,9 @@ $$ LANGUAGE 'plpgsql';
 
 
 
-CREATE OR REPLACE FUNCTION createCheck(INTEGER, TEXT, INTEGER, DATE, NUMERIC, INTEGER, INTEGER, INTEGER, TEXT, TEXT, BOOL, INTEGER) RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION createcheck(integer, text, integer, date, numeric, integer, integer, integer, text, text, boolean, integer)
+  RETURNS integer AS
+$BODY$
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
@@ -41,11 +43,13 @@ DECLARE
   pMisc			ALIAS FOR $11;
   pAropenid             ALIAS FOR $12;
   _checkid		INTEGER;
+  _checknumber		INTEGER := -1;
   _check_curr_rate      NUMERIC;
   _bankaccnt_currid	INTEGER;
+  _bankaccnt_prnt_check BOOLEAN;
 
 BEGIN
-  SELECT bankaccnt_curr_id,currRate(bankaccnt_curr_id,pCheckDate) INTO _bankaccnt_currid, _check_curr_rate
+  SELECT bankaccnt_curr_id,currRate(bankaccnt_curr_id,pCheckDate), bankaccnt_prnt_check INTO _bankaccnt_currid, _check_curr_rate, _bankaccnt_prnt_check
   FROM bankaccnt
   WHERE bankaccnt_id = pBankaccntid;
   IF (NOT FOUND) THEN
@@ -79,6 +83,10 @@ BEGIN
 --    _journalNumber := fetchJournalNumber('AP-CK');
 --  END IF;
 
+  IF (NOT _bankaccnt_prnt_check) THEN
+    SELECT fetchNextCheckNumber(pBankaccntid) INTO _checknumber;
+  END IF;
+     
   _checkid := NEXTVAL('checkhead_checkhead_id_seq');
 
   INSERT INTO checkhead
@@ -90,7 +98,7 @@ BEGIN
     checkhead_curr_id )
   VALUES
   ( _checkid,			pRecipType,		pRecipId,
-    pBankaccntid,		-1, --fetchNextCheckNumber(pBankaccntid),
+    pBankaccntid,		_checknumber,
     currToCurr(pCurrid, _bankaccnt_currid, pAmount, pCheckDate),
     pCheckDate,			COALESCE(pMisc, FALSE),	pExpcatid,
     _journalNumber,		pFor,			pNotes,
@@ -125,4 +133,5 @@ BEGIN
   RETURN _checkid;
 
 END;
-$$ LANGUAGE 'plpgsql';
+$BODY$
+  LANGUAGE plpgsql;
