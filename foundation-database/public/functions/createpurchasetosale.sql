@@ -69,10 +69,12 @@ DECLARE
   _s RECORD;
   _w RECORD;
   _i RECORD;
+  _c RECORD;
   _shipto RECORD;
   _poheadid INTEGER := -1;
   _poitemid INTEGER := -1;
   _taxtypeid INTEGER := -1;
+  _charassid INTEGER := -1;
   _polinenumber INTEGER;
   _ponumber NUMERIC;
   _price NUMERIC;
@@ -272,6 +274,31 @@ BEGIN
     END IF;
   END IF;
 
+  -- Copy characteristics from the cohead to the pohead
+  -- while avoiding duplicates
+  FOR _c IN
+  SELECT *
+  FROM charass JOIN char ON (char_id=charass_char_id)
+  WHERE ( (char_purchaseorders)
+    AND   (charass_target_type='SO')
+    AND   (charass_target_id=_s.cohead_id) )
+  LOOP
+    SELECT charass_id INTO _charassid
+    FROM charass
+    WHERE ( (charass_target_type='PO')
+      AND   (charass_target_id=_poheadid)
+      AND   (charass_char_id=_c.charass_char_id)
+      AND   (charass_value=_c.charass_value) );
+    IF (NOT FOUND) THEN
+      INSERT INTO charass
+        ( charass_target_type, charass_target_id, charass_char_id,
+          charass_value, charass_default, charass_price )
+      VALUES
+        ( 'PO', _poheadid, _c.charass_char_id,
+          _c.charass_value, _c.charass_default, _c.charass_price );
+    END IF;
+  END LOOP;
+
   SELECT NEXTVAL('poitem_poitem_id_seq') INTO _poitemid;
 
   SELECT (COALESCE(MAX(poitem_linenumber), 0) + 1) INTO _polinenumber
@@ -335,14 +362,16 @@ BEGIN
         COALESCE(_i.itemsrc_manuf_item_descrip, TEXT('')), _taxtypeid,
         COALESCE(_s.coitem_memo, TEXT('')));
   END IF;
+
   -- Copy characteristics from the coitem to the poitem
   INSERT INTO charass
     ( charass_target_type, charass_target_id, charass_char_id,
       charass_value, charass_default, charass_price )
   SELECT 'PI', _poitemid, charass_char_id,
          charass_value, charass_default, charass_price
-  FROM charass
-  WHERE ( (charass_target_type='SI')
+  FROM charass JOIN char ON (char_id=charass_char_id)
+  WHERE ( (char_purchaseorders)
+    AND   (charass_target_type='SI')
     AND   (charass_target_id=pCoitemId) );
 
   UPDATE coitem
