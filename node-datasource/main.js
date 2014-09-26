@@ -160,6 +160,31 @@ var app;
   privSessionOptions.database = X.options.datasource.databases[0];
   XT.session.loadSessionObjects(XT.session.PRIVILEGES, privSessionOptions);
 
+  var cacheCount = 0;
+  var cacheShareUsersWarmed = function (err, result) {
+    if (err) {
+      console.trace("Share Users Cache warming errors:");
+    } else {
+      cacheCount++;
+      if (cacheCount === X.options.datasource.databases.length) {
+        X.log("All Share Users Caches have been warmed.");
+      }
+    }
+  };
+
+  _.each(X.options.datasource.databases, function (dbVal, dbKey, dbList) {
+    var cacheShareUsersOptions = {
+      user: X.options.databaseServer.user,
+      port: X.options.databaseServer.port,
+      hostname: X.options.databaseServer.hostname,
+      database: dbVal,
+      password: X.options.databaseServer.password
+    };
+
+    X.log("Warming Share Users Cache for database " + dbVal + "...");
+    datasource.api.query('select xt.refresh_share_user_cache()', cacheShareUsersOptions, cacheShareUsersWarmed);
+  });
+
 }());
 
 

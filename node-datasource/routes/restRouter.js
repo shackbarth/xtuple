@@ -268,7 +268,7 @@ module.exports = (function () {
       if (!req.params.model && !req.params.service) {
         return res.send(404, "Not Found");
       }
-
+console.log("REST req: ", req.url);
       if (req.params.model) {
         ormType = _.capitalize(_.camelize(req.params.model));
         resourceModel = _.findWhere(orms, { orm_type: ormType });

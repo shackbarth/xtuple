@@ -242,11 +242,12 @@ Backbone:true, _:true, X:true, __dirname:true, exports:true, module: true */
 
             // Release the client from the pool.
             done();
-
+console.log("query: ", query);
+console.log("Time: ", Date.now() - datenow1);
             // Call the call back.
             callback(err, result);
           };
-
+var datenow1 = Date.now();
           // node-postgres supports parameters as a second argument. These will be options.parameters
           // if they're there.
           if (options.parameters) {
