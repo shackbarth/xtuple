@@ -50,8 +50,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       grade = "0",
       tableName = defaultSchema ? defaultSchema + ".pkgreport" : "report",
       description,
-      updateSql,
-      insertSql;
+      upsertSql;
 
     if (lines[3].indexOf(" <name>") !== 0 ||
         lines[4].indexOf(" <description>") !== 0) {
@@ -66,24 +65,28 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       grade = grade.substring(0, grade.indexOf("<"));
     }
 
-    insertSql = "insert into " + tableName + " (report_name, report_descrip, " +
-      "report_source, report_loaddate, report_grade) select " +
-      "'" + name + "'," +
-      "$$" + description + "$$," +
-      "$$" + content + "$$," +
-      "now(), " + grade +
-      " where not exists (select c.report_id from " + tableName + " c " +
-      "where report_name = '" + name +
-      "' and report_grade = " + grade + ");";
-
-    updateSql = "update " + tableName + " set " +
-      " report_descrip = $$" + description +
-      "$$, report_source = $$" + content +
-      "$$, report_loaddate = now() " +
-      "where report_name = '" + name +
-      "' and report_grade = " + grade + ";";
-
-    return insertSql + updateSql;
+    upsertSql = "do language plpgsql $do$" +
+                "declare _id integer := null;" +
+                " begin" +
+                "  update " + tableName + " set " +
+                "    report_descrip = $$" + description + "$$," +
+                "    report_source = $$" + content + "$$," +
+                "    report_loaddate = now() " +
+                "   where report_name = '" + name + "'" +
+                "    and report_grade = " + grade + " returning report_id into _id;" +
+                "  if _id is null then " +
+                "    insert into " + tableName + " (report_name, report_descrip," +
+                "        report_source, report_loaddate, report_grade)" +
+                "      select '" + name + "', $$" + description + "$$," +
+                "        $$" + content + "$$, now(), min(sequence_value)" +
+                "        from sequence" +
+                "       where sequence_value >= " + grade + "" +
+                "         and sequence_value not in (" +
+                "        select c.report_grade from report c where report_name = '" + name + "'" +
+                "       );" +
+                "  end if;" +
+                " end $do$;";
+    return upsertSql;
   };
 
   var convertFromScript = function (content, filename, defaultSchema) {
