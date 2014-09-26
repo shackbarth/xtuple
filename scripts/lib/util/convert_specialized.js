@@ -50,10 +50,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       grade = "0",
       tableName = defaultSchema ? defaultSchema + ".pkgreport" : "report",
       description,
-      disableSql,
       updateSql,
-      insertSql,
-      enableSql;
+      insertSql;
 
     if (lines[3].indexOf(" <name>") !== 0 ||
         lines[4].indexOf(" <description>") !== 0) {
@@ -67,8 +65,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       grade = lines[5].substring(" <grade>".length).trim();
       grade = grade.substring(0, grade.indexOf("<"));
     }
-
-    disableSql = "ALTER TABLE " + tableName + " DISABLE TRIGGER ALL;";
 
     insertSql = "insert into " + tableName + " (report_name, report_descrip, " +
       "report_source, report_loaddate, report_grade) select " +
@@ -87,21 +83,15 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       "where report_name = '" + name +
       "' and report_grade = " + grade + ";";
 
-    enableSql = "ALTER TABLE " + tableName + " ENABLE TRIGGER ALL;";
-
-    return disableSql + insertSql + updateSql + enableSql;
+    return insertSql + updateSql;
   };
 
   var convertFromScript = function (content, filename, defaultSchema) {
     var name = path.basename(filename, '.js'),
       tableName = defaultSchema ? defaultSchema + ".pkgscript" : "unknown",
       notes = "", //"xtMfg package",
-      disableSql,
       insertSql,
-      updateSql,
-      enableSql;
-
-    disableSql = "ALTER TABLE " + tableName + " DISABLE TRIGGER ALL;";
+      updateSql;
 
     insertSql = "insert into " + tableName + " (script_name, script_order, script_enabled, " +
       "script_source, script_notes) select " +
@@ -117,21 +107,15 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       "$$, script_notes = '" + notes + "' " +
       "where script_name = '" + name + "';";
 
-    enableSql = "ALTER TABLE " + tableName + " ENABLE TRIGGER ALL;";
-
-    return disableSql + insertSql + updateSql + enableSql;
+    return insertSql + updateSql;
   };
 
   var convertFromUiform = function (content, filename, defaultSchema) {
     var name = path.basename(filename, '.ui'),
       tableName = defaultSchema ? defaultSchema + ".pkguiform" : "unknown",
       notes = "", //"xtMfg package",
-      disableSql,
       insertSql,
-      updateSql,
-      enableSql;
-
-    disableSql = "ALTER TABLE " + tableName + " DISABLE TRIGGER ALL;";
+      updateSql;
 
     insertSql = "insert into " + tableName + " (uiform_name, uiform_order, uiform_enabled, " +
       "uiform_source, uiform_notes) select " +
@@ -146,9 +130,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       "uiform_source = $$" + content + "$$, uiform_notes = '" + notes + "' " +
       "where uiform_name = '" + name + "';";
 
-    enableSql = "ALTER TABLE " + tableName + " ENABLE TRIGGER ALL;";
-
-    return disableSql + insertSql + updateSql + enableSql;
+    return insertSql + updateSql;
   };
 
   exports.conversionMap = {
