@@ -7,12 +7,14 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
 (function () {
   "use strict";
 
+  var assert = require("chai").assert,
+    _ = require("underscore");
+
   /**
     @class
     @alias Printer
   */
   var spec = {
-    skipCrud: true,
     recordType: "XM.Printer",
     collectionType: "XM.PrinterCollection",
     /**
@@ -55,6 +57,34 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     updatableField: "description"
   };
 
+  var additionalTests = function () {
+    /**
+      @member Settings
+      @memberof Invoice
+      @description There is a setting "Valid Credit Card Days"
+      @default 7
+    */
+    describe("User Preference Workspace tests", function () {
+      var workspace,
+        // XXX: Avoid the need for this. To be replaced when Forms object created.
+        printSettingArray = ['SalesOrder', 'Invoice', 'PurchaseOrder', 'Location', 'EnterReceipt',
+          'Shipment'];
+      it("User navigates to User Preference workspace", function () {
+        XT.app.$.postbooks.$.navigator.openPreferencesWorkspace();
+        workspace = XT.app.$.postbooks.getActive().$.workspace;
+        assert.equal(workspace.kind, "XV.UserPreferenceWorkspace");
+      });
+      it("User Preference workspace contains the PrintPicker widget, set to default value " +
+        "'Browser', for each of the print settings 'attributes'", function () {
+        assert.include(workspace.$, printSettingArray);
+        _.each(printSettingArray, function (val) {
+          return assert.equal(workspace.$[val].value.id, "Browser");
+        });
+      });
+    });
+  };
+
+  exports.additionalTests = additionalTests;
   exports.spec = spec;
 
 }());

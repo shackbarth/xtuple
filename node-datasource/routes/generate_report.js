@@ -311,9 +311,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       Silent-print to a printer registered in the node-datasource.
      */
     var responsePrint = function (res, data, done) {
-      var print = 'lp -d ' + printer + ' ' + reportPath;
-
-      child_process.exec(print, function (error, stdout, stderr) {
+      child_process.exec('lp -d ' + printer + ' ' + reportPath, function (error, stdout, stderr) {
         if (error !== null) {
           res.send({isError: true, message: "Error printing"});
           done();

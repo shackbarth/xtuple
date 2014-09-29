@@ -149,8 +149,7 @@ white:true*/
     Printable 'objects' for enyo UserPreferenceWorkspace to build PrintPicker components in create.
     UserPreference backbone model also uses this to set meta attributes. 
 
-    XXX: Avoid the need for this. Maybe XT.rptdef (currently SYS.ReportDefinition model) should be
-    made into an ORM/cached collection.
+    XXX: Avoid the need for this. To be replaced when Forms object created.
   */
   XM.printableObjects = {
     "SalesOrder": "Browser",
