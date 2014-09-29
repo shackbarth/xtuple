@@ -83,8 +83,8 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
           } else {
             return console.log("PrintPicker widget for: " + val + " is not set to 'Browser'!");
           }
-          
         });
+        workspace.doClose();
       });
     });
   };
