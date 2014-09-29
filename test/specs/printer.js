@@ -78,7 +78,12 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
         "'Browser', for each of the print settings 'attributes'", function () {
         assert.include(workspace.$, printSettingArray);
         _.each(printSettingArray, function (val) {
-          return assert.equal(workspace.$[val].value.id, "Browser");
+          if (workspace.$[val].value) {
+            return assert.equal(workspace.$[val].value.id, "Browser");
+          } else {
+            return console.log("PrintPicker widget for: " + val + " is not set to 'Browser'!");
+          }
+          
         });
       });
     });
