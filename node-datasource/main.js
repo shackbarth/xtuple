@@ -415,6 +415,11 @@ app.all('/:org/api/v1alpha1/resources/:model/:id', routes.restRouter);
 app.all('/:org/api/v1alpha1/resources/:model', routes.restRouter);
 app.all('/:org/api/v1alpha1/resources/*', routes.restRouter);
 
+app.post('/:org/browser-api/v1/services/:service/:id', routes.restBrowserRouter);
+app.all('/:org/browser-api/v1/resources/:model/:id', routes.restBrowserRouter);
+app.all('/:org/browser-api/v1/resources/:model', routes.restBrowserRouter);
+app.all('/:org/browser-api/v1/resources/*', routes.restBrowserRouter);
+
 app.get('/', routes.loginForm);
 app.post('/login', routes.login);
 app.get('/forgot-password', routes.forgotPassword);
