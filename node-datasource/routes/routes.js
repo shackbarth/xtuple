@@ -28,6 +28,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     app = require('./app'),
     auth = require('./auth'),
     authorizeNet = require('./authorize-net'),
+    backboneModels = require('./backbone_models'),
     changePassword = require('./change_password'),
     clientCode = require('./client_code'),
     email = require('./email'),
@@ -86,6 +87,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   //
   // Custom routes
   //
+  exports.backboneModels = [ensureLogin, backboneModels.getModelJson];
   exports.creditCard = [ensureLogin, authorizeNet.transact];
   exports.changePassword = [ensureLogin, changePassword.changePassword];
   exports.clientCode = [ensureLogin, clientCode.clientCode];

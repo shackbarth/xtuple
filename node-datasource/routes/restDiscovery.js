@@ -59,8 +59,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.getRest = function (req, res, next) {
     var callback = {},
         model = null,
-        payload = {},
-        session = {};
+        payload = {};
 
     callback = function (result) {
       if (result.isError) {
@@ -86,22 +85,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     if (!req.params.model && req.query && req.query.resources && req.query.resources.length) {
       model = req.query.resources;
     }
-
-    payload.nameSpace = "XT";
-    payload.type = "Discovery";
-    payload.dispatch = {
-      functionName: "getDiscovery",
-      parameters: [model, "https://" + req.headers.host + "/"] // TODO get rootURL
-    };
-
-    // Dummy up session. This is a public call.
-    session.passport = {
-      "user": {
-        "id": X.options.databaseServer.user,
-        "username": X.options.databaseServer.user,
-        "organization": req.params.org
-      }
-    };
+    var payloadUrl = "https://" + req.headers.host + "/"; // TODO get rootURL
 
     if (getRestStore && getRestStore[req.url]) {
       // The discovery doc should be cacheable. A "Vary: " header will break that.
@@ -109,8 +93,31 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       delete res._headers.vary;
       res.json(getRestStore[req.url]);
     } else {
-      routes.queryDatabase("post", payload, session, callback);
+      getRestEngine(model, payloadUrl, req.params.org, callback);
     }
+  };
+
+  var getRestEngine = exports.getRestEngine = function (model, payloadUrl, org, callback) {
+    var session = {},
+      payload = {};
+
+    payload.nameSpace = "XT";
+    payload.type = "Discovery";
+    payload.dispatch = {
+      functionName: "getDiscovery",
+      parameters: [model, payloadUrl]
+    };
+
+    // Dummy up session. This is a public call.
+    session.passport = {
+      "user": {
+        "id": X.options.databaseServer.user,
+        "username": X.options.databaseServer.user,
+        "organization": org
+      }
+    };
+
+    routes.queryDatabase("post", payload, session, callback);
   };
 
 }());
