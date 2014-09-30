@@ -66,15 +66,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     }
 
     upsertSql = "do language plpgsql $do$" +
-                "declare _id integer := null;" +
+                "declare _grade integer := null;" +
                 " begin" +
-                "  update " + tableName + " set " +
-                "    report_descrip = $$" + description + "$$," +
-                "    report_source = $$" + content + "$$," +
-                "    report_loaddate = now() " +
-                "   where report_name = '" + name + "'" +
-                "    and report_grade = " + grade + " returning report_id into _id;" +
-                "  if _id is null then " +
+                "  select min(report_grade) into _grade" +
+                "    from " + tableName +
+                "   where report_name = '" + name + "';" +
+                "  if _grade is null then" +
                 "    insert into " + tableName + " (report_name, report_descrip," +
                 "        report_source, report_loaddate, report_grade)" +
                 "      select '" + name + "', $$" + description + "$$," +
@@ -82,8 +79,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
                 "        from sequence" +
                 "       where sequence_value >= " + grade + "" +
                 "         and sequence_value not in (" +
-                "        select c.report_grade from report c where report_name = '" + name + "'" +
+                "        select report_grade from report" +
+                "         where report_name = '" + name + "'" +
                 "       );" +
+                "  else " +
+                "    update " + tableName + " set" +
+                "      report_descrip = $$" + description + "$$," +
+                "      report_source = $$" + content + "$$," +
+                "      report_loaddate = now() " +
+                "     where report_name = '" + name + "'" +
+                "      and report_grade = _grade;" +
                 "  end if;" +
                 " end $do$;";
     return upsertSql;
