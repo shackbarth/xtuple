@@ -28,14 +28,6 @@
     </message>
   </prerequisite>
 
-<prerequisite type = "query"
-               name = "Checking for too-new xTuple ERP database version" >
-<query>SELECT NOT fetchMetricText('ServerVersion') >= '4.7.0Beta2' AND fetchMetricText('ServerVersion') != '4.7.0';</query>
-    <message>This package may not be applied to a database newer than 4.7.0Beta2.
-    </message>
-</prerequisite>
-
-
  <prerequisite type = "query"
                name = "Checking for mobile-enabled schemas" >
     <query>SELECT NOT EXISTS(SELECT 1 FROM pg_namespace WHERE nspname = 'xm');</query>
