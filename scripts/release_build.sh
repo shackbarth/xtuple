@@ -6,8 +6,8 @@ PAT=$3
 # Usage: ./scripts/release_build.sh 4 5 0-beta
 echo "BUILDING RELEASE "$MAJ"."$MIN"."$PAT""
 
-git fetch XTUPLE
-git checkout XTUPLE/$MAJ"_"$MIN"_"x
+#git fetch XTUPLE
+#git checkout XTUPLE/$MAJ"_"$MIN"_"x
 
 rm -rf scripts/output
 npm run-script build-basic-postbooks-package-sql
@@ -16,8 +16,8 @@ npm run-script build-basic-postbooks-demo
 npm run-script build-basic-quickstart
 cd ../private-extensions
 
-git fetch XTUPLE
-git checkout XTUPLE/$MAJ"_"$MIN"_"x
+#git fetch XTUPLE
+#git checkout XTUPLE/$MAJ"_"$MIN"_"x
 
 npm run-script build-basic-manufacturing-package-sql
 npm run-script build-basic-manufacturing-empty
@@ -79,9 +79,20 @@ cp scripts/output/manufacturing_upgrade.sql scripts/output/manufacturing-install
 cd scripts/output
 tar -zcvf manufacturing-install-$MAJ$MIN$PAT.gz manufacturing-install-$MAJ$MIN$PAT/
 
+#enterprise upgrade
+cd ../../
+mkdir scripts/output/enterprise-upgrade-$MAJ$MIN$PAT
+cp scripts/xml/ent_package.xml scripts/output/enterprise-upgrade-$MAJ$MIN$PAT/package.xml
+cp scripts/output/postbooks_upgrade.sql scripts/output/enterprise-upgrade-$MAJ$MIN$PAT
+cp scripts/output/inventory_upgrade.sql scripts/output/enterprise-upgrade-$MAJ$MIN$PAT
+cp scripts/ouput/distribution_upgrade.sql scripts/output/enterprise-upgrade-$MAJ$MIN$PAT
+cp scripts/output/manufacturing_upgrade.sql scripts/output/enterprise-upgrade-$MAJ$MIN$PAT
+cd scripts/output
+tar -zcvf enterprise-upgrade-$MAJ$MIN$PAT.gz enterprise-upgrade-$MAJ$MIN$PAT/
+
 ADMIN=admin
 PORT=5432
-HOST=xtuple-vagrant
+HOST=localhost
 
 DB_LIST="postbooks_demo empty quickstart distempty distquickstart mfgempty mfgquickstart mfgdemo";
 for DB in $DB_LIST ; do
@@ -100,5 +111,6 @@ rm -rf scripts/output/inventory_basic_install.sql
 rm -rf scripts/output/inventory_upgrade.sql
 rm -rf scripts/output/manufacturing-install-$MAJ$MIN$PAT/
 rm -rf scripts/output/manufacturing-upgrade-$MAJ$MIN$PAT/
+rm -rf scripts/output/enterprise-upgrade-$MAJ$MIN$PAT/
 rm -rf scripts/output/manufacturing_basic_install.sql
 rm -rf scripts/output/manufacturing_upgrade.sql

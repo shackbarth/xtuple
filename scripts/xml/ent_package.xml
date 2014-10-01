@@ -44,6 +44,7 @@
 
   <script file="postbooks_upgrade.sql" />
   <script file="inventory_upgrade.sql" />
+  <script file="distribution_upgrade.sql" />
   <script file="manufacturing_upgrade.sql" />
 
 </package>
