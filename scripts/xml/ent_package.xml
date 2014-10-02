@@ -1,4 +1,4 @@
-<package id        = "manufacturing-upgrade-470beta2"
+<package id        = "enterprise-upgrade-470beta2"
          version   = "4.7.0Beta2"
          developer = "xTuple"
          descrip   = "load PostBooks resources"
@@ -44,6 +44,7 @@
 
   <script file="postbooks_upgrade.sql" />
   <script file="inventory_upgrade.sql" />
+  <script file="distribution_upgrade.sql" />
   <script file="manufacturing_upgrade.sql" />
 
 </package>

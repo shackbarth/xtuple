@@ -1,24 +1,13 @@
-<package id        = "manufacturing-upgrade-470beta2"
-         version   = "4.7.0Beta2"
+<package id        = "enterprise-install-470"
+         version   = "4.7.0"
          developer = "xTuple"
          descrip   = "load PostBooks resources"
          updater   = "2.2.4" >
 
   <prerequisite type = "query"
                 name = "Checking xTuple Edition" >
-    <query>SELECT fetchMetricText('Application') = 'Standard';</query>
-    <message>This package must be applied to a Manufacturing Edition database.</message>
-  </prerequisite>
-
-  <prerequisite type="query"
-		name ="Checking xtmfg package" >
-    <query>SELECT TRUE FROM pkghead WHERE pkghead_name = 'xtmfg';</query>
-    <message>This package must be applied to an xTuple ERP database that already contains the xtmfg package.</message>
-  </prerequisite>
-
- <prerequisite type="query" name="Checking xtmfg Package Version">
-     <query>SELECT TRUE FROM pkghead WHERE pkghead_name = 'xtmfg' AND (pkghead_version >= '4.4');</query>
-    <message>This package must be applied against the 4.4+ version of the xtmfg package.</message>
+    <query>SELECT fetchMetricText('Application') = 'PostBooks';</query>
+    <message>This package must be applied to a PostBooks database.</message>
   </prerequisite>
 
   <prerequisite type = "query"
@@ -30,8 +19,8 @@
 
   <prerequisite type = "query"
                 name = "Checking for too-new xTuple ERP database version" >
-    <query>SELECT NOT fetchMetricText('ServerVersion') >= '4.7.0Beta2' AND fetchMetricText('ServerVersion') != '4.7.0';</query>
-    <message>This package may not be applied to a database newer than 4.7.0Beta.
+    <query>SELECT NOT fetchMetricText('ServerVersion') >= '4.8.0' AND fetchMetricText('ServerVersion') != '4.7.0';</query>
+    <message>This package may not be applied to a database newer than 4.7.0Beta2.
     </message>
   </prerequisite>
 
@@ -43,7 +32,11 @@
   </prerequisite>
 
   <script file="postbooks_upgrade.sql" />
+  <script file="inventory_basic_install.sql" />
   <script file="inventory_upgrade.sql" />
+  <script file="distribution_basic_install.sql" />
+  <script file="distribution_upgrade.sql" />
+  <script file="manufacturing_basic_install.sql" />
   <script file="manufacturing_upgrade.sql" />
 
 </package>
