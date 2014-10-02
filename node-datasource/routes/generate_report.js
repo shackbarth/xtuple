@@ -151,7 +151,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
       return _.map(detailDef, function (def) {
         var text = def.attr ? XT.String.traverseDots(data, def.attr) : loc(def.text);
-        if (def.text && def.label === true) {
+        if (def.transform) {
+          text = XT.transformFunctions[def.transform].apply(this, Object(text));
+        } else if (def.text && def.label === true) {
           // label=true on text just means add a colon
           text = text + ": ";
         } else if (def.label === true) {
