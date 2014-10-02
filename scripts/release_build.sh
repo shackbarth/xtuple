@@ -85,10 +85,24 @@ mkdir scripts/output/enterprise-upgrade-$MAJ$MIN$PAT
 cp scripts/xml/ent_package.xml scripts/output/enterprise-upgrade-$MAJ$MIN$PAT/package.xml
 cp scripts/output/postbooks_upgrade.sql scripts/output/enterprise-upgrade-$MAJ$MIN$PAT
 cp scripts/output/inventory_upgrade.sql scripts/output/enterprise-upgrade-$MAJ$MIN$PAT
-cp scripts/ouput/distribution_upgrade.sql scripts/output/enterprise-upgrade-$MAJ$MIN$PAT
+cp scripts/output/distribution_upgrade.sql scripts/output/enterprise-upgrade-$MAJ$MIN$PAT
 cp scripts/output/manufacturing_upgrade.sql scripts/output/enterprise-upgrade-$MAJ$MIN$PAT
 cd scripts/output
 tar -zcvf enterprise-upgrade-$MAJ$MIN$PAT.gz enterprise-upgrade-$MAJ$MIN$PAT/
+
+#enterprise install
+cd ../../
+mkdir scripts/output/enterprise-install-$MAJ$MIN$PAT
+cp scripts/xml/ent_package.xml scripts/output/enterprise-install-$MAJ$MIN$PAT/package.xml
+cp scripts/output/postbooks_upgrade.sql scripts/output/enterprise-install-$MAJ$MIN$PAT
+cp scripts/output/inventory_basic_install.sql scripts/output/enterprise-install-$MAJ$MIN$PAT
+cp scripts/output/inventory_upgrade.sql scripts/output/enterprise-install-$MAJ$MIN$PAT
+cp scripts/output/distribution_basic_install.sql scripts/output/enterprise-install-$MAJ$MIN$PAT
+cp scripts/output/distribution_upgrade.sql scripts/output/enterprise-install-$MAJ$MIN$PAT
+cp scripts/output/manufacturing_basic_install.sql scripts/output/enterprise-install-$MAJ$MIN$PAT
+cp scripts/output/manufacturing_upgrade.sql scripts/output/enterprise-install-$MAJ$MIN$PAT
+cd scripts/output
+tar -zcvf enterprise-install-$MAJ$MIN$PAT.gz enterprise-install-$MAJ$MIN$PAT/
 
 ADMIN=admin
 PORT=5432
@@ -112,5 +126,6 @@ rm -rf scripts/output/inventory_upgrade.sql
 rm -rf scripts/output/manufacturing-install-$MAJ$MIN$PAT/
 rm -rf scripts/output/manufacturing-upgrade-$MAJ$MIN$PAT/
 rm -rf scripts/output/enterprise-upgrade-$MAJ$MIN$PAT/
+rm -rf scripts/output/enterprise-install-$MAJ$MIN$PAT/
 rm -rf scripts/output/manufacturing_basic_install.sql
 rm -rf scripts/output/manufacturing_upgrade.sql
