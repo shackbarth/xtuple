@@ -5,27 +5,10 @@
     assert = require("chai").assert;
 
   var navigateToList = exports.navigateToList = function (app, listKind) {
-    var navigator = app.$.postbooks.$.navigator,
-      myModuleIndex,
-      myPanelIndex;
+    var status = XV.navigateToList(app, listKind);
 
-    //
-    // Drill down into the appropriate module
-    //
-    _.each(navigator.modules, function (module, moduleIndex) {
-      _.each(module.panels, function (panel, panelIndex) {
-        if (listKind && panel.kind === listKind) {
-          myModuleIndex = moduleIndex;
-          myPanelIndex = panelIndex;
-        }
-      });
-    });
-    assert.isDefined(myPanelIndex, "Cannot find " + listKind + " in any module panels");
-    navigator.setModule(myModuleIndex);
-    navigator.setContentPanel(myPanelIndex);
-    return navigator;
+    assert.notEqual(false, status, "Cannot find " + listKind + " in any module panels");
   };
-
   /**
     Finds the list in the panels and opens up a new workspace from that list.
   */
