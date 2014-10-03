@@ -39,6 +39,14 @@ return (function () {
   } else if (TG_OP === 'DELETE') {
     /* Delete share access cache for this Customer. */
     XT.ShareUsers.deleteCacheObj(OLD.obj_uuid);
+
+    /* Refresh the old Address's share access. */
+    XT.ShareUsers.refreshRelationCacheObj(addrUuidSql, [OLD.cust_cntct_id]);
+    XT.ShareUsers.refreshRelationCacheObj(addrUuidSql, [OLD.cust_corrcntct_id]);
+
+    /* Refresh the old Contact's share access. */
+    XT.ShareUsers.refreshRelationCacheObj(cntctUuidSql, [OLD.cust_cntct_id]);
+    XT.ShareUsers.refreshRelationCacheObj(cntctUuidSql, [OLD.cust_corrcntct_id]);
   }
 
   return NEW;
