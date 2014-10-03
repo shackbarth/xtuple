@@ -91,6 +91,8 @@
     "xt/functions/cust_outstanding_credit.sql",
     "xt/functions/grant_role_ext.sql",
     "xt/functions/grant_user_role.sql",
+    "xt/functions/grant_user_ext.sql",
+    "xt/functions/grant_user_priv.sql",
     "xt/functions/install_guiscript.sql",
     "xt/functions/insert_client.sql",
     "xt/functions/invc_allocated_credit.sql",

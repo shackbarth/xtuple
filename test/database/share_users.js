@@ -638,6 +638,7 @@ var _ = require('underscore'),
         assert.isNull(err);
         assert.equal(1, res.rowCount, JSON.stringify(res.rows));
         results = JSON.parse(res.rows[1].get);
+        assert.isDefined(results.data);
         assert.equal(1, results.data.length, JSON.stringify(results.data));
         done();
       });
@@ -657,7 +658,7 @@ var _ = require('underscore'),
         assert.isNull(err);
         assert.equal(1, res.rowCount, JSON.stringify(res.rows));
         results = JSON.parse(res.rows[1].get);
-console.log("Contact: ", JSON.stringify(results.data, null, 2));
+        assert.isDefined(results.data);
         assert.equal(1, results.data.length, JSON.stringify(results.data));
         done();
       });
@@ -677,6 +678,8 @@ console.log("Contact: ", JSON.stringify(results.data, null, 2));
         assert.isNull(err);
         assert.equal(1, res.rowCount, JSON.stringify(res.rows));
         results = JSON.parse(res.rows[1].get);
+console.log("Customer: ", JSON.stringify(results.data, null, 2));
+        assert.isDefined(results.data);
         assert.equal(1, results.data.length, JSON.stringify(results.data));
         done();
       });
