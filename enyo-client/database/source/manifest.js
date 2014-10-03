@@ -124,6 +124,7 @@
     "xt/functions/quote_margin.sql",
     "xt/functions/refresh_cache_share_users.sql",
     "xt/functions/refresh_cache_share_users_obj.sql",
+    "xt/functions/refresh_cache_share_users_user.sql",
     "xt/functions/register_extension.sql",
     "xt/functions/register_extension_dependency.sql",
     "xt/functions/trylock.sql",

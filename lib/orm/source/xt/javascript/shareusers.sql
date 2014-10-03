@@ -40,7 +40,7 @@ select xt.install_js('XT','ShareUsers','xtuple', $$
   /**
    * Refresh the Share Users Access cache for a single object derrived from a
    * relations query. When performing cache invaidation and refreshing from a
-   * table's trigger, sometime you need to do cache invaidation and refreshing
+   * table's trigger, sometimes you need to do cache invaidation and refreshing
    * on a related object. This method allows you to pass a query and parameters
    * that will find a matching object's UUID. If a UUID is found, this method
    * will call the XT.ShareUsers.refreshCacheObj() method on it.
@@ -75,6 +75,35 @@ select xt.install_js('XT','ShareUsers','xtuple', $$
 
     /* Refresh the cache for this object, effectively deleting any refrences. */
     XT.ShareUsers.refreshCacheObj(deleteObjUuid);
+  }
+
+  /**
+   * Refresh the Share Users Access cache for a single username.
+   *
+   * @param {string} The username of the user to refresh the cache for.
+   */
+  XT.ShareUsers.refreshCacheUser = function(refreshObjUser) {
+    var refreshObjSql = 'select xt.refresh_cache_share_users_user($1)';
+
+    plv8.execute(refreshObjSql, [refreshObjUser]);
+  }
+
+  /**
+   * Refresh the Share Users Access cache for a single object derrived from a
+   * relations query. When performing cache invaidation and refreshing from a
+   * table's trigger, sometimes you need to do cache invaidation and refreshing
+   * on a related user. This method allows you to pass a query and parameters
+   * that will find a matching username. If a username is found, this method
+   * will call the XT.ShareUsers.refreshCacheUser() method on it.
+   *
+   * @param {string} A query to execute that will return a username.
+   * @param {array} The query parameters to pass in when executing the query.
+   */
+  XT.ShareUsers.refreshRelationCacheUser = function(query, params) {
+    objUser = plv8.execute(query, params);
+    if (objUser.length && objUser[0].username) {
+      XT.ShareUsers.refreshCacheUser(objUser[0].username);
+    }
   }
 
 }());
