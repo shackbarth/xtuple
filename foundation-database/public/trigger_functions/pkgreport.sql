@@ -50,7 +50,7 @@ CREATE OR REPLACE FUNCTION _pkgreportalterTrigger() RETURNS TRIGGER AS $$
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 BEGIN
-  IF (pkgMayBeModified(TG_TABLE_SCHEMA)) THEN
+  IF (pkgMayBeModified(TG_TABLE_SCHEMA) OR isDba()) THEN
     IF (TG_OP = 'DELETE') THEN
       RETURN OLD;
     ELSE
