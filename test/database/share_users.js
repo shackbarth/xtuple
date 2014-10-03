@@ -392,10 +392,33 @@ var _ = require('underscore'),
  * 6. Check xt.share_users view for matching UUID-to-username.
  * 7. Check xt.cache_share_users view for matching UUID-to-username.
  * 8. Test access for new user with Share User association.
- * 9. Change Address and check access.
- * 10. Change Contact and check access.
- * 11.
+ *
 // TODO: Add checks for all trigger logic.
+ *
+ * Add a new Address and grant explicit access. Can access new Address.
+ * Delete an Address, no cache_share_users entry for it.
+ * Add a new Contact and Address. Grant explicit acess. Can access new Contact and Address.
+ * Delete an Contact, no cache_share_users entry for it. Cannot access it's Address.
+ * Add a new Contact under CRM Account. Can access new Contact and it's Address.
+ * Change a Contact's CRM Account. Cannot access the Contact or Address any more.
+ * Change the Contact's Address. Cannot access old Address. Can access new Address.
+ * Change Customer's Billing Contact. Cannot access old Contact or Address. Can access new Contact and Address.
+ * Change Customer's Correspondence Contact. Cannot access old Contact or Address. Can access new Contact and Address.
+ * Add Ship To. Can access it and its Contact and Address.
+ * Change Ship To Address. Can access new Address. Cannot access old Address.
+ * Change Ship To Contact. Can access new Contact. Cannot access old Contact.
+ * Delete Ship To. Cannot access old Address. Cannot access old Contact.
+ *
+ * TODO: For xDruple test: Change Ship To Customer. Can access new Customer. Cannot access old Customer.
+ * TODO: For xDruple test: Test child CRM account Ship To Contact access.
+ *
+ * Delete CRM Account. Cannot access Contacts or Addresses that were on it.
+ * Add Sales Order for Customer. Can access it.
+ * Change Sales Order Customer. Can't Access it.
+ * Delete Sales Order. No cache_share_users entry for it.
+ * Add an Invoice for Customer. Can access it.
+ * Change Invoice Customer. Can't Access it.
+ * Delete Invoice. No cache_share_users entry for it.
  */
 
     // Address exists.
@@ -684,15 +707,6 @@ var _ = require('underscore'),
       });
     });
 
-
-// Setup Share User Access through CRM Account associations.
-// Test xt.share_users view.
-// Test xt.cache_share_users table.
-// Test Access to objects.
-// Change Share User Access assocations.
-// Test xt.share_users view.
-// Test xt.cache_share_users table.
-// Test Access to objects.
 // Test Owner.
 // Test Rep.
 // Test Parent.
