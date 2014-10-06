@@ -5,9 +5,10 @@
     assert = require("chai").assert;
 
   var navigateToList = exports.navigateToList = function (app, listKind) {
-    var status = XV.navigateToList(app, listKind);
+    var navigator = XV.navigateToList(app, listKind);
 
-    assert.notEqual(false, status, "Cannot find " + listKind + " in any module panels");
+    assert.isObject(navigator, "Cannot find " + listKind + " in any module panels");
+    return navigator;
   };
   /**
     Finds the list in the panels and opens up a new workspace from that list.
