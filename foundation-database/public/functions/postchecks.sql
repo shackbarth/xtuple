@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION postchecks(integer)
+CREATE OR REPLACE FUNCTION postchecks(INTEGER)
   RETURNS integer AS
 $BODY$
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 

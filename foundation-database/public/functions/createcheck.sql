@@ -24,7 +24,7 @@ $$ LANGUAGE 'plpgsql';
 
 
 
-CREATE OR REPLACE FUNCTION createcheck(integer, text, integer, date, numeric, integer, integer, integer, text, text, boolean, integer)
+CREATE OR REPLACE FUNCTION createcheck(INTEGER, TEXT, INTEGER, DATE, NUMERIC, INTEGER, INTEGER, INTEGER, TEXT, TEXT, BOOLEAN, INTEGER)
   RETURNS integer AS
 $BODY$
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
