@@ -93,7 +93,7 @@ tar -zcvf enterprise-upgrade-$MAJ$MIN$PAT.gz enterprise-upgrade-$MAJ$MIN$PAT/
 #enterprise install
 cd ../../
 mkdir scripts/output/enterprise-install-$MAJ$MIN$PAT
-cp scripts/xml/ent_package.xml scripts/output/enterprise-install-$MAJ$MIN$PAT/package.xml
+cp scripts/xml/ent_install.xml scripts/output/enterprise-install-$MAJ$MIN$PAT/package.xml
 cp scripts/output/postbooks_upgrade.sql scripts/output/enterprise-install-$MAJ$MIN$PAT
 cp scripts/output/inventory_basic_install.sql scripts/output/enterprise-install-$MAJ$MIN$PAT
 cp scripts/output/inventory_upgrade.sql scripts/output/enterprise-install-$MAJ$MIN$PAT
