@@ -161,7 +161,7 @@ install_packages() {
 	# npm no longer supports its self-signed certificates
 	log "telling npm to use known registrars..."
 	npm config set ca ""
-        sudo chown -R $USER $HOME/.npm
+        sudo chown -R $USER $HOME/.npm $HOME/tmp
 
   log "installing npm modules..."
   npm install --unsafe-perm 2>&1 | tee -a $LOG_FILE
