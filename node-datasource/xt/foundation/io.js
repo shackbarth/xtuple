@@ -62,9 +62,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       buff = this.buff();
       buff.set("color", "blue");
       buff.set("prefix", "<<DEBUG %@>>".f(this.timestamp()));
-
       args = X.$A(arguments);
-
       args.unshift(buff);
       flushed = this.console.apply(this, args);
       this.hook("debug", flushed);
