@@ -23,13 +23,19 @@
         "properties":[
           "account.owner.username",
           "account.username.username",
-          "account.number"
+          "account.number",
+          "crmaccountUsers"
         ]
       },
       "attribute": {
         "creditStatus": {
           "create": "UpdateCustomerCreditStatus",
           "update": "UpdateCustomerCreditStatus"
+        },
+        "crmaccountUsers": {
+          "view": false,
+          "create": false,
+          "update": false
         }
       }
     },
@@ -374,6 +380,14 @@
           "type": "CreditCard",
           "column": "cust_id",
           "inverse": "customer"
+        }
+      },
+      {
+        "name": "crmaccountUsers",
+        "toMany": {
+          "type": "ShareUsers",
+          "column": "obj_uuid",
+          "inverse": "uuid"
         }
       }
     ],
