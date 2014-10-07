@@ -67,6 +67,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     },
 
     capture: function () {
+      if (!X.options.datasource.capture) {
+        return;
+      }
+
       var args = [], buff = this.buff(), flushed, payload;
       // grab the payload from the query
       payload = JSON.parse(arguments[0].split('$$')[1] || {});
