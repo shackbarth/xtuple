@@ -58,14 +58,27 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         return;
       }
 
-      var args, buff, flushed;
-      buff = this.buff();
+      var args = X.$A(arguments), buff = this.buff(), flushed;
       buff.set("color", "blue");
       buff.set("prefix", "<<DEBUG %@>>".f(this.timestamp()));
-      args = X.$A(arguments);
       args.unshift(buff);
       flushed = this.console.apply(this, args);
       this.hook("debug", flushed);
+    },
+
+    capture: function () {
+      var args = [], buff = this.buff(), flushed, payload;
+      // grab the payload from the query
+      payload = arguments[0].split('$$')[1];
+      delete payload.username;
+      delete payload.encryptionKey;
+
+      buff.set("color", "green");
+      buff.set("prefix", "<<CAPTURE %@>>".f(this.timestamp()));
+      args.push(buff);
+      args.push(payload);
+      flushed = this.console.apply(this, args);
+      this.hook("capture", flushed);
     },
 
     addHook: function (targets, hook) {
@@ -116,6 +129,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   });
 
   X.log      = _.bind(X.io.log, X.io);
+  X.capture      = _.bind(X.io.capture, X.io);
   X.debug    = _.bind(X.io.debug, X.io);
   X.err      = _.bind(X.io.err, X.io);
   X.warn     = _.bind(X.io.warn, X.io);
