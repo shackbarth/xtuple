@@ -54,12 +54,17 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     // note: this doesn't get used for websocket debugging in node-datasource
     debug: function () {
+      if (!X.options.datasource.debugging) {
+        return;
+      }
+
       var args, buff, flushed;
-      if (!X.options.datasource.debugging) return;
-      args = X.$A(arguments);
       buff = this.buff();
       buff.set("color", "blue");
       buff.set("prefix", "<<DEBUG %@>>".f(this.timestamp()));
+
+      args = X.$A(arguments);
+
       args.unshift(buff);
       flushed = this.console.apply(this, args);
       this.hook("debug", flushed);
