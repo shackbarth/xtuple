@@ -69,14 +69,15 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     capture: function () {
       var args = [], buff = this.buff(), flushed, payload;
       // grab the payload from the query
-      payload = arguments[0].split('$$')[1];
-      delete payload.username;
-      delete payload.encryptionKey;
+      payload = JSON.parse(arguments[0].split('$$')[1] || {});
+      // remove the user fields
+      delete payload['username'];
+      delete payload['encryptionKey'];
 
       buff.set("color", "green");
       buff.set("prefix", "<<CAPTURE %@>>".f(this.timestamp()));
       args.push(buff);
-      args.push(payload);
+      args.push(JSON.stringify(payload));
       flushed = this.console.apply(this, args);
       this.hook("capture", flushed);
     },
