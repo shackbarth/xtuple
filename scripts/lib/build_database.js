@@ -206,7 +206,7 @@ var  async = require('async'),
           // makes no assumptions about the username and the encryption key
 
           // To generate the patches and posts that make up the populate_data.js
-          // file, set debugging: "capture" in config.js and then copy/paste the
+          // file, set 'capture: true' in config.js and then copy/paste the
           // logged contents of the datasource as you drive around the app creating
           // and editing objects.
           if (spec.populateData && creds.encryptionKeyFile) {
