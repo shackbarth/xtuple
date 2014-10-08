@@ -8,7 +8,6 @@ var parse = global.URL.parse;
 var resolve = global.URL.resolve;
 global.URL.parse = function (url) {
   "use strict";
-  console.log('URL.parse', url);
   if (_.isObject(url) && _.isString(url.href)) {
     return parse(url.href);
   }
@@ -18,8 +17,6 @@ global.URL.parse = function (url) {
 };
 global.URL.resolve = function (from, to) {
   "use strict";
-  console.log('URL.resolve from', from);
-  console.log('URL.resolve to', to);
   if (_.isObject(from)) {
     from = from.href || '/';
   }
