@@ -115,11 +115,10 @@ Backbone:true, _:true, X:true, __dirname:true, exports:true, module: true */
           // options.debugDatabase = X.options.datasource.debugDatabase;
           // worker.send({id: this.requestNum, query: query, options: options, creds: creds});
         } else {
-          if (query.indexOf('select xt.delete($${"nameSpace":"SYS","type":"SessionStore"') < 0 &&
+          if (X.options && X.options.datasource.debugging &&
+              query.indexOf('select xt.delete($${"nameSpace":"SYS","type":"SessionStore"') < 0 &&
               query.indexOf('select xt.get($${"nameSpace":"SYS","type":"SessionStore"') < 0) {
-
-            X.capture(query);
-            X.debug(query);
+            X.log(query);
           }
           X.pg.connect(creds, _.bind(this.connected, this, query, options, callback));
         }
@@ -325,6 +324,10 @@ Backbone:true, _:true, X:true, __dirname:true, exports:true, module: true */
         query = "select xt.{method}($${payload}$$) as request"
                 .replace("{method}", method)
                 .replace("{payload}", payload);
+
+        //if (X.options.datasource.debugging) {
+        //  X.log("Query from model: ", query);
+        //}
 
         if (options.database) {
           conn.database = options.database;

@@ -14,7 +14,6 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
     },
     datasource: {
       debugging: false,
-      capture: false,
       debugDatabase: false,
       enhancedAuthKey: "xTuple",
       sessionTimeout: 60,

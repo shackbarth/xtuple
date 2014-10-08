@@ -54,36 +54,15 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     // note: this doesn't get used for websocket debugging in node-datasource
     debug: function () {
-      if (!X.options.datasource.debugging) {
-        return;
-      }
-
-      var args = X.$A(arguments), buff = this.buff(), flushed;
+      var args, buff, flushed;
+      if (!X.options.datasource.debugging) return;
+      args = X.$A(arguments);
+      buff = this.buff();
       buff.set("color", "blue");
       buff.set("prefix", "<<DEBUG %@>>".f(this.timestamp()));
       args.unshift(buff);
       flushed = this.console.apply(this, args);
       this.hook("debug", flushed);
-    },
-
-    capture: function () {
-      if (!X.options.datasource.capture) {
-        return;
-      }
-
-      var args = [], buff = this.buff(), flushed, payload;
-      // grab the payload from the query
-      payload = JSON.parse(arguments[0].split('$$')[1] || {});
-      // remove the user fields
-      delete payload['username'];
-      delete payload['encryptionKey'];
-
-      buff.set("color", "green");
-      buff.set("prefix", "<<CAPTURE %@>>".f(this.timestamp()));
-      args.push(buff);
-      args.push(JSON.stringify(payload));
-      flushed = this.console.apply(this, args);
-      this.hook("capture", flushed);
     },
 
     addHook: function (targets, hook) {
@@ -134,7 +113,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   });
 
   X.log      = _.bind(X.io.log, X.io);
-  X.capture      = _.bind(X.io.capture, X.io);
   X.debug    = _.bind(X.io.debug, X.io);
   X.err      = _.bind(X.io.err, X.io);
   X.warn     = _.bind(X.io.warn, X.io);
