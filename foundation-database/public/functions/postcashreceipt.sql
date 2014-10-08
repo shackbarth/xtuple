@@ -336,7 +336,8 @@ BEGIN
 
   -- Post any gain/loss from the alternate currency exchange rate
   IF (COALESCE(_p.cashrcpt_alt_curr_rate, 0.0) <> 0.0) THEN
-    _exchGain := ROUND((_p.cashrcpt_curr_rate - _p.cashrcpt_alt_curr_rate) * _p.cashrcpt_amount_base, 2);
+    _exchGain := ROUND((_p.cashrcpt_amount / _p.cashrcpt_alt_curr_rate) -
+                       (_p.cashrcpt_amount / _p.cashrcpt_curr_rate), 2);
 
     IF (_exchGain <> 0) THEN
       PERFORM insertIntoGLSeries( _sequence, 'A/R', 'CR',

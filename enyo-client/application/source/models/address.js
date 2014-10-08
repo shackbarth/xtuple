@@ -125,6 +125,14 @@ white:true*/
         params.length = "3";
         return XT.Error.clone('xt1006', { params: params });
       }
+
+      if (attributes.currencyNumber &&
+          attributes.currencyNumber.length !== 3) {
+        params.attr = "_currencyNumber".loc();
+        params.length = "3";
+        return XT.Error.clone('xt1006', { params: params });
+      }
+
       return XM.Document.prototype.validate.apply(this, arguments);
     }
 

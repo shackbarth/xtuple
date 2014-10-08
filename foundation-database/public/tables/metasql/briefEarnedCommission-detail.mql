@@ -5,11 +5,20 @@
 -- See www.xtuple.com/CPAL for the full text of the software license.
 
 SELECT cohist_salesrep_id, salesrep_number, salesrep_name, cust_number, cust_name,
-       cohist_ordernumber, cohist_invcnumber, cohist_invcdate, currAbbr,
+       cohist_ordernumber, cohist_orderdate, cohist_invcnumber, cohist_invcdate, currAbbr,
        SUM(extprice) AS sumextprice,
        SUM(cohist_commission) AS sumcommission,
        SUM(baseextprice) AS sumbaseextprice,
        SUM(basecommission) AS sumbasecommission,
+<? if exists("isReport") ?>
+       formatDate(cohist_orderdate) AS f_orderdate,
+       formatDate(cohist_invcdate) AS f_invcdate,
+       formatMoney(SUM(extprice)) AS f_sumextprice,
+       formatMoney(SUM(baseextprice)) AS f_sumbaseextprice,
+       formatMoney(SUM(cohist_commission)) AS f_sumcommission,
+       formatMoney(SUM(basecommission)) AS f_sumbasecommission,
+<? endif ?>
+       <? value("return") ?> AS cohist_invcdate_xtnullrole,
        'curr' AS sumextprice_xtnumericrole,
        'curr' AS sumcommission_xtnumericrole,
        'curr' AS sumbaseextprice_xtnumericrole,
@@ -23,14 +32,10 @@ FROM saleshistory
 <? endif ?>
 WHERE ((cohist_commission <> 0)
     AND(cohist_invcdate BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
-    <? if exists("includeMisc") ?>
-    AND (COALESCE(cohist_misc_type, '') <> 'T')
-    AND (COALESCE(cohist_misc_type, '') <> 'F')
-    <? endif ?>
     <? if exists("salesrep_id") ?>
     AND (cohist_salesrep_id=<? value("salesrep_id") ?>)
     <? endif ?>
       )
 GROUP BY cohist_salesrep_id, salesrep_number, salesrep_name, cust_number, cust_name,
-         cohist_ordernumber, cohist_invcnumber, cohist_invcdate, currAbbr
+         cohist_ordernumber, cohist_orderdate, cohist_invcnumber, cohist_invcdate, currAbbr
 ORDER BY salesrep_number, cust_number, cohist_invcdate;
