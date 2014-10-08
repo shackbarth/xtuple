@@ -57,14 +57,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     
   var formatInteger = function (numeric) {
     return ~~numeric;  // Returns a numeric as an integer type
-  };  
+  };
 
   XT.transformFunctions = {
     fullname: formatFullName,
     address: formatAddress,
     arbl: formatArbl,
     integer: formatInteger
-  };    
+  };
 
   /**
     Generates a report using fluentReports
