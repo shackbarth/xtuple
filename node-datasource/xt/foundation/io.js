@@ -75,8 +75,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       // grab the payload from the query
       payload = JSON.parse(arguments[0].split('$$')[1] || {});
       // remove the user fields
-      delete payload['username'];
-      delete payload['encryptionKey'];
+      delete payload.username;
+      delete payload.encryptionKey;
 
       buff.set("color", "green");
       buff.set("prefix", "");
