@@ -79,7 +79,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       delete payload['encryptionKey'];
 
       buff.set("color", "green");
-      buff.set("prefix", "<<CAPTURE %@>>".f(this.timestamp()));
+      buff.set("prefix", "");
       args.push(buff);
       args.push(JSON.stringify(payload));
       flushed = this.console.apply(this, args);
