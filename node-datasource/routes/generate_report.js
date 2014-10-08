@@ -152,7 +152,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       return _.map(detailDef, function (def) {
         var text = def.attr ? XT.String.traverseDots(data, def.attr) : loc(def.text);
         if (def.transform) {
-          text = XT.transformFunctions[def.transform].apply(this, Object(text));
+           // Transform works for a single input attribute.  Refactor if multiple inputs
+          // required, although I do not think this is possible with the report detail section
+          text = XT.transformFunctions[def.transform].apply(this, [text]);
         } else if (def.text && def.label === true) {
           // label=true on text just means add a colon
           text = text + ": ";
