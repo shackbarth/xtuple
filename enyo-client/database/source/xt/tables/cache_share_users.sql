@@ -5,7 +5,7 @@ select xt.add_column('cache_share_users','username', 'text', null, 'xt', 'The us
 
 select xt.add_constraint('cache_share_users','cache_share_users_unique', 'unique(uuid, username)');
 
-comment on table xt.sharetype is 'Cache tatble for xt.share_user';
+comment on table xt.sharetype is 'Cache table for xt.share_user';
 
 -- Indexes.
 select xt.add_index('cache_share_users', 'uuid', 'cache_share_users_uuid_idx', 'btree', 'xt');
