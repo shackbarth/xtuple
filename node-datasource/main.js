@@ -5,6 +5,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global X:true, Backbone:true, _:true, XM:true, XT:true, SYS:true, jsonpatch:true*/
 process.chdir(__dirname);
 
+async = require("async");
 Backbone = require("backbone");
 _ = require("underscore");
 jsonpatch = require("json-patch");
@@ -172,7 +173,7 @@ var app;
     }
   };
 
-  _.each(X.options.datasource.databases, function (dbVal, dbKey, dbList) {
+  var warmCacheShareUsers = function (dbVal, callback) {
     var cacheShareUsersOptions = {
       user: X.options.databaseServer.user,
       port: X.options.databaseServer.port,
@@ -182,8 +183,10 @@ var app;
     };
 
     X.log("Warming Share Users Cache for database " + dbVal + "...");
-    datasource.api.query('select xt.refresh_share_user_cache()', cacheShareUsersOptions, cacheShareUsersWarmed);
-  });
+    datasource.api.query('select xt.refresh_share_user_cache()', cacheShareUsersOptions, callback);
+  };
+
+  async.map(X.options.datasource.databases, warmCacheShareUsers, cacheShareUsersWarmed);
 
 }());
 
