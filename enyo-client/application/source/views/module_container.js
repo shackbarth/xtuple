@@ -98,7 +98,7 @@ trailing:true, white:true*/
       } else {
         var dashboardModule = {
           name: "dashboardLite",
-          label: "_dashboard".loc(),
+          label: "_dashboardLite".loc(),
           panels: [
             {
               name: "dashboardLite",

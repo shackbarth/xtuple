@@ -214,6 +214,7 @@
     "_customers": "Customers",
     "_customerNumber": "Customer #",
     "_customerProspect": "Customer / Prospect",
+    "_dashboardLite": "Dashboard Lite",
     "_data": "Data",
     "_dataState": "Data State",
     "_date": "Date",
