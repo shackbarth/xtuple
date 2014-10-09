@@ -2901,8 +2901,8 @@ a,
   color: #070707;
 }
 @media (max-width: 480px) {
-  .xv-list-attr {
-    padding: 2px;
+  .xv-list-attr .xv-list-attr {
+    padding: 2px 5px 2px 5px;
   }
 }
 .xv-list-attr.header {
