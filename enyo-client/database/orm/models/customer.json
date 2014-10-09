@@ -22,7 +22,7 @@
         "delete":"MaintainPersonalCRMAccounts",
         "properties":[
           "account.owner.username",
-          "account.username.username",
+          "account.userAccount.username",
           "account.number",
           "crmaccountUsers"
         ]

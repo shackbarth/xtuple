@@ -851,7 +851,7 @@
         }
       },
       {
-        "name":"username",
+        "name":"userAccount",
         "toOne":{
           "isNested":true,
           "type":"UserAccountRelation",
