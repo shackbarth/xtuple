@@ -8,7 +8,8 @@ DECLARE
 BEGIN
 
   -- Cache some information
-  SELECT item_type INTO _r
+  -- Added item_number as part of feature request 21645
+  SELECT item_type, item_number INTO _r
   FROM item
   WHERE (item_id=NEW.itemsite_item_id);
  
@@ -44,11 +45,11 @@ BEGIN
     END IF;
   END IF;
 
+-- Added item_number to error messages displayed to fulfill Feature Request 21645
   IF (NEW.itemsite_qtyonhand < 0 AND NEW.itemsite_costmethod = 'A') THEN
-    RAISE EXCEPTION 'Itemsite (%) is set to use average costing and is not allowed to have a negative quantity on hand.', NEW.itemsite_id;
+    RAISE EXCEPTION 'Itemsite (%) is set to use average costing and is not allowed to have a negative quantity on hand.', 'ID: ' || NEW.itemsite_id || ', Item: ' || _r.item_number;
   ELSIF (NEW.itemsite_value < 0 AND NEW.itemsite_costmethod = 'A') THEN
-    RAISE EXCEPTION 'This transaction results in a negative itemsite value.  Itemsite (%) is set to use average costing and is not allowed to have a negative value.', NEW.itemsite_id;
-  END IF;
+    RAISE EXCEPTION 'This transaction results in a negative itemsite value.  Itemsite (%) is set to use average costing and is not allowed to have a negative value.', 'ID: ' || NEW.itemsite_id || ', Item: ' || _r.item_number;  END IF;
 
 --  Handle the ChangeLog
   IF ( SELECT (metric_value='t')
@@ -363,19 +364,6 @@ BEGIN
       ELSIF (_state IN (24, 42, 44)) THEN
 
         RAISE NOTICE 'Deleting item site detail records,';
-
-        SELECT SUM(itemloc_qty) INTO _qty
-        FROM itemloc, location
-        WHERE ((itemloc_location_id=location_id)
-        AND (NOT location_netable) 
-        AND (itemloc_itemsite_id=OLD.itemsite_id));
-
-        IF (_qty != 0) THEN
-          UPDATE itemsite
-          SET itemsite_qtyonhand = itemsite_qtyonhand + _qty,
-            itemsite_nnqoh = itemsite_nnqoh - _qty
-          WHERE (itemsite_id=OLD.itemsite_id);
-        END IF;
 
         DELETE FROM itemloc
         WHERE (itemloc_itemsite_id=OLD.itemsite_id);

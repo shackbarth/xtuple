@@ -112,5 +112,4 @@ trailing:true, white:true*/
       }
     }
   });
-
 }());

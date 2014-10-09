@@ -29,44 +29,29 @@ FROM (
              invcnt_tagdate AS tagdate,
              item_number, (item_descrip1 || item_descrip2) AS item_descrip, warehous_code,
 	     CASE WHEN (location_id IS NOT NULL) THEN
-               location_name
+               formatLocationName(location_id)
                ELSE <? value("all") ?> END AS loc_specific,
-             CASE WHEN (invcnt_location_id IS NOT NULL)
-               THEN (SELECT SUM(itemloc_qty)
-                     FROM itemloc JOIN location ON (location_id=itemloc_location_id)
-                     WHERE ((itemloc_itemsite_id=itemsite_id)
-                       AND  (itemloc_location_id=invcnt_location_id)
-                       AND  (location_netable)))
-               ELSE itemsite_qtyonhand
-             END AS qoh,
-             CASE WHEN (invcnt_location_id IS NOT NULL)
-               THEN (SELECT SUM(itemloc_qty)
-                     FROM itemloc JOIN location ON (location_id=itemloc_location_id)
-                     WHERE ((itemloc_itemsite_id=itemsite_id)
-                       AND  (itemloc_location_id=invcnt_location_id)
-                       AND  (NOT location_netable)))
-               ELSE itemsite_nnqoh
-             END AS nnqoh,
+             qtyAtLocation(invcnt_itemsite_id, invcnt_location_id) AS qoh,
       <? if exists("showSlips") ?>
              calcTotalSlipQty(invcnt_id) AS qohafter,
-             (calcTotalSlipQty(invcnt_id) - (itemsite_qtyonhand + itemsite_nnqoh)) AS variance,
+             (calcTotalSlipQty(invcnt_id) - qtyAtLocation(invcnt_itemsite_id, invcnt_location_id)) AS variance,
              CASE WHEN (calcTotalSlipQty(invcnt_id) IS NULL) THEN NULL
-                  WHEN (((itemsite_qtyonhand + itemsite_nnqoh) = 0) AND (calcTotalSlipQty(invcnt_id) > 0)) THEN 1
-                  WHEN (((itemsite_qtyonhand + itemsite_nnqoh) = 0) AND (calcTotalSlipQty(invcnt_id) < 0)) THEN -1
-                  WHEN (((itemsite_qtyonhand + itemsite_nnqoh) = 0) AND (calcTotalSlipQty(invcnt_id) = 0)) THEN 0
-               ELSE ((1 - (calcTotalSlipQty(invcnt_id) / (itemsite_qtyonhand + itemsite_nnqoh))) * -1)
+                  WHEN ((qtyAtLocation(invcnt_itemsite_id, invcnt_location_id) = 0) AND (calcTotalSlipQty(invcnt_id) > 0)) THEN 1
+                  WHEN ((qtyAtLocation(invcnt_itemsite_id, invcnt_location_id) = 0) AND (calcTotalSlipQty(invcnt_id) < 0)) THEN -1
+                  WHEN ((qtyAtLocation(invcnt_itemsite_id, invcnt_location_id) = 0) AND (calcTotalSlipQty(invcnt_id) = 0)) THEN 0
+               ELSE ((1 - (calcTotalSlipQty(invcnt_id) / qtyAtLocation(invcnt_itemsite_id, invcnt_location_id))) * -1)
              END AS varianceprcnt,
-             (itemCost(itemsite_id) * (calcTotalSlipQty(invcnt_id) - (itemsite_qtyonhand + itemsite_nnqoh))) AS variancecost,
+             (itemCost(itemsite_id) * (calcTotalSlipQty(invcnt_id) - qtyAtLocation(invcnt_itemsite_id, invcnt_location_id))) AS variancecost,
       <? else ?>
              COALESCE(invcnt_qoh_after, 0.0) AS qohafter,
-             (invcnt_qoh_after - (itemsite_qtyonhand + itemsite_nnqoh)) AS variance,
+             (invcnt_qoh_after - qtyAtLocation(invcnt_itemsite_id, invcnt_location_id)) AS variance,
              CASE WHEN (invcnt_qoh_after IS NULL) THEN NULL
-                  WHEN (((itemsite_qtyonhand + itemsite_nnqoh) = 0) AND (invcnt_qoh_after > 0)) THEN 1
-                  WHEN (((itemsite_qtyonhand + itemsite_nnqoh) = 0) AND (invcnt_qoh_after < 0)) THEN -1
-                  WHEN (((itemsite_qtyonhand + itemsite_nnqoh) = 0) AND (invcnt_qoh_after = 0)) THEN 0
-               ELSE ((1 - (invcnt_qoh_after / (itemsite_qtyonhand + itemsite_nnqoh))) * -1)
+                  WHEN ((qtyAtLocation(invcnt_itemsite_id, invcnt_location_id) = 0) AND (invcnt_qoh_after > 0)) THEN 1
+                  WHEN ((qtyAtLocation(invcnt_itemsite_id, invcnt_location_id) = 0) AND (invcnt_qoh_after < 0)) THEN -1
+                  WHEN ((qtyAtLocation(invcnt_itemsite_id, invcnt_location_id) = 0) AND (invcnt_qoh_after = 0)) THEN 0
+               ELSE ((1 - (invcnt_qoh_after / qtyAtLocation(invcnt_itemsite_id, invcnt_location_id))) * -1)
              END AS varianceprcnt,
-             (itemCost(itemsite_id) * (invcnt_qoh_after - (itemsite_qtyonhand + itemsite_nnqoh))) AS variancecost,
+             (itemCost(itemsite_id) * (invcnt_qoh_after - qtyAtLocation(invcnt_itemsite_id, invcnt_location_id))) AS variancecost,
       <? endif ?>
              item_number AS orderby,
              0 AS xtindentrole
@@ -101,7 +86,6 @@ FROM (
              '' AS warehous_code,
              '' AS loc_specific,
              NULL AS qoh,
-             NULL AS nnqoh,
              cntslip_qty AS qohafter,
              NULL AS variance, NULL AS varianceprcnt, 0 AS variancecost,
              item_number AS orderby,

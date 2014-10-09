@@ -6,7 +6,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   "use strict";
 
   var async = require("async"),
-    exec = require('child_process').exec,
+    proc = require('child_process'),
     path = require('path'),
     os = require('os'),
     winston = require('winston'),
@@ -35,21 +35,29 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         var schemaPath = path.join(path.dirname(spec.source), "440_schema.sql");
         winston.info("Building schema for database " + databaseName);
 
-        exec("psql -U " + creds.username + " -h " + creds.hostname + " --single-transaction -p " +
-          creds.port + " -d " + databaseName + " -f " + schemaPath,
-          {maxBuffer: 40000 * 1024 /* 200x default */}, done);
+        var process = proc.spawn('psql', [
+          '-q', '-U', creds.username, '-h', creds.hostname, '--single-transaction', '-p',
+          creds.port, '-d', databaseName, '-f', schemaPath
+        ], { stdio: 'inherit' });
+        process.on('exit', done);
+        
       },
       populateData = function (done) {
         winston.info("Populating data for database " + databaseName + " from " + spec.source);
-        exec("psql -U " + creds.username + " -h " + creds.hostname + " --single-transaction -p " +
-          creds.port + " -d " + databaseName + " -f " + spec.source,
-          {maxBuffer: 40000 * 1024 /* 200x default */}, done);
+        var process = proc.spawn('psql', [
+          '-q', '-U', creds.username, '-h', creds.hostname, '--single-transaction', '-p',
+          creds.port, '-d', databaseName, '-f', spec.source
+        ], { stdio: 'inherit'});
+        process.on('exit', done);
       },
       // use exec to restore the backup. The alternative, reading the backup file into a string to query
       // doesn't work because the backup file is binary.
       restoreBackup = function (done) {
-        exec("pg_restore -U " + creds.username + " -h " + creds.hostname + " -p " +
-          creds.port + " -d " + databaseName + " -j " + os.cpus().length + " " + spec.backup, function (err, res) {
+        var process = proc.spawn('pg_restore', [
+          '-U', creds.username, '-h', creds.hostname, '-p', creds.port, '-d', databaseName,
+          '-j', os.cpus().length, spec.backup
+        ], { stdio: 'inherit' });
+        process.on('exit', function (err, res) {
           if (err) {
             console.log("ignoring restore db error", err);
           }

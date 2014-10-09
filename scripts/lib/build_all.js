@@ -5,6 +5,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 var _ = require('underscore'),
   async = require('async'),
   buildDatabase = require("./build_database"),
+  buildDictionary = require("./build_dictionary"),
   buildClient = require("./build_client").buildClient,
   defaultExtensions = require("./util/default_extensions").extensions,
   dataSource = require('../../node-datasource/lib/ext/datasource').dataSource,
@@ -103,9 +104,21 @@ var _ = require('underscore'),
           });
           done(null, "Build succeeded." + returnMessage);
         });
+      },
+      function (done) {
+        // step 4: import all dictionary files
+        if (specs[0].clientOnly || specs[0].databaseOnly) {
+          // don't build dictionaries if the user doesn't want us to
+          console.log("Not importing the dictionaries");
+          return done();
+        }
+        var databases = _.map(specs, function (spec) {
+          return spec.database;
+        });
+        async.map(databases, buildDictionary.importAllDictionaries, done);
       }
     ], function (err, results) {
-      buildAllCallback(err, results && results[results.length - 1]);
+      buildAllCallback(err, results && results[results.length - 2]);
     });
   };
 

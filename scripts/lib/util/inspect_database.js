@@ -11,13 +11,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
   var pathFromExtension = function (name, location) {
     if (location === '/core-extensions') {
-      return path.join(__dirname, "/../../enyo-client/extensions/source/", name);
+      return path.join(__dirname, "../../../enyo-client/extensions/source/", name);
     } else if (location === '/xtuple-extensions') {
-      return path.join(__dirname, "../../../xtuple-extensions/source", name);
+      return path.join(__dirname, "../../../../xtuple-extensions/source", name);
     } else if (location === '/private-extensions') {
-      return path.join(__dirname, "../../../private-extensions/source", name);
+      return path.join(__dirname, "../../../../private-extensions/source", name);
     } else if (location === 'npm') {
-      return path.join(__dirname, "../../node_modules", name);
+      return path.join(__dirname, "../../../node_modules", name);
     }
   };
 
@@ -36,9 +36,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         return pathFromExtension(row.ext_name, row.ext_location);
       });
 
-      paths.unshift(path.join(__dirname, "../../enyo-client")); // core path
-      paths.unshift(path.join(__dirname, "../../lib/orm")); // lib path
-      paths.unshift(path.join(__dirname, "../../foundation-database")); // foundation path
+      paths.unshift(path.join(__dirname, "../../../enyo-client")); // core path
+      paths.unshift(path.join(__dirname, "../../../lib/orm")); // lib path
+      paths.unshift(path.join(__dirname, "../../../foundation-database")); // foundation path
       done(null, _.compact(paths));
     });
   };
@@ -55,7 +55,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       }
       var extensions = _.unique(_.flatten(_.map(res.rows, function (row) {
         return _.map(editionMap[row.pkghead_name], function (ext) {
-          return path.join(__dirname, "../../../private-extensions/source", ext);
+          return path.join(__dirname, "../../../../private-extensions/source", ext);
         });
       })));
       done(err, defaultExtensions.concat(extensions));

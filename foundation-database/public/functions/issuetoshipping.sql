@@ -4,7 +4,7 @@ CREATE OR REPLACE FUNCTION issueToShipping(INTEGER, NUMERIC) RETURNS INTEGER AS 
 BEGIN
   RETURN issueToShipping('SO', $1, $2, 0, CURRENT_TIMESTAMP);
 END;
-$$ LANGUAGE 'plpgsql';
+$$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION issueToShipping(INTEGER, NUMERIC, INTEGER) RETURNS INTEGER AS $$
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION issueToShipping(INTEGER, NUMERIC, INTEGER) RETURNS IN
 BEGIN
   RETURN issueToShipping('SO', $1, $2, $3, CURRENT_TIMESTAMP);
 END;
-$$ LANGUAGE 'plpgsql';
+$$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION issueToShipping(TEXT, INTEGER, NUMERIC, INTEGER, TIMESTAMP WITH TIME ZONE) RETURNS INTEGER AS $$
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
@@ -20,38 +20,44 @@ CREATE OR REPLACE FUNCTION issueToShipping(TEXT, INTEGER, NUMERIC, INTEGER, TIME
 BEGIN
   RETURN issueToShipping($1, $2, $3, $4, $5, NULL);
 END;
-$$ LANGUAGE 'plpgsql';
+$$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION issueToShipping(TEXT, INTEGER, NUMERIC, INTEGER, TIMESTAMP WITH TIME ZONE, INTEGER) RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION issueToShipping(pordertype TEXT,
+                                           pitemid INTEGER,
+                                           pQty NUMERIC,
+                                           pItemlocSeries INTEGER,
+                                           pTimestamp TIMESTAMP WITH TIME ZONE,
+                                           pinvhistid INTEGER) RETURNS INTEGER AS $$
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
-  pordertype		ALIAS FOR $1;
-  pitemid		ALIAS FOR $2;
-  pQty			ALIAS FOR $3;
-  _itemlocSeries	INTEGER	:= $4;
-  _timestamp		TIMESTAMP WITH TIME ZONE := $5;
-  pinvhistid		ALIAS FOR $6;
-  _coholdtype		TEXT;
-  _invhistid		INTEGER;
-  _shipheadid		INTEGER;
-  _shipnumber		INTEGER;
+  _itemlocSeries        INTEGER;
+  _timestamp            TIMESTAMP WITH TIME ZONE;
+  _coholdtype           TEXT;
+  _balance              NUMERIC;
+  _invhistid            INTEGER;
+  _shipheadid           INTEGER;
+  _shipnumber           INTEGER;
   _cntctid              INTEGER;
   _p                    RECORD;
   _m                    RECORD;
   _value                NUMERIC;
-  _warehouseid		INTEGER;
-  _shipitemid     	INTEGER;
+  _warehouseid          INTEGER;
+  _shipitemid           INTEGER;
   _freight              NUMERIC;
 
 BEGIN
 
-  IF (_timestamp IS NULL) THEN
+  IF (pTimestamp IS NULL) THEN
     _timestamp := CURRENT_TIMESTAMP;
+  ELSE
+    _timestamp := pTimestamp;
   END IF;
 
-  IF (_itemlocSeries = 0) THEN
+  IF (pItemlocSeries = 0) THEN
     _itemlocSeries := NEXTVAL('itemloc_series_seq');
+  ELSE
+    _itemlocSeries := pItemlocSeries;
   END IF;
 
   IF (pordertype = 'SO') THEN
@@ -88,6 +94,29 @@ BEGIN
       END IF;
     END IF; 
   
+    -- Check Credit Hold
+    SELECT cohead_holdtype INTO _coholdtype
+    FROM coitem JOIN cohead ON (cohead_id=coitem_cohead_id)
+    WHERE (coitem_id=pitemid);
+
+    SELECT calcSalesOrderAmt(cohead_id) -
+           COALESCE(SUM(currToCurr(aropenalloc_curr_id, cohead_curr_id,
+                                   aropenalloc_amount, cohead_orderdate)),0) INTO _balance
+    FROM coitem JOIN cohead ON (cohead_id=coitem_cohead_id)
+                LEFT OUTER JOIN aropenalloc ON (aropenalloc_doctype='S' AND
+                                                aropenalloc_doc_id=cohead_id)
+    WHERE (coitem_id=pitemid)
+    GROUP BY cohead_id;
+
+    --RAISE NOTICE 'issueToShipping - order balance is %', _balance;
+    IF ( (_coholdtype = 'C') AND (_balance > 0.0) ) THEN
+      RETURN -12;
+    ELSIF (_coholdtype = 'P') THEN
+      RETURN -13;
+    ELSIF (_coholdtype = 'R') THEN
+      RETURN -14;
+    END IF;
+
     SELECT shiphead_id INTO _shipheadid
     FROM shiphead, coitem JOIN itemsite ON (itemsite_id=coitem_itemsite_id)
     WHERE ( (coitem_id=pitemid)
@@ -98,19 +127,6 @@ BEGIN
       _shipnumber := fetchShipmentNumber();
       IF (_shipnumber < 0) THEN
 	RETURN -10;
-      END IF;
-
-      SELECT cohead_holdtype INTO _coholdtype
-      FROM cohead, coitem
-      WHERE ((cohead_id=coitem_cohead_id)
-        AND  (coitem_id=pitemid));
-
-      IF (_coholdtype = 'C') THEN
-	RETURN -12;
-      ELSIF (_coholdtype = 'P') THEN
-	RETURN -13;
-      ELSIF (_coholdtype = 'R') THEN
-	RETURN -14;
       END IF;
 
       INSERT INTO shiphead
@@ -291,4 +307,4 @@ BEGIN
   RETURN _itemlocSeries;
 
 END;
-$$ LANGUAGE 'plpgsql';
+$$ LANGUAGE plpgsql;
