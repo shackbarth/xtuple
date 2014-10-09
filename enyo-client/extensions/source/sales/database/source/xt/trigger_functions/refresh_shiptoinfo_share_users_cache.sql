@@ -4,6 +4,11 @@ create or replace function xt.refresh_shiptoinfo_share_users_cache() returns tri
 
 return (function () {
   var addrUuidSql = 'select obj_uuid from addr where addr_id = $1',
+    childUserSql =  'select crmacct_usr_username as username ' +
+                    'from cntct ' +
+                    'left join crmacct on crmacct.crmacct_id = cntct.cntct_crmacct_id ' +
+                    'where cntct_id = $1 ' +
+                    '  and crmacct_usr_username is not null;',
     cntctUuidSql = 'select obj_uuid from cntct where cntct_id = $1',
     custUuidSql = 'select obj_uuid from custinfo where cust_id = $1',
     refreshAddr = false,
@@ -36,6 +41,13 @@ return (function () {
 
     /* If the Ship To's Contact changed, refresh the old Contact and new Contact's share access. */
     if (OLD.shipto_cntct_id !== NEW.shipto_cntct_id) {
+      /**
+       * If this Contact is associated with a Child CRM Account, find it's
+       * UserAccount and refresh access for that username.
+       */
+      XT.ShareUsers.refreshRelationCacheUser(childUserSql, [OLD.shipto_cntct_id]);
+      XT.ShareUsers.refreshRelationCacheUser(childUserSql, [NEW.shipto_cntct_id]);
+
       /**
        * Because the Ship To's Contact is used to provide limited Child CRM Account
        * Share Access, if the Contact changes, we need to refresh everything.

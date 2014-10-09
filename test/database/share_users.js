@@ -12,7 +12,7 @@ var _ = require('underscore'),
   describe('Test Share Users Access:', function () {
     this.timeout(10 * 1000);
 
-    var initSql = 'select xt.js_init(); ',
+    var initSql = 'select xt.js_init(); \n',
       loginData = require(path.join(__dirname, '../lib/login_data.js')).data,
       datasource = require('../../../xtuple/node-datasource/lib/ext/datasource').dataSource,
       config = require(path.join(__dirname, '../../node-datasource/config.js')),
