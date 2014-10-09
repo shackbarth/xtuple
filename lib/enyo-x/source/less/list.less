@@ -202,9 +202,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
   color: @black;
-  &.squat {
-    padding-top: 2px;
-    padding-bottom: 2px;
+  @media (max-width: 480px) {
+    padding: 2px;
   }
   &.header {
     padding: 4px;
