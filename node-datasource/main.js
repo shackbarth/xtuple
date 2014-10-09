@@ -5,14 +5,15 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global X:true, Backbone:true, _:true, XM:true, XT:true, SYS:true, jsonpatch:true*/
 process.chdir(__dirname);
 
-async = require("async");
 Backbone = require("backbone");
 _ = require("underscore");
 jsonpatch = require("json-patch");
 SYS = {};
 XT = { };
-var express = require('express');
-var app;
+
+var express = require('express'),
+  async = require("async"),
+  app;
 
 (function () {
   "use strict";
