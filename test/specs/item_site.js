@@ -189,7 +189,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
           };
 
         widget.$.privateItemSiteWidget.mockReturn = mockReturn;
-        widget.$.privateItemSiteWidget.fetchCollection("1234", 10, "mockReturn");
+        widget.$.privateItemSiteWidget.fetchCollection("739048117066", 10, "mockReturn");
       });
     });
   };
@@ -197,5 +197,3 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
   exports.spec = spec;
   exports.additionalTests = additionalTests;
 }());
-
-
