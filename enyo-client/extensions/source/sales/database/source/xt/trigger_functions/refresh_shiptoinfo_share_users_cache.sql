@@ -100,6 +100,12 @@ return (function () {
 
     /* Refresh the old Customer's share access. */
     XT.ShareUsers.refreshRelationCacheObj(custUuidSql, [OLD.shipto_cust_id]);
+
+    /**
+     * If this Contact is associated with a Child CRM Account, find it's
+     * UserAccount and refresh access for that username.
+     */
+    XT.ShareUsers.refreshRelationCacheUser(childUserSql, [OLD.shipto_cntct_id]);
   }
 
   return NEW;
