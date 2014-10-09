@@ -355,6 +355,10 @@ BEGIN
   SET pohead_status='O'
   WHERE (pohead_id=_p.vohead_pohead_id);
 
+--  Delete any apselect approval records to prevent incorrect payment runs
+  DELETE FROM apselect
+   WHERE (apselect_apopen_id=_n.apopen_id);
+
 --  Mark as voided
   UPDATE apopen
   SET apopen_void=TRUE
