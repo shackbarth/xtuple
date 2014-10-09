@@ -56,6 +56,7 @@
 @defaultPanelWidth: 320px;
 @toolbarHeight: 55px;
 @searchLength: 185px;
+@mobileLength: 115px;
 // popups
 @maxMessageHeight: 500px;
 @maxMessageWidth: 500px;
@@ -371,6 +372,9 @@ a, .hyperlink {
     width: @searchLength;
     margin: 0;
     margin-left: 6px;
+    @media (max-width: 480px) {
+      width: @mobileLength;
+    }
   }
   .xv-search {
     color: @med-gray;

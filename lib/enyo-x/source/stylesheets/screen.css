@@ -1918,6 +1918,12 @@ a,
   margin: 0;
   margin-left: 6px;
 }
+@media (max-width: 480px) {
+  .onyx-toolbar .xv-toolbar-label,
+  .onyx-toolbar .xv-search {
+    width: 100px;
+  }
+}
 .onyx-toolbar .xv-search {
   color: #939393;
 }
