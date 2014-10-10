@@ -1921,7 +1921,7 @@ a,
 @media (max-width: 480px) {
   .onyx-toolbar .xv-toolbar-label,
   .onyx-toolbar .xv-search {
-    width: 115px;
+    width: 100px;
     font-size: 18px;
   }
 }
