@@ -12,15 +12,9 @@
   border-bottom: 1px solid @silver;
 
   .xv-list-column {
+    padding-left: 7px;
     &.last {
       border-right: none;
-    }
-    &.name-column, &.first, &.second, &.third, &.short, &.small, &.medium, &.descr {
-      padding-left: 7px;
-    }
-
-    div {
-      padding-left: 5px;
     }
   }
 }
@@ -202,9 +196,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
   color: @black;
-  &.squat {
-    padding-top: 2px;
-    padding-bottom: 2px;
+  @media (max-width: 480px) {
+    padding: 2px 5px 2px 5px;
   }
   &.header {
     padding: 4px;
