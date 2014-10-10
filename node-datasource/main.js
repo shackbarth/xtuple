@@ -168,9 +168,6 @@ var express = require('express'),
       console.trace("Share Users Cache warming errors:");
     } else {
       cacheCount++;
-      if (cacheCount === X.options.datasource.databases.length) {
-        X.log("All Share Users Caches have been warmed.");
-      }
     }
   };
 
@@ -184,10 +181,14 @@ var express = require('express'),
     };
 
     X.log("Warming Share Users Cache for database " + dbVal + "...");
-    datasource.api.query('select xt.refresh_share_user_cache()', cacheShareUsersOptions, callback);
+    datasource.api.query('select xt.refresh_share_user_cache()', cacheShareUsersOptions, cacheShareUsersWarmed);
   };
 
-  async.map(X.options.datasource.databases, warmCacheShareUsers, cacheShareUsersWarmed);
+  async.map(X.options.datasource.databases, warmCacheShareUsers, function (){
+    if (cacheCount === X.options.datasource.databases.length) {
+      X.log("All Share Users Caches have been warmed.");
+    }
+  });
 
 }());
 
