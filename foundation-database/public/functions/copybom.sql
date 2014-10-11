@@ -122,14 +122,16 @@ BEGIN
       bomitem_booitem_seq_id,
       bomitem_effective, bomitem_expires, bomitem_ecn,
       bomitem_createwo, bomitem_issuemethod, bomitem_moddate, bomitem_subtype,
-      bomitem_notes, bomitem_ref )
+      bomitem_notes, bomitem_ref,
+      bomitem_char_id, bomitem_value )
     VALUES
     ( _bomitemid, pTItemid, _bi.bomitem_seqnumber, _bi.bomitem_item_id,
       _bi.bomitem_uom_id, _bi.bomitem_qtyfxd, _bi.bomitem_qtyper, _bi.bomitem_scrap, _schedatwooper,
       _booitemseqid,
       CURRENT_DATE, _bi.bomitem_expires, _bi.bomitem_ecn,
       _bi.bomitem_createwo, _bi.bomitem_issuemethod, CURRENT_DATE, _bi.bomitem_subtype,
-      _bi.bomitem_notes, _bi.bomitem_ref );
+      _bi.bomitem_notes, _bi.bomitem_ref,
+      _bi.bomitem_char_id, _bi.bomitem_value );
 
     INSERT INTO bomitemsub
     ( bomitemsub_bomitem_id, bomitemsub_item_id,
