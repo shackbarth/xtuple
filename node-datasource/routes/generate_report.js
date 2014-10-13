@@ -67,19 +67,17 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     var transformDataStructure = function (data) {
       // TODO: detailAttribute could be inferred by looking at whatever comes before the *
       // in the detailElements definition.
-
-      if (!reportDefinition.settings.detailAttribute) {
-        // no children, so no transformation is necessary
-        return [data];
-      }
-
-      return _.map(data[reportDefinition.settings.detailAttribute], function (detail) {
-        var pathedDetail = {};
-        _.each(detail, function (detailValue, detailKey) {
-          pathedDetail[reportDefinition.settings.detailAttribute + "*" + detailKey] = detailValue;
+      if (reportDefinition.settings.detailAttribute && !_.isEmpty(data[reportDefinition.settings.detailAttribute])) {
+        return _.map(data[reportDefinition.settings.detailAttribute], function (detail) {
+          var pathedDetail = {};
+          _.each(detail, function (detailValue, detailKey) {
+            pathedDetail[reportDefinition.settings.detailAttribute + "*" + detailKey] = detailValue;
+          });
+          return _.extend({}, data, pathedDetail);
         });
-        return _.extend({}, data, pathedDetail);
-      });
+      }
+      // no children, so no transformation is necessary
+      return [data];
     };
 
     /**
