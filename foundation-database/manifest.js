@@ -12,6 +12,8 @@
     "../lib/orm/source/xt/functions/add_primary_key.sql",
     "../lib/orm/source/xt/functions/create_table.sql",
 
+    "public/patches/fixflcol.sql",
+
     "public/indexes/apopentax.sql",
     "public/indexes/aropentax.sql",
     "public/indexes/asohisttax.sql",
@@ -1630,6 +1632,8 @@
     "public/tables/report/items.xml",
 
     "public/patches/fixacl.sql",
-    "public/patches/populate_ccpay_card_type.sql"
+    "public/patches/populate_ccpay_card_type.sql",
+
+    "public/tables/setVersion.sql"
   ]
 }
