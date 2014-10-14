@@ -1020,6 +1020,7 @@
     "public/trigger_functions/wo.sql",
     "public/trigger_functions/womatl.sql",
 
+    "public/tables/bankaccnt.sql",
     "public/tables/bankrecimport.sql",
     "public/tables/bankrecitem.sql",
     "public/tables/cashrcpt.sql",

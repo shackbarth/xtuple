@@ -2,7 +2,7 @@
   "author": "xTuple <dev@xtuple.com>",
   "name": "xtuple",
   "description": "xTuple Enterprise Resource Planning Mobile-Web client",
-  "version": "4.7.0",
+  "version": "4.8.0-beta",
   "repository": {
     "type": "git",
     "url": "https://github.com/xtuple/xtuple.git"
@@ -60,7 +60,7 @@
     "googleapis": "~0.4.6"
   },
   "engines": {
-    "node": "^0.10"
+    "node": "0.10.32"
   },
   "main": "node-datasource/main.js",
   "scripts": {

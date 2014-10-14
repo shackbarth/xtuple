@@ -50,7 +50,8 @@ BEGIN
   WHERE ( (apopen_doctype='V')
     AND   (apopen_id=pApopenid) );
   IF (NOT FOUND) THEN
-    RAISE EXCEPTION 'Cannot Void Voucher #% as apopen not found', pApopenid;
+    RAISE EXCEPTION 'Cannot Void Voucher Id % as apopen not found [xtuple: voidAPOpenVoucher, -10, %]',
+			pApopenid, pApopenid;
   END IF;
 
 --  Cache Voucher Infomation
@@ -63,7 +64,18 @@ BEGIN
               LEFT OUTER JOIN pohead ON (vohead_pohead_id = pohead_id)
   WHERE (vohead_number=_n.apopen_docnumber);
   IF (NOT FOUND) THEN
-    RAISE EXCEPTION 'Cannot Void Voucher #% as vohead not found', _n.apopen_docnumber;
+    RAISE EXCEPTION 'Cannot Void Voucher #% as vohead not found [xtuple: voidAPOpenVoucher, -20, %]',
+			_n.apopen_docnumber, _n.apopen_docnumber;
+  END IF;
+
+--  Check for APApplications
+  SELECT apapply_id INTO _test
+  FROM apapply
+  WHERE (apapply_target_apopen_id=_n.apopen_id)
+  LIMIT 1;
+  IF (FOUND) THEN
+    RAISE EXCEPTION 'Cannot Void Voucher #% as applications exist [xtuple: voidAPOpenVoucher, -30, %]',
+			_n.apopen_docnumber, _n.apopen_docnumber;
   END IF;
 
   _glDate := COALESCE(_p.vohead_gldistdate, _p.vohead_distdate);
@@ -130,7 +142,8 @@ BEGIN
        AND (expcat_liability_accnt_id=lb.accnt_id)
        AND (expcat_id=_g.poitem_expcat_id) );
       IF (NOT FOUND) THEN
-        RAISE EXCEPTION 'Cannot Void Voucher #% due to unassigned G/L Accounts.', _p.vohead_number;
+        RAISE EXCEPTION 'Cannot Void Voucher #% due to unassigned G/L Accounts [xtuple: voidAPOpenVoucher, -40, %]',
+			_p.vohead_number, _p.vohead_number;
       END IF;
     ELSE
       SELECT pp.accnt_id AS pp_accnt_id,
@@ -140,7 +153,8 @@ BEGIN
        AND (costcat_liability_accnt_id=lb.accnt_id)
        AND (costcat_id=_g.costcatid) );
       IF (NOT FOUND) THEN
-        RAISE EXCEPTION 'Cannot Void Voucher #% due to unassigned G/L Accounts.', _p.vohead_number;
+        RAISE EXCEPTION 'Cannot Void Voucher #% due to unassigned G/L Accounts [xtuple: voidAPOpenVoucher, -50, %]',
+			_p.vohead_number, _p.vohead_number;
       END IF;
     END IF;
 
@@ -283,7 +297,8 @@ BEGIN
   WHERE ( (findAPAccount(vohead_vend_id)=0 OR accnt_id > 0) -- G/L interface might be disabled
     AND   (vohead_id=_p.vohead_id) );
   IF (NOT FOUND) THEN
-    RAISE EXCEPTION 'Cannot Void Voucher #% due to an unassigned A/P Account.', _p.vohead_number;
+    RAISE EXCEPTION 'Cannot Void Voucher #% due to an unassigned A/P Account [xtuple: voidAPOpenVoucher, -60, %]',
+			_p.vohead_number, _p.vohead_number;
   END IF;
 
   PERFORM postGLSeries(_sequence, pJournalNumber);
@@ -323,7 +338,8 @@ BEGIN
   SELECT postAPCreditMemoApplication(_apopenid) INTO _result;
 
   IF (_result < 0) THEN
-    RAISE EXCEPTION 'Credit application failed with result %.', _result;
+    RAISE EXCEPTION 'Credit application failed with result % [xtuple: voidAPOpenVoucher, -70, %]',
+			_result, _result;
   END IF;
 
 --  Reopen all of the P/O Items that were closed by this Voucher
