@@ -30,6 +30,7 @@ WHERE ( (apopen_vend_id=vend_id)
   AND   (apselect_apopen_id=apopen_id)
   AND   (apselect_bankaccnt_id=bankaccnt_id)
   AND   (apopen_doctype IN ('V', 'D'))
+  AND   (apopen_open)
 <? if exists("bankaccntid") ?>
   AND   (bankaccnt_id=<? value("bankaccntid") ?>)
 <? endif ?>
@@ -58,6 +59,7 @@ WHERE ( (apopen_vend_id=vend_id)
   AND   (apselect_apopen_id=apopen_id)
   AND   (apselect_bankaccnt_id=bankaccnt_id)
   AND   (apopen_doctype='C')
+  AND   (apopen_open)
 <? if exists("bankaccntid") ?>
   AND   (bankaccnt_id=<? value("bankaccntid") ?>)
 <? endif ?>
