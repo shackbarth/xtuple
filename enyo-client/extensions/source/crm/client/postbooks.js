@@ -63,22 +63,11 @@ trailing:true, white:true*/
     };
 
     if (XT.session.settings.get("DashboardLite")) {
-      var dashboardModule = {
-        name: "dashboardLite",
-        label: "_dashboard".loc(),
-        panels: [
-          {
-            name: "dashboardLite",
-            kind: "XV.DashboardLite",
-            newActions: [
-              {name: "assignedIncidents", label: "_assignedIncidents".loc(), item: "XV.AssignedIncidentBarChart"},
-              {name: "opportunities", label: "_opportunities".loc(), item: "XV.OpportunityBarChart"}
-            ]
-          }
-        ]
-      };
-
-      XT.app.$.postbooks.insertModule(dashboardModule, 0);
+      var charts = [
+        {name: "assignedIncidents", label: "_assignedIncidents".loc(), item: "XV.AssignedIncidentBarChart"},
+        {name: "opportunities", label: "_opportunities".loc(), item: "XV.OpportunityBarChart"}
+      ];
+      XT.app.$.postbooks.insertDashboardCharts(charts);
     }
 
     XT.app.$.postbooks.insertModule(module, 0);

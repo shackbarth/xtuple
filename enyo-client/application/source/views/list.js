@@ -54,7 +54,7 @@ trailing:true, white:true, strict: false*/
             {kind: "XV.ListAttr", attr: "name"}
           ]},
           {kind: "XV.ListColumn", classes: "right-column", components: [
-            {kind: "XV.ListAttr", attr: "primaryContact.phone", },
+            {kind: "XV.ListAttr", attr: "primaryContact.phone"},
             {kind: "XV.ListAttr", attr: "primaryContact.primaryEmail"}
           ]},
           {kind: "XV.ListColumn", fit: true, components: [
