@@ -62,9 +62,12 @@ trailing:true, white:true*/
       ]
     };
 
-    isBiAvailable = XT.session.config.biAvailable && XT.session.privileges.get("ViewSalesHistory");
-    if (isBiAvailable) {
-      module.panels.push({name: "analysisPage", kind: "analysisFrame"});
+    if (XT.session.settings.get("DashboardLite")) {
+      var charts = [
+        {name: "assignedIncidents", label: "_assignedIncidents".loc(), item: "XV.AssignedIncidentBarChart"},
+        {name: "opportunities", label: "_opportunities".loc(), item: "XV.OpportunityBarChart"}
+      ];
+      XT.app.$.postbooks.insertDashboardCharts(charts);
     }
 
     XT.app.$.postbooks.insertModule(module, 0);
@@ -132,54 +135,5 @@ trailing:true, white:true*/
     ];
     XT.session.addRelevantPrivileges(module.name, relevantPrivileges);
 
-    /**
-      This iFrame is to show the Analysis tool.
-      On creation, it uses the analysis route to generate a signed,
-      encoded JWT which it sends to Pentaho to get the report.
-    */
-    enyo.kind({
-      name: "analysisFrame",
-      label: "_analysis".loc(),
-      tag: "iframe",
-      style: "border: none;",
-      attributes: {src: ""},
-      events: {
-        onMessage: ""
-      },
-      published: {
-        source: ""
-      },
-
-      create: function () {
-        this.inherited(arguments);
-        if (XT.session.config.freeDemo) {
-          this.doMessage({message: "_staleAnalysisWarning".loc()});
-        }
-        // generate the web token and render
-        // the iFrame
-        var url, ajax = new enyo.Ajax({
-          url: XT.getOrganizationPath() + "/analysis",
-          handleAs: "text"
-        });
-        ajax.response(this, function (inSender, inResponse) {
-          this.setSource(inResponse);
-        });
-        // uh oh. HTTP error
-        ajax.error(this, function (inSender, inResponse) {
-          // TODO: trigger some kind of error here
-          console.log("There was a problem generating the iFrame");
-        });
-        // param for the report name
-        ajax.go({reportUrl: "content/saiku-ui/index.html?biplugin=true"});
-      },
-      /**
-        When the published source value is set, this sets the src
-        attribute on the iFrame.
-      */
-      sourceChanged: function () {
-        this.inherited(arguments);
-        this.setAttributes({src: this.getSource()});
-      }
-    });
   };
 }());

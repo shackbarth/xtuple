@@ -7,7 +7,7 @@
   Variables for widths/colors
 */
 @tile-width: 500px;
-@tile-height: 230px;
+@tile-height: 250px;
 @picker-label: 100px;
 @bottom-border: #444;
 @icon-height: 32px;
@@ -90,6 +90,7 @@
     .icon-filter {
        color: @black;
        position: absolute;
+       top: 0;
        right: 35px;
     }
   }
@@ -113,6 +114,14 @@
   
   .chart-filterDrawer {
     top: 0px;
+  }
+  
+  .map-cluster {
+    width: 40px;
+    height: 40px;
+    background-color: greenyellow;
+    text-align: center;
+    font-size: 24px;
   }
 
   /*  The chart-filters may not be need as we are using the class xv-pullout

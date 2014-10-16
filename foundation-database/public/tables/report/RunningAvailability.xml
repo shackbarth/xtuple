@@ -41,7 +41,7 @@
  <querysource>
   <name>info</name>
   <sql>SELECT
-       formatQty(itemsite_qtyonhand) AS qoh,
+       formatQty(qtyAvailable(itemsite_id)) AS qoh,
        formatQty(CASE WHEN(itemsite_useparams) THEN itemsite_reorderlevel ELSE 0.0 END) AS reorderlevel,
        formatQty(CASE WHEN(itemsite_useparams) THEN itemsite_ordertoqty ELSE 0.0 END) AS ordertoqty,
        formatQty(CASE WHEN(itemsite_useparams) THEN itemsite_multordqty ELSE 0.0 END) AS multorderqty 

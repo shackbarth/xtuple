@@ -2,7 +2,8 @@
   immed:true, eqeqeq:true, forin:true, latedef:true,
   newcap:true, noarg:true, undef:true */
 /*global XT:true, XM:true, XV:true, describe:true, it:true, setTimeout:true,
-  console:true, before:true, after:true, module:true, require:true */
+  console:true, before:true, after:true, module:true, require:true, setInterval:true,
+  clearInterval:true */
 
 (function () {
   "use strict";
@@ -16,7 +17,6 @@
     gridRow,
     gridBox,
     workspace,
-    skipIfSiteCal,
     primeSubmodels = function (done) {
       var submodels = {};
       async.series([
@@ -44,8 +44,9 @@
       });
     };
 
-  describe('Sales Order Workspace', function () {
-    this.timeout(20 * 1000);
+  // TODO: move to sales order spec
+  describe.skip('Sales Order Workspace', function () {
+    this.timeout(30 * 1000);
 
     //
     // We'll want to have TTOYS, BTRUCK1, and WH1 onhand and ready for the test to work.
@@ -56,7 +57,6 @@
           submodels = submods;
           done();
         });
-        if (XT.extensions.manufacturing && XT.session.settings.get("UseSiteCalendar")) {skipIfSiteCal = true; }
       });
     });
 
@@ -120,7 +120,7 @@
         assert.equal(gridBox.liveModels().length, 2);
         assert.notEqual(submodels.itemModel.id, gridRow.$.itemSiteWidget.$.privateItemSiteWidget.$.input.value);
 
-        // The intention was to delete the above line after verifying that the item doesn't copy but ran into 
+        // The intention was to delete the above line after verifying that the item doesn't copy but ran into
         // many issues so just populating with same data and saving it with 2 line items.
         gridRow.$.itemSiteWidget.doValueChange({value: {item: submodels.itemModel, site: submodels.siteModel}});
         gridRow.$.quantityWidget.doValueChange({value: 5});
@@ -135,42 +135,49 @@
             });
         */
       });
-      // XXX - skip test if site calendar is enabled -
-      // temporary until second notifyPopup (_nextWorkingDate) is handled in test (TODO).
+      it('deleting an item through SalesOrderLineWorkspace should remove it from the line item ' +
+        'list', function (done) {
+        var lineItemBox = workspace.$.salesOrderLineItemBox,
+          model = lineItemBox.value.models[0],
+          startModelLength = lineItemBox.liveModels().length,
+          moduleContainer = XT.app.$.postbooks;
 
-      //it('changing the Schedule Date updates the line item\'s schedule date', function (done) {
-      (skipIfSiteCal ? it.skip : it)(
-        'changing the Schedule Date updates the line item\'s schedule date', function (done) {
-        var getDowDate = function (dow) {
-            var date = new Date(),
-              currentDow = date.getDay(),
-              distance = dow - currentDow;
-            date.setDate(date.getDate() + distance);
-            return date;
-          },
-          newScheduleDate = getDowDate(0); // Sunday from current week
+        /** Open the first model's salesOrderLineWorkspace...
+            Copied from gridBox buttonTapped function (expandGridRowButton)
+        */
+        lineItemBox.doChildWorkspace({
+          workspace: lineItemBox.getWorkspace(),
+          collection: lineItemBox.getValue(),
+          index: lineItemBox.getValue().indexOf(model)
+        });
 
-        var handlePopup = function () {
-          assert.equal(workspace.value.get("scheduleDate"), newScheduleDate);
-          // Confirm to update all line items
-          XT.app.$.postbooks.notifyTap(null, {originator: {name: "notifyYes"}});
-          // And verify that they were all updated with the new date
-          setTimeout(function () {
-            _.each(workspace.value.get("lineItems").models, function (model) {
-              assert.equal(newScheduleDate, model.get("scheduleDate"));
-            });
-            done();
-          }, 3000);
+        /** The line item's workspace model has been deleted (DESTROYED_CLEAN).
+            Client is now in SalesOrderWorkspace.
+        */
+        var statusChanged = function () {
+          assert.notEqual(startModelLength, lineItemBox.liveModels().length);
+          done();
         };
 
-        workspace.value.once("change:scheduleDate", handlePopup);
-        workspace.value.set("scheduleDate", newScheduleDate);
+        model.once("status:DESTROYED_CLEAN", statusChanged);
+
+        // Function to keep checking for notifyPopup showing and then tap yes.
+        // This will fire right after the delete below.
+        var notifyPopupInterval = setInterval(function () {
+          if (!moduleContainer.$.notifyPopup.showing) { return; }
+          clearInterval(notifyPopupInterval);
+          moduleContainer.notifyTap(null, {originator: {name: "notifyYes" }});
+        }, 100);
+        // Delete the item in the workspace
+        moduleContainer.getActive().deleteItem();
       });
+
       it('save, then delete order', function (done) {
-        assert.equal(workspace.value.status, XM.Model.READY_NEW);
+        assert.isTrue((workspace.value.status === XM.Model.READY_DIRTY ||
+          workspace.value.status === XM.Model.READY_NEW));
         smoke.saveWorkspace(workspace, function (err, model) {
           assert.isNull(err);
-          // TODO: sloppy
+          // XXX - sloppy
           setTimeout(function () {
             smoke.deleteFromList(XT.app, model, done);
           }, 4000);

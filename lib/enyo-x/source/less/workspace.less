@@ -89,12 +89,16 @@
 
       // fix labels with widget refactor
       .xv-label, .xv-decorated-label, .xv-flexible-label {
-        width: @labelWidth !important;
+        width: @labelWidth;
         max-width: 100%;
-        padding: 0 8px 0 6px;
         text-align: right;
+        padding: 0 8px 0 6px;
         vertical-align: middle;
+        &.disabled {
+          color: @dim-gray;
+        }
       }
+
       &.xv-assignment-box {
         .xv-flexible-label, .xv-label {
           width: 200px !important;
@@ -102,8 +106,125 @@
       }
 
       .xv-input {
-        border-bottom: 1px solid @smoke;
-        margin: 0px;
+        padding: 4px 0;
+        border-bottom: 1px solid fade(@smoke, 50%);
+
+        .enyo-tool-decorator {
+          max-width: @fieldDecoratorWidth;
+          text-align: left;
+
+          .onyx-icon {
+            display: inline-block;
+            width: @iconWidth;
+            cursor: pointer;
+          }
+        }
+
+        &.xv-textarea {
+          padding: 0;
+          margin: @decoratorPadding;
+          .enyo-tool-decorator {
+            // reset max-width on text area
+            max-width: @defaultPanelWidth;
+          }
+        }
+
+        input {
+          width: @fieldWidth;
+        }
+
+        .xv-icon-decorator {
+          input {
+            width: @iconFieldWidth;
+          }
+          .onyx-icon {
+            padding: @iconPadding;
+          }
+        }
+
+        .onyx-picker-decorator {
+          padding: 0;  // @overrides the input-decorator padding above ^^
+        }
+      }
+
+      /**
+        Styles relating to workspace widgets
+      */
+      .xv-relationwidget {
+        .xv-description {
+          .xv-limit-description;
+
+          max-width: 250px;
+          margin: 5px 5px 5px 80px;
+          font-size: 0.9em;
+
+          &.disabled {
+            color: @dim-gray;
+          }
+        }
+      }
+
+      .xv-spinnerwidget {
+        .xv-icon-decorator {
+          .onyx-icon {
+            display: block;
+            border: none;
+            font-size: 20px;
+            width: 20px;
+            padding: 0 4px 0 4px;
+          }
+          input {
+            width: @iconFieldWidth - @iconPadding;
+          }
+        }
+        .slider {
+          margin: 15px 10px;
+        }
+      }
+
+      .xv-numberwidget {
+        input {
+          text-align: right;
+        }
+      }
+
+      .xv-moneywidget {
+        .enyo-tool-decorator {
+          // reset min/max-width
+          min-width: 90px;
+          max-width: 90px;
+          input {
+            width: 90px;
+          }
+        }
+      }
+
+      .xv-currency-picker {
+        display: inline-block;
+        .enyo-tool-decorator {
+          // reset min/max-width
+          min-width: 65px;
+          max-width: 65px;
+          padding: 10px 4px;
+          .xv-button-text {
+            width: 45px;
+          }
+        }
+      }
+
+      .xv-characteristics-widget {
+        .xv-characteristic-item {
+          border-bottom: 1px solid @smoke;
+          .xv-input {
+            border: none;
+            input {
+              width: 135px;
+            }
+          }
+        }
+        .xv-characteristic-button {
+          text-align: center;
+        }
       }
 
       .enyo-fittable-columns-layout > * {
@@ -112,9 +233,30 @@
     }
 
     .onyx-input-decorator {
+      border: 0;
+      input {
+        width: 150px;
+      }
       &.onyx-disabled {
         .disabled;
       }
+    }
+
+    // Dependency picker in workflow
+    .xv-dependency-picker {
+      .onyx-picker-decorator {
+        .onyx-button {
+          width: 280px;
+          margin-left: 6px;
+        }
+      }
+    }
+
+    .xv-dependency-button {
+      color: @slate-blue;
+      font-size: 24px;
+      border: none;
+      background: transparent;
     }
 
     .xv-totals-panel {

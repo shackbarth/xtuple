@@ -161,7 +161,9 @@ white:true*/
     },
 
     assignedToDidChange: function (model, value, options) {
-      if (value) { this.set('status', XM.Incident.ASSIGNED); }
+      if (value && this.get("status") !== XM.Incident.RESOLVED && this.get("status") !== XM.Incident.CLOSED) {
+        this.set('status', XM.Incident.ASSIGNED);
+      }
     },
 
     validate: function () {

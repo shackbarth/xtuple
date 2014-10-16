@@ -38,7 +38,8 @@
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "dept_name"
+          "column": "dept_name",
+          "required": true
         }
       }
     ],
@@ -83,7 +84,8 @@
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "shift_name"
+          "column": "shift_name",
+          "required": true
         }
       }
     ],

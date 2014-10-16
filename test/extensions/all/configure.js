@@ -14,14 +14,14 @@
     smoke = require("../../lib/smoke");
 
   describe('Configuration Workspaces', function () {
-    this.timeout(30 * 1000);
+    this.timeout(60 * 1000);
 
     before(function (done) {
       zombieAuth.loadApp(done);
     });
 
     it('should all be accessible', function (done) {
-      this.timeout(80 * 1000);
+      this.timeout(120 * 1000);
       var navigator, workspace,
         list,
         i = -1;

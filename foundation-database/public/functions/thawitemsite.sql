@@ -1,11 +1,8 @@
-CREATE OR REPLACE FUNCTION thawItemSite(INTEGER) RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION thawItemSite(pItemsiteid INTEGER) RETURNS INTEGER AS $$
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
-  pItemsiteid ALIAS FOR $1;
   _qoh            NUMERIC := 0;
-  _netable_qoh    NUMERIC := 0;
-  _nonnetable_qoh NUMERIC := 0;
   _value          NUMERIC := 0;
   _itemlocid INTEGER;
   _itemloc RECORD;
@@ -48,9 +45,9 @@ BEGIN
 
 --  Cache the initial qty of the itemloc specified by the
 --  itemsite/location/lot/serial
-        SELECT itemloc_id, itemloc_qty, COALESCE(location_netable, TRUE) AS location_netable
+        SELECT itemloc_id, itemloc_qty
         INTO _itemloc
-        FROM itemloc LEFT OUTER JOIN location ON (location_id=itemloc_location_id)
+        FROM itemloc
         WHERE ( (itemloc_itemsite_id=pItemsiteid)
          AND (itemloc_location_id=_coarse.invdetail_location_id)
          AND (COALESCE(itemloc_ls_id,-1)=COALESCE(_coarse.invdetail_ls_id,-1))
@@ -70,17 +67,10 @@ BEGIN
             0, endOfTime() );
 
         _qoh := 0.0;
-        _netable_qoh := 0.0;
-        _nonnetable_qoh := 0.0;
 
         ELSE
           _itemlocid := _itemloc.itemloc_id;
           _qoh := _itemloc.itemloc_qty;
-          IF (_itemloc.location_netable) THEN
-            _netable_qoh := _itemloc.itemloc_qty;
-          ELSE
-            _nonnetable_qoh := _itemloc.itemloc_qty;
-          END IF;
         END IF;
 
 --  Now step through each unposted invdetail record for a given
@@ -104,11 +94,6 @@ BEGIN
 
 --  Update the running qoh
           _qoh = (_qoh + _fine.invdetail_qty);
-          IF (_itemloc.location_netable) THEN
-            _netable_qoh := (_netable_qoh + _fine.invdetail_qty);
-          ELSE
-            _nonnetable_qoh := (_nonnetable_qoh + _fine.invdetail_qty);
-          END IF;
 
         END LOOP;
 
@@ -166,11 +151,8 @@ BEGIN
 
     END LOOP;
 
--- _qoh can be used for the netable qoh because of the negative NN transactions
--- change to update qtyonhand with _netable_qoh
     UPDATE itemsite
-       SET itemsite_qtyonhand = _netable_qoh,
-           itemsite_nnqoh = _nonnetable_qoh,
+       SET itemsite_qtyonhand = _qoh,
            itemsite_value = CASE WHEN ((itemsite_costmethod='A') AND (_value < 0.0)) THEN 0.0
                                  ELSE _value END
      WHERE(itemsite_id=pItemsiteid);
@@ -180,4 +162,4 @@ BEGIN
   RETURN pItemsiteid;
 
 END;
-$$ LANGUAGE 'plpgsql';
+$$ LANGUAGE plpgsql;
