@@ -45,7 +45,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       message = ["Invalid username or password."];
     }
 
-    res.render('login', { message: message, databases: X.options.datasource.databases });
+    res.render('login', { message: message, databases: X.options.datasource.databases,
+      freeDemo: X.options.client.freeDemo });
   };
 
   /**
