@@ -130,8 +130,10 @@ var app;
 
       if (_.contains(["all", "get", "post", "patch", "delete"], verb)) {
         app[verb]('/:org/' + routeDetails.path, func);
+      } else if (verb === "no-route") {
+        func();
       } else {
-        console.log("Invalid verb for extension-defined route " + routeDetails.path);
+        console.log("Invalid verb (" + verb + ") for extension-defined route " + routeDetails.path);
       }
     });
   };
