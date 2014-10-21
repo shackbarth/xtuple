@@ -59,8 +59,6 @@ speech by Steve Wozniak, it promises to the be the biggest xTupleCon yet.
 The best way to start coding on our stack is to use our
 [Vagrant setup](https://github.com/xtuple/xtuple/wiki/Become-an-xTuple-Developer!).
 
-Git is fantastic!!!
-
 ### Release Notes
 
 View the [Release Notes](https://github.com/xtuple/xtuple-documentation/tree/master/release-notes) 
