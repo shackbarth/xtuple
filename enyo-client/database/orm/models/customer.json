@@ -22,13 +22,20 @@
         "delete":"MaintainPersonalCRMAccounts",
         "properties":[
           "account.owner.username",
-          "account.number"
+          "account.userAccount.username",
+          "account.number",
+          "crmaccountUsers"
         ]
       },
       "attribute": {
         "creditStatus": {
           "create": "UpdateCustomerCreditStatus",
           "update": "UpdateCustomerCreditStatus"
+        },
+        "crmaccountUsers": {
+          "view": false,
+          "create": false,
+          "update": false
         }
       }
     },
@@ -373,6 +380,14 @@
           "type": "CreditCard",
           "column": "cust_id",
           "inverse": "customer"
+        }
+      },
+      {
+        "name": "crmaccountUsers",
+        "toMany": {
+          "type": "ShareUsers",
+          "column": "obj_uuid",
+          "inverse": "uuid"
         }
       }
     ],
@@ -2531,7 +2546,7 @@
     "properties": [
       {
         "name": "id",
-        "attr":	{
+        "attr": {
           "type": "Number",
           "column": "custgrp_id",
           "isPrimaryKey": true
@@ -2539,7 +2554,7 @@
       },
       {
         "name": "name",
-        "attr":	{
+        "attr": {
           "type": "String",
           "column": "custgrp_name",
           "isNaturalKey": true
@@ -2547,7 +2562,7 @@
       },
       {
         "name": "description",
-        "attr":	{
+        "attr": {
           "type": "String",
           "column": "custgrp_descrip"
         }
@@ -2574,7 +2589,7 @@
     "properties": [
       {
         "name": "id",
-        "attr":	{
+        "attr": {
           "type": "Number",
           "column": "custgrpitem_id",
           "isPrimaryKey": true
@@ -2597,7 +2612,7 @@
       },
       {
         "name": "customer",
-        "toOne":	{
+        "toOne":  {
           "isNested": true,
           "type": "CustomerRelation",
           "column": "custgrpitem_cust_id"
@@ -2617,7 +2632,7 @@
     "properties": [
       {
         "name": "id",
-        "attr":	{
+        "attr": {
           "type": "Number",
           "column": "custgrpitem_id",
           "isPrimaryKey": true

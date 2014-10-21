@@ -406,9 +406,6 @@ select xt.install_js('XT','Data','xtuple', $$
                       identifiers.push("jt" + (joins.length - 1));
                       identifiers.push(prop.attr.column);
                       params[pcount] += "%" + (identifiers.length - 1) + "$I.%" + identifiers.length + "$I";
-                      if (param.isLower) {
-                        params[pcount] = "lower(" + params[pcount] + ")";
-                      }
                     } else {
                       sourceTableAlias = n === 0 && !isExtension ? "t1" : "jt" + (joins.length - 1);
                       if (prop.toOne && prop.toOne.type) {
@@ -496,8 +493,15 @@ select xt.install_js('XT','Data','xtuple', $$
                 /* e.g. %1$I = $1 or %1$I is null */
                 params[pcount] = params[pcount] + " " + op + ' $' + count + ' or ' + params[pcount] + ' is null';
               } else {
-                /* e.g. %1$I = $1 */
-                params[pcount] += " " + op + ' $' + count;
+                /* It's much faster to chech that param and check it again in */
+                /* all uppercase than to lowercase all column, so add an or upper() */
+                /* e.g. (%1$I.%2$I = $1 or %1$I.%2$I = upper($1)) */
+                if (param.isLower) {
+                var foo = params[pcount];
+                  params[pcount] = '(' + params[pcount] + ' ' + op + ' $' + count + ' or ' + params[pcount] + ' ' + op + ' upper($' + count + '))';
+                } else {
+                  params[pcount] += ' ' + op + ' $' + count;
+                }
               }
 
               orClause.push(params[pcount]);
@@ -1728,6 +1732,31 @@ select xt.install_js('XT','Data','xtuple', $$
     },
 
     /**
+     * Get the current database server version.
+     * If the optional precision argument is passed, return the first prec
+     * fields of the full version number.
+     *
+     * @example
+     * var x   = getPgVersion(1),       // '9'
+     *     xy  = getPgVersion(2),       // '9.1'
+     *     xyz = getPgVersion(3),       // '9.1.3'
+     *     all = getPgVersion();        // '9.1.3'
+     *
+     * @param   {Number} proc - optional precision
+     * @returns {String} X[.Y[.Z]]
+     */
+    getPgVersion: function (prec) {
+      var q = plv8.execute("select setting from pg_settings " +
+                           "where name='server_version';"),
+          ret;
+      ret = q[0].setting;
+      if (typeof prec === 'number') {
+        ret = ret.split(".").slice(0,prec).join(".");
+      }
+      return ret;
+    },
+
+    /**
      * Get the oid for a given table name.
      *
      * @param {String} table name
@@ -2399,12 +2428,14 @@ select xt.install_js('XT','Data','xtuple', $$
         lockExp,
         oid,
         pcheck,
+        pgver = 0 + XT.Data.getPgVersion(2),
         pid = options.pid || null,
-        pidSql = "select usename, procpid " +
+        pidcol = (pgver < 9.2) ? "procpid" : "pid",
+        pidSql = "select usename, {pidcol} " +
                  "from pg_stat_activity " +
                  "where datname=current_database() " +
                  " and usename=$1 " +
-                 " and procpid=$2;",
+                 " and procpid=$2;".replace("{pidcol}", pidcol),
         query,
         selectSql = "select * " +
                     "from xt.lock " +

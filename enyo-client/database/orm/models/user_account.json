@@ -850,7 +850,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "ShareUsers",
-    "table": "xt.share_users",
+    "table": "xt.cache_share_users",
     "comment": "List which users have personal privilege access to a resource based on what CRM Account it belongs to or share access grants.",
     "privileges": {
       "all": {
@@ -874,7 +874,7 @@
         "name": "uuid",
         "attr": {
           "type": "String",
-          "column": "obj_uuid",
+          "column": "uuid",
           "isPrimaryKey": true
         }
       },
