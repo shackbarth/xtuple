@@ -300,7 +300,7 @@ var conditionalExpressSession = function (req, res, next) {
       req.path === '/forgot-password' ||
       req.path === '/assets' ||
       req.path === '/stylesheets' ||
-      req.path === 'bower_components' ||
+      req.path === '/bower_components' ||
       req.path === '/recover') {
 
     next();
