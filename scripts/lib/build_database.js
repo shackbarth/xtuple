@@ -221,15 +221,11 @@ var  async = require('async'),
               }
 
               var populatedData = require(path.resolve(ext, "database/source/populate_data"));
-              _.each(populatedData.posts, function (post) {
-                post.encryptionKey = encryptionKey;
-                post.username = creds.username;
-                populateSql += "select xt.post(\'" + JSON.stringify(post) + "\');";
-              });
-              _.each(populatedData.patches, function (patch) {
-                patch.encryptionKey = encryptionKey;
-                patch.username = creds.username;
-                populateSql += "select xt.patch(\'" + JSON.stringify(patch) + "\');";
+              _.each(populatedData, function (query) {
+                var verb = query.patches ? "patch" : "post";
+                query.encryptionKey = encryptionKey;
+                query.username = creds.username;
+                populateSql += "select xt." + verb + "(\'" + JSON.stringify(query) + "\');";
               });
             });
             populateSql += "DO $$ XT.disableLocks = undefined; $$ language plv8;";
