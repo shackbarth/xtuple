@@ -572,11 +572,6 @@
       "from": "ipp@0.0.5",
       "resolved": "https://registry.npmjs.org/ipp/-/ipp-0.0.5.tgz"
     },
-    "jquery": {
-      "version": "2.1.1",
-      "from": "jquery@~2.1.1",
-      "resolved": "https://registry.npmjs.org/jquery/-/jquery-2.1.1.tgz"
-    },
     "jshint": {
       "version": "2.4.4",
       "from": "jshint@2.4.x",

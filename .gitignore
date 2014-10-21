@@ -5,6 +5,7 @@
 *.backup
 *.deb
 node_modules
+bower_components
 npm-debug.log
 scripts/private
 scripts/lib/temp_query*
