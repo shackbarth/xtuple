@@ -116,6 +116,11 @@ var _ = require('underscore'),
           console.log("Not importing the dictionaries");
           return done();
         }
+        if (specs[0].extensions.length === 1 || specs[0].extensions[0].indexOf("foundation-database") >= 0) {
+          // don't build dictionaries if we're just building the foundation
+          console.log("Not importing the dictionaries");
+          return done();
+        }
         var databases = _.map(specs, function (spec) {
           return spec.database;
         });
