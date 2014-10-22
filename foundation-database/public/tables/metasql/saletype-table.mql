@@ -4,7 +4,19 @@
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 
-<? if exists("ViewMode") ?>
+<? if exists("CheckMode") ?>
+  SELECT saletype_id
+    FROM saletype
+   WHERE true
+  <? if exists("saletype_id") ?>
+    AND (saletype_id != <? value("saletype_id") ?>) 
+  <? endif ?>
+  <? if exists("saletype_code") ?>
+    AND (UPPER(saletype_code)=UPPER(<? value("saletype_code") ?>)) 
+  <? endif ?>
+  ORDER BY saletype_code;
+
+<? elseif exists("ViewMode") ?>
   SELECT *
     FROM saletype
    WHERE true
