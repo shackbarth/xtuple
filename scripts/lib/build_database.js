@@ -193,7 +193,6 @@ var  async = require('async'),
 
         // Without this, psql runs all input and returns success even if errors occurred
         allSql = "\\set ON_ERROR_STOP TRUE\n" + allSql;
-
         winston.info("Applying build to database " + spec.database);
         credsClone.database = spec.database;
         sendToDatabase(allSql, credsClone, spec, function (err, res) {
