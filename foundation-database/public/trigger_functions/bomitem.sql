@@ -9,6 +9,7 @@ DECLARE
   _bomworkid INTEGER;
   _seqNumber INTEGER;
   _parentItem RECORD;
+  _bomheadid INTEGER;
 BEGIN
 
   -- Privilege Checks
@@ -40,6 +41,17 @@ BEGIN
     END IF;
 
     PERFORM deleteBOMWorkset(_bomworksetid);
+
+    -- Create bomhead record if one does not exist
+
+    SELECT bomhead_id INTO _bomheadid
+    FROM bomhead
+    WHERE (bomhead_item_id=NEW.bomitem_parent_item_id);
+
+    IF (NOT FOUND) THEN
+      INSERT INTO bomhead (bomhead_item_id, bomhead_batchsize, bomhead_rev_id)
+                   VALUES (NEW.bomitem_parent_item_id, 1, -1);
+    END IF;
 
     -- Set defaults
     NEW.bomitem_rev_id := COALESCE(NEW.bomitem_rev_id, -1);
