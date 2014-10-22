@@ -331,7 +331,7 @@ module.exports = (function () {
    */
   function getSession(req, next) {
     return {
-      passport: getPassport(req.user, next)
+      passport: getPassport(req.user.get('username') ? req.user : req.session.passport.user, next)
     };
   }
 
@@ -342,9 +342,9 @@ module.exports = (function () {
     if (!user) return next(new Error('user is not defined'));
     return {
       user: {
-        id: user.get('username'),
-        username: user.get('username'),
-        organization: user.get('organization')
+        id: user.get ? user.get('username') : user.username,
+        username: user.get ? user.get('username') : user.username,
+        organization: user.get ? user.get('organization') : user.organization
       }
     };
   }
