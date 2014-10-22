@@ -1918,6 +1918,13 @@ a,
   margin: 0;
   margin-left: 6px;
 }
+@media (max-width: 480px) {
+  .onyx-toolbar .xv-toolbar-label,
+  .onyx-toolbar .xv-search {
+    width: 100px;
+    font-size: 18px;
+  }
+}
 .onyx-toolbar .xv-search {
   color: #939393;
 }
@@ -2236,18 +2243,11 @@ a,
   padding-bottom: 4px;
   border-bottom: 1px solid #aaaaaa;
 }
+.xv-list-header .xv-list-column {
+  padding-left: 7px;
+}
 .xv-list-header .xv-list-column.last {
   border-right: none;
-}
-.xv-list-header .xv-list-column.name-column,
-.xv-list-header .xv-list-column.first,
-.xv-list-header .xv-list-column.second,
-.xv-list-header .xv-list-column.third,
-.xv-list-header .xv-list-column.short,
-.xv-list-header .xv-list-column.small,
-.xv-list-header .xv-list-column.medium,
-.xv-list-header .xv-list-column.descr {
-  padding-left: 7px;
 }
 /* List */
 .xv-list-column.line-number {
@@ -2258,7 +2258,7 @@ a,
   width: 200px;
 }
 .xv-list-column.right-column {
-  width: 100px;
+  width: 115px;
   text-align: right;
 }
 .xv-list-column.short {
@@ -2432,6 +2432,11 @@ a,
   overflow: hidden;
   text-overflow: ellipsis;
   color: #070707;
+}
+@media (max-width: 480px) {
+  .xv-list-attr {
+    padding: 2px 5px 2px 5px;
+  }
 }
 .xv-list-attr.header {
   padding: 4px;
@@ -2956,11 +2961,45 @@ a,
   top: 0px;
 }
 .selectable-chart .map-cluster {
-  width: 40px;
-  height: 40px;
-  background-color: greenyellow;
+  background-clip: padding-box;
+  border-radius: 20px;
+}
+.selectable-chart .map-cluster div {
+  width: 30px;
+  height: 30px;
+  margin-left: 5px;
+  margin-top: 5px;
   text-align: center;
-  font-size: 24px;
+  border-radius: 15px;
+  color: #ff6529;
+  font: 24px "Helvetica Neue", Arial, Helvetica, sans-serif;
+}
+.selectable-chart .map-cluster span {
+  line-height: 30px;
+}
+.selectable-chart .map-cluster-small {
+  background-color: rgba(181, 226, 140, 0.6);
+  border: 1px solid #000;
+}
+.selectable-chart .map-cluster-small div {
+  background-color: rgba(110, 204, 57, 0.6);
+  border: 1px solid #000;
+}
+.selectable-chart .map-cluster-medium {
+  background-color: rgba(241, 211, 87, 0.6);
+  border: 1px solid #000;
+}
+.selectable-chart .map-cluster-medium div {
+  background-color: rgba(240, 194, 12, 0.6);
+  border: 1px solid #000;
+}
+.selectable-chart .map-cluster-large {
+  background-color: rgba(253, 156, 115, 0.6);
+  border: 1px solid #000;
+}
+.selectable-chart .map-cluster-large div {
+  background-color: rgba(241, 128, 23, 0.6);
+  border: 1px solid #000;
 }
 .selectable-chart .map-bottom {
   background-color: #d8d8d8;
