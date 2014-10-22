@@ -41,7 +41,7 @@
   <sql>SELECT warehous_code, item_number, item_descrip1, item_descrip2,
        formatDate(reorderdate) AS f_reorderdate,
        formatQty(reorderlevel) AS f_reorderlevel,
-       formatQty((itemsite_qtyonhand - qtyAllocated(itemsite_id, reorderdate) + qtyOrdered(itemsite_id, reorderdate))) AS f_projavail,
+       formatQty((qtyNetable(itemsite_id) - qtyAllocated(itemsite_id, reorderdate) + qtyOrdered(itemsite_id, reorderdate))) AS f_projavail,
        reorderdate 
   FROM ( SELECT itemsite_id,
                 CASE WHEN (item_type IN ('M', 'B', 'T')) THEN 1
@@ -49,10 +49,9 @@
                      ELSE 3
                 END AS itemtype,
                 warehous_code, item_number, item_descrip1, item_descrip2,
-                reorderDate(itemsite_id, &lt;? value(&quot;lookAheadDays&quot;) ?>, &lt;? if exists(&quot;includePlannedOrder&quot;) ?>true&lt;? else ?>false&lt;? endif ?>) AS reorderdate, itemsite_qtyonhand,
+                reorderDate(itemsite_id, &lt;? value(&quot;lookAheadDays&quot;) ?>, &lt;? if exists(&quot;includePlannedOrder&quot;) ?>true&lt;? else ?>false&lt;? endif ?>) AS reorderdate,
                 reorderlevel 
            FROM ( SELECT itemsite_id, itemsite_item_id, itemsite_warehous_id,
-                         itemsite_qtyonhand,
                          CASE WHEN(itemsite_useparams) THEN itemsite_reorderlevel ELSE 0.0 END AS reorderlevel
                     FROM itemsite 
                    WHERE ((true)

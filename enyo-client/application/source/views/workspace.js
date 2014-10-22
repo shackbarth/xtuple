@@ -641,12 +641,12 @@ strict: false*/
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup",
             classes: "in-panel", components: [
-            {kind: "XV.InputWidget", attr: "abbreviation"},
+            {kind: "XV.InputWidget", attr: "abbreviation", maxlength: 2},
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.InputWidget", attr: "currencyName"},
             {kind: "XV.InputWidget", attr: "currencySymbol"},
-            {kind: "XV.InputWidget", attr: "currencyAbbreviation"},
-            {kind: "XV.InputWidget", attr: "currencyNumber"}
+            {kind: "XV.InputWidget", attr: "currencyAbbreviation", maxlength: 3},
+            {kind: "XV.InputWidget", attr: "currencyNumber", maxlength: 3}
           ]}
         ]}
       ]}
@@ -2785,19 +2785,17 @@ strict: false*/
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
-            {kind: "XV.InputWidget", attr: "code"},
-            {kind: "XV.CheckboxWidget", attr: "isActive"},
-            {kind: "XV.SiteTypePicker", attr: "siteType"},
-            {kind: "XV.InputWidget", attr: "description"},
-            {kind: "XV.ContactWidget", attr: "contact"},
-            {kind: "XV.AddressWidget", attr: "address"},
-            {kind: "XV.TaxZonePicker", attr: "taxZone"},
-            {kind: "XV.InputWidget", attr: "incoterms"},
-            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
-            {kind: "XV.TextArea", attr: "notes", fit: true}
+            {name: "mainSubgroup", components: [ // not a scroller, so we can addBefore
+              {kind: "XV.InputWidget", attr: "code"},
+              {kind: "XV.CheckboxWidget", attr: "isActive"},
+              {kind: "XV.SiteTypePicker", attr: "siteType"},
+              {kind: "XV.InputWidget", attr: "description"},
+              {kind: "XV.ContactWidget", attr: "contact", name: "contactWidget"},
+              {kind: "XV.AddressWidget", attr: "address"}
+            ]}
           ]}
         ]},
-        {kind: "XV.SiteCommentBox", attr: "comments"}
+        {kind: "XV.SiteCommentBox", attr: "comments", name: "commentsPanel"}
       ]}
     ]
   });
@@ -3344,6 +3342,5 @@ strict: false*/
   XV.registerModelWorkspace("XM.UserAccountRole", "XV.UserAccountRoleWorkspace");
   XV.registerModelWorkspace("XM.UserAccountRoleRelation", "XV.UserAccountRoleWorkspace");
   XV.registerModelWorkspace("XM.UserAccountRoleListItem", "XV.UserAccountRoleWorkspace");
-
 
 }());

@@ -114,9 +114,15 @@ var app;
     var extensionLocation = extension.location === "npm" ? extension.location : extension.location + "/source";
     useClientDir(extensionLocation + "/" + extension.name + "/client", X.path.join(getExtensionDir(extension), "client"));
   };
-  var loadExtensionRoutes = function (extension) {
-    var manifest = JSON.parse(X.fs.readFileSync(X.path.join(getExtensionDir(extension),
-        "database/source/manifest.js")));
+  var loadExtensionServerside = function (extension) {
+    var packagePath = X.path.join(getExtensionDir(extension), "package.json");
+    var packageJson = X.fs.existsSync(packagePath) ? require(packagePath) : undefined;
+    var manifestPath = X.path.join(getExtensionDir(extension), "database/source/manifest.js");
+    var manifest = X.fs.existsSync(manifestPath) ? JSON.parse(X.fs.readFileSync(manifestPath)) : {};
+    var version = packageJson ? packageJson.version : manifest.version;
+    X.versions[extension.name] = version || "none"; // XXX the "none" is temporary until we have core extensions in npm
+
+    // TODO: be able to define routes in package.json
     _.each(manifest.routes || [], function (routeDetails) {
       var verb = (routeDetails.verb || "all").toLowerCase(),
         func = require(X.path.join(getExtensionDir(extension),
@@ -124,8 +130,10 @@ var app;
 
       if (_.contains(["all", "get", "post", "patch", "delete"], verb)) {
         app[verb]('/:org/' + routeDetails.path, func);
+      } else if (verb === "no-route") {
+        func();
       } else {
-        console.log("Invalid verb for extension-defined route " + routeDetails.path);
+        console.log("Invalid verb (" + verb + ") for extension-defined route " + routeDetails.path);
       }
     });
   };
@@ -149,7 +157,7 @@ var app;
           return;
         }
         useClientDir("/client", "../enyo-client/application");
-        _.each(results, loadExtensionRoutes);
+        _.each(results, loadExtensionServerside);
         _.each(results, loadExtensionClientside);
       }
     });
@@ -168,11 +176,9 @@ var app;
  */
 
 var packageJson = X.fs.readFileSync("../package.json");
-try {
-  X.version = JSON.parse(packageJson).version;
-} catch (error) {
-
-}
+X.versions = {
+  core: JSON.parse(packageJson).version
+};
 
 /**
  * Module dependencies.
@@ -291,10 +297,13 @@ var conditionalExpressSession = function (req, res, next) {
   // The 'assets' folder and login page are sessionless.
   if ((/^api/i).test(req.path.split("/")[2]) ||
       (/^\/assets/i).test(req.path) ||
-      req.path === "/" ||
-      req.path === "/favicon.ico" ||
-      req.path === "/forgot-password" ||
-      req.path === "/recover") {
+      req.path === '/' ||
+      req.path === '/favicon.ico' ||
+      req.path === '/forgot-password' ||
+      req.path === '/assets' ||
+      req.path === '/stylesheets' ||
+      req.path === '/bower_components' ||
+      req.path === '/recover') {
 
     next();
   } else {
@@ -391,8 +400,11 @@ require('./oauth2/passport');
  */
 var that = this;
 
-app.use(express.favicon(__dirname + '/views/login/assets/favicon.ico'));
-app.use('/assets', express.static('views/login/assets', { maxAge: 86400000 }));
+/* Static assets */
+app.use(express.favicon(__dirname + '/views/assets/favicon.ico'));
+app.use('/assets', express.static('views/assets', { maxAge: 86400000 }));
+app.use('/stylesheets', express.static('views/stylesheets', { maxAge: 86400000 }));
+app.use('/bower_components', express.static('bower_components', { maxAge: 86400000 }));
 
 app.get('/:org/dialog/authorize', oauth2.authorization);
 app.post('/:org/dialog/authorize/decision', oauth2.decision);
@@ -638,10 +650,9 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
           data: session.passport.user,
           code: 1,
           debugging: X.options.datasource.debugging,
-          biAvailable: _.isObject(X.options.biServer) && !_.isEmpty(X.options.biServer),
           emailAvailable: _.isString(X.options.datasource.smtpHost) && X.options.datasource.smtpHost !== "",
           printAvailable: _.isString(X.options.datasource.printer) && X.options.datasource.printer !== "",
-          version: X.version
+          versions: X.versions
         });
       callback(callbackObj);
     }, data && data.payload);

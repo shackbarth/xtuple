@@ -5,9 +5,9 @@ xTuple
 
 ### What we're about
 
-xTuple is open-source business management software. The code is managed by an eponymous
-company in Norfolk, VA, and our community stretches around the world. Our web application
-is implemented as an [HTML5 node.js app](https://github.com/xtuple/xtuple/wiki/Overview).
+xTuple is open-source business management software (learn more at [xTuple.com](http://www.xtuple.com).
+The code is managed by an eponymous company in Norfolk, VA, and our community stretches around 
+the world. Our web application is implemented as an [HTML5 node.js app](https://github.com/xtuple/xtuple/wiki/Overview).
 The other client to our server is a [desktop app](https://github.com/xtuple/qt-client) written
 in the cross-platform Qt framework.
 
@@ -38,7 +38,7 @@ Fork us, take a test drive with our [free trial](http://www.xtuple.com/free-tria
 file a github issue. 
 If you want to be a contributor and are looking for a place to
 make your mark, we're keeping a list of issues that are 
-[fair game](https://github.com/xtuple/xtuple/issues?labels=fair+game) 
+[fair game](https://github.com/xtuple/xtuple/labels/fair%20game)
 to pick off and provide
 a convenient, well-documented starting point into our project.
 
@@ -55,13 +55,14 @@ is going to be held October 13-18 in Norfolk, VA. With six days of events and a 
 speech by Steve Wozniak, it promises to the be the biggest xTupleCon yet.
 
 ### Installing this project
-
+If you are looking to install xTuple for demonstration or use, please follow the instructions on the [xTuple Server wiki](https://github.com/xtuple/xtuple-server/wiki).
 The best way to start coding on our stack is to use our
-[Vagrant setup](https://github.com/xtuple/xtuple/wiki/Become-an-xTuple-Developer!).
+[Vagrant setup for developers](https://github.com/xtuple/xtuple/wiki/Become-an-xTuple-Developer!).
 
 ### Release Notes
 
-View the [Release Notes](RELEASE.md) to see a change log.
+View the [Release Notes](https://github.com/xtuple/xtuple-documentation/tree/master/release-notes) 
+to see a change log.
 
 ### Additional Resources
   * [Building an Extension Tutorial](https://github.com/xtuple/xtuple-extensions/blob/master/docs/TUTORIAL.md)

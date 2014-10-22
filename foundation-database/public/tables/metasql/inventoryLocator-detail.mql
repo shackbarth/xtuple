@@ -8,6 +8,7 @@
 SELECT *,
        <? value("na") ?> AS locationname_xtnullrole,
        <? value("na") ?> AS netable_xtnullrole,
+       <? value("na") ?> AS usable_xtnullrole,
        <? value("na") ?> AS lotserial_xtnullrole,
        <? value("na") ?> AS expiration_xtnullrole,
        <? value("na") ?> AS warranty_xtnullrole,
@@ -25,6 +26,8 @@ FROM (SELECT itemloc_id, 1 AS type, warehous_code,
              END AS locationname,
              CASE WHEN (location_id IS NOT NULL) THEN location_netable
              END AS netable,
+             CASE WHEN (location_id IS NOT NULL) THEN location_usable
+             END AS usable,
              CASE WHEN (itemsite_controlmethod IN ('L', 'S')) THEN
                         formatlotserialnumber(itemloc_ls_id)
              END AS lotserial,
@@ -88,6 +91,7 @@ FROM (SELECT itemloc_id, 1 AS type, warehous_code,
              itemsite_warrpurc, NULL AS itemloc_warrpurc,
              NULL AS locationname,
              NULL AS netable,
+             NULL AS usable,
              NULL AS lotserial,
              NULL AS expiration,
              NULL AS warranty,

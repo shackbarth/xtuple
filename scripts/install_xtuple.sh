@@ -23,7 +23,7 @@ sudo apt-get -q -y install \
   python-software-properties \
   software-properties-common
 
-NODE_VERSION=0.8.26
+NODE_VERSION=0.10.31
 
 DEBDIST=`lsb_release -c -s`
 echo "Trying to install xTuple for platform ${DEBDIST}"
@@ -156,9 +156,12 @@ install_packages() {
   sudo nvm alias default $NODE_VERSION
   sudo nvm alias xtuple $NODE_VERSION
 
+  # use latest npm
+  sudo npm install -fg npm@1.4.25
 	# npm no longer supports its self-signed certificates
 	log "telling npm to use known registrars..."
 	npm config set ca ""
+        sudo chown -R $USER $HOME/.npm
 
   log "installing npm modules..."
   npm install --unsafe-perm 2>&1 | tee -a $LOG_FILE

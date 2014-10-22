@@ -161,7 +161,9 @@ require:true, __dirname:true, console:true */
             _.each(spec.extensions, function (extension) {
               it("has privilege " + priv + " declared by the " + extension + " extension", function () {
                 assert.isDefined(_.findWhere(XT.session.relevantPrivileges,
-                  {privilege: priv, module: spec.relevantPrivilegeModule || extension}));
+                  {privilege: priv, module: spec.relevantPrivilegeModule || extension}),
+                  "Perhaps you're adding the privilege in a different module and haven't set the " +
+                  "spec.relevantPrivilegeModule attribute to be that module?");
               });
             });
             /*

@@ -56,6 +56,10 @@
 @defaultPanelWidth: 320px;
 @toolbarHeight: 55px;
 @searchLength: 185px;
+@mobileLength: 100px;
+// popups
+@maxMessageHeight: 500px;
+@maxMessageWidth: 500px;
 
 // libs
 @import "../../lib/font-awesome/less/font-awesome.less";
@@ -196,12 +200,15 @@ a, .hyperlink {
 */
 .xv-popup {
   background: @header-gray;
-  margin: 0;
-  max-height: 400px;
-  width: 400px;
   min-width: @defaultPanelWidth;
-  padding: 7px;
+  padding: 10px;
   text-align: center;
+
+  .message {
+    margin-bottom: 10px;
+    max-height: @maxMessageHeight;
+    max-width: @maxMessageWidth;
+  }
 
   &.xv-groupbox-popup {
     .xv-workspace-container > .xv-workspace > .xv-workspace-panel;
@@ -365,6 +372,10 @@ a, .hyperlink {
     width: @searchLength;
     margin: 0;
     margin-left: 6px;
+    @media (max-width: 480px) {
+      width: @mobileLength;
+      font-size: 18px;
+    }
   }
   .xv-search {
     color: @med-gray;

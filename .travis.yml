@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-  - "0.8"
+  - "0.10"
 
 install:
   - "bash scripts/install_xtuple.sh -ipn"
@@ -14,7 +14,4 @@ before_script:
 script:
   - "npm run-script test-datasource"
   - "npm run-script test"
-
-  # test an upgrade from 4.4.0
-  - "wget http://sourceforge.net/projects/postbooks/files/03%20PostBooks-databases/4.4.0/postbooks_demo-4.4.0.backup"
-  - "./scripts/build_app.js -d upgrade_test -i -b ./postbooks_demo-4.4.0.backup"
+  - "npm run-script jshint"

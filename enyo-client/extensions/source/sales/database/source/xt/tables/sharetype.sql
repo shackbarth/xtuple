@@ -54,6 +54,20 @@ insert into xt.sharetype (
   'username'
 );
 
+-- Customer that a Ship To is on CRM Account's users.
+delete from xt.sharetype where sharetype_tblname = 'share_users_shipto_cust';
+insert into xt.sharetype (
+  sharetype_nsname,
+  sharetype_tblname,
+  sharetype_col_obj_uuid,
+  sharetype_col_username
+) values (
+  'xt',
+  'share_users_shipto_cust',
+  'obj_uuid',
+  'username'
+);
+
 -- Sales Order CRM Account's users.
 delete from xt.sharetype where sharetype_tblname = 'share_users_cohead';
 insert into xt.sharetype (

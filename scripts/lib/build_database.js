@@ -6,8 +6,8 @@ _ = require('underscore');
 
 var  async = require('async'),
   dataSource = require('../../node-datasource/lib/ext/datasource').dataSource,
-  buildDatabaseUtil = require('./build_database_util'),
   exec = require('child_process').exec,
+  explodeManifest = require("./util/process_manifest").explodeManifest,
   fs = require('fs'),
   ormInstaller = require('./orm'),
   dictionaryBuilder = require('./build_dictionary'),
@@ -15,6 +15,7 @@ var  async = require('async'),
   path = require('path'),
   pg = require('pg'),
   os = require('os'),
+  sendToDatabase = require("./util/send_to_database").sendToDatabase,
   winston = require('winston');
 
 (function () {
@@ -73,25 +74,30 @@ var  async = require('async'),
           isPublicExtension = extension.indexOf("xtuple-extensions") >= 0,
           isPrivateExtension = extension.indexOf("private-extensions") >= 0,
           isNpmExtension = baseName.indexOf("xtuple-") >= 0,
+          isExtension = !isFoundation && !isLibOrm && !isApplicationCore,
           dbSourceRoot = (isFoundation || isFoundationExtension) ? extension :
             isLibOrm ? path.join(extension, "source") :
             path.join(extension, "database/source"),
           manifestOptions = {
+            manifestFilename: path.resolve(dbSourceRoot, "manifest.js"),
+            extensionPath: isExtension ?
+              path.resolve(dbSourceRoot, "../../") :
+              undefined,
             useFrozenScripts: spec.frozen,
             useFoundationScripts: baseName.indexOf('inventory') >= 0 ||
               baseName.indexOf('manufacturing') >= 0 ||
               baseName.indexOf('distribution') >= 0,
-            registerExtension: !isFoundation && !isLibOrm && !isApplicationCore,
+            registerExtension: isExtension,
             runJsInit: !isFoundation && !isLibOrm,
-            wipeViews: isApplicationCore && spec.wipeViews,
+            wipeViews: isFoundation && spec.wipeViews,
+            wipeOrms: isApplicationCore && spec.wipeViews,
             extensionLocation: isCoreExtension ? "/core-extensions" :
               isPublicExtension ? "/xtuple-extensions" :
               isPrivateExtension ? "/private-extensions" :
               isNpmExtension ? "npm" : "not-applicable"
           };
 
-        buildDatabaseUtil.explodeManifest(path.join(dbSourceRoot, "manifest.js"),
-          manifestOptions, extensionCallback);
+        explodeManifest(manifestOptions, extensionCallback);
       };
 
       // We also need to get the sql that represents the queries to generate
@@ -187,25 +193,39 @@ var  async = require('async'),
 
         // Without this, psql runs all input and returns success even if errors occurred
         allSql = "\\set ON_ERROR_STOP TRUE\n" + allSql;
-
-        if (spec.wasInitialized && !_.isEqual(extensions, ["foundation-database"])) {
-          // give the admin user every extension by default
-          allSql = allSql + "insert into xt.usrext (usrext_usr_username, usrext_ext_id) " +
-            "select '" + creds.username +
-            "', ext_id from xt.ext where ext_location = '/core-extensions' and ext_name NOT LIKE 'oauth2';";
-        }
-
         winston.info("Applying build to database " + spec.database);
         credsClone.database = spec.database;
-        buildDatabaseUtil.sendToDatabase(allSql, credsClone, spec, function (err, res) {
+        sendToDatabase(allSql, credsClone, spec, function (err, res) {
+          // If the user has included a -p flag to populate the data, parse
+          // and insert any files found at ext/database/source/populate_data.js
+          // This will get done after the rest of the database is built, and
+          // in the load order of the extensions.
+
+          // This method is more portable to hand-inserting the data, because it
+          // makes no assumptions about the username and the encryption key
+
+          // To generate the patches and posts that make up the populate_data.js
+          // file, set 'capture: true' in config.js and then copy/paste the
+          // logged contents of the datasource as you drive around the app creating
+          // and editing objects.
           if (spec.populateData && creds.encryptionKeyFile) {
             var populateSql = "DO $$ XT.disableLocks = true; $$ language plv8;";
-            var encryptionKey = fs.readFileSync(path.resolve(__dirname, "../../node-datasource", creds.encryptionKeyFile), "utf8");
-            var patches = require(path.join(__dirname, "../../enyo-client/database/source/populate_data")).patches;
-            _.each(patches, function (patch) {
-              patch.encryptionKey = encryptionKey;
-              patch.username = creds.username;
-              populateSql += "select xt.patch(\'" + JSON.stringify(patch) + "\');";
+            var encryptionKey = fs.readFileSync(path.resolve(__dirname, "../../node-datasource",
+              creds.encryptionKeyFile), "utf8");
+
+            _.each(spec.extensions, function (ext) {
+              if (!fs.existsSync(path.resolve(ext, "database/source/populate_data.js"))) {
+                // many extensions will not have a populate_data.js file
+                return;
+              }
+
+              var populatedData = require(path.resolve(ext, "database/source/populate_data"));
+              _.each(populatedData, function (query) {
+                var verb = query.patches ? "patch" : "post";
+                query.encryptionKey = encryptionKey;
+                query.username = creds.username;
+                populateSql += "select xt." + verb + "(\'" + JSON.stringify(query) + "\');";
+              });
             });
             populateSql += "DO $$ XT.disableLocks = undefined; $$ language plv8;";
             dataSource.query(populateSql, credsClone, databaseCallback);

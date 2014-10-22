@@ -15,7 +15,7 @@ BEGIN
   RETURN createPurchaseToSale(pCoitemId, pItemSourceId, pDropShip, NULL, NULL, NULL);
 
 END;
-$$ LANGUAGE 'plpgsql';
+$$ LANGUAGE plpgsql;
 
 
 CREATE OR REPLACE FUNCTION createPurchaseToSale(INTEGER, INTEGER, BOOLEAN, NUMERIC) RETURNS INTEGER AS $$
@@ -32,7 +32,7 @@ BEGIN
   RETURN createPurchaseToSale(pCoitemId, pItemSourceId, pDropShip, NULL, NULL, pPrice);
 
 END;
-$$ LANGUAGE 'plpgsql';
+$$ LANGUAGE plpgsql;
 
 
 CREATE OR REPLACE FUNCTION createPurchaseToSale(INTEGER, INTEGER, BOOLEAN, NUMERIC, DATE, NUMERIC) RETURNS INTEGER AS $$
@@ -51,7 +51,7 @@ BEGIN
   RETURN createPurchaseToSale(pCoitemId, pItemSourceId, pDropShip, pQty, pDueDate, pPrice, NULL);
 
 END;
-$$ LANGUAGE 'plpgsql';
+$$ LANGUAGE plpgsql;
 
 
 CREATE OR REPLACE FUNCTION createPurchaseToSale(INTEGER, INTEGER, BOOLEAN, NUMERIC, DATE, NUMERIC, INTEGER) RETURNS INTEGER AS $$
@@ -69,10 +69,12 @@ DECLARE
   _s RECORD;
   _w RECORD;
   _i RECORD;
+  _c RECORD;
   _shipto RECORD;
   _poheadid INTEGER := -1;
   _poitemid INTEGER := -1;
   _taxtypeid INTEGER := -1;
+  _charassid INTEGER := -1;
   _polinenumber INTEGER;
   _ponumber NUMERIC;
   _price NUMERIC;
@@ -126,27 +128,27 @@ BEGIN
     FROM pohead
     WHERE ( (pohead_status = 'U')
       AND (pohead_vend_id = _i.itemsrc_vend_id)
-      AND (pohead_shiptoname = COALESCE(_s.cohead_shiptoname, _s.shipto_name, ''))
-      AND (pohead_shiptoaddress1 = COALESCE(_s.cohead_shiptoaddress1, _s.addr_line1, ''))
-      AND (pohead_shiptoaddress2 = COALESCE(_s.cohead_shiptoaddress2, _s.addr_line2, ''))
-      AND (pohead_shiptoaddress3 = COALESCE(_s.cohead_shiptoaddress3, _s.addr_line3, ''))
-      AND (pohead_shiptocity = COALESCE(_s.cohead_shiptocity, _s.addr_city, ''))
-      AND (pohead_shiptostate = COALESCE(_s.cohead_shiptostate, _s.addr_state, ''))
-      AND (pohead_shiptozipcode = COALESCE(_s.cohead_shiptozipcode, _s.addr_postalcode, ''))
-      AND (pohead_shiptocountry = COALESCE(_s.cohead_shiptocountry, _s.addr_country, ''))
+      AND (COALESCE(pohead_shiptoname, '') = COALESCE(_s.cohead_shiptoname, _s.shipto_name, ''))
+      AND (COALESCE(pohead_shiptoaddress1, '') = COALESCE(_s.cohead_shiptoaddress1, _s.addr_line1, ''))
+      AND (COALESCE(pohead_shiptoaddress2, '') = COALESCE(_s.cohead_shiptoaddress2, _s.addr_line2, ''))
+      AND (COALESCE(pohead_shiptoaddress3, '') = COALESCE(_s.cohead_shiptoaddress3, _s.addr_line3, ''))
+      AND (COALESCE(pohead_shiptocity, '') = COALESCE(_s.cohead_shiptocity, _s.addr_city, ''))
+      AND (COALESCE(pohead_shiptostate, '') = COALESCE(_s.cohead_shiptostate, _s.addr_state, ''))
+      AND (COALESCE(pohead_shiptozipcode, '') = COALESCE(_s.cohead_shiptozipcode, _s.addr_postalcode, ''))
+      AND (COALESCE(pohead_shiptocountry, '') = COALESCE(_s.cohead_shiptocountry, _s.addr_country, ''))
       AND ((pohead_id=pPoheadId) OR (pPoheadid IS NULL)) );
   ELSE
     SELECT COALESCE(pohead_id, -1) INTO _temp
     FROM pohead
     WHERE ( (pohead_status = 'U')
       AND (pohead_vend_id = _i.itemsrc_vend_id)
-      AND (pohead_shiptoaddress1 = COALESCE(_w.addr_line1, ''))
-      AND (pohead_shiptoaddress2 = COALESCE(_w.addr_line2, ''))
-      AND (pohead_shiptoaddress3 = COALESCE(_w.addr_line3, ''))
-      AND (pohead_shiptocity = COALESCE(_w.addr_city, ''))
-      AND (pohead_shiptostate = COALESCE(_w.addr_state, ''))
-      AND (pohead_shiptozipcode = COALESCE(_w.addr_postalcode, ''))
-      AND (pohead_shiptocountry = COALESCE(_w.addr_country, ''))
+      AND (COALESCE(pohead_shiptoaddress1, '') = COALESCE(_w.addr_line1, ''))
+      AND (COALESCE(pohead_shiptoaddress2, '') = COALESCE(_w.addr_line2, ''))
+      AND (COALESCE(pohead_shiptoaddress3, '') = COALESCE(_w.addr_line3, ''))
+      AND (COALESCE(pohead_shiptocity, '') = COALESCE(_w.addr_city, ''))
+      AND (COALESCE(pohead_shiptostate, '') = COALESCE(_w.addr_state, ''))
+      AND (COALESCE(pohead_shiptozipcode, '') = COALESCE(_w.addr_postalcode, ''))
+      AND (COALESCE(pohead_shiptocountry, '') = COALESCE(_w.addr_country, ''))
       AND ((pohead_id=pPoheadId) OR (pPoheadid IS NULL)) );
   END IF;
 
@@ -272,6 +274,31 @@ BEGIN
     END IF;
   END IF;
 
+  -- Copy characteristics from the cohead to the pohead
+  -- while avoiding duplicates
+  FOR _c IN
+  SELECT *
+  FROM charass JOIN char ON (char_id=charass_char_id)
+  WHERE ( (char_purchaseorders)
+    AND   (charass_target_type='SO')
+    AND   (charass_target_id=_s.cohead_id) )
+  LOOP
+    SELECT charass_id INTO _charassid
+    FROM charass
+    WHERE ( (charass_target_type='PO')
+      AND   (charass_target_id=_poheadid)
+      AND   (charass_char_id=_c.charass_char_id)
+      AND   (charass_value=_c.charass_value) );
+    IF (NOT FOUND) THEN
+      INSERT INTO charass
+        ( charass_target_type, charass_target_id, charass_char_id,
+          charass_value, charass_default, charass_price )
+      VALUES
+        ( 'PO', _poheadid, _c.charass_char_id,
+          _c.charass_value, _c.charass_default, _c.charass_price );
+    END IF;
+  END LOOP;
+
   SELECT NEXTVAL('poitem_poitem_id_seq') INTO _poitemid;
 
   SELECT (COALESCE(MAX(poitem_linenumber), 0) + 1) INTO _polinenumber
@@ -335,14 +362,16 @@ BEGIN
         COALESCE(_i.itemsrc_manuf_item_descrip, TEXT('')), _taxtypeid,
         COALESCE(_s.coitem_memo, TEXT('')));
   END IF;
+
   -- Copy characteristics from the coitem to the poitem
   INSERT INTO charass
     ( charass_target_type, charass_target_id, charass_char_id,
       charass_value, charass_default, charass_price )
   SELECT 'PI', _poitemid, charass_char_id,
          charass_value, charass_default, charass_price
-  FROM charass
-  WHERE ( (charass_target_type='SI')
+  FROM charass JOIN char ON (char_id=charass_char_id)
+  WHERE ( (char_purchaseorders)
+    AND   (charass_target_type='SI')
     AND   (charass_target_id=pCoitemId) );
 
   UPDATE coitem
@@ -364,4 +393,4 @@ BEGIN
   RETURN _poitemid;
 
 END;
-$$ LANGUAGE 'plpgsql' VOLATILE;
+$$ LANGUAGE plpgsql VOLATILE;
