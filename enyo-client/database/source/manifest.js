@@ -125,6 +125,7 @@
     "xt/functions/register_extension_dependency.sql",
     "xt/functions/trylock.sql",
     "xt/functions/undomerge.sql",
+    "xt/functions/workflow_inheritsource.sql",
     "xt/functions/workflow_notify.sql",
     "xt/tables/acttype.sql",
     "xt/tables/sharetype.sql",
