@@ -53,6 +53,7 @@ strict:true, trailing:true, white:true */
     "_RequireStdCostForPOItem": "Require Standard Cost",
     "_transactedPoNotUnreleased": "This Purchase Order has transactions and can not be Unreleased.",
     "_supply": "Supply",
+    "_unclosedPurchaseOrders": "Unclosed Purchase Orders",
     "_unitRatio": "Unit Ratio",
     "_UseEarliestAvailDateOnPOItem": "Use Earliest Date",
     "_vendorItem": "Vendor Item",
