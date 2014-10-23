@@ -67,12 +67,11 @@ trailing:true, white:true*/
         operator: "=",
         value: "O"
       }, {
-        attribute: "orderDate",
+        attribute: "scheduleDate",
         operator: "<=",
         value: XT.date.applyTimezoneOffset(XV.DateWidget.prototype.textToDate("0"), true)
       }]
     },
-    dateField: "scheduleDate",
     totalField: "total"
   });
 
