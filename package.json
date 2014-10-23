@@ -73,7 +73,7 @@
     "jsdoc-api": "rm -rf scripts/output;./node_modules/xtuple-documentation/node_modules/jsdoc/jsdoc -t ./node_modules/xtuple-documentation/jsdoc-setup/api-templates -c ./node_modules/xtuple-documentation/jsdoc-setup/jsdoc.conf.json -d ./scripts/output -r ./lib/backbone-x/source ./lib/tools/source ./lib/enyo-x/source/widgets ./lib/enyo-x/source/views ./lib/enyo-x/source/app.js ./lib/enyo-x/source/core.js ./node_modules/xtuple-documentation/jsdoc-setup/api-readme.md",
     "jsdoc-specs": "rm -rf scripts/output/*;mkdir scripts/output/tech-specs;./node_modules/xtuple-documentation/node_modules/jsdoc/jsdoc -t ./node_modules/xtuple-documentation/jsdoc-setup/spec-templates -c ./node_modules/xtuple-documentation/jsdoc-setup/jsdoc.conf.json -d ./scripts/output/tech-specs/ -r ./test/specs ./node_modules/xtuple-documentation/jsdoc-setup/tech-specs-readme.md;mkdir scripts/output/user-specs;./node_modules/xtuple-documentation/node_modules/jsdoc/jsdoc -t ./node_modules/xtuple-documentation/jsdoc-setup/spec-templates -c ./node_modules/xtuple-documentation/jsdoc-setup/jsdoc-user.conf.json -d ./scripts/output/user-specs/ -r ./test/specs ./node_modules/xtuple-documentation/jsdoc-setup/user-specs-readme.md;",
     "preinstall": "cd node-datasource/lib/query ; npm install",
-    "postinstall": "bower install",
+    "postinstall": "./node_modules/.bin/bower install",
     "start": "node_modules/.bin/nodemon node-datasource/main.js --debug --watch node-datasource",
     "test-build": "./node_modules/.bin/mocha -R spec test/build/build_app.js",
     "test": "./node_modules/.bin/mocha -R spec test/lib/login.js test/models/* test/database/* test/extensions/* test/lib/test_runner.js",
