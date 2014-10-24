@@ -456,6 +456,11 @@ white:true*/
   // Incident status mixin
   XM.IncidentRelation = XM.IncidentRelation.extend(XM.IncidentStatus);
 
+  XT.documentAssociations.INCDT = {
+    model: "XM.IncidentRelation",
+    label: "_incident".loc()
+  };
+
   /**
     @class
 

@@ -262,6 +262,11 @@ white:true*/
 
   });
 
+  XT.documentAssociations.CRMA = {
+    model: "XM.AccountRelation",
+    label: "_account".loc()
+  };
+
   /**
     @class
 

@@ -138,6 +138,11 @@ white:true*/
 
   });
 
+  XT.documentAssociations.T = {
+    model: "XM.ContactRelation",
+    label: "_contact".loc()
+  };
+
   /**
     @class
 
