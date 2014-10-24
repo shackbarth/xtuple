@@ -5,9 +5,9 @@ xTuple
 
 ### What we're about
 
-xTuple is open-source business management software. The code is managed by an eponymous
-company in Norfolk, VA, and our community stretches around the world. Our web application
-is implemented as an [HTML5 node.js app](https://github.com/xtuple/xtuple/wiki/Overview).
+xTuple is open-source business management software (learn more at [xTuple.com](http://www.xtuple.com).
+The code is managed by an eponymous company in Norfolk, VA, and our community stretches around 
+the world. Our web application is implemented as an [HTML5 node.js app](https://github.com/xtuple/xtuple/wiki/Overview).
 The other client to our server is a [desktop app](https://github.com/xtuple/qt-client) written
 in the cross-platform Qt framework.
 
@@ -55,9 +55,9 @@ is going to be held October 13-18 in Norfolk, VA. With six days of events and a 
 speech by Steve Wozniak, it promises to the be the biggest xTupleCon yet.
 
 ### Installing this project
-
+If you are looking to install xTuple for demonstration or use, please follow the instructions on the [xTuple Server wiki](https://github.com/xtuple/xtuple-server/wiki).
 The best way to start coding on our stack is to use our
-[Vagrant setup](https://github.com/xtuple/xtuple/wiki/Become-an-xTuple-Developer!).
+[Vagrant setup for developers](https://github.com/xtuple/xtuple/wiki/Become-an-xTuple-Developer!).
 
 ### Release Notes
 

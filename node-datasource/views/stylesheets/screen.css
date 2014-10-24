@@ -1,0 +1,59 @@
+
+* {
+  margin: 0;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+a {
+  color: orange;
+  text-decoration: none;
+}
+
+a:hover {
+  color: orange;
+  text-decoration: underline;
+}
+
+/*
+  Change the label to white for forms on blue panel
+*/
+label {
+  color: #fff;
+  font-weight: 500
+}
+
+.container {
+  width: 280px;
+  margin: 80px auto;
+}
+
+.header_image {
+  display: block;
+  margin: 0 auto 5px auto;
+  width: 162px;
+  text-align: center;
+}
+
+.oauth {
+  margin-bottom: 10px;
+}
+
+.main {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
+  background-color: #2f6c9d;
+  overflow: visible;
+}
+
+.panel-body {
+  padding: 25px;
+  padding-top: 30px;
+}

@@ -17,6 +17,54 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     Report = require('fluentreports').Report,
     qr = require('qr-image'),
     queryForData = require("./export").queryForData;
+    
+    
+  //
+  // FLUENT REPORT FORMAT TRANFORMS  
+  //
+  var formatAddress = function (name, address1, address2, address3, city, state, code, country) {
+    var address = [];
+    if (name) { address.push(name); }
+    if (address1) {address.push(address1); }
+    if (address2) {address.push(address2); }
+    if (address3) {address.push(address3); }
+    if (city || state || code) {
+      var cityStateZip = (city || '') +
+            (city && (state || code) ? ' '  : '') +
+            (state || '') +
+            (state && code ? ' '  : '') +
+            (code || '');
+      address.push(cityStateZip);
+    }
+    if (country) { address.push(country); }
+    return address;
+  };
+
+  // this is very similar to a function on the XM.Location model
+  var formatArbl = function (aisle, rack, bin, location) {
+    return [_.filter(arguments, function (item) {
+      return !_.isEmpty(item);
+    }).join("-")];
+  };
+
+  var formatFullName = function (firstName, lastName, honorific, suffix) {
+    var fullName = [];
+    if (honorific) { fullName.push(honorific +  ' '); }
+    fullName.push(firstName + ' ' + lastName);
+    if (suffix) { fullName.push(' ' + suffix); }
+    return fullName;
+  };
+    
+  var formatInteger = function (numeric) {
+    return ~~numeric;  // Returns a numeric as an integer type
+  };
+
+  XT.transformFunctions = {
+    fullname: formatFullName,
+    address: formatAddress,
+    arbl: formatArbl,
+    integer: formatInteger
+  };
 
   /**
     Generates a report using fluentReports
@@ -103,7 +151,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
       return _.map(detailDef, function (def) {
         var text = def.attr ? XT.String.traverseDots(data, def.attr) : loc(def.text);
-        if (def.text && def.label === true) {
+        if (def.transform) {
+           // Transform works for a single input attribute.  Refactor if multiple inputs
+          // required, although I do not think this is possible with the report detail section
+          text = XT.transformFunctions[def.transform].apply(this, [text]);
+        } else if (def.text && def.label === true) {
           // label=true on text just means add a colon
           text = text + ": ";
         } else if (def.label === true) {
@@ -143,7 +195,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
       if (def.transform) {
         params = marryData(def.definition, data, true);
-        return transformFunctions[def.transform].apply(this, params);
+        return XT.transformFunctions[def.transform].apply(this, params);
       }
 
       if (def.element === 'image') {
@@ -167,45 +219,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       textOnly = def.element === "print" || !def.element;
 
       return marryData(def.definition, data, textOnly);
-    };
-
-    var formatAddress = function (name, address1, address2, address3, city, state, code, country) {
-      var address = [];
-      if (name) { address.push(name); }
-      if (address1) {address.push(address1); }
-      if (address2) {address.push(address2); }
-      if (address3) {address.push(address3); }
-      if (city || state || code) {
-        var cityStateZip = (city || '') +
-              (city && (state || code) ? ' '  : '') +
-              (state || '') +
-              (state && code ? ' '  : '') +
-              (code || '');
-        address.push(cityStateZip);
-      }
-      if (country) { address.push(country); }
-      return address;
-    };
-
-    // this is very similar to a function on the XM.Location model
-    var formatArbl = function (aisle, rack, bin, location) {
-      return [_.filter(arguments, function (item) {
-        return !_.isEmpty(item);
-      }).join("-")];
-    };
-
-    var formatFullName = function (firstName, lastName, honorific, suffix) {
-      var fullName = [];
-      if (honorific) { fullName.push(honorific +  ' '); }
-      fullName.push(firstName + ' ' + lastName);
-      if (suffix) { fullName.push(' ' + suffix); }
-      return fullName;
-    };
-
-    var transformFunctions = {
-      fullname: formatFullName,
-      address: formatAddress,
-      arbl: formatArbl
     };
 
     /**
