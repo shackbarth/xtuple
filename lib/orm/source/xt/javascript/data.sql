@@ -969,6 +969,7 @@ select xt.install_js('XT','Data','xtuple', $$
       if (orm.type === "DocumentAssociation" && typeof data.target === "object") {
         var documentAssignmentMaps = {
           "CRMA": "AccountRelation",
+          "INCDT": "IncidentRelation",
           "T": "ContactRelation"
         };
         var targetType = documentAssignmentMaps[data.targetType];
