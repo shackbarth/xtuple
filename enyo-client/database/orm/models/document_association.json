@@ -32,6 +32,13 @@
         }
       },
       {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "source_type"
+        }
+      },
+      {
         "name": "source",
         "attr": {
           "type": "Number",
