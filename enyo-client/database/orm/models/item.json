@@ -304,7 +304,7 @@
       {
         "name": "accounts",
         "toMany": {
-          "type": "ContactAccount",
+          "type": "ItemAccount",
           "column": "item_id",
           "inverse": "source",
           "isNested": true

@@ -1,3 +1,4 @@
+[
   {
     "context": "xtuple",
     "nameSpace": "XM",
@@ -38,7 +39,14 @@
         }
       },
       {
-        "name": "destination",
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type"
+        }
+      },
+      {
+        "name": "target",
         "attr": {
           "type": "Number",
           "column": "target_id"
@@ -54,5 +62,5 @@
     ],
     "isNestedOnly": true,
     "isSystem": true
-  },
-
+  }
+]
