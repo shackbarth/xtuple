@@ -20,9 +20,9 @@ trailing:true, white:true*/
       // filter out closed p/o's
       query: {
         parameters: [{
-          "attribute":"status",
-          "operator":"!=",
-          "value":"C"
+          "attribute": "status",
+          "operator": "!=",
+          "value": "C"
         }]
       },
       totalField: "total"
