@@ -69,13 +69,15 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
         // XXX: Avoid the need for this. To be replaced when Forms object created.
         printSettingArray = ['SalesOrder', 'Invoice', 'PurchaseOrder', 'Location', 'EnterReceipt',
           'Shipment'];
-      it("User navigates to User Preference workspace", function () {
+      it("User navigates to User Preference workspace", function (done) {
+        this.timeout(4000);
         XT.app.$.postbooks.$.navigator.openPreferencesWorkspace();
         workspace = XT.app.$.postbooks.getActive().$.workspace;
         assert.equal(workspace.kind, "XV.UserPreferenceWorkspace");
+        done();
       });
       it("User Preference workspace contains the PrintPicker widget, set to default value " +
-        "'Browser', for each of the print settings 'attributes'", function () {
+        "'Browser', for each of the print settings 'attributes'", function (done) {
         assert.include(workspace.$, printSettingArray);
         _.each(printSettingArray, function (val) {
           if (workspace.$[val].value) {
@@ -85,6 +87,8 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
           }
         });
         workspace.doClose();
+        assert.equal(XT.app.$.postbooks.getActive().kind, "XV.Navigator");
+        done();
       });
     });
   };

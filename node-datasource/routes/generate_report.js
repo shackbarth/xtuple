@@ -44,6 +44,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       reportName = req.query.type.toLowerCase() + req.query.id + ".pdf",
       auxilliaryInfo = req.query.auxilliaryInfo,
       printer = req.query.printer,
+      printQty = req.query.printQty || 1,
       workingDir = path.join(__dirname, "../temp", databaseName),
       reportPath = path.join(workingDir, reportName),
       imageFilenameMap = {},
@@ -309,7 +310,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       Silent-print to a printer registered in the node-datasource.
      */
     var responsePrint = function (res, data, done) {
-      child_process.exec('lp -d ' + printer + ' ' + reportPath, function (error, stdout, stderr) {
+      child_process.exec('lp -d ' + printer + ' -n ' + printQty + ' ' + reportPath, function (error, stdout, stderr) {
         if (error !== null) {
           res.send({isError: true, message: "Error printing"});
           done();
@@ -319,7 +320,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           done();
         }
       });
-
     };
 
     // Convenience hash to avoid if-else

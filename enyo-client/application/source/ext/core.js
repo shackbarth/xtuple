@@ -194,10 +194,9 @@ white:true*/
     },
 
     /**
-      Returns the (user pref) default printer if profiled. Some day, when Forms object exists, 
-      go look up those if no user preferences here.
+      Returns the (user pref) default printer if set through User Preferences.
     */
-    defaultPrinter: function (modelName) {
+    defaultPrinter: function (formType) {
       // TODO - review below handling of the preferences object/stringified object.
       var userPrintPref = _.isString(XT.session.preferences.getValue("PrintSettings")) ?
             JSON.parse(XT.session.preferences.getValue("PrintSettings")) :
@@ -206,12 +205,9 @@ white:true*/
 
       if (userPrintPref) {
         foundPrinter = _.find(userPrintPref, function (val, key) {
-          /**
-            PrintSettings object uses names, not model names i.e. SalesOrders, Invoices, etc.
-            TODO: What if the printer name doesn't match a real printer in CUPS? Return notify
-            popup error message and print in browser. Somehow need to go look at CUPS printers.
-          */
-          return ("XM." + key) === modelName;
+          // TODO: What if the printer name doesn't match a real printer in CUPS? Return notify
+          // popup error message and print in browser. Somehow need to go look at CUPS printers.
+          return key === formType;
         });
       }
       // Currently XV.List and XV.Workspace handle false by opening the report in a new tab.
