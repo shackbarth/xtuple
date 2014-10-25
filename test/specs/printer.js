@@ -65,12 +65,12 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
       @default 7
     */
     describe("User Preference Workspace tests", function () {
+      this.timeout(10000);
       var workspace,
         // XXX: Avoid the need for this. To be replaced when Forms object created.
         printSettingArray = ['SalesOrder', 'Invoice', 'PurchaseOrder', 'Location', 'EnterReceipt',
           'Shipment'];
       it("User navigates to User Preference workspace", function (done) {
-        this.timeout(4000);
         XT.app.$.postbooks.$.navigator.openPreferencesWorkspace();
         workspace = XT.app.$.postbooks.getActive().$.workspace;
         assert.equal(workspace.kind, "XV.UserPreferenceWorkspace");
@@ -86,9 +86,11 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
             return console.log("PrintPicker widget for: " + val + " is not set to 'Browser'!");
           }
         });
-        workspace.doClose();
-        assert.equal(XT.app.$.postbooks.getActive().kind, "XV.Navigator");
-        done();
+        XT.app.$.postbooks.getActive().close({force: true});
+        setTimeout(function () {
+          assert.equal(XT.app.$.postbooks.getActive().kind, "XV.Navigator");
+          done();
+        }, 5000);
       });
     });
   };
