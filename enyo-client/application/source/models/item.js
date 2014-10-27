@@ -667,6 +667,12 @@ white:true*/
 
   });
 
+  XT.documentAssociations.I = {
+    model: "XM.ItemRelation",
+    label: "_item".loc()
+  };
+
+
   // Add in item mixin
   XM.ItemRelation = XM.ItemRelation.extend(XM.ItemMixin);
 

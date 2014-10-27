@@ -316,6 +316,11 @@ white:true*/
 
   });
 
+  XT.documentAssociations.S = {
+    model: "XM.SalesOrderRelation",
+    label: "_salesOrder".loc()
+  };
+
   // ..........................................................
   // COLLECTIONS
   //

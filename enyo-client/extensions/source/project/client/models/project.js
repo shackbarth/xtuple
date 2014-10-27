@@ -307,6 +307,11 @@ white:true*/
 
     XM.ProjectRelation.prototype.editableModel = "XM.Project";
 
+    XT.documentAssociations.J = {
+      model: "XM.ProjectRelation",
+      label: "_project".loc()
+    };
+
     /**
       @class
 

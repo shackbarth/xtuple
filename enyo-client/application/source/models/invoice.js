@@ -655,6 +655,11 @@ white:true*/
 
   });
 
+  XT.documentAssociations.INV = {
+    model: "XM.InvoiceRelationRelation",
+    label: "_invoice".loc()
+  };
+
   /**
     @class
 

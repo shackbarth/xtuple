@@ -198,6 +198,11 @@ white:true*/
 
   });
 
+  XT.documentAssociations.TODO = {
+    model: "XM.ToDoRelation",
+    label: "_toDo".loc()
+  };
+
   /**
     @class
 

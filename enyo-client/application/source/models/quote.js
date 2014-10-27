@@ -119,6 +119,11 @@ white:true*/
 
   });
 
+  XT.documentAssociations.Qquhead_id = { /* That's really what it's called */
+    model: "XM.QuoteRelation",
+    label: "_quote".loc()
+  };
+
   // ..........................................................
   // COLLECTIONS
   //

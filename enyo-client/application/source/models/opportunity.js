@@ -140,6 +140,11 @@ white:true*/
 
   });
 
+  XT.documentAssociations.OPP = {
+    model: "XM.OpportunityRelation",
+    label: "_opportunity".loc()
+  };
+
   /**
     @class
 

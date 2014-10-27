@@ -308,8 +308,11 @@ return (function () {
     return ret;
   }
 
-  /* INCDT: "IncidentRelation", etc. To be declared by extensions */
-  XT.documentAssociations = {};
+  /* INCDT: "IncidentRelation", etc. To be appended to by extensions */
+  XT.documentAssociations = {
+    I: "ItemRelation",
+  };
+
 
   /**
     Returns today's date at midnight.

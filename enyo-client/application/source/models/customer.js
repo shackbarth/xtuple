@@ -637,6 +637,11 @@ white:true*/
 
   });
 
+  XT.documentAssociations.C = {
+    model: "XM.CustomerRelation",
+    label: "_customer".loc()
+  };
+
   /**
     @class
 
