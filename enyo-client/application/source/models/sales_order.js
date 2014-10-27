@@ -425,19 +425,6 @@ white:true*/
 
     @extends XM.Model
   */
-  XM.SalesOrderCustomer = XM.Model.extend(/** @lends XM.SalesOrderCustomer.prototype */{
-
-    recordType: 'XM.SalesOrderCustomer',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
   XM.SalesOrderToDo = XM.Model.extend(/* @lends XM.SalesOrderToDo */{
 
     recordType: 'XM.SalesOrderToDo',
