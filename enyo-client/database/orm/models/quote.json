@@ -514,6 +514,15 @@
         }
       },
       {
+        "name": "documents",
+        "toMany": {
+          "type": "DocumentAssociation",
+          "column": "quhead_id",
+          "inverse": "source",
+          "isNested": true
+        }
+      },
+      {
         "name": "comments",
         "toMany": {
           "isNested": true,

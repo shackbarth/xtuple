@@ -313,6 +313,15 @@
         }
       },
       {
+        "name": "documents",
+        "toMany": {
+          "type": "DocumentAssociation",
+          "column": "cust_id",
+          "inverse": "source",
+          "isNested": true
+        }
+      },
+      {
         "name": "creditCards",
         "toMany": {
           "isNested": true,

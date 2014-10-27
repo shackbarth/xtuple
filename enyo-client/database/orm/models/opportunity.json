@@ -190,6 +190,15 @@
         }
       },
       {
+        "name": "documents",
+        "toMany": {
+          "type": "DocumentAssociation",
+          "column": "opphead_id",
+          "inverse": "source",
+          "isNested": true
+        }
+      },
+      {
         "name": "comments",
         "toMany": {
           "isNested": true,

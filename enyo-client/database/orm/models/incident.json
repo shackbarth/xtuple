@@ -216,6 +216,15 @@
         }
       },
       {
+        "name": "documents",
+        "toMany": {
+          "type": "DocumentAssociation",
+          "column": "incdt_id",
+          "inverse": "source",
+          "isNested": true
+        }
+      },
+      {
         "name": "uuid",
         "attr": {
           "type": "String",

@@ -167,6 +167,15 @@
         }
       },
       {
+        "name": "documents",
+        "toMany": {
+          "type": "DocumentAssociation",
+          "column": "todoitem_id",
+          "inverse": "source",
+          "isNested": true
+        }
+      },
+      {
         "name": "alarms",
         "toMany": {
           "isNested": true,

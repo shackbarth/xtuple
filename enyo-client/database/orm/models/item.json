@@ -302,6 +302,15 @@
         }
       },
       {
+        "name": "documents",
+        "toMany": {
+          "type": "DocumentAssociation",
+          "column": "item_id",
+          "inverse": "source",
+          "isNested": true
+        }
+      },
+      {
         "name": "itemSites",
         "toMany": {
           "type": "ItemItemSiteRelation",

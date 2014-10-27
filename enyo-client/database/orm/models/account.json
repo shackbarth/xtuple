@@ -173,6 +173,15 @@
         }
       },
       {
+        "name": "documents",
+        "toMany": {
+          "type": "DocumentAssociation",
+          "column": "crmacct_id",
+          "inverse": "source",
+          "isNested": true
+        }
+      },
+      {
         "name":"comments",
         "toMany":{
           "isNested":true,

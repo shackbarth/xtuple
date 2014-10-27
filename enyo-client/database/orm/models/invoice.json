@@ -323,6 +323,15 @@
         }
       },
       {
+        "name": "documents",
+        "toMany": {
+          "type": "DocumentAssociation",
+          "column": "invchead_id",
+          "inverse": "source",
+          "isNested": true
+        }
+      },
+      {
         "name": "crmaccountUsers",
         "toMany": {
           "type": "ShareUsers",

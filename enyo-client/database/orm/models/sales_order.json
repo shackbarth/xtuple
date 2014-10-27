@@ -618,6 +618,15 @@
         }
       },
       {
+        "name": "documents",
+        "toMany": {
+          "type": "DocumentAssociation",
+          "column": "cohead_id",
+          "inverse": "source",
+          "isNested": true
+        }
+      },
+      {
         "name": "crmaccountUsers",
         "toMany": {
           "type": "ShareUsers",
