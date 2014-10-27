@@ -305,60 +305,6 @@
         }
       },
       {
-        "name": "accounts",
-        "toMany": {
-          "isNested": true,
-          "type": "CustomerAccount",
-          "column": "cust_id",
-          "inverse": "source"
-        }
-      },
-      {
-        "name": "contacts",
-        "toMany": {
-          "isNested": true,
-          "type": "CustomerContact",
-          "column": "cust_id",
-          "inverse": "source"
-        }
-      },
-      {
-        "name": "items",
-        "toMany": {
-          "isNested": true,
-          "type": "CustomerItem",
-          "column": "cust_id",
-          "inverse": "source"
-        }
-      },
-      {
-        "name": "files",
-        "toMany": {
-          "isNested": true,
-          "type": "CustomerFile",
-          "column": "cust_id",
-          "inverse": "source"
-        }
-      },
-      {
-        "name": "urls",
-        "toMany": {
-          "isNested": true,
-          "type": "CustomerUrl",
-          "column": "cust_id",
-          "inverse": "source"
-        }
-      },
-      {
-        "name": "customers",
-        "toMany": {
-          "isNested": true,
-          "type": "CustomerCustomer",
-          "column": "cust_id",
-          "inverse": "source"
-        }
-      },
-      {
         "name": "preferredSite",
         "toOne": {
           "type": "SiteRelation",
