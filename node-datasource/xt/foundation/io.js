@@ -71,12 +71,24 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         return;
       }
 
-      var args = [], buff = this.buff(), flushed, payload;
+      var args = [], buff = this.buff(), flushed, payload, split, verb;
       // grab the payload from the query
-      payload = JSON.parse(arguments[0].split('$$')[1] || {});
+      split = arguments[0].split('$$');
+      verb = split[0].substring(split[0].indexOf('.') + 1);
+      verb = verb.substring(0, verb.indexOf('('));
+      if (verb !== 'post' && verb !== 'patch') {
+        return;
+      }
+      payload = JSON.parse(split[1] || {});
+      if (payload.dispatch || payload.type === "SessionStore") {
+        return;
+      }
+
       // remove the user fields
       delete payload.username;
+      delete payload.etag;
       delete payload.encryptionKey;
+      delete payload.lock;
 
       buff.set("color", "green");
       buff.set("prefix", "");

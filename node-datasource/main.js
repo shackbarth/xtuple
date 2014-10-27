@@ -130,8 +130,10 @@ var app;
 
       if (_.contains(["all", "get", "post", "patch", "delete"], verb)) {
         app[verb]('/:org/' + routeDetails.path, func);
+      } else if (verb === "no-route") {
+        func();
       } else {
-        console.log("Invalid verb for extension-defined route " + routeDetails.path);
+        console.log("Invalid verb (" + verb + ") for extension-defined route " + routeDetails.path);
       }
     });
   };
@@ -295,11 +297,13 @@ var conditionalExpressSession = function (req, res, next) {
   // The 'assets' folder and login page are sessionless.
   if ((/^api/i).test(req.path.split("/")[2]) ||
       (/^\/assets/i).test(req.path) ||
-      req.path === "/" ||
-      req.path === "/favicon.ico" ||
-      req.path === "/forgot-password" ||
-      req.path === '/node_modules/jquery/jquery.js' ||
-      req.path === "/recover") {
+      req.path === '/' ||
+      req.path === '/favicon.ico' ||
+      req.path === '/forgot-password' ||
+      req.path === '/assets' ||
+      req.path === '/stylesheets' ||
+      req.path === '/bower_components' ||
+      req.path === '/recover') {
 
     next();
   } else {
@@ -396,9 +400,11 @@ require('./oauth2/passport');
  */
 var that = this;
 
-app.use(express.favicon(__dirname + '/views/login/assets/favicon.ico'));
-app.use('/assets', express.static('views/login/assets', { maxAge: 86400000 }));
-app.use('/node_modules/jquery', express.static('../node_modules/jquery/dist', { maxAge: 86400000 }));
+/* Static assets */
+app.use(express.favicon(__dirname + '/views/assets/favicon.ico'));
+app.use('/assets', express.static('views/assets', { maxAge: 86400000 }));
+app.use('/stylesheets', express.static('views/stylesheets', { maxAge: 86400000 }));
+app.use('/bower_components', express.static('../bower_components', { maxAge: 86400000 }));
 
 app.get('/:org/dialog/authorize', oauth2.authorization);
 app.post('/:org/dialog/authorize/decision', oauth2.decision);
@@ -414,6 +420,11 @@ app.post('/:org/api/v1alpha1/services/:service/:id', routes.restRouter);
 app.all('/:org/api/v1alpha1/resources/:model/:id', routes.restRouter);
 app.all('/:org/api/v1alpha1/resources/:model', routes.restRouter);
 app.all('/:org/api/v1alpha1/resources/*', routes.restRouter);
+
+app.post('/:org/browser-api/v1/services/:service/:id', routes.restBrowserRouter);
+app.all('/:org/browser-api/v1/resources/:model/:id', routes.restBrowserRouter);
+app.all('/:org/browser-api/v1/resources/:model', routes.restBrowserRouter);
+app.all('/:org/browser-api/v1/resources/*', routes.restBrowserRouter);
 
 app.get('/', routes.loginForm);
 app.post('/login', routes.login);

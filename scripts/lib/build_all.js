@@ -56,6 +56,10 @@ var _ = require('underscore'),
 
       },
       function (done) {
+        if (specs[0].npmDev) {
+          done();
+          return;
+        }
         // step 1: npm install extension if necessary
         // an alternate approach would be only npm install these
         // extensions on an npm install.
@@ -112,6 +116,11 @@ var _ = require('underscore'),
           console.log("Not importing the dictionaries");
           return done();
         }
+        if (specs[0].extensions.length === 1 || specs[0].extensions[0].indexOf("foundation-database") >= 0) {
+          // don't build dictionaries if we're just building the foundation
+          console.log("Not importing the dictionaries");
+          return done();
+        }
         var databases = _.map(specs, function (spec) {
           return spec.database;
         });
@@ -134,6 +143,7 @@ var _ = require('underscore'),
             extensions: paths,
             database: database,
             keepSql: options.keepSql,
+            npmDev: options.npmDev,
             populateData: options.populateData,
             wipeViews: options.wipeViews,
             clientOnly: options.clientOnly,
@@ -195,6 +205,7 @@ var _ = require('underscore'),
       }
       buildSpecs.initialize = true;
       buildSpecs.keepSql = options.keepSql;
+      buildSpecs.npmDev = options.npmDev;
       buildSpecs.populateData = options.populateData;
       buildSpecs.wipeViews = options.wipeViews;
       buildSpecs.clientOnly = options.clientOnly;
@@ -214,6 +225,7 @@ var _ = require('underscore'),
         return {
           database: database,
           frozen: options.frozen,
+          npmDev: options.npmDev,
           keepSql: options.keepSql,
           populateData: options.populateData,
           wipeViews: options.wipeViews,
