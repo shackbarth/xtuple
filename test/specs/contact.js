@@ -37,6 +37,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     @property {String} email
     @property {String} Comments
     @property {ContactCharacteristics} Characteristics
+    @property {DocumentAssociations} documents
   */
   var spec = {
     recordType: "XM.Contact",
@@ -60,7 +61,8 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     attributes: ["id", "number", "isActive", "honorific", "firstName", "middleName", "lastName",
     "suffix", "jobTitle", "initials", "phone", "alternate", "fax", "primaryEmail", "webAddress",
     "account", "owner", "notes", "address", "email", "comments", "characteristics", "crmaccountUsers",
-    "incidentRelations", "opportunityRelations", "toDoRelations", "projectRelations"],
+    "incidentRelations", "opportunityRelations", "toDoRelations", "projectRelations",
+    "documents"],
     requiredAttributes: ["number"],
     /**
       @member -

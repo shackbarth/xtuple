@@ -51,6 +51,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
     @property {Site} PreferredSite
     @property {CreditCards} CreditCards
     @property {CustomerAccount} CRMAccount
+    @property {DocumentAssociations} documents
     */
   var spec = {
     recordType: "XM.Customer",
@@ -84,7 +85,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
     "partialShip", "blanketPurchaseOrders", "usesPurchaseOrders", "autoUpdateStatus",
     "autoHoldOrders",
     "preferredSite", "creditCards", "account", "contactRelations", "incidentRelations",
-    "opportunityRelations", "toDoRelations", "projects", "quoteRelations", "salesOrderRelations"],
+    "opportunityRelations", "toDoRelations", "documents", "quoteRelations", "salesOrderRelations"],
     requiredAttributes: ["number", "name", "isActive", "isFreeFormShipto", "isFreeFormBillto",
     "discount", "creditStatus", "balanceMethod", "backorder", "partialShip",
     "blanketPurchaseOrders", "usesPurchaseOrders", "autoUpdateStatus",

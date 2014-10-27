@@ -31,6 +31,7 @@
   @property {Boolean} Prospect
   @property {String} Comments
   @property {AccountCharacteristics} Characteristics
+  @property {DocumentAssociations} documents
   **/
   var spec = {
     recordType: "XM.Account",
@@ -42,7 +43,7 @@
     "primaryContact", "secondaryContact", "contactRelations", "owner", "userAccount",
     "employee", "salesRep", "taxAuthority", "partner", "competitor", "comments",
     "characteristics", "incidentRelations", "opportunityRelations", "toDoRelations",
-    "projects", "projectRelations", "customer", "prospect", "customers"],
+    "projectRelations", "customer", "prospect", "documents"],
     requiredAttributes: ["number", "name", "isActive", "accountType"],
     /**
       @member -

@@ -39,6 +39,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     @property {ItemComment} comments
     @property {ItemCharacteristic} characteristics
     @property {Number} maximumDesiredcost
+    @property {DocumentAssociations} documents
   */
   var spec = {
     recordType: "XM.Item",
@@ -68,7 +69,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     "classCode", "inventoryUnit", "isFractional", "isConfigured", "notes", "extendedDescription",
     "isSold", "productCategory", "freightClass", "barcode", "listPrice", "wholesalePrice",
     "priceUnit", "productWeight", "packageWeight", "aliases", "comments", "characteristics",
-    "maximumDesiredCost"],
+    "maximumDesiredCost", "documents"],
     /**
       @member -
       @memberof Item.prototype

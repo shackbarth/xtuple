@@ -36,6 +36,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     @property {IncidentAlarm} alarms ()
     @property {IncidentComment} comments (To view system-generated Comments associated with an Incident or to add new Comments of your own. select the "Comments" tab)
     @property {IncidentCharacterisitic} characterisitcs
+    @property {DocumentAssociations} documents
   */
   var spec = {
     recordType: "XM.Incident",
@@ -61,7 +62,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     attributes: ["id", "number", "description", "category", "isPublic", "account", "contact",
     "priority", "status", "resolution", "severity", "owner", "assignedTo", "notes", "item",
     "recurrences", "created", "updated", "alarms", "history", "comments", "characteristics",
-    "uuid", "toDoRelations", "project"],
+    "uuid", "toDoRelations", "project", "documents"],
     requiredAttributes: ["description", "status", "created", "category", "account", "contact",
     "number"],
     /**

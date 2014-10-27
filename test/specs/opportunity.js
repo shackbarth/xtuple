@@ -38,6 +38,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     @property {UserAccount} assignedTo (Specify the user the Opportunity is assigned to)
     @property {OpportunityComment} comments
     @property {OpportunityCharacterisitic} characterisitcs
+    @property {DocumentAssociations} documents
   */
   var spec = {
     recordType: "XM.Opportunity",
@@ -59,9 +60,11 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     idAttribute: "number",
     enforceUpperKey: true,
     attributes: ["id", "number", "name", "isActive", "account", "contact", "opportunityStage",
-    "priority", "opportunitySource", "opportunityType", "amount", "currency", "probability",
-    "startDate", "assignDate", "targetClose", "actualClose", "notes", "owner", "assignedTo",
-    "comments", "characteristics", "toDoRelations", "quoteRelations", "salesOrderRelations"],
+      "priority", "opportunitySource", "opportunityType", "amount", "currency", "probability",
+      "startDate", "assignDate", "targetClose", "actualClose", "notes", "owner", "assignedTo",
+      "comments", "characteristics", "toDoRelations", "quoteRelations", "salesOrderRelations",
+      "documents"
+    ],
     requiredAttributes: ["number", "name", "isActive", "account", "opportunityStage",
     "opportunitySource", "opportunityType"],
     /**

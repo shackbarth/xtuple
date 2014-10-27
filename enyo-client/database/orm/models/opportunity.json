@@ -193,7 +193,7 @@
         "name": "documents",
         "toMany": {
           "type": "DocumentAssociation",
-          "column": "opphead_id",
+          "column": "ophead_id",
           "inverse": "source",
           "isNested": true
         }

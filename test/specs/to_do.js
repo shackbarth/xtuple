@@ -31,6 +31,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
     @property {UserAccount} AssignedTo
     @property {ToDoAlarm} Alarms
     @property {ToDoComment} Comments
+    @property {DocumentAssociations} documents
     */
   var spec = {
     recordType: "XM.ToDo",
@@ -58,7 +59,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
     attributes: ["id", "uuid", "name", "description", "account", "contact", "status",
                     "statusProxy", "isActive", "startDate", "dueDate", "assignDate",
                     "completeDate", "notes", "priority", "owner", "assignedTo", "alarms",
-                    "comments", "incident", "opportunity"],
+                    "comments", "incident", "opportunity", "documents"],
     requiredAttributes: ["name", "dueDate", "uuid"],
     /**
       @member -
