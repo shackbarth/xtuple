@@ -1215,15 +1215,6 @@ TODO deferred to later sprint:
     });
     describe("Sales Extension", function () {
       /**
-        @member Setup
-        @memberof Invoice
-        @description If the sales extension is installed you can link invoices to sales orders
-      */
-      it("XM.InvoiceSalesOrder", function () {
-        assert.isFunction(XM.InvoiceSalesOrder);
-        assert.isTrue(XM.InvoiceSalesOrder.prototype.isDocumentAssignment);
-      });
-      /**
         @member Settings
         @memberof Invoice
         @description Invoice will include authorizedCredit, the sum of credit card authorizations
@@ -1248,15 +1239,6 @@ TODO deferred to later sprint:
       });
     });
     describe("Project extension", function () {
-      /**
-        @member Setup
-        @memberof Invoice
-        @description If the project extension is installed you can link invoices to projects
-      */
-      it("XM.InvoiceProject", function () {
-        assert.isFunction(XM.InvoiceProject);
-        assert.isTrue(XM.InvoiceProject.prototype.isDocumentAssignment);
-      });
       /**
         @member Settings
         @memberof Invoice

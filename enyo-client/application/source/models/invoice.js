@@ -656,7 +656,7 @@ white:true*/
   });
 
   XT.documentAssociations.INV = {
-    model: "XM.InvoiceRelationRelation",
+    model: "XM.InvoiceRelation",
     label: "_invoice".loc()
   };
 
