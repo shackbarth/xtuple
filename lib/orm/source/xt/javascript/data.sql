@@ -967,12 +967,7 @@ select xt.install_js('XT','Data','xtuple', $$
 
       /* Swap out the object of a document association for its primary key */
       if (orm.type === "DocumentAssociation" && typeof data.target === "object") {
-        var documentAssignmentMaps = {
-          "CRMA": "AccountRelation",
-          "INCDT": "IncidentRelation",
-          "T": "ContactRelation"
-        };
-        var targetType = documentAssignmentMaps[data.targetType];
+        var targetType = XT.documentAssociations[data.targetType];
         var targetOrm = this.fetchOrm("XM", targetType);
         var targetNaturalKeyAttr = XT.Orm.naturalKey(targetOrm);
         var targetId = this.getId(targetOrm, data.target[targetNaturalKeyAttr]);

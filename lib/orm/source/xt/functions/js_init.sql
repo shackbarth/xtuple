@@ -308,6 +308,9 @@ return (function () {
     return ret;
   }
 
+  /* INCDT: "IncidentRelation", etc. To be declared by extensions */
+  XT.documentAssociations = {};
+
   /**
     Returns today's date at midnight.
     returns {Date}
