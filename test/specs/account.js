@@ -31,15 +31,6 @@
   @property {Boolean} Prospect
   @property {String} Comments
   @property {AccountCharacteristics} Characteristics
-  @property {AccountContacts} contacts
-  @property {AccountIncidents} incidents
-  @property {AccountItems} Items
-  @property {AccountFiles} Files
-  @property {AccountUrls}  Urls
-  @property {AccountAccounts} accounts
-  @property {AccountOpportunities} Opportunities
-  @property {AccountTodos} ToDos
-  @property {AccountProjects} Projects
   **/
   var spec = {
     recordType: "XM.Account",
@@ -50,8 +41,7 @@
     attributes: ["id", "number", "name", "isActive", "accountType", "parent", "notes",
     "primaryContact", "secondaryContact", "contactRelations", "owner", "userAccount",
     "employee", "salesRep", "taxAuthority", "partner", "competitor", "comments",
-    "characteristics", "contacts", "incidents", "items", "files", "urls", "accounts",
-    "opportunities", "toDos", "incidentRelations", "opportunityRelations", "toDoRelations",
+    "characteristics", "incidentRelations", "opportunityRelations", "toDoRelations",
     "projects", "projectRelations", "customer", "prospect", "customers"],
     requiredAttributes: ["number", "name", "isActive", "accountType"],
     /**
@@ -81,7 +71,7 @@
     /**
       @member -
       @memberof Account.prototype
-      @description Accounts can be read by users with "ViewAllCRMAccounts" privilege and can be 
+      @description Accounts can be read by users with "ViewAllCRMAccounts" privilege and can be
         created, updated, or deleted by users with the "MaintainAllCRMAccounts" privilege.
     */
     privileges: {
@@ -98,9 +88,9 @@
     /**
     @member -
     @memberof Account.prototype
-    @description Users with "ViewPersonalCRMAccounts" privilege can read their personal accounts 
+    @description Users with "ViewPersonalCRMAccounts" privilege can read their personal accounts
     but cannot read the accounts owned by other users. Users with "MaintainPersonalCRMAccounts" privilege
-    can create, update or delete their personal accounts but not the accounts owned by other users 
+    can create, update or delete their personal accounts but not the accounts owned by other users
     */
     it.skip("Users with \"ViewPersonalCRMAccounts\" privilege can read their personal accounts" +
       "but cannot read the Accounts owned by other users. ", function () {
