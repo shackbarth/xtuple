@@ -47,11 +47,6 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
     @property {String} Comments
     @property {TaxRegistration} TaxRegistration
     @property {CustomerCharacteristics} Characteristics
-    @property {CustomerAccounts} Accounts
-    @property {CustomerContacts} Contacts
-    @property {CustomerItems} Items
-    @property {CustomerFiles} Files
-    @property {CustomerUrls} Urls
     @property {CustomerRelatedCustomers} Customers
     @property {Site} PreferredSite
     @property {CreditCards} CreditCards
@@ -87,7 +82,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
     "balanceMethod", "creditLimit", "creditLimitCurrency", "creditRating", "graceDays",
     "taxZone", "shiptos", "comments", "taxRegistration", "characteristics", "backorder",
     "partialShip", "blanketPurchaseOrders", "usesPurchaseOrders", "autoUpdateStatus",
-    "autoHoldOrders", "accounts", "contacts", "items", "files", "urls", "customers",
+    "autoHoldOrders",
     "preferredSite", "creditCards", "account", "contactRelations", "incidentRelations",
     "opportunityRelations", "toDoRelations", "projects", "quoteRelations", "salesOrderRelations"],
     requiredAttributes: ["number", "name", "isActive", "isFreeFormShipto", "isFreeFormBillto",

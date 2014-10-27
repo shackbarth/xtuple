@@ -34,18 +34,8 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     @property {Date} updated
     @property {IncidentHistory} history (To view the history associated with an Incident, select the "History" tab)
     @property {IncidentAlarm} alarms ()
-    @property {IncidentAccount} accounts
     @property {IncidentComment} comments (To view system-generated Comments associated with an Incident or to add new Comments of your own. select the "Comments" tab)
     @property {IncidentCharacterisitic} characterisitcs
-    @property {IncidentContact} contacts
-    @property {IncidentIncident} incidents
-    @property {IncidentOpportunity} opportunities
-    @property {IncidentItem} items
-    @property {IncidentFile} files
-    @property {IncidentUrl} urls
-    @property {IncidentToDo} Todos
-    @property {IncidentProject} Projects
-    @property {IncidentCustomer} Customers
   */
   var spec = {
     recordType: "XM.Incident",
@@ -71,8 +61,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     attributes: ["id", "number", "description", "category", "isPublic", "account", "contact",
     "priority", "status", "resolution", "severity", "owner", "assignedTo", "notes", "item",
     "recurrences", "created", "updated", "alarms", "history", "comments", "characteristics",
-    "contacts", "items", "files", "urls", "accounts", "incidents", "uuid", "opportunities",
-    "toDos", "toDoRelations", "project", "projects", "customers"],
+    "uuid", "toDoRelations", "project"],
     requiredAttributes: ["description", "status", "created", "category", "account", "contact",
     "number"],
     /**
