@@ -310,7 +310,9 @@ return (function () {
 
   /* INCDT: "IncidentRelation", etc. To be appended to by extensions */
   XT.documentAssociations = {
+    FILE: "FileRelation",
     I: "ItemRelation",
+    URL: "Url"
   };
 
 
