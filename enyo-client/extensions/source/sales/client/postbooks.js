@@ -70,7 +70,8 @@ trailing:true, white:true*/
     if (XT.session.settings.get("DashboardLite")) {
       var charts = [
         {name: "salesHistory", label: "_salesHistory".loc(), item: "XV.SalesHistoryTimeSeriesChart"},
-        {name: "bookings", label: "_bookings".loc(), item: "XV.SalesOrderTimeSeriesChart"}
+        {name: "pastDueSalesOrders", label: "_pastDueSalesOrders".loc(), item: "XV.PastDueSalesOrderTimeSeriesChart"},
+        {name: "salesOrder", label: "_salesOrders".loc(), item: "XV.SalesOrderTimeSeriesChart"}
       ];
       XT.app.$.postbooks.insertDashboardCharts(charts);
     }
