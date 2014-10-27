@@ -394,20 +394,6 @@ white:true*/
 
       @extends XM.Model
     */
-    XM.ProjectCustomer = XM.Model.extend(
-      /** @scope XM.ProjectCustomer.prototype */ {
-
-      recordType: "XM.ProjectCustomer",
-
-      isDocumentAssignment: true
-
-    });
-
-    /**
-      @class
-
-      @extends XM.Model
-    */
     XM.ProjectRecurrence = XM.Model.extend({
       /** @scope XM.ProjectRecurrence.prototype */
 
@@ -508,48 +494,6 @@ white:true*/
       recordType: "XM.ProjectWorkflowRelation",
 
       editableModel: "XM.ProjectWorkflow"
-
-    });
-
-    /**
-      @class
-
-      @extends XM.Model
-    */
-    XM.ProjectIncident = XM.Model.extend(
-      /** @scope XM.ProjectIncident.prototype */ {
-
-      recordType: "XM.ProjectIncident",
-
-      isDocumentAssignment: true
-
-    });
-
-    /**
-      @class
-
-      @extends XM.Model
-    */
-    XM.ProjectOpportunity = XM.Model.extend(
-      /** @scope XM.ProjectOpportunity.prototype */ {
-
-      recordType: "XM.ProjectOpportunity",
-
-      isDocumentAssignment: true
-
-    });
-
-    /**
-      @class
-
-      @extends XM.Model
-    */
-    XM.ProjectToDo = XM.Model.extend(
-      /** @scope XM.ProjectToDo.prototype */ {
-
-      recordType: "XM.ProjectToDo",
-
-      isDocumentAssignment: true
 
     });
 

@@ -159,20 +159,6 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
-  */
-  XM.ToDoAccount = XM.Model.extend({
-    /** @scope XM.ToDoAccount.prototype */
-
-    recordType: 'XM.ToDoAccount',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
     @extends XM.Alarm
   */
   XM.ToDoAlarm = XM.Alarm.extend({
@@ -193,76 +179,6 @@ white:true*/
     recordType: 'XM.ToDoComment',
 
     sourceName: 'TD'
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.ToDoContact = XM.Model.extend({
-    /** @scope XM.ToDoContact.prototype */
-
-    recordType: 'XM.ToDoContact',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.ToDoItem = XM.Model.extend({
-    /** @scope XM.ToDoItem.prototype */
-
-    recordType: 'XM.ToDoItem',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.ToDoFile = XM.Model.extend({
-    /** @scope XM.ToDoFile.prototype */
-
-    recordType: 'XM.ToDoFile',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.ToDoToDo = XM.Model.extend({
-    /** @scope XM.ToDoToDo.prototype */
-
-    recordType: 'XM.ToDoToDo',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.ToDoUrl = XM.Model.extend({
-    /** @scope XM.ToDoUrl.prototype */
-
-    recordType: 'XM.ToDoUrl',
-
-    isDocumentAssignment: true
 
   });
 

@@ -235,38 +235,6 @@ TODO deferred to later sprint:
         }), "isInvoices");
       });
     });
-    /**
-      @member Settings
-      @memberof Invoice
-      @description Documents should exist to connect an invoice to:
-        Contact, Account, Customer, File, Url, Item
-    */
-    describe("Nested-only Document associations per the document convention", function () {
-      it("XM.InvoiceContact", function () {
-        assert.isFunction(XM.InvoiceContact);
-        assert.isTrue(XM.InvoiceContact.prototype.isDocumentAssignment);
-      });
-      it("XM.InvoiceAccount", function () {
-        assert.isFunction(XM.InvoiceAccount);
-        assert.isTrue(XM.InvoiceAccount.prototype.isDocumentAssignment);
-      });
-      it("XM.InvoiceCustomer", function () {
-        assert.isFunction(XM.InvoiceCustomer);
-        assert.isTrue(XM.InvoiceCustomer.prototype.isDocumentAssignment);
-      });
-      it("XM.InvoiceFile", function () {
-        assert.isFunction(XM.InvoiceFile);
-        assert.isTrue(XM.InvoiceFile.prototype.isDocumentAssignment);
-      });
-      it("XM.InvoiceUrl", function () {
-        assert.isFunction(XM.InvoiceUrl);
-        assert.isTrue(XM.InvoiceUrl.prototype.isDocumentAssignment);
-      });
-      it("XM.InvoiceItem", function () {
-        assert.isFunction(XM.InvoiceItem);
-        assert.isTrue(XM.InvoiceItem.prototype.isDocumentAssignment);
-      });
-    });
     describe("InvoiceLine", function () {
       before(function (done) {
         async.parallel([
