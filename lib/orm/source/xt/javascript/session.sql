@@ -157,9 +157,6 @@ select xt.install_js('XT','Session','xtuple', $$
 
     /* Compose our commit settings by applying the patch to what we already have */
     patches.map(function (patch) {
-      if (name === "PrintSettings" && typeof patch.value === "object") {
-        patch.value = JSON.stringify(patch.value);
-      }
       var sql,
         name = patch.path.substring(1),
         updateSql = "UPDATE xt.userpref SET userpref_value = $1 WHERE userpref_usr_username = $2 AND userpref_name = $3;",
