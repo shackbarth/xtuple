@@ -623,6 +623,7 @@
           "type": "DocumentAssociation",
           "column": "cohead_id",
           "inverse": "source",
+          "sourceType": "S",
           "isNested": true
         }
       },

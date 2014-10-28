@@ -318,6 +318,7 @@
           "type": "DocumentAssociation",
           "column": "cust_id",
           "inverse": "source",
+          "sourceType": "C",
           "isNested": true
         }
       },

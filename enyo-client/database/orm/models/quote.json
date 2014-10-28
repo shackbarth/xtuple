@@ -519,6 +519,7 @@
           "type": "DocumentAssociation",
           "column": "quhead_id",
           "inverse": "source",
+          "sourceType": "Qquhead_id",
           "isNested": true
         }
       },

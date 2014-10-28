@@ -328,6 +328,7 @@
           "type": "DocumentAssociation",
           "column": "invchead_id",
           "inverse": "source",
+          "sourceType": "INV",
           "isNested": true
         }
       },

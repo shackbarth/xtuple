@@ -211,6 +211,7 @@
           "type": "DocumentAssociation",
           "column": "cntct_id",
           "inverse": "source",
+          "sourceType": "T",
           "isNested": true
         }
       },

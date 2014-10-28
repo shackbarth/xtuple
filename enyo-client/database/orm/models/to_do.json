@@ -172,6 +172,7 @@
           "type": "DocumentAssociation",
           "column": "todoitem_id",
           "inverse": "source",
+          "sourceType": "TODO",
           "isNested": true
         }
       },

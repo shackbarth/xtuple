@@ -178,6 +178,7 @@
           "type": "DocumentAssociation",
           "column": "crmacct_id",
           "inverse": "source",
+          "sourceType": "CRMA",
           "isNested": true
         }
       },

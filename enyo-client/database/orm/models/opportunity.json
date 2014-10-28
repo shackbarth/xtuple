@@ -195,6 +195,7 @@
           "type": "DocumentAssociation",
           "column": "ophead_id",
           "inverse": "source",
+          "sourceType": "OPP",
           "isNested": true
         }
       },

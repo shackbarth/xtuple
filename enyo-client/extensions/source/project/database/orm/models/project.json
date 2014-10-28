@@ -332,6 +332,7 @@
           "type": "DocumentAssociation",
           "column": "prj_id",
           "inverse": "source",
+          "sourceType": "J",
           "isNested": true
         }
       },
