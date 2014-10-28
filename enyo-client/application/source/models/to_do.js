@@ -68,8 +68,6 @@ white:true*/
     bindEvents: function () {
       XM.Model.prototype.bindEvents.apply(this, arguments);
       this.on('change:startDate change:completeDate change:statusProxy', this.toDoStatusDidChange);
-      // Bind document assignments
-      this.bindDocuments();
     },
 
     /**
