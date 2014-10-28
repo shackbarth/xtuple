@@ -965,7 +965,11 @@ select xt.install_js('XT','Data','xtuple', $$
         pkey = XT.Orm.primaryKey(orm),
         rec;
 
-      /* Swap out the object of a document association for its primary key */
+      /*
+        https://github.com/xtuple/xtuple/pull/1964
+        Document associations are stored "wrong" on the client.
+        Swap out the object of a document association for its primary key
+      */
       if (orm.type === "DocumentAssociation" && typeof data.target === "object") {
         var targetType = XT.documentAssociations[data.targetType];
         var targetOrm = this.fetchOrm("XM", targetType);
