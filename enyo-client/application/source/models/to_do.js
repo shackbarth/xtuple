@@ -46,7 +46,6 @@ white:true*/
     @class
 
     @extends XM.Model
-    @extends XM.DocumentAssignmentsMixin
   */
   XM.ToDo = XM.Model.extend({
     /** @scope XM.ToDo.prototype */
@@ -98,8 +97,6 @@ white:true*/
     }
 
   });
-
-  XM.ToDo = XM.ToDo.extend(XM.DocumentAssignmentsMixin);
 
   // To-Do status mixin
   XM.ToDo = XM.ToDo.extend(XM.ToDoStatus);
