@@ -74,7 +74,7 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
       password: "admin"
     },
     biServer: {
-      bihttphost: "localhost", 
+      bihttphost: "localhost",
       bihttpport: 8080,
       bihttpshost: "localhost",
       bihttpsport: 8443,
