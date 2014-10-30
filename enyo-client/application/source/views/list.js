@@ -1895,6 +1895,7 @@ trailing:true, white:true, strict: false*/
     }
   });
 
+  XV.registerModelList("XM.SalesOrderListItem", "XV.SalesOrderList");
   XV.registerModelList("XM.SalesOrderRelation", "XV.SalesOrderList");
 
   // ..........................................................
