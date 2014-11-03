@@ -259,7 +259,7 @@ white:true*/
       var isPosted = this.get("isPosted");
 
       this.setReadOnly(["lineItems", "number", this.documentDateKey, "salesRep", "commission",
-        "taxZone", "saleType", "taxAdjustments"], isPosted);
+        "taxZone", "saleType", "taxAdjustments", "miscCharge"], isPosted);
 
       if (_.contains(this.getAttributeNames(), "terms")) {
         this.setReadOnly("terms", isPosted);

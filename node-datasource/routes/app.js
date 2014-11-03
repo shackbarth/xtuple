@@ -40,14 +40,47 @@ var async = require("async"),
     Works with three or four dot-separated numbers.
   */
   var getVersionSize = function (version) {
-    var versionSplit = version.split('.'),
-      versionSize = 1000000 * versionSplit[0] +
-        10000 * versionSplit[1] +
-        100 * versionSplit[2];
+    var versionSplit = version.split('.'),                  // e.g. "4.5.0-beta2".
+      versionSize = 1000000 * versionSplit[0] +             // Get "4" from "4.5.0-beta2".
+        10000 * versionSplit[1] +                           // Get "5" from "4.5.0-beta2".
+        100 * versionSplit[2].match(/^[0-9]+/g, '')[0],     // Get "0" from "0-beta2".
+      prerelease = versionSplit[2].replace(/^[0-9]+/g, ''), // Get "-beta2" from "0-beta2".
+      preRegEx = /([a-zA-Z]+)([0-9]*)/g,                    // Capture pre-release as ["beta2", "beta", "2"].
+      preMatch = preRegEx.exec(prerelease),
+      preVersion,
+      preNum;
 
     if (versionSplit.length > 3) {
       versionSize += versionSplit[3];
     }
+
+    if (preMatch && preMatch.length && preMatch[0] !== '') {
+      if (preMatch[1] !== '') {
+        preVersion = preMatch[1].match(/[a-zA-Z]+/g);       // Get ["beta"] from ["beta2", "beta", "2"].
+
+        // Decrease versionSize for pre-releasees.
+        switch (preVersion[0].toLowerCase()) {
+          case 'alpha':
+            versionSize = versionSize - 50;
+            break;
+          case 'beta':
+            versionSize = versionSize - 40;
+            break;
+          case 'rc':
+            versionSize = versionSize - 20;
+            break;
+          default :
+            X.err("Cannot get pre-release version number.");
+        }
+      }
+
+      // Add pre-release version to versionSize.
+      if (preMatch[2] !== '') {
+        preNum = preMatch[2].match(/[0-9]+/g);              // Get ["2"] from ["beta2", "beta", "2"].
+        versionSize = versionSize + parseInt(preNum);
+      }
+    }
+
     return versionSize;
   };
 
@@ -70,6 +103,15 @@ var async = require("async"),
       },
       fetchSuccess = function (model, result) {
         var sendExtensions = function (res, extensions) {
+          var filteredExtensions;
+          if (req.query.extensions) {
+            // the user is requesting to only see a certain set of extensions
+            filteredExtensions = JSON.parse(req.query.extensions);
+            extensions = extensions.filter(function (ext) {
+              return _.contains(filteredExtensions, ext.name);
+            });
+          }
+
           extensions.sort(function (ext1, ext2) {
             if (ext1.loadOrder !== ext2.loadOrder) {
               return ext1.loadOrder - ext2.loadOrder;
@@ -77,20 +119,30 @@ var async = require("async"),
               return ext1.name > ext2.name ? 1 : -1;
             }
           });
-          var uuids = _.map(extensions, function (ext) {
-            var sortedModels = _.sortBy(ext.codeInfo, function (codeInfo) {
-              return -1 * getVersionSize(codeInfo.version);
+          var getLatestUuid = function (extensions, language) {
+            var uuids = _.map(extensions, function (ext) {
+              var jsModels = _.filter(ext.codeInfo, function (codeInfo) {
+                return codeInfo.language === language;
+              });
+              var sortedModels = _.sortBy(jsModels, function (codeInfo) {
+                return -1 * getVersionSize(codeInfo.version);
+              });
+              if (sortedModels[0]) {
+                return sortedModels[0].uuid;
+              } else if (language === "js") {
+                X.log("Could not find js uuid for extension " + ext.description);
+                return null;
+              }
             });
-            if (sortedModels[0]) {
-              return sortedModels[0].uuid;
-            } else {
-              X.log("Could not find uuid for extension " + ext.description);
-              return null;
-            }
-          });
-          uuids = _.compact(uuids); // eliminate any null values
+            return _.compact(uuids); // eliminate any null values
+          };
+          var extJsUuids = getLatestUuid(extensions, "js");
+          var extCssUuids = getLatestUuid(extensions, "css");
           var extensionPaths = _.compact(_.map(extensions, function (ext) {
-            return path.join(ext.location, "source", ext.name);
+            var locationName = ext.location.indexOf("/") === 0 ?
+              path.join(ext.location, "source") :
+              "/" + ext.location;
+            return path.join(locationName, ext.name);
           }));
           getCoreUuid('js', req.session.passport.user.organization, function (err, jsUuid) {
             if (err) {
@@ -106,7 +158,8 @@ var async = require("async"),
                 org: req.session.passport.user.organization,
                 coreJs: jsUuid,
                 coreCss: cssUuid,
-                extensions: uuids,
+                extensionJsArray: extJsUuids,
+                extensionCssArray: extCssUuids,
                 extensionPaths: extensionPaths
               });
             });

@@ -32,9 +32,17 @@ trailing:true, white:true, strict:false*/
       panels: [
         {name: "ItemSourceList", kind: "XV.ItemSourceList"},
         {name: "purchaseOrderList", kind: "XV.PurchaseOrderList"},
-        {name: "activityList", kind: "XV.ActivityList"}
+        {name: "purchasing_activityList", kind: "XV.ActivityList"}
       ]
     };
+
+    if (XT.session.settings.get("DashboardLite")) {
+      var charts = [
+        {name: "unclosedPurchaseOrders", label: "_unclosedPurchaseOrders".loc(), item: "XV.PurchaseOrderBarChart"}
+      ];
+      XT.app.$.postbooks.insertDashboardCharts(charts);
+    }
+
     XT.app.$.postbooks.insertModule(module, 0);
 
     relevantPrivileges = [

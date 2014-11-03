@@ -77,14 +77,39 @@ trailing:true, white:true*/
               },
               callback: wsCallback,
               success: function () {
-                this.$.isBase.setValue("true");
+                this.$.isBase.setValue(true);
               }
             });
           }
         }
       });
+    },
+    insertDashboardCharts: function (newActions) {
+      if (!XT.session.settings.get("DashboardLite")) {
+        return;
+      }
+      var preExistingDashboard = _.find(this.modules, function (module) {
+        return module.name === "dashboardLite";
+      });
+
+      if (preExistingDashboard) {
+        preExistingDashboard.panels[0].newActions = _.union(preExistingDashboard.panels[0].newActions, newActions);
+
+      } else {
+        var dashboardModule = {
+          name: "dashboardLite",
+          label: "_dashboardLite".loc(),
+          panels: [
+            {
+              name: "dashboardLite",
+              kind: "XV.DashboardLite",
+              newActions: newActions
+            }
+          ]
+        };
+
+        this.insertModule(dashboardModule, 0);
+      }
     }
-
   });
-
 }());

@@ -1,0 +1,12 @@
+{
+  "name": "xtuple",
+  "version": "4.8.0-beta2",
+  "dependencies": {
+    "bootstrap": "3.2.0",
+    "jquery": "2.1.1",
+    "less": "1.5.0",
+    "nvd3": "1.1.x",
+    "globalize": "~0.1.1",
+    "moment": "~2.8.3"
+  }
+}

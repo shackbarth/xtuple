@@ -1,9 +1,8 @@
-CREATE OR REPLACE FUNCTION initialDistribution(INTEGER, INTEGER) RETURNS INTEGER  AS $$
+CREATE OR REPLACE FUNCTION initialDistribution(pItemsiteid INTEGER,
+                                               pLocationid INTEGER) RETURNS INTEGER  AS $$
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
-  pItemsiteid ALIAS FOR $1;
-  pLocationid ALIAS FOR $2;
   _itemlocid INTEGER;
   _invhistid INTEGER;
   _itemlocSeries INTEGER;
@@ -65,37 +64,6 @@ BEGIN
       ( _invhistid, pLocationid, _r.itemloc_ls_id,
         _r.itemloc_qty, 0, _r.itemloc_qty );
 
---  Adjust QOH if this itemlocdist is to/from a non-netable location
-      IF ( SELECT (NOT location_netable)
-           FROM location
-           WHERE (location_id=pLocationid) ) THEN
-
-        INSERT INTO invhist
-        ( invhist_itemsite_id, invhist_series,
-          invhist_transtype, invhist_invqty,
-          invhist_qoh_before, invhist_qoh_after,
-          invhist_comments,
-          invhist_invuom, invhist_unitcost,
-          invhist_costmethod, invhist_value_before, invhist_value_after  ) 
-        SELECT itemsite_id, _itemlocSeries,
-               'NN', (_r.itemloc_qty * -1),
-               _r.itemloc_qty, 0,
-               'Initial Distribution',
-               uom_name, stdCost(item_id),
-               itemsite_costmethod, itemsite_value, itemsite_value
-        FROM itemsite, item, uom
-        WHERE ( (itemsite_item_id=item_id)
-         AND (item_inv_uom_id=uom_id)
-         AND (itemsite_controlmethod <> 'N')
-         AND (itemsite_id=pItemsiteid) );
-
-        UPDATE itemsite
-        SET itemsite_nnqoh = (itemsite_nnqoh + _r.itemloc_qty),
-            itemsite_qtyonhand = (itemsite_qtyonhand - _r.itemloc_qty) 
-        WHERE (itemsite_id=pItemsiteid);
-
-      END IF;
-
     END LOOP;
 
   ELSE
@@ -144,43 +112,9 @@ BEGIN
     FROM itemsite
     WHERE (itemsite_id=pItemsiteid);
 
---  Adjust QOH if this itemlocdist is to/from a non-netable location
-    IF ( SELECT (NOT location_netable)
-         FROM location
-         WHERE (location_id=pLocationid) ) THEN
-
-      INSERT INTO invhist
-      ( invhist_itemsite_id, invhist_series,
-        invhist_transtype, invhist_invqty,
-        invhist_qoh_before, invhist_qoh_after,
-        invhist_comments,
-        invhist_invuom, invhist_unitcost,
-        invhist_costmethod, invhist_value_before, invhist_value_after  ) 
-      SELECT itemsite_id, _itemlocSeries,
-             'NN', (itemloc_qty * -1),
-             itemloc_qty, 0,
-             'Initial Distribution',
-             uom_name, stdCost(item_id),
-             itemsite_costmethod, itemsite_value, itemsite_value
-      FROM itemloc, itemsite, item, uom
-      WHERE ( (itemsite_item_id=item_id)
-       AND (item_inv_uom_id=uom_id)
-       AND (itemsite_controlmethod <> 'N')
-       AND (itemloc_itemsite_id=itemsite_id)
-       AND (itemloc_id=_itemlocid) );
-
-      UPDATE itemsite
-      SET itemsite_nnqoh = itemsite_qtyonhand,
-          itemsite_qtyonhand = 0 
-      FROM itemloc
-      WHERE ( (itemloc_itemsite_id=itemsite_id)
-       AND (itemloc_id=_itemlocid) );
-
-    END IF;
-
   END IF;
 
   RETURN _itemlocid;
 
 END;
-$$ LANGUAGE 'plpgsql';
+$$ LANGUAGE plpgsql;

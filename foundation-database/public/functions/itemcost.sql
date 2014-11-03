@@ -14,12 +14,29 @@ CREATE OR REPLACE FUNCTION itemCost(pItemid INTEGER,
 -- Overload for future costing enhancements
 --
 DECLARE
+  _r RECORD;
   _cost NUMERIC := 0.0;
 BEGIN
-  SELECT itemcost(itemsite_id) INTO _cost
-  FROM itemsite
+  -- cache item info
+  SELECT *, itemInvPriceRat(item_id) AS itempriceinvrat INTO _r
+  FROM itemsite, item
   WHERE (itemsite_item_id=pItemid)
-    AND (itemsite_warehous_id=pSiteid);
+    AND (itemsite_warehous_id=pSiteid)
+    AND (item_id=pItemid);
+
+  IF (_r.item_type = 'K') THEN
+    SELECT SUM(roundQty(itemuomfractionalbyuom(bomitem_item_id, bomitem_uom_id),
+                                               (bomitem_qtyfxd + bomitem_qtyper) * (1 + bomitem_scrap))
+               * stdCost(bomitem_item_id)) INTO _cost
+    FROM bomitem
+    WHERE (bomitem_parent_item_id=_r.item_id)
+      AND (bomitem_rev_id=getActiveRevid('BOM', _r.item_id))
+      AND (pEffective BETWEEN bomitem_effective AND (bomitem_expires - 1));
+  ELSEIF (fetchMetricBool('WholesalePriceCosting')) THEN
+    _cost := _r.item_listcost / _r.itempriceinvrat;
+  ELSE
+    SELECT itemcost(_r.itemsite_id) INTO _cost;
+  END IF;
 
   RETURN _cost;
 END;

@@ -67,7 +67,7 @@ var _ = require("underscore"),
         assert.isNull(err);
         assert.equal(1, res.rowCount, JSON.stringify(res.rows));
         results = JSON.parse(res.rows[1].get);
-        assert.equal(results.data.length, 5);
+        assert.isNumber(results.data.length);
         done();
       });
     });
@@ -93,7 +93,7 @@ var _ = require("underscore"),
         assert.isNull(err);
         assert.equal(1, res.rowCount, JSON.stringify(res.rows));
         results = JSON.parse(res.rows[1].get);
-        assert.equal(results.data.length, 5);
+        assert.isNumber(results.data.length);
         done();
       });
     });
@@ -137,6 +137,19 @@ var _ = require("underscore"),
       });
     });
 
+    it('should execute a query with an x.y join path when x.y.naturalKeyOfY is needed', function (done) {
+      var sql = 'select xt.js_init(true);select xt.post($${"nameSpace":"XM","type":"ItemSiteListItem","dispatch":{"functionName":"fetch","parameters":{"orderBy":[{"attribute":"item.number"}],"rowOffset":0,"rowLimit":50,"parameters":[{"attribute":"isActive","operator":"=","value":true},{"attribute":"item.classCode","operator":"","isCharacteristic":false,"value":"TOYS-CARS"}]}},"encoding":"rjson","username":"admin","encryptionKey":"this is any content"}$$);';
+
+      datasource.query(sql, creds, function (err, res) {
+        var results;
+        assert.isNull(err);
+        assert.equal(1, res.rowCount, JSON.stringify(res.rows));
+        results = JSON.parse(res.rows[1].post);
+        assert.isNumber(results.length);
+        done();
+      });
+    });
+
     it('should execute a query with ambiguous column filters', function (done) {
       var sql = 'select xt.js_init(true);select xt.get($${"nameSpace":"XM","type":"ToDoListItem","query":{"orderBy":[{"attribute":"priorityOrder"},{"attribute":"dueDate"},{"attribute":"name"}],"parameters":[{"attribute":"isActive","operator":"=","value":true},{"attribute":["owner.username","assignedTo.username"],"operator":"","isCharacteristic":false,"value":"admin"},{"attribute":"uuid","operator":"=","value":"23eef809-2f7c-4289-9eab-a72d621a6adb"}],"rowOffset":0,"rowLimit":50},"username":"admin","encryptionKey":"this is any content"}$$);';
 
@@ -158,6 +171,19 @@ var _ = require("underscore"),
         assert.equal(1, res.rowCount, JSON.stringify(res.rows));
         results = JSON.parse(res.rows[1].get);
         assert.equal(results.data.length, 1);
+        done();
+      });
+    });
+
+    it('should execute a simple item-site fetch', function (done) {
+      var sql = 'select xt.js_init(true);select xt.post($${"nameSpace":"XM","type":"ItemSiteListItem","dispatch":{"functionName":"fetch","parameters":{"orderBy":[{"attribute":"item.number"}],"parameters":[{"attribute":"isActive","operator":"=","value":true}],"rowOffset":0,"rowLimit":50}},"username":"admin"}$$);';
+
+      datasource.query(sql, creds, function (err, res) {
+        var results;
+        assert.isNull(err);
+        assert.equal(1, res.rowCount, JSON.stringify(res.rows));
+        results = JSON.parse(res.rows[1].post);
+        assert.isNumber(results.length);
         done();
       });
     });
@@ -188,6 +214,19 @@ var _ = require("underscore"),
       });
     });
 
+    it('should be able to search item-site by number', function (done) {
+      var sql = 'select xt.js_init(true);select xt.post($${"nameSpace":"XM","type":"ItemSiteListItem","dispatch":{"functionName":"fetch","parameters":{"orderBy":[{"attribute":"item.number"}],"rowOffset":0,"rowLimit":50,"parameters":[{"attribute":"isActive","operator":"=","value":true},{"attribute":"item.number","operator":"MATCHES","isCharacteristic":false,"value":"yt"}]}},"encoding":"rjson","username":"admin","encryptionKey":"foo"}$$);';
+
+      datasource.query(sql, creds, function (err, res) {
+        var results;
+        assert.isNull(err);
+        assert.equal(1, res.rowCount, JSON.stringify(res.rows));
+        results = JSON.parse(res.rows[1].post);
+        assert.isNumber(results.length);
+        done();
+      });
+    });
+
     it('should be able to do an item-site search with a keysearch', function (done) {
       var sql = 'select xt.js_init(true);select xt.post($${"nameSpace":"XM","type":"ItemSiteRelation","dispatch":{"functionName":"fetch","parameters":{"parameters":[{"attribute":["number","barcode"],"operator":"BEGINS_WITH","value":"BTR","keySearch":true}],"orderBy":[{"attribute":"number"},{"attribute":"barcode"}],"rowLimit":10}},"username":"admin","encryptionKey":"this is any content"}$$);';
 
@@ -201,6 +240,18 @@ var _ = require("underscore"),
       });
     });
 
+    it('should be able to do a complex item-site search with a keysearch and join table parameters', function (done) {
+      var sql = 'select xt.js_init(true);select xt.post($${"nameSpace":"XM","type":"ItemSiteRelation","dispatch":{"functionName":"fetch","parameters":{"parameters":[{"attribute":"item.isSold","value":true},{"attribute":"item.isActive","value":true},{"attribute":"isSold","value":true},{"attribute":"isActive","value":true},{"attribute":"site.code","value":"WH1"},{"attribute":"customer","value":"TTOYS"},{"attribute":["number","barcode"],"operator":"BEGINS_WITH","value":"btr","keySearch":true}],"orderBy":[{"attribute":"number"},{"attribute":"barcode"}],"rowLimit":10}},"username":"admin"}$$);';
+
+      datasource.query(sql, creds, function (err, res) {
+        var results;
+        assert.isNull(err);
+        assert.equal(1, res.rowCount, JSON.stringify(res.rows));
+        results = JSON.parse(res.rows[1].post);
+        assert.isNumber(results.length);
+        done();
+      });
+    });
 
     it('should support a nested order-by', function (done) {
       var sql = 'select xt.js_init(true);select xt.get($${"nameSpace":"XM","type":"ItemSource","query":{"orderBy":[{"attribute":"vendorItemNumber"},{"attribute":"vendor.name"}],"parameters":[{"attribute":"isActive","value":true},{"attribute":"effective","operator":"<=","value":"2014-03-20T04:00:00.000Z"},{"attribute":"expires","operator":">=","value":"2014-03-22T01:18:09.202Z"}],"rowOffset":0,"rowLimit":50},"username":"admin","encryptionKey":"this is any content"}$$);';
@@ -208,9 +259,9 @@ var _ = require("underscore"),
       datasource.query(sql, creds, function (err, res) {
         var results;
         assert.isNull(err);
-        assert.equal(1, res.rowCount, JSON.stringify(res.rows));
+        assert.isNumber(res.rowCount);
         results = JSON.parse(res.rows[1].get);
-        assert.equal(results.data.length, 20);
+        assert.isNumber(results.data.length);
         done();
       });
     });
@@ -287,13 +338,13 @@ var _ = require("underscore"),
     });
 
     it('should facilitate the count query', function (done) {
-      var sql = 'select xt.js_init(true);select xt.get($${"nameSpace":"XM","type":"ContactListItem","query":{"count":true,"orderBy":[{"attribute":"lastName"}],"rowOffset":0,"rowLimit":50,"parameters":[{"attribute":"isActive","operator":"=","value":true},{"attribute":"owner.username","operator":"","isCharacteristic":false,"value":"admin"}]},"username":"admin","encryptionKey":"foo"}$$);';
+      var sql = 'select xt.js_init(true);select xt.get($${"nameSpace":"XM","type":"ContactListItem","query":{"count":true,"orderBy":[{"attribute":"lastName"}],"rowOffset":0,"rowLimit":50,"parameters":[{"attribute":"isActive","operator":"=","value":true},{"attribute":"owner.username","operator":"","isCharacteristic":false,"value":"admin"}]},"username":"admin","encryptionKey":"this is any content"}$$);';
       datasource.query(sql, creds, function (err, res) {
         var results;
         assert.isNull(err);
         assert.equal(1, res.rowCount, JSON.stringify(res.rows));
         results = JSON.parse(res.rows[1].get);
-        assert.equal(results.data[0].count, 5);
+        assert.isNumber(results.data[0].count);
         done();
       });
     });

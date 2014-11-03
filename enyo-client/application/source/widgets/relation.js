@@ -23,98 +23,49 @@ regexp:true, undef:true, trailing:true, white:true, strict:false */
     name: "XV.ContactWidget",
     kind: "XV.RelationWidget",
     label: "_contact".loc(),
-    collection: "XM.ContactRelationCollection",
-    list: "XV.ContactList",
     keyAttribute: "name",
     nameAttribute: "jobTitle",
     descripAttribute: "phone",
-    classes: "xv-relationwidget",
+    collection: "XM.ContactRelationCollection",
+    list: "XV.ContactList",
     published: {
       showAddress: false
     },
-    components: [
-      {kind: "FittableColumns", components: [
-        {name: "label", content: "", fit: true, classes: "xv-flexible-label"},
-        {kind: "onyx.InputDecorator", name: "decorator",
-          classes: "xv-input-decorator", components: [
-          {name: "input", kind: "onyx.Input", classes: "xv-subinput",
-            onkeyup: "keyUp", onkeydown: "keyDown", onblur: "receiveBlur",
-            onfocus: "receiveFocus"
-          },
-          {kind: "onyx.MenuDecorator", onSelect: "itemSelected", components: [
-            {kind: "onyx.IconButton", classes: "icon-folder-open-alt"},
-            {name: "popupMenu", floating: true, kind: "onyx.Menu",
-              components: [
-              {kind: "XV.MenuItem", name: "searchItem", content: "_search".loc()},
-              {kind: "XV.MenuItem", name: "openItem", content: "_open".loc(),
-                disabled: true},
-              {kind: "XV.MenuItem", name: "newItem", content: "_new".loc(),
-                disabled: true}
-            ]}
-          ]},
-          {name: "completer", kind: "XV.Completer", onSelect: "itemSelected"}
-        ]}
+    descriptionComponents: [
+      {name: "jobTitleRow", controlClasses: "enyo-inline", showing: false, components: [
+        {classes: 'xv-description', name: "name"}
       ]},
-      {kind: "FittableColumns", components: [
-        {name: "labels", classes: "xv-relationwidget-column left",
-          components: [
-          {name: "jobTitleLabel", content: "_jobTitle".loc() + ":",
-            classes: "xv-relationwidget-description label",
-            showing: false},
-          {name: "phoneLabel", content: "_phone".loc() + ":",
-            classes: "xv-relationwidget-description label",
-            showing: false},
-          {name: "alternateLabel", content: "_alternate".loc() + ":",
-            classes: "xv-relationwidget-description label",
-            showing: false},
-          {name: "faxLabel", content: "_fax".loc() + ":",
-            classes: "xv-relationwidget-description label",
-            showing: false},
-          {name: "primaryEmailLabel", content: "_email".loc() + ":",
-            classes: "xv-relationwidget-description label",
-            showing: false},
-          {name: "webAddressLabel", content: "_web".loc() + ":",
-            classes: "xv-relationwidget-description label",
-            showing: false},
-          {name: "addressLabel", content: "_address".loc() + ":",
-            classes: "xv-relationwidget-description label",
-            showing: false}
-        ]},
-        {name: "data", fit: true, components: [
-          {name: "name", classes: "xv-relationwidget-description hasLabel"},
-          {name: "description", ontap: "callPhone",
-            classes: "xv-relationwidget-description hasLabel hyperlink"},
-          {name: "alternate", classes: "xv-relationwidget-description hasLabel"},
-          {name: "fax", classes: "xv-relationwidget-description hasLabel"},
-          {name: "primaryEmail", ontap: "sendMail",
-            classes: "xv-relationwidget-description hasLabel hyperlink"},
-          {name: "webAddress", ontap: "openWindow",
-            classes: "xv-relationwidget-description hasLabel hyperlink"},
-          {name: "address", classes: "xv-relationwidget-description hasLabel",
-            allowHtml: true}
-        ]}
+      {name: "phoneRow", controlClasses: "enyo-inline", showing: false, components: [
+        {classes: "xv-description hyperlink", target: '_blank', name: "description"}
+      ]},
+      {name: "alternateRow", controlClasses: "enyo-inline", showing: false, components: [
+        {classes: "xv-description hyperlink", target: "_blank", name: "alternate"}
+      ]},
+      {name: "faxRow", controlClasses: "enyo-inline", showing: false, components: [
+        {classes: "xv-description hyperlink", target: "_blank", name: "fax"}
+      ]},
+      {name: "emailRow", controlClasses: "enyo-inline", showing: false, components: [
+        {classes: 'xv-description hyperlink', target: "_blank", name: "email"}
+      ]},
+      {name: "webAddressRow", controlClasses: "enyo-inline", showing: false, components: [
+        {classes: 'xv-description hyperlink', target: "_blank", name: "webAddress"}
+      ]},
+      {name: "addressRow", controlClasses: "enyo-inline", showing: false, components: [
+        {classes: "xv-description", name: "address", allowHtml: true}
       ]}
     ],
-    disabledChanged: function () {
-      this.inherited(arguments);
-      var disabled = this.getDisabled();
-      if (this.$.phone) {
-        this.$.jobTitle.addRemoveClass("disabled", disabled);
-        this.$.phone.addRemoveClass("disabled", disabled);
-        this.$.alternate.addRemoveClass("disabled", disabled);
-        this.$.fax.addRemoveClass("disabled", disabled);
-        this.$.primaryEmail.addRemoveClass("disabled", disabled);
-        this.$.webAddress.addRemoveClass("disabled", disabled);
-      }
-    },
     setValue: function (value, options) {
       this.inherited(arguments);
+
       if (value && !value.get) {
         // the value of the widget is still being fetched asyncronously.
         // when the value is fetched, this function will be run again,
         // so for now we can just stop here.
         return;
       }
+
+      // The rows are here because sometimes the values needs labels
+      // to go with the values.
       var jobTitle = value ? value.get("jobTitle") : "",
         phone = value ? value.get("phone") : "",
         alternate = value ? value.get("alternate") : "",
@@ -123,23 +74,32 @@ regexp:true, undef:true, trailing:true, white:true, strict:false */
         webAddress = value ? value.get("webAddress") : "",
         address = value ? XM.Address.format(value.get("address")) : "",
         showAddress = this.getShowAddress();
-      this.$.jobTitleLabel.setShowing(jobTitle);
-      this.$.phoneLabel.setShowing(phone);
-      this.$.alternate.setShowing(alternate);
+
+      this.$.jobTitleRow.setShowing(!!jobTitle);
+      this.$.name.setContent(jobTitle);
+
+      this.$.phoneRow.setShowing(!!phone);
+      this.$.description.setContent(phone);
+      this.$.description.setAttribute('href', 'tel://' + phone);
+
+      this.$.alternateRow.setShowing(!!alternate);
       this.$.alternate.setContent(alternate);
-      this.$.alternateLabel.setShowing(alternate);
-      this.$.fax.setShowing(fax);
+      this.$.alternate.setAttribute('href', 'tel://' + alternate);
+
+      this.$.faxRow.setShowing(!!fax);
       this.$.fax.setContent(fax);
-      this.$.faxLabel.setShowing(fax);
-      this.$.primaryEmail.setShowing(primaryEmail);
-      this.$.primaryEmail.setContent(primaryEmail);
-      this.$.primaryEmailLabel.setShowing(primaryEmail);
-      this.$.webAddress.setShowing(webAddress);
+      this.$.fax.setAttribute('href', 'tel://' + fax);
+
+      this.$.emailRow.setShowing(!!primaryEmail);
+      this.$.email.setContent(primaryEmail);
+      this.$.email.setAttribute('href', 'mailto:' + primaryEmail);
+
+      this.$.webAddressRow.setShowing(!!webAddress);
       this.$.webAddress.setContent(webAddress);
-      this.$.webAddressLabel.setShowing(webAddress);
-      this.$.address.setShowing(address && showAddress);
-      this.$.addressLabel.setShowing(address && showAddress);
-      if (showAddress) { this.$.address.setContent(address); }
+      this.$.webAddress.setAttribute('href', '//' + alternate);
+
+      this.$.addressRow.setShowing(address && showAddress);
+      this.$.address.setContent(address);
     },
     openWindow: function () {
       var address = this.value ? this.value.get("webAddress") : null;

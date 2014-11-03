@@ -7,6 +7,8 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
 (function () {
   "use strict";
 
+  var assert = require("chai").assert;
+
   /**
     @class
     @alias Country
@@ -70,18 +72,44 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     updatableField: "name"
   };
   var additionalTests = function () {
-    /**
-      @member -
-      @memberof Country.prototype
-      @description Length of Abbreviation field should not exceed 2, Currency Abbreviation
-      and Currency Number should not exceed 3 and Currency Number value should be an integer
-    */
-    it.skip("Abbreviation length should not exceed 2", function () {
-    });
-    it.skip("Length of Currency Abbreviation should not exceed 3", function () {
-    });
-    it.skip("Currency Number value should be an integer and its length should not" +
-    " exceed 3 ", function () {
+    describe("Country field validation", function () {
+      var countryModel;
+
+      beforeEach(function () {
+        countryModel = new XM.Country();
+        countryModel.initialize(null, {isNew: true});
+      });
+      /**
+        @member -
+        @memberof Country.prototype
+        @description Length of Abbreviation field should be 2, Currency Abbreviation
+        and Currency Number should be 3
+      */
+      it("Abbreviation length should be less than 2", function () {
+        countryModel.set("abbreviation", "A");
+        assert.isObject(countryModel.validate(countryModel.attributes));
+      });
+      it("Length of Currency Abbreviation should not be less than 3", function () {
+        countryModel.set("currencyAbbreviation", "AB");
+        assert.isObject(countryModel.validate(countryModel.attributes));
+      });
+      it("Currency Number length should not be less than 3", function () {
+        countryModel.set("currencyNumber", "AB");
+        assert.isObject(countryModel.validate(countryModel.attributes));
+      });
+
+      it("Abbreviation length should not exceed 2", function () {
+        countryModel.set("abbreviation", "ABC");
+        assert.isObject(countryModel.validate(countryModel.attributes));
+      });
+      it("Length of Currency Abbreviation should not exceed 3", function () {
+        countryModel.set("currencyAbbreviation", "ABCD");
+        assert.isObject(countryModel.validate(countryModel.attributes));
+      });
+      it("Currency Number length should not exceed 3", function () {
+        countryModel.set("currencyNumber", "ABCD");
+        assert.isObject(countryModel.validate(countryModel.attributes));
+      });
     });
   };
   exports.spec = spec;

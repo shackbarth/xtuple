@@ -55,8 +55,11 @@
     "public/tables/vendaddrinfo.sql",
     "public/tables/wo.sql",
     "public/tables/womatl.sql",
+    "xt/functions/grant_role_priv.sql",
     "xt/functions/add_priv.sql",
+    "public/tables/priv.sql",
     "xt/functions/add_role.sql",
+    "add_admin_role.sql",
     "xt/functions/add_report_definition.sql",
     "xt/functions/average_cost.sql",
     "xt/functions/change_password.sql",
@@ -85,7 +88,6 @@
     "xt/functions/cntctrestore.sql",
     "xt/functions/createuser.sql",
     "xt/functions/cust_outstanding_credit.sql",
-    "xt/functions/grant_role_priv.sql",
     "xt/functions/grant_role_ext.sql",
     "xt/functions/grant_user_role.sql",
     "xt/functions/install_guiscript.sql",
@@ -123,6 +125,7 @@
     "xt/functions/register_extension_dependency.sql",
     "xt/functions/trylock.sql",
     "xt/functions/undomerge.sql",
+    "xt/functions/workflow_inheritsource.sql",
     "xt/functions/workflow_notify.sql",
     "xt/tables/acttype.sql",
     "xt/tables/sharetype.sql",
@@ -218,6 +221,7 @@
     "public/tables/comment_trigger.sql",
     "public/tables/pkghead.sql",
     "public/tables/schemaord.sql",
+    "grant_roles.sql",
     "update_version.sql"
   ]
 }

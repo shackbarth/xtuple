@@ -15,114 +15,10 @@
  <bottommargin>50</bottommargin>
  <rightmargin>50</rightmargin>
  <leftmargin>50</leftmargin>
- <querysource>
+ <querysource loadFromDb="true">
   <name>detail</name>
-  <sql>SELECT cohist_ordernumber AS sonumber,
-       cohist_invcnumber AS invnumber,
-       formatDate(cohist_orderdate) AS orddate,
-       formatDate(cohist_invcdate, 'Return') AS invcdate,
-       item_number, item_descrip1, item_descrip2,
-       formatQty(cohist_qtyshipped) AS shipped,
-       &lt;? if exists("showPrices") ?>
-       formatPrice(currtobase(cohist_curr_id,cohist_unitprice,cohist_invcdate)) AS unitprice,
-       formatMoney(round(cohist_qtyshipped * currtobase(cohist_curr_id,cohist_unitprice,cohist_invcdate),2)) AS f_total,
-       &lt;? else ?>
-       '' AS unitprice,
-       '' AS f_total,
-       &lt;? endif ?>
-       round(cohist_qtyshipped * currtobase(cohist_curr_id,cohist_unitprice,cohist_invcdate),2) AS total
-  FROM cohist JOIN custinfo ON (cust_id=cohist_cust_id)
-              JOIN salesrep ON (salesrep_id=cohist_salesrep_id)
-&lt;? if exists("includeMisc") ?>
-              LEFT OUTER JOIN itemsite ON (itemsite_id=cohist_itemsite_id)
-              LEFT OUTER JOIN site() ON (warehous_id=itemsite_warehous_id)
-              LEFT OUTER JOIN item ON (item_id=itemsite_item_id)
-&lt;? else ?>
-              JOIN itemsite ON (itemsite_id=cohist_itemsite_id)
-              JOIN site() ON (warehous_id=itemsite_warehous_id)
-              JOIN item ON (item_id=itemsite_item_id)
-&lt;? endif ?>
-&lt;? if exists("cohead_id") ?>
-              JOIN cohead ON (cohead_number=cohist_ordernumber)
-&lt;? endif ?>
-WHERE ( (true)
-&lt;? if exists("includeMisc") ?>
-  AND  (COALESCE(cohist_misc_type, '') &lt;> 'F')
-  AND  (COALESCE(cohist_misc_type, '') &lt;> 'T')
-&lt;? endif ?>
-&lt;? if exists("startDate") ?>
-  AND  (cohist_invcdate >= &lt;? value("startDate") ?>)
-&lt;? endif ?>
-&lt;? if exists("endDate") ?>
-  AND  (cohist_invcdate &lt;= &lt;? value("endDate") ?>)
-&lt;? endif ?>
-&lt;? if exists("shipStartDate") ?>
-  AND  (cohist_shipdate >= &lt;? value("shipStartDate") ?>)
-&lt;? endif ?>
-&lt;? if exists("shipEndDate") ?>
-  AND  (cohist_shipdate &lt;= &lt;? value("shipEndDate") ?>)
-&lt;? endif ?>
-&lt;? if exists("salesrep_id") ?>
-  AND  (cohist_salesrep_id=&lt;? value("salesrep_id") ?>)
-&lt;? endif ?>
-&lt;? if exists("shipto_id") ?>
-  AND  (cohist_shipto_id=&lt;? value("shipto_id") ?>)
-&lt;? endif ?>
-&lt;? if exists("billToName") ?>
-  AND  (UPPER(cohist_billtoname) ~ UPPER(&lt;? value("billToName") ?>))
-&lt;? endif ?>
-&lt;? if exists("cust_id") ?>
-  AND  (cohist_cust_id=&lt;? value("cust_id") ?>)
-&lt;? endif ?>
-&lt;? if exists("custtype_id") ?>
-  AND  (cust_custtype_id=&lt;? value("custtype_id") ?>)
-&lt;? elseif exists("custtype_pattern") ?>
-  AND  (cust_custtype_id IN (SELECT DISTINCT custtype_id
-                             FROM custtype
-                             WHERE (custtype_code ~ &lt;? value("custtype_pattern") ?>)))
-&lt;? endif ?>
-&lt;? if exists("by_custgrp" ?>
-  AND (cust_id IN (SELECT DISTINCT custgrpitem_cust_id
-                   FROM custgrpitem))
-&lt;? endif ?>
-&lt;? if exists("custgrp_id") ?>
-  AND (cust_id IN (SELECT DISTINCT custgrpitem_cust_id
-                   FROM custgrpitem
-                   WHERE (custgrpitem_custgrp_id=&lt;? value("custgrp_id") ?>)))
-&lt;? endif ?>
-&lt;? if exists("custgrp_pattern") ?>
-  AND (cust_id IN (SELECT DISTINCT custgrpitem_cust_id
-                   FROM custgrp, custgrpitem
-                   WHERE ( (custgrpitem_custgrp_id=custgrp_id)
-                     AND   (custgrp_name ~ &lt;? value("custgrp_pattern") ?>) )) )
-&lt;? endif ?>
-
-&lt;? if exists("item_id") ?>
-  AND  (itemsite_item_id=&lt;? value("item_id") ?>)
-&lt;? endif ?>
-&lt;? if exists("prodcat_id") ?>
-  AND (item_prodcat_id=&lt;? value("prodcat_id") ?>)
-&lt;? endif ?>
-&lt;? if exists("prodcat_pattern") ?>
-  AND (item_prodcat_id IN (SELECT DISTINCT prodcat_id
-                           FROM prodcat
-                           WHERE (prodcat_code ~ &lt;? value("prodcat_pattern") ?>)))
-&lt;? endif ?>
-
-&lt;? if exists("warehous_id") ?>
-  AND  (itemsite_warehous_id=&lt;? value("warehous_id") ?>)
-&lt;? endif ?>
-&lt;? if exists("shipzone_id") ?>
-  AND (cohist_shipzone_id=&lt;? value("shipzone_id") ?>)
-&lt;? endif ?>
-&lt;? if exists("saletype_id") ?>
-  AND (cohist_saletype_id=&lt;? value("saletype_id") ?>)
-&lt;? endif ?>
-&lt;? if exists("cohead_id") ?>
-  AND (cohead_id=&lt;? value("cohead_id") ?>)
-&lt;? endif ?>
-      )
-ORDER BY cohist_invcdate, item_number</sql>
+  <mqlgroup>salesHistory</mqlgroup>
+  <mqlname>detail</mqlname>
  </querysource>
  <querysource>
   <name>head</name>
@@ -496,6 +392,50 @@ ORDER BY cohist_invcdate, item_number</sql>
  </pghead>
  <section>
   <name>detail</name>
+  <group>
+   <name>total</name>
+   <column></column>
+   <foot>
+    <height>39</height>
+    <field>
+     <rect>
+      <x>660</x>
+      <y>9</y>
+      <width>80</width>
+      <height>15</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>bold</weight>
+     </font>
+     <right/>
+     <vcenter/>
+     <data>
+      <query>detail</query>
+      <column>baseextprice</column>
+     </data>
+     <format builtin="true">money</format>
+     <tracktotal/>
+    </field>
+    <label>
+     <rect>
+      <x>570</x>
+      <y>9</y>
+      <width>80</width>
+      <height>15</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>normal</weight>
+     </font>
+     <right/>
+     <vcenter/>
+     <string>Total Sales:</string>
+    </label>
+   </foot>
+  </group>
   <detail>
    <key>
     <query>detail</query>
@@ -536,7 +476,7 @@ ORDER BY cohist_invcdate, item_number</sql>
     <vcenter/>
     <data>
      <query>detail</query>
-     <column>sonumber</column>
+     <column>cohist_ordernumber</column>
     </data>
    </field>
    <field>
@@ -574,7 +514,7 @@ ORDER BY cohist_invcdate, item_number</sql>
     <vcenter/>
     <data>
      <query>detail</query>
-     <column>unitprice</column>
+     <column>f_baseunitprice</column>
     </data>
    </field>
    <field>
@@ -593,7 +533,7 @@ ORDER BY cohist_invcdate, item_number</sql>
     <vcenter/>
     <data>
      <query>detail</query>
-     <column>orddate</column>
+     <column>f_orderdate</column>
     </data>
    </field>
    <field>
@@ -612,7 +552,7 @@ ORDER BY cohist_invcdate, item_number</sql>
     <vcenter/>
     <data>
      <query>detail</query>
-     <column>shipped</column>
+     <column>f_qtyshipped</column>
     </data>
    </field>
    <line>
@@ -638,7 +578,7 @@ ORDER BY cohist_invcdate, item_number</sql>
     <vcenter/>
     <data>
      <query>detail</query>
-     <column>invcdate</column>
+     <column>f_invcdate</column>
     </data>
    </field>
    <field>
@@ -657,7 +597,7 @@ ORDER BY cohist_invcdate, item_number</sql>
     <vcenter/>
     <data>
      <query>detail</query>
-     <column>item_number</column>
+     <column>itemnumber</column>
     </data>
    </field>
    <field>
@@ -676,7 +616,7 @@ ORDER BY cohist_invcdate, item_number</sql>
     <vcenter/>
     <data>
      <query>detail</query>
-     <column>f_total</column>
+     <column>f_baseextprice</column>
     </data>
    </field>
    <field>
@@ -695,55 +635,9 @@ ORDER BY cohist_invcdate, item_number</sql>
     <vcenter/>
     <data>
      <query>detail</query>
-     <column>invnumber</column>
+     <column>invoicenumber</column>
     </data>
    </field>
-  </detail>
- </section>
- <section>
-  <name>total</name>
-  <detail>
-   <key>
-    <query>showPrices</query>
-   </key>
-   <height>16</height>
-   <field>
-    <rect>
-     <x>665</x>
-     <y>0</y>
-     <width>80</width>
-     <height>15</height>
-    </rect>
-    <font>
-     <face>Arial</face>
-     <size>8</size>
-     <weight>bold</weight>
-    </font>
-    <right/>
-    <vcenter/>
-    <data>
-     <query>detail</query>
-     <column>total</column>
-    </data>
-    <format builtin="true">money</format>
-    <tracktotal/>
-   </field>
-   <label>
-    <rect>
-     <x>575</x>
-     <y>0</y>
-     <width>80</width>
-     <height>15</height>
-    </rect>
-    <font>
-     <face>Arial</face>
-     <size>8</size>
-     <weight>normal</weight>
-    </font>
-    <right/>
-    <vcenter/>
-    <string>Total Sales:</string>
-   </label>
   </detail>
  </section>
  <pgfoot>

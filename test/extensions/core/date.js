@@ -17,7 +17,7 @@
     before(function (done) {
       // setup for the date widget
       var initializeDate = function () {
-        K = enyo.kind({kind: XV.Date});
+        K = enyo.kind({kind: XV.DateWidget});
         K = new K();
         done();
       };

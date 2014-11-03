@@ -7,6 +7,7 @@ strict:true, trailing:true, white:true */
   "use strict";
 
   var lang = XT.stringsFor("en_US", {
+    "_activityType": "Activity Type",
     "_correctToEarliestDate?": "The due date does not fall within the lead time for this Item Source. Would you like it corrected?",
     "_correctToMinimumQuantity?": "The quantity is below the minimum order quantity for this Item Source. Would you like it corrected?",
     "_correctToMultipleQuantity?": "The quantity does not fall within the order multiple quantity for this Item Source. Would you like it corrected?",
@@ -52,10 +53,13 @@ strict:true, trailing:true, white:true */
     "_RequireStdCostForPOItem": "Require Standard Cost",
     "_transactedPoNotUnreleased": "This Purchase Order has transactions and can not be Unreleased.",
     "_supply": "Supply",
+    "_unclosedPurchaseOrders": "Unclosed Purchase Orders",
     "_unitRatio": "Unit Ratio",
     "_UseEarliestAvailDateOnPOItem": "Use Earliest Date",
     "_vendorItem": "Vendor Item",
     "_vendorItemNumber": "VendorItemNumber",
+    "_vendors": "Vendors",
+    "_vendorUnit": "Vendor Unit",
     "_viewPurchaseOrders": "View Purchase Orders",
     "_vouchered": "Vouchered",
     "_warnMaxCostExceeded": "The price is above the maximum desired cost of {maximumDesiredCost} for this Item."

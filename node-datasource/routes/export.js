@@ -150,19 +150,37 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       } else {
         var resultAsCsv,
           filename = "export",
-          type;
+          type,
+          number = requestDetails.query &&
+                   requestDetails.query.details &&
+                   requestDetails.query.details.id,
+          attr = requestDetails.query &&
+                 requestDetails.query.details &&
+                 requestDetails.query.details.attr
+          ;
         try {
-          // try to name the file after the record type
           type = requestDetails.type;
-          // suffix() would be better than substring() but doesn't exist here yet
-          filename = type.replace("ListItem", "Export");
+          filename = type.replace("ListItem", "Export") +
+                     (attr && number ? "-" + number : "") +
+                     (attr           ? "-" + attr   : "")
+                   ;
 
         } catch (error) {
           // "export" will have to do.
         }
 
-        resultAsCsv = jsonToCsv(result.data.data);
-        res.attachment(filename + ".csv");
+        try {
+          /* export requests have 2 flavors: export a list of records (data.data)
+             or export a list of children of the current record ([0][attr]) */
+          if (attr) {
+            resultAsCsv = jsonToCsv(result.data.data[0][attr]);
+          } else {
+            resultAsCsv = jsonToCsv(result.data.data);
+          }
+          res.attachment(filename + ".csv");
+        } catch (error) {
+          resultAsCsv = jsonToCsv(error);
+        }
         res.send(resultAsCsv);
       }
     });

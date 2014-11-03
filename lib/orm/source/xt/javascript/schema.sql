@@ -289,7 +289,7 @@ select xt.install_js('XT','Schema','xtuple', $$
         nkey = XT.Orm.naturalKey(orm),
         pkey = XT.Orm.primaryKey(orm),
         prop,
-        ret = {},
+        ret = {"id": orm.type, "type": "object"},
         relatedORM = {},
         relatedKey,
         relatedKeyProp,

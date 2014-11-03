@@ -23,7 +23,7 @@ sudo apt-get -q -y install \
   python-software-properties \
   software-properties-common
 
-NODE_VERSION=0.8.26
+NODE_VERSION=0.10.31
 
 DEBDIST=`lsb_release -c -s`
 echo "Trying to install xTuple for platform ${DEBDIST}"
@@ -139,7 +139,10 @@ install_packages() {
   sudo add-apt-repository -y "deb http://apt.postgresql.org/pub/repos/apt/ ${DEBDIST}-pgdg main"
   sudo wget -qO- https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
   sudo apt-get -qq update 2>&1 | tee -a $LOG_FILE
-  sudo apt-get -q -y install curl build-essential libssl-dev postgresql-9.1 postgresql-server-dev-9.1 postgresql-contrib-9.1 postgresql-9.1-plv8 2>&1 | tee -a $LOG_FILE
+  sudo apt-get -q -y install curl build-essential libssl-dev \
+    postgresql-${PG_VERSION} postgresql-server-dev-${PG_VERSION} \
+    postgresql-contrib-${PG_VERSION} postgresql-${PG_VERSION}-plv8 2>&1 \
+    | tee -a $LOG_FILE
 
   if [ ! -d "/usr/local/nvm" ]; then
     sudo rm -f /usr/local/bin/nvm
@@ -153,9 +156,12 @@ install_packages() {
   sudo nvm alias default $NODE_VERSION
   sudo nvm alias xtuple $NODE_VERSION
 
+  # use latest npm
+  sudo npm install -fg npm@1.4.25
 	# npm no longer supports its self-signed certificates
 	log "telling npm to use known registrars..."
 	npm config set ca ""
+        sudo chown -R $USER $HOME/.npm
 
   log "installing npm modules..."
   npm install --unsafe-perm 2>&1 | tee -a $LOG_FILE
@@ -187,7 +193,7 @@ setup_postgres() {
 		return 1
 	fi
 
-	PGDIR=/etc/postgresql/9.1/main
+	PGDIR=/etc/postgresql/${PG_VERSION}/main
 
   log "copying configs..."
 	sudo cp $PGDIR/postgresql.conf $PGDIR/postgresql.conf.default
@@ -224,6 +230,8 @@ init_everythings() {
 	cdir $XT_DIR/node-datasource/lib/private
 	cat /dev/urandom | tr -dc '0-9a-zA-Z!@#$%^&*_+-'| head -c 64 > salt.txt
 	log "Created salt"
+	cat /dev/urandom | tr -dc '0-9a-zA-Z!@#$%^&*_+-'| head -c 64 > encryption_key.txt
+	log "Created encryption key"
 	openssl genrsa -des3 -out server.key -passout pass:xtuple 1024 2>&1 | tee -a $LOG_FILE
 	openssl rsa -in server.key -passin pass:xtuple -out key.pem -passout pass:xtuple 2>&1 | tee -a $LOG_FILE
 	openssl req -batch -new -key key.pem -out server.csr -subj '/CN='$(hostname) 2>&1 | tee -a $LOG_FILE

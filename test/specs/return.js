@@ -136,8 +136,8 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
           primeSubmodels = require("./sales_order").primeSubmodels;
 
         primeSubmodels(function (submodels) {
-          workspace.$.returnLineItemBox.newItem();
-          gridRow = workspace.$.returnLineItemBox.$.editableGridRow;
+          workspace.$.lineItemBox.newItem();
+          gridRow = workspace.$.lineItemBox.$.editableGridRow;
           gridRow.$.itemSiteWidget.doValueChange({value: {item: submodels.itemModel,
             site: submodels.siteModel}});
           gridRow.$.quantityWidget.doValueChange({value: 5});
@@ -1038,10 +1038,10 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
 
         enyo.platform.touch = true;
         workspace = new XV.ReturnWorkspace();
-        assert.equal(workspace.$.returnLineItemBox.kind, "XV.ReturnLineItemBox");
+        assert.equal(workspace.$.lineItemBox.kind, "XV.ReturnLineItemBox");
         enyo.platform.touch = false;
         workspace = new XV.ReturnWorkspace();
-        assert.equal(workspace.$.returnLineItemBox.kind, "XV.ReturnLineItemGridBox");
+        assert.equal(workspace.$.lineItemBox.kind, "XV.ReturnLineItemGridBox");
       });
       /**
         @member -

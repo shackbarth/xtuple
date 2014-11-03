@@ -65,7 +65,7 @@ trailing:true, white:true*/
       this.$.buttonsPanel.createComponent({
         kind: "onyx.Button",
         name: "processButton",
-        showing: false,
+        disabled: true,
         ontap: "processCreditCard",
         classes: "onyx-affirmative",
         content: "_process".loc()
@@ -73,7 +73,7 @@ trailing:true, white:true*/
       this.$.buttonsPanel.createComponent({
         kind: "onyx.Button",
         name: "authorizeButton",
-        showing: false,
+        disabled: true,
         ontap: "processCreditCard",
         content: "_authorize".loc()
       }, {owner: this});
@@ -84,7 +84,7 @@ trailing:true, white:true*/
     newItem: function (options) {
       options = options || {};
       var that = this,
-        // XXX #refactor 
+        // XXX #refactor
         customer = that.parent.parent.getValue().getValue("customer"),
         creditCardCollection = customer.get("creditCards"),
         creditCardModel = new XM.CreditCard(),
@@ -201,8 +201,8 @@ trailing:true, white:true*/
           // XXX #refactor
           payload.orderNumber = that.parent.parent.getValue().id;
           payload.customerNumber = that.parent.parent.getValue().getValue("customer.id");
-          that.$.authorizeButton.setShowing(false);
-          that.$.processButton.setShowing(false);
+          that.$.authorizeButton.setDisabled(true);
+          that.$.processButton.setDisabled(true);
           XT.dataSource.callRoute("credit-card", payload, {success: success, error: error});
         };
 
@@ -226,10 +226,17 @@ trailing:true, white:true*/
       var list = this.$.list,
         creditCard = list.getModel(list.getFirstSelected()),
         ccv = this.$.ccv.value,
-        amount = this.$.creditCardAmount.value;
+        amount = this.$.creditCardAmount.value,
+        disable = !creditCard ||
+          !amount ||
+          (!ccv && !!XT.session.settings.get("CCRequireCCV")) ||
+          // XXX refactor after attributesChanged refactor
+          // this kind should hold onto a reference to the model
+          // that backs the workspace
+          this.parent.parent.value.isNew();
 
-      this.$.processButton.setShowing(creditCard && amount && (ccv || !XT.session.settings.get("CCRequireCCV")));
-      this.$.authorizeButton.setShowing(creditCard && amount && (ccv || !XT.session.settings.get("CCRequireCCV")));
+      this.$.processButton.setDisabled(disable);
+      this.$.authorizeButton.setDisabled(disable);
       return true;
     }
   });
