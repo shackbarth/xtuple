@@ -17,10 +17,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     Report = require('fluentreports').Report,
     qr = require('qr-image'),
     queryForData = require("./export").queryForData;
-    
-    
+
+
   //
-  // FLUENT REPORT FORMAT TRANFORMS  
+  // FLUENT REPORT FORMAT TRANFORMS
   //
   var formatAddress = function (name, address1, address2, address3, city, state, code, country) {
     var address = [];
@@ -47,6 +47,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     }).join("-")];
   };
 
+  var format3of9 = function (string) {
+    return "*" + string + "*";
+  };
+
+  var formatArbl3of9 = function (aisle, rack, bin, location) {
+    return format3of9(formatArbl(aisle, rack, bin, location));
+  };
+
   var formatFullName = function (firstName, lastName, honorific, suffix) {
     var fullName = [];
     if (honorific) { fullName.push(honorific +  ' '); }
@@ -54,7 +62,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     if (suffix) { fullName.push(' ' + suffix); }
     return fullName;
   };
-    
+
   var formatInteger = function (numeric) {
     return ~~numeric;  // Returns a numeric as an integer type
   };
@@ -62,7 +70,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   XT.transformFunctions = {
     fullname: formatFullName,
     address: formatAddress,
+    "3of9": format3of9,
     arbl: formatArbl,
+    arbl3of9: formatArbl3of9,
     integer: formatInteger
   };
 
