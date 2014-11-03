@@ -188,7 +188,7 @@ trailing:true, white:true, strict: false*/
       });
     },
     getWorkspace: function () {
-      if (!this._lastTapIndex) {
+      if (this._lastTapIndex === undefined) {
         // don't respond to events waterfalled from other models
         return;
       }
