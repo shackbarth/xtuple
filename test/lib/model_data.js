@@ -2,7 +2,7 @@
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
 /*global XT:true, _:true, console:true, XM:true, Backbone:true, require:true, assert:true,
-setTimeout:true, clearTimeout:true, exports:true, it:true */
+setTimeout:true, clearTimeout:true, exports:true, it:true, Globalize: true */
 
 
 /*

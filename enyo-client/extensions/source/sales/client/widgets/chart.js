@@ -11,15 +11,17 @@ trailing:true, white:true*/
     collection: "XM.SalesHistoryCollection",
     chartTitle: "_salesHistoryLast30Days".loc(),
     groupByOptions: [
-      { name: "" },
-      { name: "customer" },
-      { name: "salesRep" }
+      { name: "" }
     ],
     query: {
       parameters: [{
         attribute: "shipDate",
         operator: ">=",
         value: XT.date.applyTimezoneOffset(XV.DateWidget.prototype.textToDate("-30"), true)
+      }, {
+        attribute: "shipDate",
+        operator: "<=",
+        value: XT.date.applyTimezoneOffset(XV.DateWidget.prototype.textToDate("0"), true)
       }]
     },
     dateField: "shipDate",
@@ -30,10 +32,9 @@ trailing:true, white:true*/
     name: "XV.SalesOrderTimeSeriesChart",
     kind: "XV.TimeSeriesChart",
     collection: "XM.SalesOrderListItemCollection",
-    chartTitle: "_bookingsNext30Days".loc(),
+    chartTitle: "_salesOrdersNext30Days".loc(),
     groupByOptions: [
       { name: "" },
-      { name: "customer" },
       { name: "salesRep" }
     ],
     query: {
@@ -48,6 +49,29 @@ trailing:true, white:true*/
       }]
     },
     dateField: "orderDate",
+    totalField: "total"
+  });
+
+  enyo.kind({
+    name: "XV.PastDueSalesOrderTimeSeriesChart",
+    kind: "XV.DrilldownBarChart",
+    collection: "XM.SalesOrderListItemCollection",
+    chartTitle: "_pastDueSalesOrders".loc(),
+    groupByOptions: [
+      { name: "" },
+      { name: "salesRep" }
+    ],
+    query: {
+      parameters: [{
+        attribute: "status",
+        operator: "=",
+        value: "O"
+      }, {
+        attribute: "scheduleDate",
+        operator: "<=",
+        value: XT.date.applyTimezoneOffset(XV.DateWidget.prototype.textToDate("0"), true)
+      }]
+    },
     totalField: "total"
   });
 
