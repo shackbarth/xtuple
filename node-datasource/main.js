@@ -95,20 +95,18 @@ var app;
   XT.session.schemas.SYS = false;
 
   // Load the Database hostname and port into metrics to enable Qt client deep linking
-  var queryPayload,  
-    query = "SELECT setmetric('%@', '%@');",
-    queryOptions = {
-          user: X.options.databaseServer.user,
-          port: X.options.databaseServer.port,
-          hostname: X.options.databaseServer.hostname,
-          password: X.options.databaseServer.password
-        };
   X.options.datasource.databases.map(function (database) {
-    queryOptions.database = database;
+    var queryPayload,
+      query = "SELECT setmetric('%@', '%@');";
+
     queryPayload = query.f('WebappHostname', X.options.datasource.hostname);
-    XT.dataSource.query(queryPayload, queryOptions, function (error, res) { return; } );
+    XT.dataSource.query(queryPayload, XT.dataSource.getAdminCredentials(database), function (error, res) {
+      if (error) { console.log("An error occurred writing the hostname to the metric table " + error); } 
+    });
     queryPayload = query.f('WebappPort', X.options.datasource.port);
-    XT.dataSource.query(queryPayload, queryOptions, function (error, res) { return; } );
+    XT.dataSource.query(queryPayload, XT.dataSource.getAdminCredentials(database), function (error, res) {
+      if (error) { console.log("An error occurred writing the port to the metric table" + error); } 
+    });
   });
 
   var getExtensionDir = function (extension) {
