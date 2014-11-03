@@ -101,11 +101,11 @@ var app;
 
     queryPayload = query.f('WebappHostname', X.options.datasource.hostname);
     XT.dataSource.query(queryPayload, XT.dataSource.getAdminCredentials(database), function (error, res) {
-      if (error) { console.log("An error occurred writing the hostname to the metric table " + error); } 
+      if (error) { console.log("An error occurred writing the hostname to the metric table " + error); }
     });
     queryPayload = query.f('WebappPort', X.options.datasource.port);
     XT.dataSource.query(queryPayload, XT.dataSource.getAdminCredentials(database), function (error, res) {
-      if (error) { console.log("An error occurred writing the port to the metric table" + error); } 
+      if (error) { console.log("An error occurred writing the port to the metric table" + error); }
     });
   });
 
