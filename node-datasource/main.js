@@ -297,12 +297,12 @@ var conditionalExpressSession = function (req, res, next) {
   // The 'assets' folder and login page are sessionless.
   if ((/^api/i).test(req.path.split("/")[2]) ||
       (/^\/assets/i).test(req.path) ||
+      (/^\/stylesheets/i).test(req.path) ||
+      (/^\/bower_components/i).test(req.path) ||
       req.path === '/' ||
       req.path === '/favicon.ico' ||
       req.path === '/forgot-password' ||
       req.path === '/assets' ||
-      req.path === '/stylesheets' ||
-      req.path === '/bower_components' ||
       req.path === '/recover') {
 
     next();
