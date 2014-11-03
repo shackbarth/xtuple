@@ -9,7 +9,7 @@ trailing:true, white:true*/
 
     enyo.kind({
       name: "XV.AssignedIncidentBarChart",
-      kind: "XV.DrilldownBarChart",
+      kind: "XV.DrilldownPieChart",
       collection: "XM.IncidentListItemCollection",
       chartTitle: "_assignedIncidents".loc(),
       filterOptions: [
@@ -51,11 +51,11 @@ trailing:true, white:true*/
         parameters: [{
           attribute: "targetClose",
           operator: ">=",
-          value: XT.date.applyTimezoneOffset(XV.Date.prototype.textToDate("0"), true)
+          value: XT.date.applyTimezoneOffset(XV.DateWidget.prototype.textToDate("0"), true)
         }, {
           attribute: "targetClose",
           operator: "<=",
-          value: XT.date.applyTimezoneOffset(XV.Date.prototype.textToDate("+30"), true)
+          value: XT.date.applyTimezoneOffset(XV.DateWidget.prototype.textToDate("+30"), true)
         }]
       },
       totalField: "amount"

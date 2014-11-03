@@ -2,6 +2,32 @@
 regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global XT:true, XM:true, XV:true, XZ:true, enyo:true, XG:true */
 
+var _ = require('underscore');
+global.URL = require('url');
+var parse = global.URL.parse;
+var resolve = global.URL.resolve;
+global.URL.parse = function (url) {
+  "use strict";
+  if (_.isObject(url) && _.isString(url.href)) {
+    return parse(url.href);
+  }
+  else {
+    return parse(url);
+  }
+};
+global.URL.resolve = function (from, to) {
+  "use strict";
+  if (_.isObject(from)) {
+    from = from.href || '/';
+  }
+  if (_.isObject(to)) {
+    to = to.href || '';
+  }
+
+  return resolve(from, to);
+};
+
+
 // global objects
 enyo = {};
 XT = {};
@@ -10,9 +36,11 @@ XM = {};
 XV = {};
 XZ = {}; // xTuple Zombie. Used to help zombie within the context of these tests.
 
+// https://github.com/mikeal/request/issues/418#issuecomment-17149236
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
 var assert = require('assert'),
   zombie = require('zombie'),
-  URL = require('url'),
   _ = require('underscore');
 
 
@@ -100,23 +128,15 @@ Simplest possible usage:
       return;
     }
 
-    var parse = URL.parse;
-    URL.parse = function (url) {
-      if (_.isObject(url) && _.isString(url.href)) {
-        return parse(url.href);
-      }
-      else {
-        return parse(url);
-      }
-    };
 
-    zombie.visit(host, {debug: verboseMode}, function (e, browser) {
+    zombie.visit(host, {debug: verboseMode, runScripts: false}, function (e, browser) {
       if (e) {
-        //console.log("Zombie visit error: ", e);
+        console.log("Zombie visit error: ", e);
       }
       //
       // This is the login screen
       //
+      browser.runScripts = true;
       browser
         .fill('id', username)
         .fill('password', password)

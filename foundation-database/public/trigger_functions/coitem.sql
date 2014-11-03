@@ -523,12 +523,14 @@ BEGIN
   IF (TG_OP = 'INSERT') THEN
     -- Create Purchase Request if flagged to do so
     IF ((NEW.coitem_order_type='R') AND (NEW.coitem_order_id=-1)) THEN
-      SELECT createpr(CAST(cohead_number AS INTEGER), 'S', NEW.coitem_id) INTO _orderid
+      SELECT createPR(CAST(cohead_number AS INTEGER), 'S', NEW.coitem_id) INTO _orderid
       FROM cohead
       WHERE (cohead_id=NEW.coitem_cohead_id);
       IF (_orderid > 0) THEN
         UPDATE coitem SET coitem_order_id=_orderid
         WHERE (coitem_id=NEW.coitem_id);
+      ELSE
+        RAISE EXCEPTION 'CreatePR failed, result=%', _orderid;
       END IF;
     END IF;
 
@@ -550,6 +552,8 @@ BEGIN
         IF (_orderid > 0) THEN
           UPDATE coitem SET coitem_order_id=_orderid
           WHERE (coitem_id=NEW.coitem_id);
+        ELSE
+          RAISE EXCEPTION 'CreatePurchaseToSale failed, result=%', _orderid;
         END IF;
       END IF;
     END IF;

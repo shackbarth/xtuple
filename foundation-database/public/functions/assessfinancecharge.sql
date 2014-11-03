@@ -164,7 +164,10 @@ BEGIN
       -1,
       NULL,
       _fc.fincharg_markoninvoice,
-      'Finance Charge Assessment',
+--    - enhance data shown in the item description for the invoice line to indicate which invoice is affected
+--    - Feature Request 23344       
+--      'Finance Charge Assessment',
+      'Finance Charge Assessment - Invoice Number ' || _ar.aropen_docnumber || ' - Past Due Balance ' || (_ar.aropen_amount - _ar.aropen_paid) || ' Due Date - ' || _ar.aropen_duedate,
       1.0,
       1.0,
       pAssessAmount,

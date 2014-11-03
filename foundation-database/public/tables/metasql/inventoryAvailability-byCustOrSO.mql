@@ -94,10 +94,10 @@ FROM (
       GROUP BY cohead_id, item_number, cust_number,
                cust_name, cohead_orderdate, pack_id, coitem_scheddate
   <? if exists("onlyShowShortages") ?>
-      HAVING (MIN(noNeg(itemsite_qtyonhand) +
+      HAVING (MIN(noNeg(qtyAvailable(itemsite_id)) +
                   qtyOrdered(itemsite_id, coitem_scheddate) -
                   qtyAllocated(itemsite_id, coitem_scheddate)) < 0
-              OR MIN(noNeg(itemsite_qtyonhand) +
+              OR MIN(noNeg(qtyAvailable(itemsite_id)) +
                   qtyOrdered(itemsite_id, coitem_scheddate) -
                   noNeg(coitem_qtyord - coitem_qtyshipped + coitem_qtyreturned)) < 0
            )
@@ -108,7 +108,7 @@ FROM (
             item_number,
             item_number AS trueitem_number,
             (item_descrip1 || ' ' || item_descrip2) AS descrip,
-            uom_name, noNeg(itemsite_qtyonhand) AS qoh,
+            uom_name, noNeg(qtyAvailable(itemsite_id)) AS qoh,
             noNeg(coitem_qtyord - coitem_qtyshipped + coitem_qtyreturned) AS sobalance,
             qtyAllocated(itemsite_id, coitem_scheddate) AS allocated,
             qtyOrdered(itemsite_id, coitem_scheddate) AS ordered,
@@ -138,8 +138,8 @@ FROM (
                                   WHERE(custtype_code ~ <? value("custtype_pattern") ?>)))
 <? endif ?>
 <? if exists("onlyShowShortages") ?>
-        AND ((noNeg(itemsite_qtyonhand) + qtyOrdered(itemsite_id, coitem_scheddate) - qtyAllocated(itemsite_id, coitem_scheddate) < 0)
-          OR (noNeg(itemsite_qtyonhand) + qtyOrdered(itemsite_id, coitem_scheddate) - noNeg(coitem_qtyord - coitem_qtyshipped + coitem_qtyreturned) < 0))
+        AND ((noNeg(qtyAvailable(itemsite_id)) + qtyOrdered(itemsite_id, coitem_scheddate) - qtyAllocated(itemsite_id, coitem_scheddate) < 0)
+          OR (noNeg(qtyAvailable(itemsite_id)) + qtyOrdered(itemsite_id, coitem_scheddate) - noNeg(coitem_qtyord - coitem_qtyshipped + coitem_qtyreturned) < 0))
 <? endif ?>
     )
 <? if exists("showWoSupply") ?>
@@ -167,7 +167,7 @@ FROM (
            AND (wo_status IN ('E','R','I'))
            AND (wo_qtyord-wo_qtyrcv > 0)
            AND (noNeg(coitem_qtyord - coitem_qtyshipped + coitem_qtyreturned-qtyatshipping(coitem_id)) >
-            (SELECT itemsite_qtyonhand FROM itemsite WHERE (itemsite_id=coitem_itemsite_id))))
+            (SELECT qtyAvailable(itemsite_id) FROM itemsite WHERE (itemsite_id=coitem_itemsite_id))))
      WHERE ((coitem_cohead_id=cohead_id)
         AND (coitem_itemsite_id=itemsite_id)
         AND (itemsite_warehous_id=warehous_id)
@@ -184,8 +184,8 @@ FROM (
                                   WHERE(custtype_code ~ <? value("custtype_pattern") ?>)))
   <? endif ?>
   <? if exists("onlyShowShortages") ?>
-        AND ((noNeg(itemsite_qtyonhand) + qtyOrdered(itemsite_id, coitem_scheddate) - qtyAllocated(itemsite_id, coitem_scheddate) < 0)
-          OR (noNeg(itemsite_qtyonhand) + qtyOrdered(itemsite_id, coitem_scheddate) - noNeg(coitem_qtyord - coitem_qtyshipped + coitem_qtyreturned) < 0))
+        AND ((noNeg(qtyAvailable(itemsite_id)) + qtyOrdered(itemsite_id, coitem_scheddate) - qtyAllocated(itemsite_id, coitem_scheddate) < 0)
+          OR (noNeg(qtyAvailable(itemsite_id)) + qtyOrdered(itemsite_id, coitem_scheddate) - noNeg(coitem_qtyord - coitem_qtyshipped + coitem_qtyreturned) < 0))
   <? endif ?>
   )
 <? endif ?>

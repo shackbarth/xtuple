@@ -199,7 +199,7 @@
 
       });
       afterEach(function (done) {
-        this.timeout(10 * 1000);
+        this.timeout(30 * 1000);
 
         // restore permissions
         _.extend(XT.session.privileges.attributes, originalPrivileges);

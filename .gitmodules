@@ -25,18 +25,12 @@
 [submodule "lib/backbone-x/lib/Backbone-relational"]
   path = lib/backbone-x/lib/Backbone-relational
   url = https://github.com/PaulUithol/Backbone-relational.git
-[submodule "lib/tools/lib/globalize"]
-  path = lib/tools/lib/globalize
-  url = https://github.com/jquery/globalize.git
 [submodule "lib/tools/lib/underscore"]
   path = lib/tools/lib/underscore
   url = https://github.com/documentcloud/underscore.git
 [submodule "lib/backbone-x/lib/JSON-Patch"]
   path = lib/backbone-x/lib/JSON-Patch
   url = https://github.com/xtuple/JSON-Patch.git
-[submodule "lib/enyo-x/lib/nvd3"]
-	path = lib/enyo-x/lib/nvd3
-	url = https://github.com/novus/nvd3.git
 [submodule "lib/enyo-x/lib/font-onyx"]
 	path = lib/enyo-x/lib/font-onyx
 	url = https://github.com/xtuple/font-onyx.git

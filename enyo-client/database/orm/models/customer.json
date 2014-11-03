@@ -2323,6 +2323,14 @@
         }
       },
       {
+        "name": "customerType",
+        "toOne": {
+          "isNested": true,
+          "type": "CustomerType",
+          "column": "cust_custtype_id"
+        }
+      },
+      {
         "name": "billingContact",
         "toOne": {
           "isNested": true,

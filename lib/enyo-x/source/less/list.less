@@ -12,11 +12,9 @@
   border-bottom: 1px solid @silver;
 
   .xv-list-column {
+    padding-left: 7px;
     &.last {
       border-right: none;
-    }
-    &.name-column, &.first, &.second, &.third, &.short, &.small, &.medium, &.descr {
-      padding-left: 7px;
     }
   }
 }
@@ -31,7 +29,7 @@
     width: 200px
   }
   &.right-column {
-    width: 100px;
+    width: 115px;
     text-align: right;
   }
   &.short {
@@ -198,6 +196,9 @@
   overflow: hidden;
   text-overflow: ellipsis;
   color: @black;
+  @media (max-width: 480px) {
+    padding: 2px 5px 2px 5px;
+  }
   &.header {
     padding: 4px;
     background: @gray;
@@ -242,7 +243,8 @@
     color: @dim-gray;
   }
   &.hyperlink {
-    color: blue;
+    color: @slate-blue;
+    cursor: pointer;
   }
   &.disabled {
     color: @dim-gray;

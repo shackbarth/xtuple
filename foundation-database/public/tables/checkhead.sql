@@ -1,0 +1,1 @@
+select xt.add_column('checkhead','checkhead_alt_curr_rate', 'NUMERIC', NULL, 'public');

@@ -222,6 +222,9 @@ WHERE ( (cashrcpt_distdate BETWEEN <? value("startDate") ?> AND <? value("endDat
 <? elseif exists("custtype_pattern") ?>
   AND   (cust_custtype_id IN (SELECT custtype_id FROM custtype WHERE (custtype_code ~ <? value("custtype_pattern") ?>)))
 <? endif ?>
+<? if exists("fundstype") ?>
+  AND   (cashrcpt_fundstype=<? value("fundstype") ?>)
+<? endif ?>
       )
 
 --  Cash Receipt items
@@ -261,6 +264,9 @@ WHERE ( (cashrcpt_distdate BETWEEN <? value("startDate") ?> AND <? value("endDat
 <? elseif exists("custtype_pattern") ?>
   AND   (cust_custtype_id IN (SELECT custtype_id FROM custtype WHERE (custtype_code ~ <? value("custtype_pattern") ?>)))
 <? endif ?>
+<? if exists("fundstype") ?>
+  AND   (cashrcpt_fundstype=<? value("fundstype") ?>)
+<? endif ?>
       )
 
 --  Cash Receipt misc
@@ -291,6 +297,9 @@ WHERE ( (cashrcpt_distdate BETWEEN <? value("startDate") ?> AND <? value("endDat
   AND   (custgrpitem_custgrp_id=<? value("custgrp_id") ?>)
 <? elseif exists("custtype_pattern") ?>
   AND   (cust_custtype_id IN (SELECT custtype_id FROM custtype WHERE (custtype_code ~ <? value("custtype_pattern") ?>)))
+<? endif ?>
+<? if exists("fundstype") ?>
+  AND   (cashrcpt_fundstype=<? value("fundstype") ?>)
 <? endif ?>
       )
   ) AS data

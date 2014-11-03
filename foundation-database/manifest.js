@@ -7,10 +7,13 @@
   "databaseScripts": [
     "../lib/orm/source/create_xt_schema.sql",
     "../lib/orm/source/xt/functions/add_column.sql",
+    "../lib/orm/source/xt/functions/add_comment_type.sql",
     "../lib/orm/source/xt/functions/add_constraint.sql",
     "../lib/orm/source/xt/functions/add_index.sql",
     "../lib/orm/source/xt/functions/add_primary_key.sql",
     "../lib/orm/source/xt/functions/create_table.sql",
+
+    "public/patches/fixflcol.sql",
 
     "public/indexes/apopentax.sql",
     "public/indexes/aropentax.sql",
@@ -81,6 +84,7 @@
     "public/functions/averagesalesprice.sql",
     "public/functions/avgcost.sql",
     "public/functions/balanceitemsite.sql",
+    "public/functions/bankreconciliation.sql",
     "public/functions/basecurrid.sql",
     "public/functions/bomcontains.sql",
     "public/functions/bomhistsequence.sql",
@@ -561,6 +565,7 @@
     "public/functions/haspriv.sql",
     "public/functions/hasprivonobject.sql",
     "public/functions/implodewo.sql",
+    "public/functions/importbankreccleared.sql",
     "public/functions/incdt.sql",
     "public/functions/indentedbom.sql",
     "public/functions/indentedwhereused.sql",
@@ -720,10 +725,12 @@
     "public/functions/purgepostedcounttags.sql",
     "public/functions/purgeshipments.sql",
     "public/functions/qtyallocated.sql",
+    "public/functions/qtyatlocation.sql",
     "public/functions/qtyatshipping.sql",
     "public/functions/qtyavailable.sql",
     "public/functions/qtyinshipment.sql",
     "public/functions/qtylocation.sql",
+    "public/functions/qtynetable.sql",
     "public/functions/qtyordered.sql",
     "public/functions/qtypr.sql",
     "public/functions/qtyreserved.sql",
@@ -740,6 +747,7 @@
     "public/functions/releaseinvcnumber.sql",
     "public/functions/releasenumber.sql",
     "public/functions/releaseponumber.sql",
+    "public/functions/releasepr.sql",
     "public/functions/releaseprnumber.sql",
     "public/functions/releasepurchaseorder.sql",
     "public/functions/releasequnumber.sql",
@@ -1012,17 +1020,21 @@
     "public/trigger_functions/wo.sql",
     "public/trigger_functions/womatl.sql",
 
+    "public/tables/bankaccnt.sql",
+    "public/tables/bankrecimport.sql",
     "public/tables/bankrecitem.sql",
     "public/tables/cashrcpt.sql",
     "public/tables/ccpay.sql",
     "public/tables/ccbank.sql",
+    "public/tables/checkhead.sql",
+    "public/tables/itemsite.sql",
+    "public/tables/location.sql",
     "public/tables/metric.sql",
     "public/tables/payco.sql",
     "public/tables/priv.sql",
     "public/tables/tax.sql",
     "public/tables/taxpay.sql",
 
-    "public/tables/location.sql",
     "public/views/address.sql",
     "public/views/apmemo.sql",
     "public/views/armemo.sql",
@@ -1630,6 +1642,8 @@
     "public/tables/report/items.xml",
 
     "public/patches/fixacl.sql",
-    "public/patches/populate_ccpay_card_type.sql"
+    "public/patches/populate_ccpay_card_type.sql",
+
+    "public/tables/setVersion.sql"
   ]
 }
