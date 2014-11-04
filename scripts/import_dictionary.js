@@ -18,7 +18,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     .option('-f, --filename [/path/to/filename]', 'Path to xTuple dictionary js file.')
     .parse(process.argv);
 
-  importDictionary(program.database, program.filename, function (err, res) {
+  importDictionary({database: program.database, filename: program.filename}, function (err, res) {
     if (err) {
       console.log("Import failed", err);
       return;
