@@ -116,15 +116,18 @@ var _ = require('underscore'),
           console.log("Not importing the dictionaries");
           return done();
         }
-        if (specs[0].extensions.length === 1 || specs[0].extensions[0].indexOf("foundation-database") >= 0) {
+        if (specs[0].extensions.length === 1 && specs[0].extensions[0].indexOf("foundation-database") >= 0) {
           // don't build dictionaries if we're just building the foundation
           console.log("Not importing the dictionaries");
           return done();
         }
-        var databases = _.map(specs, function (spec) {
-          return spec.database;
+        var dictionaryOptionsArray = _.map(specs, function (spec) {
+          return {
+            configPath: spec.configPath,
+            database: spec.database
+          };
         });
-        async.map(databases, buildDictionary.importAllDictionaries, done);
+        async.map(dictionaryOptionsArray, buildDictionary.importAllDictionaries, done);
       }
     ], function (err, results) {
       buildAllCallback(err, results && results[results.length - 2]);
@@ -135,12 +138,17 @@ var _ = require('underscore'),
     var buildSpecs = {},
       databases = [],
       extension,
+      configPath = options.config ?
+        path.resolve(process.cwd(), options.config) :
+        path.resolve(__dirname, "../../node-datasource/config.js"),
+      config = require(configPath),
       getRegisteredExtensions = function (database, callback) {
         var credsClone = JSON.parse(JSON.stringify(creds));
         credsClone.database = database;
         inspectDatabaseExtensions(credsClone, function (err, paths) {
           callback(null, {
             extensions: paths,
+            configPath: configPath,
             database: database,
             keepSql: options.keepSql,
             npmDev: options.npmDev,
@@ -150,14 +158,8 @@ var _ = require('underscore'),
             databaseOnly: options.databaseOnly
           });
         });
-      },
-      config;
+      };
 
-    if (options.config) {
-      config = require(path.resolve(process.cwd(), options.config));
-    } else {
-      config = require(path.resolve(__dirname, "../../node-datasource/config.js"));
-    }
     creds = config.databaseServer;
     creds.encryptionKeyFile = config.datasource.encryptionKeyFile;
     creds.host = creds.hostname; // adapt our lingo to node-postgres lingo
@@ -203,6 +205,7 @@ var _ = require('underscore'),
           [options.extension] :
           defaultExtensions;
       }
+      buildSpecs.configPath = configPath;
       buildSpecs.initialize = true;
       buildSpecs.keepSql = options.keepSql;
       buildSpecs.npmDev = options.npmDev;
@@ -223,6 +226,7 @@ var _ = require('underscore'),
       buildSpecs = _.map(databases, function (database) {
         var extension = path.resolve(process.cwd(), options.extension);
         return {
+          configPath: configPath,
           database: database,
           frozen: options.frozen,
           npmDev: options.npmDev,
