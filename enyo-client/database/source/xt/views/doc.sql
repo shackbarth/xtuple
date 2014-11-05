@@ -7,7 +7,7 @@ select xt.create_view('xt.doc', $$
     docass_target_type as target_type,  
     docass_target_id as target_id,  
     docass_purpose as purpose,  
-    obj_uuid  
+    ('0' || substring(obj_uuid::text from 2 for 40))::uuid as obj_uuid
    from docass  
    union all  
    -- (inverse)
@@ -22,7 +22,7 @@ select xt.create_view('xt.doc', $$
      when docass_purpose = 'C' then 'A'  
      else docass_purpose  
     end as purpose,  
-    obj_uuid  
+    ('1' || substring(obj_uuid::text from 2 for 40))::uuid as obj_uuid
    from public.docass; ;
 
 $$, false);
