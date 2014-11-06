@@ -7,6 +7,7 @@ install:
   - "wget xtuple.com/bootstrap -qO- | sudo bash"
   - "n 0.11.13"
   - "sudo apt-get install npm"
+  - "npm install -g npm@1.4"
   - "npm install -g xtuple-server"
   - "sudo xtuple-server install-dev --xt-name dev --xt-version v4.7.0 --xt-demo"
 
