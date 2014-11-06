@@ -164,7 +164,6 @@
     "xt/tables/sordtype.sql",
     "xt/javascript/init.sql",
     "xt/views/cohistinfo.sql",
-    "xt/views/doc.sql",
     "xt/views/cmheadtaxinfo.sql",
     "xt/views/cmitemtaxinfo.sql",
     "xt/views/cmiteminfo.sql",

@@ -331,8 +331,7 @@
         "toMany": {
           "type": "DocumentAssociation",
           "column": "prj_id",
-          "inverse": "source",
-          "sourceType": "J",
+          "documentType": "J",
           "isNested": true
         }
       },

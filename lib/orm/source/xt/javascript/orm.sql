@@ -656,19 +656,29 @@ select xt.install_js('XT','Orm','xtuple', $$
           if (ormp && ormp.toOne && ormp.toOne.isNested) {
             conditions = toMany.column ? '(' + type + '."' + inverse + '").id = ' +
               (toMany.isBase ? "t1" : tblAlias) + "." + toMany.column : 'true';
-          } else {
-            conditions = toMany.column ? type + '."' + inverse + '" = ' +
-              (toMany.isBase ? "t1" : tblAlias) + '.' + toMany.column : 'true';
-
+          } else if (toMany.documentType) {
             /*
               Document associations have a second key that must be joined on here,
               to avoid different business objects with the same ID picking up
               each other's document associations
+
+              Document associations should be shown both ways
             */
-            if (toMany.sourceType) {
-              conditions = conditions + " AND " + type + ".\"sourceType\" = '" +
-                toMany.sourceType + "'";
-            }
+            conditions = '(' + type + '."source" = ' +
+              (toMany.isBase ? "t1" : tblAlias) + '.' + toMany.column;
+
+            conditions = conditions + " AND " + type + ".\"sourceType\" = '" +
+              toMany.documentType + "')";
+
+            conditions = conditions + ' OR (' + type + '."target" = ' +
+              (toMany.isBase ? "t1" : tblAlias) + '.' + toMany.column;
+
+            conditions = conditions + " AND " + type + ".\"targetType\" = '" +
+              toMany.documentType + "')";
+
+          } else {
+            conditions = toMany.column ? type + '."' + inverse + '" = ' +
+              (toMany.isBase ? "t1" : tblAlias) + '.' + toMany.column : 'true';
           }
 
           /* build select */

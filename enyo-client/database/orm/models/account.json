@@ -177,8 +177,7 @@
         "toMany": {
           "type": "DocumentAssociation",
           "column": "crmacct_id",
-          "inverse": "source",
-          "sourceType": "CRMA",
+          "documentType": "CRMA",
           "isNested": true
         }
       },

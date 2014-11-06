@@ -3,7 +3,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "DocumentAssociation",
-    "table": "xt.doc",
+    "table": "public.docass",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Document Association Map",
     "privileges": {
@@ -19,7 +19,7 @@
         "name": "id",
         "attr": {
           "type": "Number",
-          "column": "id",
+          "column": "docass_id",
           "isPrimaryKey": true
         }
       },
@@ -35,35 +35,35 @@
         "name": "sourceType",
         "attr": {
           "type": "String",
-          "column": "source_type"
+          "column": "docass_source_type"
         }
       },
       {
         "name": "source",
         "attr": {
           "type": "Number",
-          "column": "source_id"
+          "column": "docass_source_id"
         }
       },
       {
         "name": "targetType",
         "attr": {
           "type": "String",
-          "column": "target_type"
+          "column": "docass_target_type"
         }
       },
       {
         "name": "target",
         "attr": {
           "type": "Number",
-          "column": "target_id"
+          "column": "docass_target_id"
         }
       },
       {
         "name": "purpose",
         "attr": {
           "type": "String",
-          "column": "purpose"
+          "column": "docass_purpose"
         }
       }
     ],

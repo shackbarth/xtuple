@@ -518,8 +518,7 @@
         "toMany": {
           "type": "DocumentAssociation",
           "column": "quhead_id",
-          "inverse": "source",
-          "sourceType": "Qquhead_id",
+          "documentType": "Qquhead_id",
           "isNested": true
         }
       },

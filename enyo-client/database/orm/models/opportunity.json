@@ -194,8 +194,7 @@
         "toMany": {
           "type": "DocumentAssociation",
           "column": "ophead_id",
-          "inverse": "source",
-          "sourceType": "OPP",
+          "documentType": "OPP",
           "isNested": true
         }
       },

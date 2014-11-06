@@ -171,8 +171,7 @@
         "toMany": {
           "type": "DocumentAssociation",
           "column": "todoitem_id",
-          "inverse": "source",
-          "sourceType": "TODO",
+          "documentType": "TODO",
           "isNested": true
         }
       },

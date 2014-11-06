@@ -306,8 +306,7 @@
         "toMany": {
           "type": "DocumentAssociation",
           "column": "item_id",
-          "inverse": "source",
-          "sourceType": "I",
+          "documentType": "I",
           "isNested": true
         }
       },

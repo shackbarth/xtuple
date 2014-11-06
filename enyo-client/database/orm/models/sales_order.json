@@ -622,8 +622,7 @@
         "toMany": {
           "type": "DocumentAssociation",
           "column": "cohead_id",
-          "inverse": "source",
-          "sourceType": "S",
+          "documentType": "S",
           "isNested": true
         }
       },

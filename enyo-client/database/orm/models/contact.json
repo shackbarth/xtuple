@@ -210,8 +210,7 @@
         "toMany": {
           "type": "DocumentAssociation",
           "column": "cntct_id",
-          "inverse": "source",
-          "sourceType": "T",
+          "documentType": "T",
           "isNested": true
         }
       },

@@ -220,8 +220,7 @@
         "toMany": {
           "type": "DocumentAssociation",
           "column": "incdt_id",
-          "inverse": "source",
-          "sourceType": "INCDT",
+          "documentType": "INCDT",
           "isNested": true
         }
       },

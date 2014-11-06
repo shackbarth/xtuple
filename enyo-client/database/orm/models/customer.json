@@ -317,8 +317,7 @@
         "toMany": {
           "type": "DocumentAssociation",
           "column": "cust_id",
-          "inverse": "source",
-          "sourceType": "C",
+          "documentType": "C",
           "isNested": true
         }
       },
