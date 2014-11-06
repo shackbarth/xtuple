@@ -7,9 +7,9 @@ install:
   - "wget xtuple.com/bootstrap -qO- | sudo bash"
   - "which node"
   - "/usr/local/bin/node -v"
-  - "n 0.11.13"
+  - "node -v"
   - "/usr/local/bin/npm install -g xtuple-server"
-  - "sudo xtuple-server install-dev --xt-name dev --xt-version v4.7.0 --xt-demo"
+  - "sudo xtuple-server install-dev --xt-version v4.7.0 --xt-demo"
 
 before_script:
   - "n 0.10.32"
