@@ -4,6 +4,11 @@ node_js:
 
 install:
   - "bash scripts/install_xtuple.sh -ipn"
+  - "ls -l"
+  - "npm install"
+  - "ls -l"
+  - "bower install"
+  - "ls -l"
 
 before_script:
   - "cd node-datasource"
