@@ -4,6 +4,7 @@ node_js:
 
 install:
   - "wget xtuple.com/bootstrap -qO- | sudo bash"
+  - "npm -v"
   - "npm install"
   - "npm install -g xtuple-server"
   - "sudo xtuple-server install-dev --xt-name dev --xt-version v4.7.0 --xt-demo"
