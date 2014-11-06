@@ -1,6 +1,4 @@
 language: c
-node_js:
-  - 0.10.32
 
 install:
   - npm install
@@ -16,7 +14,7 @@ before_script:
   - sleep 10
 
 script:
-  - sudo cat test/lib/sample_login_data.js | sed "s/org: ''/org: 'dev'/" > test/lib/login_data.js
+  - sudo cat test/lib/sample_login_data.js | sed "s/org: \'\'/org: \'dev\'/" > test/lib/login_data.js
   - /usr/local/bin/npm run-script test-datasource
   - /usr/local/bin/npm run-script test
   - /usr/local/bin/npm run-script jshint
