@@ -3,10 +3,12 @@ language: c
 install:
   - npm install
   - wget xtuple.com/bootstrap -qO- | sudo bash
-  - /usr/local/bin/npm install -g xtuple-server
+  - npm install -g xtuple-server
   - sudo xtuple-server install-dev --xt-version v4.7.0 --xt-demo
   - ls -l node-datasource
   - ls -l test/lib
+  - sudo tail node-datasource/config.js
+  - sudo tail test/lib/login_data.js
 
 before_script:
   - n 0.10.32
@@ -14,6 +16,6 @@ before_script:
   - sleep 10
 
 script:
-  - /usr/local/bin/npm run-script test-datasource
-  - /usr/local/bin/npm run-script test
-  - /usr/local/bin/npm run-script jshint
+  - npm run-script test-datasource
+  - npm run-script test
+  - npm run-script jshint
