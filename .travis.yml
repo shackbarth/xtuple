@@ -3,13 +3,14 @@ node_js:
   - "0.10"
 
 install:
-  - "bash scripts/install_xtuple.sh -ipn"
+  - "wget xtuple.com/bootstrap -qO- | sudo bash"
+  - "npm install"
+  - "npm install -g xtuple-server"
+  - "sudo xtuple-server install-dev --xt-name dev --xt-version v4.7.0 --xt-demo"
 
 before_script:
-  - "cd node-datasource"
-  - "node main.js &"
+  - "npm start &"
   - "sleep 10"
-  - "cd .."
 
 script:
   - "npm run-script test-datasource"
