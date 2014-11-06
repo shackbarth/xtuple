@@ -5,6 +5,7 @@ node_js:
 install:
   - "npm install"
   - "wget xtuple.com/bootstrap -qO- | sudo bash"
+  - "node -v"
   - "n 0.11.13"
   - "/usr/local/bin/npm install -g xtuple-server"
   - "sudo xtuple-server install-dev --xt-name dev --xt-version v4.7.0 --xt-demo"
