@@ -4,6 +4,8 @@ CREATE OR REPLACE FUNCTION deleteInvoice(INTEGER) RETURNS INTEGER AS $$
 DECLARE
   pInvcheadid ALIAS FOR $1;
   _cobmiscid INTEGER := -1;
+  _cobill RECORD;
+  _cobillid INTEGER := -1;
 
 BEGIN
   UPDATE shipitem SET shipitem_invoiced=FALSE, shipitem_invcitem_id=NULL
@@ -34,11 +36,25 @@ BEGIN
                                 WHERE (invcitem_invchead_id=pInvcheadid))))
   LIMIT 1;
   IF (FOUND) THEN
-    UPDATE cobill SET cobill_invcnum=NULL, cobill_invcitem_id=NULL, cobill_cobmisc_id=_cobmiscid
-    FROM invcitem
-    WHERE ((cobill_invcitem_id=invcitem_id)
-      AND  (invcitem_invchead_id=pInvcheadid));
-
+    -- Check for uposted cobill for the same S/O Item
+    -- If found then consolidate
+    FOR _cobill IN SELECT cobill.*
+                   FROM invcitem JOIN cobill ON (cobill_invcitem_id=invcitem_id)
+                   WHERE (invcitem_invchead_id=pInvcheadid) LOOP
+      SELECT cobill_id INTO _cobillid
+      FROM cobill
+      WHERE (cobill_cobmisc_id=_cobmiscid)
+        AND (cobill_coitem_id=_cobill.cobill_coitem_id);
+      IF (FOUND) THEN
+        UPDATE cobill SET cobill_qty = cobill_qty + _cobill.cobill_qty
+        WHERE (cobill_id=_cobillid);
+        DELETE FROM cobill
+        WHERE (cobill_id=_cobill.cobill_id);
+      ELSE
+        UPDATE cobill SET cobill_invcnum=NULL, cobill_invcitem_id=NULL, cobill_cobmisc_id=_cobmiscid
+        WHERE (cobill_id=_cobill.cobill_id);
+      END IF;
+    END LOOP;
     DELETE FROM cobmisc
     WHERE (cobmisc_invchead_id=pInvcheadid);
   ELSE
