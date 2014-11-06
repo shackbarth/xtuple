@@ -3,10 +3,11 @@ node_js:
   - "0.10.32"
 
 install:
-  - "cat test/lib/sample_login_data.js | sed \"s/org: 'dev'/org: '$demo_dev'/\" > test/lib/login_data.js"
+  - "cat test/lib/sample_login_data.js | sed \"s/org: ''/org: 'dev'/\" > test/lib/login_data.js"
   - "tail test/lib/login_data.js"
   - "npm install"
   - "wget xtuple.com/bootstrap -qO- | sudo bash"
+  - "n 0.11.13"
   - "npm install -g xtuple-server"
   - "sudo xtuple-server install-dev --xt-name dev --xt-version v4.7.0 --xt-demo"
 
