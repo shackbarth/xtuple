@@ -1,22 +1,22 @@
-language: node_js
+language: c
 node_js:
-  - "0.10.32"
+  - 0.10.32
 
 install:
-  - "npm install"
-  - "wget xtuple.com/bootstrap -qO- | sudo bash"
-  - "/usr/local/bin/npm install -g xtuple-server"
-  - "sudo xtuple-server install-dev --xt-version v4.7.0 --xt-demo"
-  - "ls -l node-datasource"
-  - "ls -l test/lib"
+  - npm install
+  - wget xtuple.com/bootstrap -qO- | sudo bash
+  - /usr/local/bin/npm install -g xtuple-server
+  - sudo xtuple-server install-dev --xt-version v4.7.0 --xt-demo
+  - ls -l node-datasource
+  - ls -l test/lib
 
 before_script:
-  - "n 0.10.32"
-  - "/usr/local/bin/npm start &"
-  - "sleep 10"
+  - n 0.10.32
+  - /usr/local/bin/npm start &
+  - sleep 10
 
 script:
-  - "sudo cat test/lib/sample_login_data.js | sed \"s/org: ''/org: 'dev'/\" > test/lib/login_data.js"
-  - "/usr/local/bin/npm run-script test-datasource"
-  - "/usr/local/bin/npm run-script test"
-  - "/usr/local/bin/npm run-script jshint"
+  - sudo cat test/lib/sample_login_data.js | sed "s/org: ''/org: 'dev'/" > test/lib/login_data.js
+  - /usr/local/bin/npm run-script test-datasource
+  - /usr/local/bin/npm run-script test
+  - /usr/local/bin/npm run-script jshint
