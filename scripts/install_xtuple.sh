@@ -165,6 +165,7 @@ install_packages() {
 
   log "installing npm modules..."
   npm install --unsafe-perm 2>&1 | tee -a $LOG_FILE
+  bower install
 }
 
 # Use only if running from a debian package install for the first time
