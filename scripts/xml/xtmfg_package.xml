@@ -11,7 +11,7 @@
   </prerequisite>
 
   <prerequisite type="query"
-		name ="Checking xtmfg package" >
+    name ="Checking xtmfg package" >
     <query>SELECT TRUE FROM pkghead WHERE pkghead_name = 'xtmfg';</query>
     <message>This package must be applied to an xTuple ERP database that already contains the xtmfg package.</message>
   </prerequisite>

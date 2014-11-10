@@ -1635,6 +1635,8 @@
     "public/tables/report/items.xml",
 
     "public/patches/fixacl.sql",
-    "public/patches/populate_ccpay_card_type.sql"
+    "public/patches/populate_ccpay_card_type.sql",
+
+    "public/tables/setVersion.sql"
   ]
 }
