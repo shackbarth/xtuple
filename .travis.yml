@@ -9,6 +9,7 @@ install:
 
 before_script:
   - n 0.10.32
+  - ls -l /var/log/xtuple
   - /usr/local/bin/npm start &
   - sleep 10
 
