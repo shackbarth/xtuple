@@ -23,7 +23,6 @@ var buildAll = require('../../scripts/lib/build_all'),
       buildAll.build({
         database: databaseName,
         initialize: true,
-        populateData: true,
         source: path.join(__dirname, "../../foundation-database/postbooks_demo_data.sql")
       }, function (err, res) {
         assert.isNull(err);
