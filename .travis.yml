@@ -5,11 +5,9 @@ install:
   - wget xtuple.com/bootstrap -qO- | sudo bash
   - /usr/local/bin/npm install -g xtuple-server
   - sudo xtuple-server install-dev --xt-version v4.7.0 --xt-demo
-  - sudo tail -n 1000 node-datasource/config.js
 
 before_script:
   - n 0.10.32
-  - ls -l /var/log/xtuple
   - /usr/local/bin/npm start &
   - sleep 10
 
@@ -17,3 +15,7 @@ script:
   - /usr/local/bin/npm run-script test-datasource
   - /usr/local/bin/npm run-script test
   - /usr/local/bin/npm run-script jshint
+
+after_failure:
+  - ls -l /var/log/xtuple
+  - sudo tail -n 100000 /var/log/xtuple/travis-v470-dev-forever.log
