@@ -5,8 +5,7 @@ install:
   - wget xtuple.com/bootstrap -qO- | sudo bash
   - /usr/local/bin/npm install -g xtuple-server
   - sudo xtuple-server install-dev --xt-version v4.7.0 --xt-demo
-  - ls -l node-datasource
-  - ls -l test/lib
+  - sudo tail -n 1000 node-datasource/config.js
 
 before_script:
   - n 0.10.32
