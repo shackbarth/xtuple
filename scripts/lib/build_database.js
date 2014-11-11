@@ -214,18 +214,21 @@ var  async = require('async'),
               creds.encryptionKeyFile), "utf8");
 
             _.each(spec.extensions, function (ext) {
-              if (!fs.existsSync(path.resolve(ext, "database/source/populate_data.js"))) {
-                // many extensions will not have a populate_data.js file
-                return;
+              if (fs.existsSync(path.resolve(ext, "database/source/populate_data.js"))) {
+                // look for a populate_data.js file
+                var populatedData = require(path.resolve(ext, "database/source/populate_data"));
+                _.each(populatedData, function (query) {
+                  var verb = query.patches ? "patch" : "post";
+                  query.encryptionKey = encryptionKey;
+                  query.username = creds.username;
+                  populateSql += "select xt." + verb + "(\'" + JSON.stringify(query) + "\');";
+                });
+              }
+              if (fs.existsSync(path.resolve(ext, "database/source/populate_data.sql"))) {
+                // look for a populate_data.sql file
+                populateSql += fs.readFileSync(path.resolve(ext, "database/source/populate_data.sql"));
               }
 
-              var populatedData = require(path.resolve(ext, "database/source/populate_data"));
-              _.each(populatedData, function (query) {
-                var verb = query.patches ? "patch" : "post";
-                query.encryptionKey = encryptionKey;
-                query.username = creds.username;
-                populateSql += "select xt." + verb + "(\'" + JSON.stringify(query) + "\');";
-              });
             });
             populateSql += "DO $$ XT.disableLocks = undefined; $$ language plv8;";
             dataSource.query(populateSql, credsClone, databaseCallback);
