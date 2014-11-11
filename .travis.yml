@@ -20,4 +20,4 @@ after_failure:
   - sudo tail -n 10000 thelog.txt
   - sudo ls -l /var/log
   - sudo ls -l /var/log/postgresql
-  - sudo tail -n 10000 /var/log/postgresql/postgresql-9.3-travis-v470-dev.log
+  - sudo tail -n 10000 /var/log/postgresql/postgresql-9.3-travis-4_8_x-dev.log
