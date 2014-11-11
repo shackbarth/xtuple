@@ -236,6 +236,31 @@ white:true*/
     },
 
     /**
+    Returns sales order hold type as a localized string.
+
+    @returns {String}
+    */
+    formatHoldType: function () {
+      var K = XM.SalesOrderBase,
+        holdType = this.get('holdType');
+
+      switch (holdType)
+      {
+      // Lists don't need to say None. Just return null to avoid need for enyo component formatter.
+      case K.NONE_HOLD_TYPE:
+        return null;
+      case K.CREDIT_HOLD_TYPE:
+        return '_creditHoldType'.loc();
+      case K.PACKING_HOLD_TYPE:
+        return '_packingHoldType'.loc();
+      case K.RETURN_HOLD_TYPE:
+        return '_returnHoldType'.loc();
+      case K.SHIPPING_HOLD_TYPE:
+        return '_shippingHoldType'.loc();
+      }
+    },
+
+    /**
     Returns quote or sales order status as a localized string.
 
     @returns {String}
