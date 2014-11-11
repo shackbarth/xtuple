@@ -17,5 +17,7 @@ script:
   - /usr/local/bin/npm run-script jshint
 
 after_failure:
+  - sudo ls -l /var
+  - sudo ls -l /var/log
   - sudo ls -l /var/log/xtuple
   - sudo tail -n 100000 /var/log/xtuple/travis-v470-dev-forever.log
