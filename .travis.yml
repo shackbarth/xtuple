@@ -8,7 +8,7 @@ install:
 
 before_script:
   - n 0.10.32
-  - /usr/local/bin/npm start &
+  - /usr/local/bin/npm start > thelog.txt &
   - sleep 10
 
 script:
@@ -17,6 +17,7 @@ script:
   - /usr/local/bin/npm run-script jshint
 
 after_failure:
+  - sudo tail -n 100000 thelog.txt
   - sudo ls -l /var
   - sudo ls -l /var/log
   - sudo ls -l /var/log/xtuple
