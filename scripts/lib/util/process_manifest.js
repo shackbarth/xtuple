@@ -29,7 +29,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     // infer dependencies from manifest.js -> dependencies
     var isPackageJson = !!options.engines; // XXX this is a pretty rough proxy
     var dependencies = (isPackageJson ? options.peerDependencies : options.dependencies) || [];
-    _.each(dependencies, function (dependency) {
+    _.each(dependencies, function (dependency, key) {
+      if (key === "xtuple") {
+        // xtuple itself is not really a dependency
+        return;
+      }
       var dependencySql = "select xt.register_extension_dependency('%@', '%@');\n"
           .f(options.name, dependency),
         grantDependToAdmin = "select xt.grant_role_ext('ADMIN', '%@');\n"
