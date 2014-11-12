@@ -21,3 +21,4 @@ after_failure:
   - sudo ls -l /var/log
   - sudo ls -l /var/log/postgresql
   - sudo tail -n 10000 /var/log/postgresql/postgresql-9.3-travis-4_8_x-dev.log
+  - sudo grep -r oom /var/log
