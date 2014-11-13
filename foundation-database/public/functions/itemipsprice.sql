@@ -86,7 +86,7 @@ BEGIN
         ipsprice, ipshead, ipsass, sale
   WHERE ( (ipsprice_ipshead_id=ipshead_id)
     AND   (sale_ipshead_id=ipsprice_ipshead_id)
-    AND   (_asof BETWEEN sale_startdate AND sale_enddate)
+    AND   (_asof BETWEEN sale_startdate AND (sale_enddate - 1))
     AND   (ipsprice_qtybreak <= _qty)
     AND   (ipsass_ipshead_id=ipshead_id)
     AND ( (ipsass_shipto_id=_shipto.shipto_id)
@@ -135,7 +135,7 @@ BEGIN
     FROM ipsass JOIN ipshead ON (ipshead_id=ipsass_ipshead_id)
                 JOIN ipsiteminfo ON (ipsitem_ipshead_id=ipshead_id)
     WHERE ((ipsitem_item_id=_item.item_id) OR (ipsitem_prodcat_id=_item.item_prodcat_id))
-      AND (_asof BETWEEN ipshead_effective AND ipshead_expires)
+      AND (_asof BETWEEN ipshead_effective AND (ipshead_expires - 1))
       AND ((ipsitem_warehous_id=pSiteid) OR (ipsitem_warehous_id IS NULL))
       AND ( (ipsass_shipto_id=_shipto.shipto_id)
        OR   ((COALESCE(LENGTH(ipsass_shipto_pattern), 0) > 0) AND (_shipto.shipto_num ~ ipsass_shipto_pattern))
