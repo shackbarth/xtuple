@@ -41,6 +41,10 @@ make your mark, we're keeping a list of issues that are
 [fair game](https://github.com/xtuple/xtuple/labels/fair%20game)
 to pick off and provide a convenient, well-documented starting point into our project.
 
+## What's Here?
+
+[This repository](http://github.com/xtuple/xtuple) contains the source code for the _xTuple ERP Web app_, an [HTML5 node.js app](http://github.com/xtuple/xtuple/wiki/Overview).
+
 ### Installing this project
 If you are looking to install xTuple for demonstration or use, please follow the instructions on the [xTuple Server wiki](https://github.com/xtuple/xtuple-server/wiki).
 The best way to start coding on our stack is to use our
