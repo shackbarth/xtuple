@@ -39,20 +39,7 @@ file a github issue.
 If you want to be a contributor and are looking for a place to
 make your mark, we're keeping a list of issues that are 
 [fair game](https://github.com/xtuple/xtuple/labels/fair%20game)
-to pick off and provide
-a convenient, well-documented starting point into our project.
-
-In the month of August, we will be running haxTuple 2014. As in previous incarnations, 
-we will open up our bug-shooting derby for the Qt client to our community, with prizes 
-for the most effective bugsquashers! In this year's event, we will also introduce our 
-new technologies by opening up our webapp for haxxing. Those who write the best 
-JavaScript extensions or REST clients will get prizes. More details 
-[here](https://github.com/xtuple/xtuple/wiki/haxTuple-2014).
-
-Also, don't miss the xTuple event of the year! 
-[xTupleCon 2014](http://www.xtuple.com/xtuple-conference-2014)
-is going to be held October 13-18 in Norfolk, VA. With six days of events and a kickoff
-speech by Steve Wozniak, it promises to the be the biggest xTupleCon yet.
+to pick off and provide a convenient, well-documented starting point into our project.
 
 ### Installing this project
 If you are looking to install xTuple for demonstration or use, please follow the instructions on the [xTuple Server wiki](https://github.com/xtuple/xtuple-server/wiki).
