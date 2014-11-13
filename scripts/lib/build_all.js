@@ -152,7 +152,8 @@ var _ = require('underscore'),
             database: database,
             keepSql: options.keepSql,
             npmDev: options.npmDev,
-            populateData: options.populateData,
+            populateData: options.populateData ||
+              (options.source && options.source.indexOf("postbooks_demo_data.sql") >= 0),
             wipeViews: options.wipeViews,
             clientOnly: options.clientOnly,
             databaseOnly: options.databaseOnly
@@ -210,6 +211,8 @@ var _ = require('underscore'),
       buildSpecs.keepSql = options.keepSql;
       buildSpecs.npmDev = options.npmDev;
       buildSpecs.populateData = options.populateData;
+      buildSpecs.populateData = options.populateData ||
+        (options.source && options.source.indexOf("postbooks_demo_data.sql") >= 0);
       buildSpecs.wipeViews = options.wipeViews;
       buildSpecs.clientOnly = options.clientOnly;
       buildSpecs.databaseOnly = options.databaseOnly;
@@ -231,7 +234,8 @@ var _ = require('underscore'),
           frozen: options.frozen,
           npmDev: options.npmDev,
           keepSql: options.keepSql,
-          populateData: options.populateData,
+          populateData: options.populateData ||
+            (options.source && options.source.indexOf("postbooks_demo_data.sql") >= 0),
           wipeViews: options.wipeViews,
           clientOnly: options.clientOnly,
           databaseOnly: options.databaseOnly,
