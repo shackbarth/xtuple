@@ -1,10 +1,11 @@
 language: c
 
 install:
+  - git checkout v4.7.0
   - npm install
   - wget xtuple.com/bootstrap -qO- | sudo bash
   - /usr/local/bin/npm install -g xtuple-server
-  - sudo xtuple-server install-dev --xt-version 4_8_x --xt-demo
+  - sudo xtuple-server install-dev --xt-version v4.7.0 --xt-demo
 
 before_script:
   - n 0.10.32
