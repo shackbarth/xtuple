@@ -1,6 +1,7 @@
 language: c
 
 install:
+  - git tag
   - git checkout v4.7.0
   - npm install
   - wget xtuple.com/bootstrap -qO- | sudo bash
