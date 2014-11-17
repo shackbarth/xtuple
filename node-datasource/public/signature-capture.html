@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>xTuple</title>
+    <link rel="shortcut icon" href="/assets/favicon.ico" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf8"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <link href="signature-pad.css" rel="stylesheet"/>
+  </head>
+  <body class="enyo-unselectable">
+
+    <div id="signature-pad" class="m-signature-pad">
+      <div class="m-signature-pad--body">
+        <canvas></canvas>
+      </div>
+      <div class="m-signature-pad--footer">
+        <div class="description">Sign above</div>
+        <button class="button clear" data-action="clear">Clear</button>
+        <button class="button save" data-action="save">Save</button>
+      </div>
+    </div>
+
+    <script src="/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="/bower_components/signature_pad/signature_pad.min.js"></script>
+    <script src="/bower_components/async/lib/async.js"></script>
+    <script src="canvas-toBlob.js"></script>
+    <script src="signature-capture.js"></script>
+    <script src="signature-capture-save.js"></script>
+  </body>
+</html>
+

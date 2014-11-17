@@ -311,6 +311,7 @@ var conditionalExpressSession = function (req, res, next) {
   // The 'assets' folder and login page are sessionless.
   if ((/^api/i).test(req.path.split("/")[2]) ||
       (/^\/assets/i).test(req.path) ||
+      (/^\/public/i).test(req.path) ||
       (/^\/stylesheets/i).test(req.path) ||
       (/^\/bower_components/i).test(req.path) ||
       req.path === '/' ||
@@ -416,6 +417,7 @@ var that = this;
 
 /* Static assets */
 app.use(express.favicon(__dirname + '/views/assets/favicon.ico'));
+app.use("/public", express.static('public', { maxAge: 86400000 }));
 app.use('/assets', express.static('views/assets', { maxAge: 86400000 }));
 app.use('/stylesheets', express.static('views/stylesheets', { maxAge: 86400000 }));
 app.use('/bower_components', express.static('../bower_components', { maxAge: 86400000 }));
