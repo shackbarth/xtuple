@@ -375,6 +375,38 @@ var _ = require("underscore"),
       });
     });
 
+    it('should pick up document associations', function (done) {
+      var sql = 'select xt.js_init();select xt.get($${"nameSpace":"XM","type":"Project","id":"GREENLEAF","encoding":"rjson","username":"admin","encryptionKey":"thisisanycontent"}$$);';
+
+      // This project has an ID of 4. There's an incident with the same ID with a document association.
+      // We don't want to pick it up in this query.
+      datasource.query(sql, creds, function (err, res) {
+        var results;
+        assert.isNull(err);
+        assert.equal(1, res.rowCount, JSON.stringify(res.rows));
+        results = JSON.parse(res.rows[1].get);
+        assert.equal(results.data.documents.length, 1);
+        done();
+      });
+    });
+
+    it('should not pick up document associations from business objects with the same id', function (done) {
+      var sql = 'select xt.js_init();select xt.get($${"nameSpace":"XM","type":"Project","id":"TT2007S","encoding":"rjson","username":"admin","encryptionKey":"thisisanycontent"}$$);';
+
+      // This project has an ID of 4. There's an incident with the same ID with a document association.
+      // We don't want to pick it up in this query.
+      datasource.query(sql, creds, function (err, res) {
+        var results;
+        assert.isNull(err);
+        assert.equal(1, res.rowCount, JSON.stringify(res.rows));
+        results = JSON.parse(res.rows[1].get);
+        assert.equal(results.data.documents.length, 0);
+        done();
+      });
+    });
+
+
+
 
 // incident plus
 //select xt.js_init(true);select xt.get($${"nameSpace":"XM","type":"IncidentListItem","query":{"orderBy":[{"attribute":"priorityOrder"},{"attribute":"updated","descending":true},{"attribute":"number","descending":true,"numeric":true}],"rowOffset":0,"rowLimit":50,"parameters":[{"attribute":["owner.username","assignedTo.username"],"operator":"","isCharacteristic":false,"value":"admin"},{"attribute":"project","operator":"","isCharacteristic":false,"value":"GREENLEAF"},{"attribute":"foundIn","operator":"","isCharacteristic":false,"value":"d0e6c507-eac5-461c-f63e-91e352a3ffb1"}]},"username":"admin","encryptionKey":"this is any content"}$$)

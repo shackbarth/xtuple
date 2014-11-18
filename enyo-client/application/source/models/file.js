@@ -36,6 +36,11 @@ white:true*/
 
   });
 
+  XT.documentAssociations.FILE = {
+    model: "XM.FileRelation",
+    label: "_file".loc()
+  };
+
   // ..........................................................
   // COLLECTIONS
   //

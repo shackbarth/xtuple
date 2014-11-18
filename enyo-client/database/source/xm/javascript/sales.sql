@@ -63,6 +63,10 @@ select xt.install_js('XM','Sales','xtuple', $$
 
   XM.Sales.isDispatchable = true;
 
+  XT.documentAssociations.C = "CustomerRelation";
+  XT.documentAssociations.Qquhead_id = "QuoteRelation"; /* That's really what it's called */
+  XT.documentAssociations.S = "SalesOrderRelation";
+
   /**
    Returns an array of freight detail records based on input
 

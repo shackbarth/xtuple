@@ -59,62 +59,6 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
-  */
-  XM.QuoteAccount = XM.Model.extend({
-    /** @scope XM.QuoteAccount.prototype */
-
-    recordType: 'XM.QuoteAccount',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.QuoteContact = XM.Model.extend({
-    /** @scope XM.QuoteContact.prototype */
-
-    recordType: 'XM.QuoteContact',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.QuoteFile = XM.Model.extend({
-    /** @scope XM.QuoteFile.prototype */
-
-    recordType: 'XM.QuoteFile',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.QuoteItem = XM.Model.extend({
-    /** @scope XM.QuoteItem.prototype */
-
-    recordType: 'XM.QuoteItem',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
     @extends XM.CharacteristicAssignment
   */
   XM.QuoteLineCharacteristic = XM.CharacteristicAssignment.extend({
@@ -175,84 +119,10 @@ white:true*/
 
   });
 
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.QuoteUrl = XM.Model.extend({
-    /** @scope XM.QuoteUrl.prototype */
-
-    recordType: 'XM.QuoteUrl',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.QuoteProject = XM.Model.extend({
-     /** @scope XM.QuoteProject.prototype */
-
-    recordType: 'XM.QuoteProject',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.QuoteIncident = XM.Model.extend({
-     /** @scope XM.QuoteIncident.prototype */
-
-    recordType: 'XM.QuoteIncident',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.QuoteOpportunity = XM.Model.extend({
-    /** @scope XM.QuoteOpportunity.prototype */
-
-    recordType: 'XM.QuoteOpportunity',
-
-    isDocumentAssignment: true
-
-  });
-
-  /*
-    @extends XM.Model
-  */
-  XM.QuoteCustomer = XM.Model.extend({
-    /** @scope XM.QuoteCustomer.prototype */
-
-    recordType: 'XM.QuoteCustomer',
-
-    isDocumentAssignment: true
-
-  });
-
-  /*
-    @extends XM.Model
-  */
-  XM.QuoteToDo = XM.Model.extend({
-
-    recordType: 'XM.QuoteToDo',
-
-    isDocumentAssignment: true
-
-  });
+  XT.documentAssociations.Qquhead_id = { /* That's really what it's called */
+    model: "XM.QuoteRelation",
+    label: "_quote".loc()
+  };
 
   // ..........................................................
   // COLLECTIONS

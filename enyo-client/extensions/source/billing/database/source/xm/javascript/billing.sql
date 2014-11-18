@@ -43,6 +43,8 @@ select xt.install_js('XM','Billing','xtuple', $$
 
   XM.Billing.isDispatchable = true;
 
+  XT.documentAssociations.INV = "InvoiceRelation";
+
   /**
     Return Billing configuration settings.
 

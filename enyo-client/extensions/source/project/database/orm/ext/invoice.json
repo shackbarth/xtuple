@@ -19,15 +19,6 @@
           "type": "ProjectRelation",
           "column": "invchead_prj_id"
         }
-      },
-      {
-        "name": "projects",
-        "toMany": {
-          "isNested": true,
-          "type": "InvoiceProject",
-          "column": "invchead_id",
-          "inverse": "source"
-        }
       }
     ],
     "sequence": 0,

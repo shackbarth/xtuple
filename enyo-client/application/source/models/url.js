@@ -42,6 +42,11 @@ white:true*/
 
   });
 
+  XT.documentAssociations.URL = {
+    model: "XM.Url",
+    label: "_url".loc()
+  };
+
   // ..........................................................
   // COLLECTIONS
   //
