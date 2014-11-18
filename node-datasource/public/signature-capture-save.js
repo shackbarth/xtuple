@@ -1,3 +1,21 @@
+//
+// This is hacked-together, but is a decent proof of concept of browser-side use of the
+// xTuple REST API using little more than jQuery. It is just a single widget that captures
+// a signature and attaches it to the sales order whose id is in the URL.
+//
+// Navigate to https://hostname/public/signature-capture.html?org=demo_dev&id=50218
+//
+// note that public is not the name of the database. That's the org parameter.
+// Public is probably a terrible name for hosting files like this, because it might
+// be a database name for a customer.
+//
+// Overall the organization of these files leave a lot to be desired. It'd be straightforward
+// to put it all into an extension following the example of xtuple-morpheus.
+//
+
+
+
+
 var saveSignature;
 
 (function () {
