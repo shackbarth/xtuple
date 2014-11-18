@@ -1,3 +1,7 @@
+//
+// js, html, and css taken mostly from the reference example
+// https://github.com/szimek/signature_pad/tree/gh-pages
+//
 (function () {
   var wrapper = document.getElementById("signature-pad"),
     clearButton = wrapper.querySelector("[data-action=clear]"),
@@ -25,11 +29,17 @@
   });
 
   saveButton.addEventListener("click", function (event) {
+    var callback = function (blob) {
+      saveSignature(blob, function () {
+        signaturePad.clear();
+        clearButton.disabled = true;
+        saveButton.disabled = true;
+      });
+    };
     if (signaturePad.isEmpty()) {
       alert("Please provide signature first.");
     } else {
-      //window.open(signaturePad.toDataURL());
-      saveSignature();
+      signaturePad._canvas.toBlob(callback, "png", true);
     }
   });
 }());
