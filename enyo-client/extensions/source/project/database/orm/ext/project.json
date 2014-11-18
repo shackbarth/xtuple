@@ -64,15 +64,6 @@
     ],
     "properties": [
       {
-        "name": "projects",
-        "toMany": {
-          "isNested": true,
-          "type": "AccountProject",
-          "column": "crmacct_id",
-          "inverse": "source"
-        }
-      },
-      {
         "name": "projectRelations",
         "toMany": {
           "type": "ProjectRelation",
@@ -98,15 +89,6 @@
       }
     ],
     "properties": [
-      {
-        "name": "projects",
-        "toMany": {
-          "isNested": true,
-          "type": "ContactProject",
-          "column": "cntct_id",
-          "inverse": "source"
-        }
-      },
       {
         "name": "projectRelations",
         "toMany": {
@@ -140,15 +122,6 @@
           "type": "ProjectRelation",
           "column": "incdt_prj_id"
         }
-      },
-      {
-        "name": "projects",
-        "toMany": {
-          "isNested": true,
-          "type": "IncidentProject",
-          "column": "incdt_id",
-          "inverse": "source"
-        }
       }
     ],
     "sequence": 0,
@@ -173,60 +146,6 @@
         "toOne": {
           "type": "ProjectRelation",
           "column": "incdt_prj_id"
-        }
-      }
-    ],
-    "sequence": 0,
-    "isSystem": true
-  },
-  {
-    "context": "project",
-    "nameSpace": "XM",
-    "type": "Opportunity",
-    "table": "ophead",
-    "isExtension": true,
-    "comment": "Extended by Project",
-    "relations": [
-      {
-        "column": "ophead_id",
-        "inverse": "id"
-      }
-    ],
-    "properties": [
-      {
-        "name": "projects",
-        "toMany": {
-          "isNested": true,
-          "type": "OpportunityProject",
-          "column": "ophead_id",
-          "inverse": "source"
-        }
-      }
-    ],
-    "sequence": 0,
-    "isSystem": true
-  },
-  {
-    "context": "project",
-    "nameSpace": "XM",
-    "type": "ToDo",
-    "table": "todoitem",
-    "isExtension": true,
-    "comment": "Extended by Project",
-    "relations": [
-      {
-        "column": "todoitem_id",
-        "inverse": "id"
-      }
-    ],
-    "properties": [
-      {
-        "name": "projects",
-        "toMany": {
-          "isNested": true,
-          "type": "ToDoProject",
-          "column": "todoitem_id",
-          "inverse": "source"
         }
       }
     ],

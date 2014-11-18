@@ -28,15 +28,6 @@
           "type": "ProspectRelation",
           "column": "crmacct_prospect_id"
         }
-      },
-      {
-        "name": "customers",
-        "toMany": {
-          "isNested": true,
-          "type": "AccountCustomer",
-          "column": "crmacct_id",
-          "inverse": "source"
-        }
       }
     ],
     "sequence": 0,

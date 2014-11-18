@@ -241,7 +241,8 @@ white:true*/
         };
 
       _(payload).extend({
-        encoding: options.encoding || XT.session.config.encoding
+        encoding: options.encoding || XT.session.config.encoding,
+        queryOnPrimaryKey: options.queryOnPrimaryKey
       });
 
       return XT.Request
