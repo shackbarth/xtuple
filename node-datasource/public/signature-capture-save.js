@@ -16,7 +16,10 @@ var saveSignature;
 
   saveSignature = function (data, callback) {
     var org = getUrlParameter("org");
-    var id = getUrlParameter("id");
+    var salesOrderId = getUrlParameter("id");
+    var salesOrderEtag;
+    var salesOrderData;
+    var root = location.protocol + "//" + location.host + "/" + org + "/browser-api/v1/resources/";
     var fileId;
 
     var reader = new FileReader(),
@@ -28,8 +31,7 @@ var saveSignature;
       },
       saveFile = function (done) {
         // XXX TODO localization
-        var root = location.protocol + "//" + location.host + "/" + org;
-        var filename =  "SalesOrder".replace(/ /g, "") + id + "Signature";
+        var filename =  "SalesOrder".replace(/ /g, "") + salesOrderId + "Signature";
 
         var data = {
           data: reader.result,
@@ -37,9 +39,13 @@ var saveSignature;
           description: filename.toLowerCase() + ".png"
         };
 
-        var url = root + "/browser-api/v1/resources/file";
+        var url = root + "file";
         var success = function (resp) {
-          console.log("success", arguments);
+          if (_.isString(resp)) {
+            // probably the login page
+            window.location = "/logout";
+            return done(true);
+          }
           fileId = resp.data.id;
           done();
         };
@@ -50,23 +56,46 @@ var saveSignature;
           success: success
         });
       },
+      fetchSalesOrder = function (done) {
+        var url = root + "sales-order/" + salesOrderId;
+        var success = function (resp) {
+          salesOrderData = resp.data.data;
+          salesOrderEtag = resp.data.etag;
+          done();
+        };
+        $.ajax({
+          type: "GET",
+          url: url,
+          success: success
+        });
+      },
       createDocumentAssociation = function (done) {
-        console.log("file id is", fileId);
-        /*
-        var docAss = new XM.SalesOrderFile();
-        docAss.initialize(null, {isNew: true});
-        docAss.set({
-          file: fileRelation,
+        var url = root + "sales-order/" + salesOrderId;
+        var observer = jsonpatch.observe(salesOrderData);
+        salesOrderData.documents.push({
+          //source: salesOrderId,
+          sourceType: "S",
+          targetType: "FILE",
+          target: {uuid: fileId},
           purpose: "S"
         });
-        salesOrder.get("files").add(docAss);
-        */
-        done();
+
+        var patch = jsonpatch.generate(observer);
+        var success = function (resp) {
+          done();
+        };
+        $.ajax({
+          type: "PATCH",
+          url: url,
+          data: {patches: patch, etag: salesOrderEtag},
+          success: success
+        });
       };
 
     async.series([
       readBlob,
       saveFile,
+      fetchSalesOrder,
       createDocumentAssociation
     ], callback);
   };
