@@ -310,7 +310,10 @@ var conditionalExpressSession = function (req, res, next) {
   // REST API endpoints start with "/api" in their path.
   // The 'assets' folder and login page are sessionless.
   if ((/^api/i).test(req.path.split("/")[2]) ||
-      (/^\/assets/i).test(req.path) ||
+      (/^\/asset/i).test(req.path) ||
+      (/^\/accounting/i).test(req.path) ||
+      (/^\/browser-api/i).test(req.path) ||
+      (/^\/js/i).test(req.path) ||
       (/^\/stylesheets/i).test(req.path) ||
       (/^\/bower_components/i).test(req.path) ||
       req.path === '/' ||
@@ -415,6 +418,9 @@ require('./oauth2/passport');
 var that = this;
 
 /* Static assets */
+app.use('/accounting', express.static('../../xtuple-accounting/assets', { maxAge: 86400000 }));
+app.use('/js', express.static('../../xtuple-accounting/assets/js', { maxAge: 86400000 }));
+
 app.use(express.favicon(__dirname + '/views/assets/favicon.ico'));
 app.use('/assets', express.static('views/assets', { maxAge: 86400000 }));
 app.use('/stylesheets', express.static('views/stylesheets', { maxAge: 86400000 }));
