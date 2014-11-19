@@ -91,9 +91,23 @@ var app;
     }
   });
 
-
   XT.session = Object.create(XT.Session);
   XT.session.schemas.SYS = false;
+
+  // Load the Database hostname and port into metrics to enable Qt client deep linking
+  X.options.datasource.databases.map(function (database) {
+    var queryPayload,
+      query = "SELECT setmetric('%@', '%@');";
+
+    queryPayload = query.f('WebappHostname', X.options.datasource.hostname);
+    XT.dataSource.query(queryPayload, XT.dataSource.getAdminCredentials(database), function (error, res) {
+      if (error) { console.log("An error occurred writing the hostname to the metric table " + error); }
+    });
+    queryPayload = query.f('WebappPort', X.options.datasource.port);
+    XT.dataSource.query(queryPayload, XT.dataSource.getAdminCredentials(database), function (error, res) {
+      if (error) { console.log("An error occurred writing the port to the metric table" + error); }
+    });
+  });
 
   var getExtensionDir = function (extension) {
     var dirMap = {
@@ -297,12 +311,12 @@ var conditionalExpressSession = function (req, res, next) {
   // The 'assets' folder and login page are sessionless.
   if ((/^api/i).test(req.path.split("/")[2]) ||
       (/^\/assets/i).test(req.path) ||
+      (/^\/stylesheets/i).test(req.path) ||
+      (/^\/bower_components/i).test(req.path) ||
       req.path === '/' ||
       req.path === '/favicon.ico' ||
       req.path === '/forgot-password' ||
       req.path === '/assets' ||
-      req.path === '/stylesheets' ||
-      req.path === '/bower_components' ||
       req.path === '/recover') {
 
     next();

@@ -262,8 +262,10 @@ if (typeof XT === 'undefined') {
   /**
     Takes a dictionary definition file and inserts the data into the database
    */
-  var importDictionary = exports.importDictionary = function (database, filename, masterCallback) {
-    var creds = require("../../node-datasource/config").databaseServer;
+  var importDictionary = exports.importDictionary = function (options, masterCallback) {
+    var database = options.database;
+    var filename = options.filename;
+    var creds = require(options.configPath || "../../node-datasource/config").databaseServer;
     creds.database = database;
 
     filename = path.resolve(process.cwd(), filename);
@@ -296,14 +298,14 @@ if (typeof XT === 'undefined') {
     });
   };
 
-  exports.importAllDictionaries = function (database, callback) {
+  exports.importAllDictionaries = function (options, callback) {
     var translationsDir = path.join(__dirname, "../../node_modules/xtuple-linguist/translations");
     if (!fs.existsSync(translationsDir)) {
       console.log("No translations directory found. Ignoring linguist.");
       return callback();
     }
     var importOne = function (dictionary, next) {
-      importDictionary(database, dictionary, next);
+      importDictionary({database: options.database, filename: dictionary, configPath: options.configPath}, next);
     };
     var allDictionaries = _.map(fs.readdirSync(translationsDir), function (filename) {
       return path.join(translationsDir, filename);

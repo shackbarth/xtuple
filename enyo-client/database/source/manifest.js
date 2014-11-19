@@ -177,7 +177,6 @@
     "xt/views/crmacctcomment.sql",
     "xt/views/custitem.sql",
     "xt/views/customer_prospect.sql",
-    "xt/views/cust_doc.sql",
     "xt/views/incdtinfo.sql",
     "xt/views/incdtxt.sql",
     "xt/views/invcheadinfo.sql",

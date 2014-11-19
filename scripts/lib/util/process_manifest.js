@@ -28,7 +28,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     // infer dependencies from package.json -> peerDependencies
     // infer dependencies from manifest.js -> dependencies
     var isPackageJson = !!options.engines; // XXX this is a pretty rough proxy
-    var dependencies = (isPackageJson ? options.peerDependencies : options.dependencies) || [];
+    var dependencies = (isPackageJson ? _.omit(options.peerDependencies, "xtuple") : options.dependencies) || [];
     _.each(dependencies, function (dependency) {
       var dependencySql = "select xt.register_extension_dependency('%@', '%@');\n"
           .f(options.name, dependency),

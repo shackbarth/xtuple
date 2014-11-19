@@ -127,90 +127,6 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
-  */
-  XM.OpportunityAccount = XM.Model.extend({
-    /** @scope XM.OpportunityAccount.prototype */
-
-    recordType: 'XM.OpportunityAccount',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.OpportunityContact = XM.Model.extend({
-    /** @scope XM.OpportunityContact.prototype */
-
-    recordType: 'XM.OpportunityContact',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.OpportunityItem = XM.Model.extend({
-    /** @scope XM.OpportunityItem.prototype */
-
-    recordType: 'XM.OpportunityItem',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.OpportunityFile = XM.Model.extend({
-    /** @scope XM.OpportunityFile.prototype */
-
-    recordType: 'XM.OpportunityFile',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.OpportunityUrl = XM.Model.extend({
-    /** @scope XM.OpportunityUrl.prototype */
-
-    recordType: 'XM.OpportunityUrl',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.OpportunityOpportunity = XM.Model.extend({
-    /** @scope XM.OpportunityOpportunity.prototype */
-
-    recordType: 'XM.OpportunityOpportunity',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
     Same as `XM.OpportunityInfo` but less data.
 
     @extends XM.Info
@@ -223,6 +139,11 @@ white:true*/
     editableModel: 'XM.Opportunity'
 
   });
+
+  XT.documentAssociations.OPP = {
+    model: "XM.OpportunityRelation",
+    label: "_opportunity".loc()
+  };
 
   /**
     @class

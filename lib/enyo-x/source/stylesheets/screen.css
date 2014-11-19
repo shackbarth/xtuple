@@ -57,7 +57,7 @@
 /* makes the font 33% larger relative to the icon container */
 .icon-large:before {
   vertical-align: -10%;
-  font-size: 1.33333333em;
+  font-size: 1.33333333;
 }
 /* makes sure icons active on rollover in links */
 a [class^="icon-"],
@@ -68,16 +68,16 @@ a [class*=" icon-"] {
 [class^="icon-"].icon-fixed-width,
 [class*=" icon-"].icon-fixed-width {
   display: inline-block;
-  width: 1.14285714em;
+  width: 1.14285714;
   text-align: right;
-  padding-right: 0.28571429em;
+  padding-right: 0.28571429;
 }
 [class^="icon-"].icon-fixed-width.icon-large,
 [class*=" icon-"].icon-fixed-width.icon-large {
-  width: 1.42857143em;
+  width: 1.42857143;
 }
 .icons-ul {
-  margin-left: 2.14285714em;
+  margin-left: 2.14285714;
   list-style-type: none;
 }
 .icons-ul > li {
@@ -85,8 +85,8 @@ a [class*=" icon-"] {
 }
 .icons-ul .icon-li {
   position: absolute;
-  left: -2.14285714em;
-  width: 2.14285714em;
+  left: -2.14285714;
+  width: 2.14285714;
   text-align: center;
   line-height: inherit;
 }
@@ -2571,49 +2571,6 @@ a,
   margin: 10px;
   color: #357ec7;
   overflow: hidden;
-  /*  The chart-filters may not be need as we are using the class xv-pullout
-      for styles.  Delete when finished hacking the filter styles.
-
-  .chart-filters {
-  	  background-color: @white;
-  	  
-  	  -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
-	  -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
-	  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
-  }
-  
-  .chart-filters .xv-parameter-panel {
-  	  background-color: @ghost;
-  	  border: 1px solid @smoke;
-  	  margin: 0 4px 6px 0;
-  	  width: 100%;
-  }
-  
-  .chart-filters.xv-parameter-panel .onyx-groupbox-header {
-	  padding: 6px 10px;
-	  border-bottom: 1px solid @smoke;
-	  background: @lightest-gray;
-	  color: @near-black;
-  }
-
-  .chart-filters.xv-parameter-panel .enyo-fittable-columns-layout {
-	  border-bottom: 1px solid @smoke;
-	  background: @white;
-    color: @near-black;
-    position: relative;
-    text-align: left;
-    white-space: nowrap;
-  }
-
-  .chart-filters.xv-parameter-panel .enyo-fittable-columns-layout > * {
-    vertical-align: middle;
-  }
-
-  .chart-filters.xv-parameter-panel .xv-label {
-    text-align: right;
-  }
-  
-  */
 }
 .selectable-chart .xv-list-item {
   border-bottom: 1px solid grey;
@@ -2686,13 +2643,6 @@ a,
 }
 .selectable-chart .chart-filterDrawer {
   top: 0px;
-}
-.selectable-chart .map-cluster {
-  width: 40px;
-  height: 40px;
-  background-color: greenyellow;
-  text-align: center;
-  font-size: 24px;
 }
 /**
   Styles relating to Lists

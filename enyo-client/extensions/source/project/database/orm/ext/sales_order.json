@@ -20,15 +20,6 @@
           "type": "ProjectRelation",
           "column": "cohead_prj_id"
         }
-      },
-      {
-        "name": "projects",
-        "toMany": {
-          "isNested": true,
-          "type": "SalesOrderProject",
-          "column": "cohead_id",
-          "inverse": "source"
-        }
       }
     ],
     "sequence": 0,

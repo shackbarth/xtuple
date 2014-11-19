@@ -46,7 +46,7 @@ mkdir -p "$TARGET/lib"
 #cp "$SOURCE/index.html" "$SOURCE/icon.png" "$TARGET"
 
 # copy assets and build
-cp -r "$SOURCE/../../node-datasource/views/login/assets" "$SOURCE/build" "$TARGET"
+cp -r "$SOURCE/../../node-datasource/views/assets" "$SOURCE/build" "$TARGET"
 
 for i in "$SOURCE/lib/"*; do
 	o=${i##*/}

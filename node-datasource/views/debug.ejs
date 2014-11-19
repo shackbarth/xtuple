@@ -6,6 +6,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf8"/>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <link href="/bower_components/nvd3/src/nv.d3.css" rel="stylesheet"/>
+    <script src="/socket.io/socket.io.js" type="text/javascript"></script>
+    <script src="/bower_components/d3/d3.min.js"></script>
+    <script src="/bower_components/nvd3/nv.d3.min.js"></script>
     <script src="/bower_components/jquery/dist/jquery.min.js"></script>
     <script src="/<%= org %>/client/enyo/enyo.js"></script>
     <script src="/<%= org %>/locale?debug=true"></script>
@@ -15,9 +19,12 @@
     <script src="/<%= org %>/client/lib/tools/source/en/strings.js" type="text/javascript"></script>
     <script src="/<%= org %>/client/source/en/strings.js" type="text/javascript"></script>
     <script src="/<%= org %>/client/source/package.js" type="text/javascript"></script>
+    <% for (var i = 0; i < extensionPaths.length; i++) { %>
+      <script src="/<%= org %><%= extensionPaths[i] %>/client/en/strings.js"></script>
+      <script src="/<%= org %><%= extensionPaths[i] %>/client/package.js"></script>
+    <% } %>
   </head>
   <body class="enyo-unselectable">
-    <script src="/socket.io/socket.io.js" type="text/javascript"></script>
     <script>
       less = {
         poll: 3000,
@@ -25,17 +32,10 @@
       };
     </script>
     <script src="/bower_components/less/dist/less-1.5.0.js"></script>
-    <link href="/bower_components/nvd3/src/nv.d3.css" rel="stylesheet"/>
-    <script src="/bower_components/d3/d3.min.js"></script>
-    <script src="/bower_components/nvd3/nv.d3.min.js"></script>
     <script src="/bower_components/globalize/lib/globalize.js"></script>
-    <% for (var i = 0; i < extensionPaths.length; i++) { %>
-      <script src="/<%= org %><%= extensionPaths[i] %>/client/en/strings.js"></script>
-      <script src="/<%= org %><%= extensionPaths[i] %>/client/package.js"></script>
-    <% } %>
     <script>
       new App().start();
-
+	  
       // turn off exit prompt in debug mode.
       window.onbeforeunload = undefined;
     </script>

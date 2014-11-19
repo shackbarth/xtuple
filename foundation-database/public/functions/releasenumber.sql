@@ -29,7 +29,7 @@ BEGIN
 
     -- check if an order exists with the given order number
     EXECUTE 'SELECT ' || quote_ident(_numcol) ||
-            ' FROM '  || quote_ident(_table) ||
+            ' FROM '  || _table ||
             ' WHERE (' || quote_ident(_numcol) || '=' ||
             quote_literal(_number) || ');'
     INTO _test;
