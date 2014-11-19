@@ -1815,12 +1815,15 @@ trailing:true, white:true, strict: false*/
             ]},
             {kind: "XV.ListColumn", classes: "right-column", components: [
               {kind: "XV.ListAttr", attr: "scheduleDate",
-                placeholder: "_noSchedule".loc()},
+                placeholder: "_noSched.".loc()},
               {kind: "XV.ListAttr", attr: "total", formatter: "formatTotal"}
             ]},
-            {kind: "XV.ListColumn", fit: true, components: [
+            {kind: "XV.ListColumn", classes: "descr", components: [
               {kind: "XV.ListAttr", formatter: "formatName"},
               {kind: "XV.ListAttr", formatter: "formatShiptoOrBillto"}
+            ]},
+            {kind: "XV.ListColumn", components: [
+              {kind: "XV.ListAttr", attr: "formatHoldType", style: "color: red"}
             ]}
           ]}
         ]}
