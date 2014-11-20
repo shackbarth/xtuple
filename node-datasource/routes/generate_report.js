@@ -714,29 +714,33 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     };
 
     var execOpenRPT = function (done) {
-      var databaseUrl = "psql://localhost:" +
+      var databaseUrl = "psql://localhost:" + // XXX FIXME
         X.options.databaseServer.port + "/" +
         databaseName;
-
-      child_process.execFile("rptrender", [
+      var args = [
         "-display",
         ":0",
         "-close",
         "-databaseUrl="  + databaseUrl,
         "-username=" + X.options.databaseServer.user,
-        "-passwd=admin",
+        "-passwd=admin", // XXX FIXME
         "-pdf",
         "-outpdf=" + reportPath,
         "-loadfromdb=" + req.query.type
-      ], done);
+      ];
+      if (req.query.params) {
+        args.push("-param=" + req.query.params);
+      }
+      child_process.execFile("rptrender", args, done);
     };
-
 
     //
     // Actually perform the operations, one at a time
     //
 
+    // Support rendering through openRPT via the following API:
     // https://localhost/demo_dev/generate-report?nameSpace=ORPT&type=AddressesMasterList
+    // https://localhost/demo_dev/generate-report?nameSpace=ORPT&type=AROpenItems&params=startDate:date=%272007-01-01%27
     if (req.query.nameSpace === "ORPT") {
       async.series([
         createTempDir,
