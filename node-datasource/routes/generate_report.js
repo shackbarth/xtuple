@@ -13,6 +13,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     async = require("async"),
     fs = require("fs"),
     path = require("path"),
+    child_process = require("child_process"),
     ipp = require("ipp"),
     Report = require('fluentreports').Report,
     qr = require('qr-image'),
@@ -712,9 +713,46 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       done();
     };
 
+    var execOpenRPT = function (done) {
+      var databaseUrl = "psql://localhost:" +
+        X.options.databaseServer.port + "/" +
+        databaseName;
+
+      child_process.execFile("rptrender", [
+        "-display",
+        ":0",
+        "-close",
+        "-databaseUrl="  + databaseUrl,
+        "-username=" + X.options.databaseServer.user,
+        "-passwd=admin",
+        "-pdf",
+        "-outpdf=" + reportPath,
+        "-loadfromdb=" + req.query.type
+      ], done);
+    };
+
+
     //
     // Actually perform the operations, one at a time
     //
+
+    // https://localhost/demo_dev/generate-report?nameSpace=ORPT&type=AddressesMasterList
+    if (req.query.nameSpace === "ORPT") {
+      async.series([
+        createTempDir,
+        createTempOrgDir,
+        execOpenRPT,
+        sendReport,
+        cleanUpFiles
+      ], function (err, results) {
+        if (err) {
+          res.send({isError: true, message: err.description});
+        }
+      });
+
+
+      return;
+    }
 
     async.series([
       createTempDir,
