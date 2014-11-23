@@ -2214,9 +2214,7 @@ strict: false*/
             {kind: "onyx.GroupboxHeader", content: "_delivery".loc()},
             {kind: "XV.DateWidget", attr: "scheduleDate"},
             {kind: "XV.DateWidget", attr: "promiseDate", showing: false,
-              name: "promiseDate"},
-            {kind: "XV.PurchaseOrderLineCharacteristicsWidget",
-              attr: "characteristics"}
+              name: "promiseDate"}
           ]}
         ]},
         {kind: "XV.Groupbox", name: "detailsPanel", title: "_detail".loc(),
