@@ -94,11 +94,24 @@ BEGIN
         END IF;
       END IF; -- End taxes
 
-      -- Create debit memo for discount
-      SELECT createARDebitMemo(_ardiscountid, _r.cashrcpt_cust_id, pJournalNumber, _arMemoNumber, '',
-                                _r.cashrcpt_distdate, _r.cashrcptitem_discount,
+      -- Create negative credit memo for discount
+      SELECT createARCreditMemo(_ardiscountid, _r.cashrcpt_cust_id, _arMemoNumber, '',
+                                _r.cashrcpt_distdate, (_r.cashrcptitem_discount * -1.0),
                                 _comment, -1, -1, _discountAccntid, _r.cashrcpt_distdate,
-                                -1, NULL, 0, _r.cashrcpt_curr_id) INTO _ardiscountid;
+                                -1, NULL, 0,
+                                pJournalNumber, _r.cashrcpt_curr_id) INTO _ardiscountid;
+
+      -- Apply discount negative credit memo
+      INSERT INTO arcreditapply ( 
+        arcreditapply_source_aropen_id, arcreditapply_target_aropen_id,
+        arcreditapply_amount, arcreditapply_curr_id )
+      VALUES ( 
+        _ardiscountid, _r.aropen_id, (_r.cashrcptitem_discount * -1.0), _r.cashrcpt_curr_id );
+ 
+      SELECT postARCreditMemoApplication(_ardiscountid, _r.cashrcpt_applydate) INTO _check;
+      IF (_check < 0) THEN
+        RAISE EXCEPTION 'Error posting discount credit memo application. Code %', _check;
+      END IF;
 
     END IF; -- End handle Discount
 
