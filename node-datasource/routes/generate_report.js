@@ -13,7 +13,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     async = require("async"),
     fs = require("fs"),
     path = require("path"),
-    ipp = require("ipp"),
+    child_process = require("child_process"),
     Report = require('fluentreports').Report,
     qr = require('qr-image'),
     queryForData = require("./export").queryForData;
@@ -101,6 +101,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       // TODO: introduce pseudorandomness (maybe a timestamp) to avoid collisions
       reportName = req.query.type.toLowerCase() + req.query.id + ".pdf",
       auxilliaryInfo = req.query.auxilliaryInfo,
+      printer = req.query.printer,
+      printQty = req.query.printQty || 1,
       workingDir = path.join(__dirname, "../temp", databaseName),
       reportPath = path.join(workingDir, reportName),
       imageFilenameMap = {},
@@ -124,19 +126,17 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     var transformDataStructure = function (data) {
       // TODO: detailAttribute could be inferred by looking at whatever comes before the *
       // in the detailElements definition.
-
-      if (!reportDefinition.settings.detailAttribute) {
-        // no children, so no transformation is necessary
-        return [data];
-      }
-
-      return _.map(data[reportDefinition.settings.detailAttribute], function (detail) {
-        var pathedDetail = {};
-        _.each(detail, function (detailValue, detailKey) {
-          pathedDetail[reportDefinition.settings.detailAttribute + "*" + detailKey] = detailValue;
+      if (reportDefinition.settings.detailAttribute && !_.isEmpty(data[reportDefinition.settings.detailAttribute])) {
+        return _.map(data[reportDefinition.settings.detailAttribute], function (detail) {
+          var pathedDetail = {};
+          _.each(detail, function (detailValue, detailKey) {
+            pathedDetail[reportDefinition.settings.detailAttribute + "*" + detailKey] = detailValue;
+          });
+          return _.extend({}, data, pathedDetail);
         });
-        return _.extend({}, data, pathedDetail);
-      });
+      }
+      // no children, so no transformation is necessary
+      return [data];
     };
 
     /**
@@ -333,25 +333,22 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       Silent-print to a printer registered in the node-datasource.
      */
     var responsePrint = function (res, data, done) {
-      var printer = ipp.Printer(X.options.datasource.printer),
-        msg = {
-          "operation-attributes-tag": {
-            "job-name": "Silent Print",
-            "document-format": "application/pdf"
-          },
-          data: data
-        };
+      var print = child_process.spawn('lp', ['-d', printer, '-n', printQty, reportPath]);
 
-      printer.execute("Print-Job", msg, function (error, result) {
-        if (error) {
-          X.log("Print error", error);
-          res.send({isError: true, message: "Error printing"});
-          done();
-        } else {
-          res.send({message: "Print Success"});
-          done();
-        }
+      print.stdout.on('data', function (data) {
+        res.send({message: "Print Success"});
+        done();
       });
+
+      print.stderr.on('data', function (data) {
+        res.send({isError: true, message: "Error printing: " + data});
+        done();
+      });
+      /*
+      print.on('close', function (code) {
+        console.log('child process exited with code ' + code);
+      });
+      */
     };
 
     // Convenience hash to avoid if-else

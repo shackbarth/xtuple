@@ -519,6 +519,10 @@ strict: false*/
     ]
   });
 
+  // ..........................................................
+  // USER PREFERENCES
+  //
+
   enyo.kind({
     name: "XV.UserPreferenceWorkspace",
     kind: "XV.Workspace",
@@ -535,10 +539,57 @@ strict: false*/
           {kind: "XV.ScrollableGroupbox", name: "mainGroup",
             classes: "in-panel", components: [
           ]}
+        ]},
+        {kind: "XV.Groupbox", components: [
+          {kind: "onyx.GroupboxHeader", content: "_printSettings".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "printSettingsGroup",
+            classes: "in-panel", components: [
+          ]}
         ]}
       ]}
-    ]
+    ],
+    /**
+      On create, cycle through the XM.printableObjects cache and create the enyo PrinterPickers
+      components.
+    */
+    create: function () {
+      this.inherited(arguments);
+      var printableObjects = XM.printableObjects,
+        that = this;
+
+      _.each(printableObjects, function (val, key) {
+        that.$.printSettingsGroup.createComponents([
+            {kind: "XV.PrinterPicker", attr: key, name: key, label: key.loc(),
+              onValueChange: "metaChanged"}
+          ], {owner: that});
+      });
+    },
+    /** 
+      PrintPicker value changed, call model's metaChanged for some special handling.
+    */
+    metaChanged: function (inSender, inEvent) {
+      var model = this.getValue(),
+        val = inSender.value ? inSender.value.id : null;
+      model.meta.set(inSender.attr, val);
+      model.metaChanged();
+    },
+    /**
+      Overload: Some special handling for start up. Go and set PrinterPicker value's based on
+      User's Print Settings preferences.
+    */
+    recordIdChanged: function () {
+      this.inherited(arguments);
+      var model = this.getValue();
+
+      if (!this._started && model && model.getStatus() === XM.Model.READY_CLEAN) {
+        model.statusReadyClean();
+        // Repaint workspace
+        this.attributesChanged();
+      }
+    }
   });
+
+  XV.registerModelWorkspace("XM.UserPreference", "XV.UserPreferenceWorkspace");
 
   // ..........................................................
   // CONTACT
@@ -1731,6 +1782,32 @@ strict: false*/
   });
 
   XV.registerModelWorkspace("XM.PlannerCode", "XV.PlannerCodeWorkspace");
+
+  // ..........................................................
+  // PRINTER
+  //
+
+  enyo.kind({
+    name: "XV.PrinterWorkspace",
+    kind: "XV.Workspace",
+    title: "_printers".loc(),
+    model: "XM.Printer",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.InputWidget", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.Printer", "XV.PrinterWorkspace");
 
   // ..........................................................
   // PRIORITY
