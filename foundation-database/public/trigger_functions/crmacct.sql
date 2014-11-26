@@ -72,105 +72,77 @@ DECLARE
 BEGIN
   /* update _number and _name separately to propagate just what changed.
      the priv manipulation allows targeted updates of crmaccount-maintained data
-     (note: grantPriv() == false if the user already had the priv, true if this
-     call granted the priv).
    */
+  IF TG_OP = 'UPDATE' AND
+      (OLD.crmacct_number != NEW.crmacct_number OR
+       OLD.crmacct_name   != NEW.crmacct_name) THEN
+      IF NEW.crmacct_cust_id IS NOT NULL THEN
+        UPDATE custinfo SET cust_number = NEW.crmacct_number
+        WHERE ((cust_id=NEW.crmacct_cust_id)
+          AND  (cust_number!=NEW.crmacct_number));
+        UPDATE custinfo SET cust_name = NEW.crmacct_name
+        WHERE ((cust_id=NEW.crmacct_cust_id)
+          AND  (cust_name!=NEW.crmacct_name));
+      END IF;
+
+      IF NEW.crmacct_emp_id IS NOT NULL THEN
+        UPDATE emp SET emp_code = NEW.crmacct_number
+        WHERE ((emp_id=NEW.crmacct_emp_id)
+          AND  (emp_code!=NEW.crmacct_number));
+        UPDATE emp SET emp_name = NEW.crmacct_name
+        WHERE ((emp_id=NEW.crmacct_emp_id)
+          AND  (emp_name!=NEW.crmacct_name));
+      END IF;
+
+      IF (NEW.crmacct_prospect_id IS NOT NULL) THEN
+        UPDATE prospect SET prospect_number = NEW.crmacct_number
+        WHERE ((prospect_id=NEW.crmacct_prospect_id)
+          AND  (prospect_number!=NEW.crmacct_number));
+        UPDATE prospect SET prospect_name = NEW.crmacct_name
+        WHERE ((prospect_id=NEW.crmacct_prospect_id)
+          AND  (prospect_name!=NEW.crmacct_name));
+      END IF;
+
+      IF (NEW.crmacct_salesrep_id IS NOT NULL) THEN
+        UPDATE salesrep SET salesrep_number = NEW.crmacct_number
+        WHERE ((salesrep_id=NEW.crmacct_salesrep_id)
+          AND  (salesrep_number!=NEW.crmacct_number));
+        UPDATE salesrep SET salesrep_name = NEW.crmacct_name
+        WHERE ((salesrep_id=NEW.crmacct_salesrep_id)
+          AND  (salesrep_name!=NEW.crmacct_name));
+      END IF;
+
+      IF (NEW.crmacct_taxauth_id IS NOT NULL) THEN
+        UPDATE taxauth SET taxauth_code = NEW.crmacct_number
+        WHERE ((taxauth_id=NEW.crmacct_taxauth_id)
+          AND  (taxauth_code!=NEW.crmacct_number));
+        UPDATE taxauth SET taxauth_name = NEW.crmacct_name
+        WHERE ((taxauth_id=NEW.crmacct_taxauth_id)
+          AND  (taxauth_name!=NEW.crmacct_name));
+      END IF;
+
+      IF (NEW.crmacct_vend_id IS NOT NULL) THEN
+        UPDATE vendinfo SET vend_number = NEW.crmacct_number
+        WHERE ((vend_id=NEW.crmacct_vend_id)
+          AND  (vend_number!=NEW.crmacct_number));
+        UPDATE vendinfo SET vend_name = NEW.crmacct_name
+        WHERE ((vend_id=NEW.crmacct_vend_id)
+          AND  (vend_name!=NEW.crmacct_name));
+      END IF;
+  END IF;
+
   IF (TG_OP = 'INSERT' OR TG_OP = 'UPDATE') THEN
-    IF (NEW.crmacct_cust_id IS NOT NULL) THEN
-      _gotpriv := grantPriv(getEffectiveXtUser(), 'MaintainCustomerMasters');
-      UPDATE custinfo SET cust_number = NEW.crmacct_number
-      WHERE ((cust_id=NEW.crmacct_cust_id)
-        AND  (cust_number!=NEW.crmacct_number));
-      UPDATE custinfo SET cust_name = NEW.crmacct_name
-      WHERE ((cust_id=NEW.crmacct_cust_id)
-        AND  (cust_name!=NEW.crmacct_name));
-      IF (_gotpriv) THEN
-        PERFORM revokePriv(getEffectiveXtUser(), 'MaintainCustomerMasters');
-      END IF;
-    END IF;
-
-    IF (NEW.crmacct_emp_id IS NOT NULL) THEN
-      _gotpriv := grantPriv(getEffectiveXtUser(), 'MaintainEmployees');
-      UPDATE emp SET emp_code = NEW.crmacct_number
-      WHERE ((emp_id=NEW.crmacct_emp_id)
-        AND  (emp_code!=NEW.crmacct_number));
-      UPDATE emp SET emp_name = NEW.crmacct_name
-      WHERE ((emp_id=NEW.crmacct_emp_id)
-        AND  (emp_name!=NEW.crmacct_name));
-      IF (_gotpriv) THEN
-        PERFORM revokePriv(getEffectiveXtUser(), 'MaintainEmployees');
-      END IF;
-    END IF;
-
-    IF (NEW.crmacct_prospect_id IS NOT NULL) THEN
-      _gotpriv := grantPriv(getEffectiveXtUser(), 'MaintainProspectMasters');
-      UPDATE prospect SET prospect_number = NEW.crmacct_number
-      WHERE ((prospect_id=NEW.crmacct_prospect_id)
-        AND  (prospect_number!=NEW.crmacct_number));
-      UPDATE prospect SET prospect_name = NEW.crmacct_name
-      WHERE ((prospect_id=NEW.crmacct_prospect_id)
-        AND  (prospect_name!=NEW.crmacct_name));
-      IF (_gotpriv) THEN
-        PERFORM revokePriv(getEffectiveXtUser(), 'MaintainProspectMasters');
-      END IF;
-    END IF;
-
-    IF (NEW.crmacct_salesrep_id IS NOT NULL) THEN
-      _gotpriv := grantPriv(getEffectiveXtUser(), 'MaintainSalesReps');
-      UPDATE salesrep SET salesrep_number = NEW.crmacct_number
-      WHERE ((salesrep_id=NEW.crmacct_salesrep_id)
-        AND  (salesrep_number!=NEW.crmacct_number));
-      UPDATE salesrep SET salesrep_name = NEW.crmacct_name
-      WHERE ((salesrep_id=NEW.crmacct_salesrep_id)
-        AND  (salesrep_name!=NEW.crmacct_name));
-      IF (_gotpriv) THEN
-        PERFORM revokePriv(getEffectiveXtUser(), 'MaintainSalesReps');
-      END IF;
-    END IF;
-
-    IF (NEW.crmacct_taxauth_id IS NOT NULL) THEN
-      _gotpriv := grantPriv(getEffectiveXtUser(), 'MaintainTaxAuthorities');
-      UPDATE taxauth SET taxauth_code = NEW.crmacct_number
-      WHERE ((taxauth_id=NEW.crmacct_taxauth_id)
-        AND  (taxauth_code!=NEW.crmacct_number));
-      UPDATE taxauth SET taxauth_name = NEW.crmacct_name
-      WHERE ((taxauth_id=NEW.crmacct_taxauth_id)
-        AND  (taxauth_name!=NEW.crmacct_name));
-      IF (_gotpriv) THEN
-        PERFORM revokePriv(getEffectiveXtUser(), 'MaintainTaxAuthorities');
-      END IF;
-    END IF;
-
-    IF (NEW.crmacct_vend_id IS NOT NULL) THEN
-      _gotpriv := grantPriv(getEffectiveXtUser(), 'MaintainVendors');
-      UPDATE vendinfo SET vend_number = NEW.crmacct_number
-      WHERE ((vend_id=NEW.crmacct_vend_id)
-        AND  (vend_number!=NEW.crmacct_number));
-      UPDATE vendinfo SET vend_name = NEW.crmacct_name
-      WHERE ((vend_id=NEW.crmacct_vend_id)
-        AND  (vend_name!=NEW.crmacct_name));
-      IF (_gotpriv) THEN
-        PERFORM revokePriv(getEffectiveXtUser(), 'MaintainVendors');
-      END IF;
-    END IF;
-
     -- Link Primary and Secondary Contacts to this Account if they are not already
     IF (NEW.crmacct_cntct_id_1 IS NOT NULL) THEN
-      _gotpriv := grantPriv(getEffectiveXtUser(), 'MaintainAllContacts');
       UPDATE cntct SET cntct_crmacct_id = NEW.crmacct_id
-       WHERE cntct_id=NEW.crmacct_cntct_id_1;
-      IF (_gotpriv) THEN
-        PERFORM revokePriv(getEffectiveXtUser(), 'MaintainAllContacts');
-      END IF;
+       WHERE cntct_id=NEW.crmacct_cntct_id_1
+         AND COALESCE(cntct_crmacct_id, -1) != NEW.crmacct_id;
     END IF;
 
     IF (NEW.crmacct_cntct_id_2 IS NOT NULL) THEN
-      _gotpriv := grantPriv(getEffectiveXtUser(), 'MaintainAllContacts');
       UPDATE cntct SET cntct_crmacct_id = NEW.crmacct_id
-       WHERE cntct_id=NEW.crmacct_cntct_id_2;
-      IF (_gotpriv) THEN
-        PERFORM revokePriv(getEffectiveXtUser(), 'MaintainAllContacts');
-      END IF;
+       WHERE cntct_id=NEW.crmacct_cntct_id_2
+         AND COALESCE(cntct_crmacct_id, -1) != NEW.crmacct_id;
     END IF;
 
     -- cannot have fkey references to system catalogs so enforce them here
