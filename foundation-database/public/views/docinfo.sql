@@ -588,38 +588,6 @@ CREATE VIEW docinfo AS
         AND (docass_source_id=location_id)
         AND (warehous_id=location_warehous_id))
 
- ------------ LOT SERIAL -----------
- UNION ALL
- SELECT docass_id AS id,
-        ls_number AS target_number,
-        docass_target_type AS target_type,
-        docass_target_id AS target_id,
-        docass_source_type AS source_type,
-        docass_source_id AS source_id,
-        item_number AS name, firstLine(item_descrip1) AS description,
-        docass_purpose AS purpose
-        FROM docass, ls, item
-        WHERE ((docass_target_type='LS')
-        AND (docass_target_id=ls_id)
-        AND (item_id=ls_item_id))
- UNION ALL
- SELECT docass_id AS id,
-        ls_number AS target_number,
-        docass_source_type AS target_type,
-        docass_source_id AS target_id,
-        docass_target_type AS source_type,
-        docass_target_id AS source_id,
-        item_number AS name, firstLine(item_descrip1) AS description,
-        CASE 
-          WHEN docass_purpose = 'A' THEN 'C'
-          WHEN docass_purpose = 'C' THEN 'A'
-          ELSE docass_purpose
-        END AS purpose
-        FROM docass, ls, item
-        WHERE ((docass_source_type='LS')
-        AND (docass_source_id=ls_id)
-        AND (item_id=ls_item_id))
-
  ------------ OPPORTUNITY -----------
  UNION ALL
  SELECT docass_id AS id,
@@ -778,76 +746,6 @@ CREATE VIEW docinfo AS
          AND (pohead_id=poitem_pohead_id)
          AND (vend_id=pohead_vend_id)
          AND (itemsite_id=poitem_itemsite_id)
-         AND (item_id=itemsite_item_id))
-
------------- RETURN AUTHORIZATION -----------
- UNION ALL
- SELECT docass_id AS id,
-        rahead_number AS target_number,
-        docass_target_type AS target_type,
-        docass_target_id AS target_id,
-        docass_source_type AS source_type,
-        docass_source_id AS source_id,
-        cust_name AS name, firstline(rahead_notes) AS description,
-        docass_purpose AS purpose
-        FROM docass, rahead, custinfo
-        WHERE ((docass_target_type='RA')
-         AND (docass_target_id=rahead_id)
-         AND (cust_id=rahead_cust_id))
- UNION ALL
- SELECT docass_id AS id,
-        rahead_number AS target_number,
-        docass_source_type AS target_type,
-        docass_source_id AS target_id,
-        docass_target_type AS source_type,
-        docass_target_id AS source_id,
-        cust_name AS name, firstline(rahead_notes) AS description,
-        CASE 
-          WHEN docass_purpose = 'A' THEN 'C'
-          WHEN docass_purpose = 'C' THEN 'A'
-          ELSE docass_purpose
-        END AS purpose
-        FROM docass, rahead, custinfo
-        WHERE ((docass_source_type='RA')
-         AND (docass_source_id=rahead_id)
-         AND (cust_id=rahead_cust_id))
-
------------- RETURN AUTHORIZATION ITEM -----------
- UNION ALL
- SELECT docass_id AS id,
-        rahead_number AS target_number,
-        docass_target_type AS target_type,
-        docass_target_id AS target_id,
-        docass_source_type AS source_type,
-        docass_source_id AS source_id,
-        cust_name AS name, item_number AS description,
-        docass_purpose AS purpose
-        FROM docass, raitem, rahead, custinfo, itemsite, item
-        WHERE ((docass_target_type='RI')
-         AND (docass_target_id=raitem_id)
-         AND (rahead_id=raitem_rahead_id)
-         AND (cust_id=rahead_cust_id)
-         AND (itemsite_id=raitem_itemsite_id)
-         AND (item_id=itemsite_item_id))
- UNION ALL
- SELECT docass_id AS id,
-        rahead_number AS target_number,
-        docass_source_type AS target_type,
-        docass_source_id AS target_id,
-        docass_target_type AS source_type,
-        docass_target_id AS source_id,
-        cust_name AS name, item_number AS description,
-        CASE 
-          WHEN docass_purpose = 'A' THEN 'C'
-          WHEN docass_purpose = 'C' THEN 'A'
-          ELSE docass_purpose
-        END AS purpose
-        FROM docass, raitem, rahead, custinfo, itemsite, item
-        WHERE ((docass_source_type='RI')
-         AND (docass_source_id=raitem_id)
-         AND (rahead_id=raitem_rahead_id)
-         AND (cust_id=rahead_cust_id)
-         AND (itemsite_id=raitem_itemsite_id)
          AND (item_id=itemsite_item_id))
 
 ------------ QUOTE -----------
