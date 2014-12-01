@@ -821,7 +821,7 @@ return (function () {
   };
 
   XT.message = function (code, message) {
-    var msg = {code: code, message: message};
+    var msg = {code: code, message: message.substring(0, 90)};
 
     plv8.elog(INFO, JSON.stringify(msg));
     return 'Handled by XT.message';
