@@ -24,7 +24,7 @@ return (function () {
         plv8.execute(sql, [id]);
       }
 
-    if (NEW.dflt_workflow) {
+    if (NEW.create_dfltworkflow) {
       plv8.execute("SELECT xt.workflow_inheritsource($1, $2, $3, $4);", ['xt.saletypewf', 'XM.SalesOrderWorkflow', NEW.obj_uuid, NEW.cohead_saletype_id]);
     }
 

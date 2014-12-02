@@ -106,7 +106,7 @@ insert into cohead (
   cohead_status,
   cohead_saletype_id,
   cohead_shipzone_id,
-  dflt_workflow
+  create_dfltworkflow
 ) values (
   new.cohead_id,
   new.cohead_number,
