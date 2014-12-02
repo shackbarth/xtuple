@@ -105,7 +105,8 @@ insert into cohead (
   cohead_ophead_id,
   cohead_status,
   cohead_saletype_id,
-  cohead_shipzone_id
+  cohead_shipzone_id,
+  dflt_workflow
 ) values (
   new.cohead_id,
   new.cohead_number,
@@ -185,7 +186,8 @@ insert into cohead (
   new.cohead_ophead_id,
   new.cohead_status,
   new.cohead_saletype_id,
-  new.cohead_shipzone_id
+  new.cohead_shipzone_id,
+  false
 )
 
 returning cohead.*, null::date, null::numeric, null::numeric, null::numeric, 
