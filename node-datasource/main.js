@@ -417,10 +417,6 @@ require('./oauth2/passport');
  */
 var that = this;
 
-/* Static assets */
-app.use('/accounting', express.static('../../xtuple-accounting/assets', { maxAge: 86400000 }));
-app.use('/js', express.static('../../xtuple-accounting/assets/js', { maxAge: 86400000 }));
-
 app.use(express.favicon(__dirname + '/views/assets/favicon.ico'));
 app.use('/assets', express.static('views/assets', { maxAge: 86400000 }));
 app.use('/stylesheets', express.static('views/stylesheets', { maxAge: 86400000 }));
@@ -473,6 +469,8 @@ app.get('/:org/reset-password', routes.resetPassword);
 app.post('/:org/oauth/revoke-token', routes.revokeOauthToken);
 app.all('/:org/vcfExport', routes.vcfExport);
 
+X.useClientDir('/accounting', '../../xtuple-accounting/assets');
+X.useClientDir('/js', '../../xtuple-accounting/assets/js');
 
 // Set up the other servers we run on different ports.
 
