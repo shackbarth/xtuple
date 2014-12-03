@@ -2,6 +2,7 @@
 var Chart = React.createClass({
   propTypes: {
     data: React.PropTypes.array,
+    stuff: React.PropTypes.array,
     domain: React.PropTypes.object
   },
 
@@ -19,9 +20,11 @@ var Chart = React.createClass({
   },
 
   getChartState: function() {
+    console.log("gcs", this.props);
     return {
       data: this.props.data,
-      domain: this.props.domain
+      domain: this.props.domain,
+      stuff: this.props.stuff
     };
   },
 
@@ -94,8 +97,31 @@ var App = React.createClass({
     var domain = { x: [0, 30], y: [0, 100]};
     return {
       data: this.getData(domain),
-      domain: domain
+      domain: domain,
+      stuff: this.getStuff([])
     };
+  },
+
+  componentDidMount: function () {
+    console.log("ajax request");
+    $.ajax({
+      url: "/demo_dev/browser-api/v1/resources/incident-list-item",
+      dataType: "json",
+      success: function (data) {
+        console.log("ajax success");
+        this.state.stuff = this.getStuff(data.data.data); // not a joke
+      }.bind(this)
+    });
+  },
+
+  getStuff: function (data) {
+    return _.map(data, function (datum) {
+      return {
+        severity: datum.severity,
+        priority: datum.priority,
+        owner: datum.owner.propername
+      };
+    });
   },
 
   getData: function (domain) {
@@ -115,6 +141,7 @@ var App = React.createClass({
           setAppState={this.setAppState} />
         <Chart
           data={this.state.data}
+          stuff={this.state.stuff}
           domain={this.state.domain} />
       </div>
     );
