@@ -1,6 +1,6 @@
 
 CREATE OR REPLACE FUNCTION explodeKit(INTEGER, INTEGER, INTEGER, INTEGER, NUMERIC) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pSoheadid ALIAS FOR $1;
@@ -14,7 +14,7 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 CREATE OR REPLACE FUNCTION explodeKit(INTEGER, INTEGER, INTEGER, INTEGER, NUMERIC, DATE, DATE) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pSoheadid ALIAS FOR $1;
@@ -25,12 +25,12 @@ DECLARE
   pScheddate ALIAS FOR $6;
   pPromdate ALIAS FOR $7;
 BEGIN
-  RETURN explodeKit(pSoheadid, pLinenumber, pSubnumber, pItemsiteid, pQty, CURRENT_DATE, NULL, '');
+  RETURN explodeKit(pSoheadid, pLinenumber, pSubnumber, pItemsiteid, pQty, pScheddate, pPromdate, '');
 END;
 $$ LANGUAGE 'plpgsql';
 
 CREATE OR REPLACE FUNCTION explodeKit(INTEGER, INTEGER, INTEGER, INTEGER, NUMERIC, DATE, DATE, TEXT) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pSoheadid ALIAS FOR $1;
@@ -62,7 +62,7 @@ BEGIN
   END IF;
 
   FOR _item IN
-  SELECT bomitem_id, 
+  SELECT bomitem_id,
          itemsite_id,
          itemsite_warehous_id,
          COALESCE((itemsite_active AND item_active), false) AS active,
