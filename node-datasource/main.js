@@ -129,7 +129,7 @@ var app;
     // add static assets in client folder
     useClientDir(extensionLocation + "/" + extension.name + "/client", X.path.join(getExtensionDir(extension), "client"));
     // add static assets in public folder
-    useClientDir(extensionLocation + "/" + extension.name + "/client", X.path.join(getExtensionDir(extension), "public"));
+    useClientDir(extensionLocation + "/" + extension.name + "/public", X.path.join(getExtensionDir(extension), "public"));
   };
   var loadExtensionServerside = function (extension) {
     var packagePath = X.path.join(getExtensionDir(extension), "package.json");
