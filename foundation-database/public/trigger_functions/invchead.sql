@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION _invcheadBeforeTrigger() RETURNS "trigger" AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _recurid     INTEGER;
@@ -22,7 +22,7 @@ BEGIN
       RAISE EXCEPTION 'Edit not allow on Posted Invoice.';
     END IF;
   END IF;
-  
+
   IF (TG_OP = 'DELETE') THEN
     DELETE FROM invcheadtax
     WHERE (taxhist_parent_id=OLD.invchead_id);
@@ -65,7 +65,7 @@ CREATE TRIGGER invcheadBeforeTrigger
   EXECUTE PROCEDURE _invcheadBeforeTrigger();
 
 CREATE OR REPLACE FUNCTION _invcheadTrigger() RETURNS "trigger" AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 BEGIN
   IF (TG_OP = 'DELETE') THEN
@@ -147,7 +147,7 @@ CREATE TRIGGER invcheadtrigger
 CREATE OR REPLACE FUNCTION _invcheadaftertrigger()
   RETURNS trigger AS
 $BODY$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
   DECLARE
     _cmnttypeid INTEGER;
@@ -186,3 +186,25 @@ CREATE TRIGGER invcheadaftertrigger
   FOR EACH ROW
   EXECUTE PROCEDURE _invcheadaftertrigger();
 
+CREATE OR REPLACE FUNCTION _invcheadAfterDeleteTrigger() RETURNS TRIGGER AS $$
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+DECLARE
+
+BEGIN
+
+  DELETE
+  FROM charass
+  WHERE charass_target_type = 'INV'
+    AND charass_target_id = OLD.invchead_id;
+
+  RETURN OLD;
+END;
+$$ LANGUAGE 'plpgsql';
+
+SELECT dropIfExists('TRIGGER', 'invcheadAfterDeleteTrigger');
+CREATE TRIGGER invcheadAfterDeleteTrigger
+  AFTER DELETE
+  ON invchead
+  FOR EACH ROW
+  EXECUTE PROCEDURE _invcheadAfterDeleteTrigger();

@@ -110,3 +110,22 @@ $$ LANGUAGE 'plpgsql';
 
 SELECT dropifexists('TRIGGER','poheadTriggerAfter');
 CREATE TRIGGER poheadTriggerAfter AFTER UPDATE ON pohead FOR EACH ROW EXECUTE PROCEDURE _poheadTriggerAfter();
+
+CREATE OR REPLACE FUNCTION _poheadAfterDeleteTrigger() RETURNS TRIGGER AS $$
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+DECLARE
+
+BEGIN
+
+  DELETE
+  FROM charass
+  WHERE charass_target_type = 'PO'
+    AND charass_target_id = OLD.pohead_id;
+
+  RETURN OLD;
+END;
+$$ LANGUAGE 'plpgsql';
+
+SELECT dropIfExists('TRIGGER', 'poheadAfterDeleteTrigger');
+CREATE TRIGGER poheadAfterDeleteTrigger AFTER DELETE ON pohead FOR EACH ROW EXECUTE PROCEDURE _poheadAfterDeleteTrigger();

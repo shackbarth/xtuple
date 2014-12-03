@@ -253,3 +253,22 @@ $$ LANGUAGE 'plpgsql';
 
 DROP TRIGGER IF EXISTS itemAfterTrigger ON item;
 CREATE TRIGGER itemAfterTrigger AFTER INSERT OR UPDATE OR DELETE ON item FOR EACH ROW EXECUTE PROCEDURE _itemAfterTrigger();
+
+CREATE OR REPLACE FUNCTION _itemAfterDeleteTrigger() RETURNS TRIGGER AS $$
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+DECLARE
+
+BEGIN
+
+  DELETE
+  FROM charass
+  WHERE charass_target_type = 'I'
+    AND charass_target_id = OLD.item_id;
+
+  RETURN OLD;
+END;
+$$ LANGUAGE 'plpgsql';
+
+SELECT dropIfExists('TRIGGER', 'itemAfterDeleteTrigger');
+CREATE TRIGGER itemAfterDeleteTrigger AFTER DELETE ON item FOR EACH ROW EXECUTE PROCEDURE _itemAfterDeleteTrigger();

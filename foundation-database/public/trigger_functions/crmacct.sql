@@ -229,3 +229,22 @@ $$ LANGUAGE 'plpgsql';
 
 DROP TRIGGER IF EXISTS crmacctAfterTrigger ON crmacct;
 CREATE TRIGGER crmacctAfterTrigger AFTER INSERT OR UPDATE OR DELETE ON crmacct FOR EACH ROW EXECUTE PROCEDURE _crmacctAfterTrigger();
+
+CREATE OR REPLACE FUNCTION _crmacctAfterDeleteTrigger() RETURNS TRIGGER AS $$
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+DECLARE
+
+BEGIN
+
+  DELETE
+  FROM charass
+  WHERE charass_target_type = 'CRMACCT'
+    AND charass_target_id = OLD.crmacct_id;
+
+  RETURN OLD;
+END;
+$$ LANGUAGE 'plpgsql';
+
+SELECT dropIfExists('TRIGGER', 'crmacctAfterDeleteTrigger');
+CREATE TRIGGER crmacctAfterDeleteTrigger AFTER DELETE ON crmacct FOR EACH ROW EXECUTE PROCEDURE _crmacctAfterDeleteTrigger();

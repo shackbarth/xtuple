@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION _custtypeTrigger() RETURNS TRIGGER AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _check      BOOLEAN;
@@ -29,10 +29,14 @@ END;
 $$ LANGUAGE PLPGSQL;
 
 SELECT dropIfExists('TRIGGER', 'custtypeTrigger');
-CREATE TRIGGER custtypeTrigger BEFORE INSERT OR UPDATE ON custtype FOR EACH ROW EXECUTE PROCEDURE _custtypeTrigger();
+CREATE TRIGGER custtypeTrigger
+  BEFORE INSERT OR UPDATE
+  ON custtype
+  FOR EACH ROW
+  EXECUTE PROCEDURE _custtypeTrigger();
 
 CREATE OR REPLACE FUNCTION _custtypeAfterDeleteTrigger() RETURNS TRIGGER AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 BEGIN
   IF (SELECT fetchMetricValue('DefaultCustType') = OLD.custtype_id) THEN
@@ -40,10 +44,18 @@ BEGIN
                     OLD.custtype_code;
   END IF;
 
+  DELETE
+  FROM charass
+  WHERE charass_target_type = 'CT'
+    AND charass_target_id = OLD.custtype_id;
+
   RETURN OLD;
 END;
 $$ LANGUAGE PLPGSQL;
 
-DROP TRIGGER IF EXISTS custtypeAfterDeleteTrigger ON custtype;
-CREATE TRIGGER custtypeAfterDeleteTrigger AFTER DELETE ON custtype
-  FOR EACH ROW EXECUTE PROCEDURE _custtypeAfterDeleteTrigger();
+SELECT dropIfExists('TRIGGER', 'custtypeAfterDeleteTrigger');
+CREATE TRIGGER custtypeAfterDeleteTrigger
+  AFTER DELETE
+  ON custtype
+  FOR EACH ROW
+  EXECUTE PROCEDURE _custtypeAfterDeleteTrigger();

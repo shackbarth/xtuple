@@ -173,6 +173,11 @@ BEGIN
      WHERE (cmnttype_name='ChangeLog');
   END IF;
 
+  DELETE
+  FROM charass
+  WHERE charass_target_type = 'V'
+    AND charass_target_id = OLD.vend_id;
+
   RETURN OLD;
 END;
 $$ LANGUAGE 'plpgsql';

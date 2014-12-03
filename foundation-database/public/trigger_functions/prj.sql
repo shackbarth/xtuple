@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION _prjBeforeDeleteTrigger() RETURNS TRIGGER AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _recurid     INTEGER;
@@ -9,7 +9,7 @@ BEGIN
   IF (TG_OP = 'DELETE') THEN
     DELETE FROM docass WHERE docass_source_id = OLD.prj_id AND docass_source_type = 'J';
     DELETE FROM docass WHERE docass_target_id = OLD.prj_id AND docass_target_type = 'J';
-    
+
     SELECT recur_id INTO _recurid
       FROM recur
      WHERE ((recur_parent_id=OLD.prj_id)
@@ -45,8 +45,31 @@ CREATE TRIGGER prjbeforedeletetrigger
   FOR EACH ROW
   EXECUTE PROCEDURE _prjBeforeDeleteTrigger();
 
+CREATE OR REPLACE FUNCTION _prjAfterDeleteTrigger() RETURNS TRIGGER AS $$
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+DECLARE
+
+BEGIN
+
+  DELETE
+  FROM charass
+  WHERE charass_target_type = 'PROJ'
+    AND charass_target_id = OLD.prj_id;
+
+  RETURN OLD;
+END;
+$$ LANGUAGE 'plpgsql';
+
+SELECT dropIfExists('TRIGGER', 'prjAfterDeleteTrigger');
+CREATE TRIGGER prjAfterDeleteTrigger
+  AFTER DELETE
+  ON prj
+  FOR EACH ROW
+  EXECUTE PROCEDURE _prjAfterDeleteTrigger();
+
 CREATE OR REPLACE FUNCTION _prjAfterTrigger() RETURNS TRIGGER AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _cmnttypeid INTEGER;
