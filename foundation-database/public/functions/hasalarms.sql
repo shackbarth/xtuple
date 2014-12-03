@@ -4,7 +4,7 @@ CREATE OR REPLACE FUNCTION hasAlarms() RETURNS BOOLEAN AS $$
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _alarm          RECORD;
-  _alarmtype      TEXT;
+  _alarmtype      TEXT := '';
   _batchId        INTEGER;
   _evntlogordtype TEXT;
   _evnttypeid     INTEGER;
