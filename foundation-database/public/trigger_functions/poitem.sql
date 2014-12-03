@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION _poitemTrigger() RETURNS TRIGGER AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _cmnttypeid 	INTEGER;
@@ -55,8 +55,8 @@ BEGIN
     IF (_status='C') THEN
       RAISE EXCEPTION 'New lines may not be inserted into a closed purchase order';
     END IF;
-    
-    --Fetch and apply default item source data if applicable    
+
+    --Fetch and apply default item source data if applicable
     IF ((NEW.poitem_itemsrc_id IS NULL) AND (NEW.poitem_itemsite_id IS NOT NULL)) THEN
       IF (NEW.poitem_itemsrc_id IS NULL) THEN
         SELECT COUNT(itemsrc_id)  INTO _cnt
@@ -111,7 +111,7 @@ BEGIN
     IF (NEW.poitem_duedate IS NULL) THEN
       RAISE EXCEPTION  'A due date is required';
     END IF;
-    
+
     --Set defaults
     NEW.poitem_linenumber    		:= COALESCE(NEW.poitem_linenumber,(
 						SELECT COALESCE(MAX(poitem_linenumber),0) + 1
@@ -147,7 +147,7 @@ BEGIN
     NEW.poitem_qty_received		:= 0;
     NEW.poitem_qty_returned		:= 0;
     NEW.poitem_qty_vouchered		:= 0;
-      
+
   END IF;
 
   IF (TG_OP = 'UPDATE') THEN
@@ -167,7 +167,7 @@ SELECT dropifexists('TRIGGER', 'poitemTrigger');
 CREATE TRIGGER poitemTrigger BEFORE INSERT OR UPDATE ON poitem FOR EACH ROW EXECUTE PROCEDURE _poitemTrigger();
 
 CREATE OR REPLACE FUNCTION _poitemAfterTrigger() RETURNS TRIGGER AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _changelog BOOLEAN := FALSE;
@@ -256,7 +256,7 @@ SELECT dropifexists('TRIGGER', 'poitemAfterTrigger');
 CREATE TRIGGER poitemAfterTrigger AFTER INSERT OR UPDATE ON poitem FOR EACH ROW EXECUTE PROCEDURE _poitemAfterTrigger();
 
 CREATE OR REPLACE FUNCTION _poitemDeleteTrigger() RETURNS TRIGGER AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
 BEGIN
@@ -290,7 +290,7 @@ SELECT dropifexists('TRIGGER', 'poitemDeleteTrigger');
 CREATE TRIGGER poitemDeleteTrigger BEFORE DELETE ON poitem FOR EACH ROW EXECUTE PROCEDURE _poitemDeleteTrigger();
 
 CREATE OR REPLACE FUNCTION _poitemAfterDeleteTrigger() RETURNS TRIGGER AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _changelog BOOLEAN := FALSE;
@@ -315,6 +315,11 @@ BEGIN
   IF ( _changelog ) THEN
     PERFORM postComment('ChangeLog', 'P', OLD.poitem_pohead_id, ('Deleted Line #' || OLD.poitem_linenumber::TEXT));
   END IF;
+
+  DELETE
+  FROM charass
+  WHERE charass_target_type = 'PI'
+    AND charass_target_id = OLD.poitem_id;
 
   RETURN OLD;
 END;
