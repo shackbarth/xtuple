@@ -1578,6 +1578,35 @@ trailing:true, white:true, strict: false*/
   XV.registerModelList("XM.PlannerCode", "XV.PlannerCodeList");
 
   // ..........................................................
+  // PRINTER
+  //
+
+  enyo.kind({
+    name: "XV.PrinterList",
+    kind: "XV.List",
+    label: "_printers".loc(),
+    collection: "XM.PrinterCollection",
+    parameterWidget: null,
+    query: {orderBy: [
+      {attribute: 'name'}
+    ]},
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", components: [
+            {kind: "XV.ListAttr", attr: "name", isKey: true}
+          ]},
+          {kind: "XV.ListColumn", components: [
+            {kind: "XV.ListAttr", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelList("XM.Printer", "XV.PrinterList");
+
+  // ..........................................................
   // PRODUCT CATEGORY
   //
 
