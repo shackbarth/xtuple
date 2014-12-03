@@ -310,7 +310,7 @@ var conditionalExpressSession = function (req, res, next) {
   // REST API endpoints start with "/api" in their path.
   // The 'assets' folder and login page are sessionless.
   if ((/^api/i).test(req.path.split("/")[2]) ||
-      (/^\/asset/i).test(req.path) ||
+      (/^\/assets/i).test(req.path) ||
       (/^\/accounting/i).test(req.path) ||
       (/^\/browser-api/i).test(req.path) ||
       (/^\/js/i).test(req.path) ||
