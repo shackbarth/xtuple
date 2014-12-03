@@ -32,8 +32,11 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 SELECT dropIfExists('TRIGGER', 'opheadBeforeTrigger');
-CREATE TRIGGER opheadBeforeTrigger BEFORE INSERT OR UPDATE ON ophead
-FOR EACH ROW EXECUTE PROCEDURE _opheadBeforeTrigger();
+CREATE TRIGGER opheadBeforeTrigger
+  BEFORE INSERT OR UPDATE
+  ON ophead
+  FOR EACH ROW
+  EXECUTE PROCEDURE _opheadBeforeTrigger();
 
 CREATE OR REPLACE FUNCTION _opheadAfterTrigger () RETURNS TRIGGER AS $$
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
@@ -163,8 +166,11 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 SELECT dropIfExists('TRIGGER', 'opheadAfterTrigger');
-CREATE TRIGGER opheadAfterTrigger AFTER INSERT OR UPDATE OR DELETE ON ophead
-FOR EACH ROW EXECUTE PROCEDURE _opheadAfterTrigger();
+CREATE TRIGGER opheadAfterTrigger
+  AFTER INSERT OR UPDATE OR DELETE
+  ON ophead
+  FOR EACH ROW
+  EXECUTE PROCEDURE _opheadAfterTrigger();
 
 CREATE OR REPLACE FUNCTION _opheadAfterDeleteTrigger() RETURNS TRIGGER AS $$
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
@@ -183,4 +189,8 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 SELECT dropIfExists('TRIGGER', 'opheadAfterDeleteTrigger');
-CREATE TRIGGER opheadAfterDeleteTrigger AFTER DELETE ON ophead FOR EACH ROW EXECUTE PROCEDURE _opheadAfterDeleteTrigger();
+CREATE TRIGGER opheadAfterDeleteTrigger
+  AFTER DELETE
+  ON ophead
+  FOR EACH ROW
+  EXECUTE PROCEDURE _opheadAfterDeleteTrigger();

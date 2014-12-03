@@ -38,8 +38,11 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 SELECT dropIfExists('TRIGGER', 'custTrigger');
-CREATE TRIGGER custTrigger BEFORE INSERT OR UPDATE ON custinfo
-       FOR EACH ROW EXECUTE PROCEDURE _custTrigger();
+CREATE TRIGGER custTrigger
+  BEFORE INSERT OR UPDATE
+  ON custinfo
+  FOR EACH ROW
+  EXECUTE PROCEDURE _custTrigger();
 
 CREATE OR REPLACE FUNCTION _custAfterTrigger () RETURNS TRIGGER AS $$
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
@@ -192,8 +195,11 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 SELECT dropIfExists('TRIGGER', 'custAfterTrigger');
-CREATE TRIGGER custAfterTrigger AFTER INSERT OR UPDATE ON custinfo
-       FOR EACH ROW EXECUTE PROCEDURE _custAfterTrigger();
+CREATE TRIGGER custAfterTrigger
+  AFTER INSERT OR UPDATE
+  ON custinfo
+  FOR EACH ROW
+  EXECUTE PROCEDURE _custAfterTrigger();
 
 CREATE OR REPLACE FUNCTION _custinfoBeforeDeleteTrigger() RETURNS TRIGGER AS $$
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
@@ -211,8 +217,11 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 SELECT dropIfExists('TRIGGER', 'custinfoBeforeDeleteTrigger');
-CREATE TRIGGER custinfoBeforeDeleteTrigger BEFORE DELETE ON custinfo
-       FOR EACH ROW EXECUTE PROCEDURE _custinfoBeforeDeleteTrigger();
+CREATE TRIGGER custinfoBeforeDeleteTrigger
+  BEFORE DELETE
+  ON custinfo
+  FOR EACH ROW
+  EXECUTE PROCEDURE _custinfoBeforeDeleteTrigger();
 
 CREATE OR REPLACE FUNCTION _custinfoAfterDeleteTrigger() RETURNS TRIGGER AS $$
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
@@ -269,5 +278,8 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 SELECT dropIfExists('TRIGGER', 'custinfoAfterDeleteTrigger');
-CREATE TRIGGER custinfoAfterDeleteTrigger AFTER DELETE ON custinfo
-       FOR EACH ROW EXECUTE PROCEDURE _custinfoAfterDeleteTrigger();
+CREATE TRIGGER custinfoAfterDeleteTrigger
+  AFTER DELETE
+  ON custinfo
+  FOR EACH ROW
+  EXECUTE PROCEDURE _custinfoAfterDeleteTrigger();

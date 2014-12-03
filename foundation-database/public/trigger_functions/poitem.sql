@@ -164,7 +164,11 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 SELECT dropifexists('TRIGGER', 'poitemTrigger');
-CREATE TRIGGER poitemTrigger BEFORE INSERT OR UPDATE ON poitem FOR EACH ROW EXECUTE PROCEDURE _poitemTrigger();
+CREATE TRIGGER poitemTrigger
+  BEFORE INSERT OR UPDATE
+  ON poitem
+  FOR EACH ROW
+  EXECUTE PROCEDURE _poitemTrigger();
 
 CREATE OR REPLACE FUNCTION _poitemAfterTrigger() RETURNS TRIGGER AS $$
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
@@ -253,7 +257,11 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 SELECT dropifexists('TRIGGER', 'poitemAfterTrigger');
-CREATE TRIGGER poitemAfterTrigger AFTER INSERT OR UPDATE ON poitem FOR EACH ROW EXECUTE PROCEDURE _poitemAfterTrigger();
+CREATE TRIGGER poitemAfterTrigger
+  AFTER INSERT OR UPDATE
+  ON poitem
+  FOR EACH ROW
+  EXECUTE PROCEDURE _poitemAfterTrigger();
 
 CREATE OR REPLACE FUNCTION _poitemDeleteTrigger() RETURNS TRIGGER AS $$
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
@@ -287,7 +295,11 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 SELECT dropifexists('TRIGGER', 'poitemDeleteTrigger');
-CREATE TRIGGER poitemDeleteTrigger BEFORE DELETE ON poitem FOR EACH ROW EXECUTE PROCEDURE _poitemDeleteTrigger();
+CREATE TRIGGER poitemDeleteTrigger
+  BEFORE DELETE
+  ON poitem
+  FOR EACH ROW
+  EXECUTE PROCEDURE _poitemDeleteTrigger();
 
 CREATE OR REPLACE FUNCTION _poitemAfterDeleteTrigger() RETURNS TRIGGER AS $$
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
@@ -326,4 +338,8 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 SELECT dropifexists('TRIGGER', 'poitemAfterDeleteTrigger');
-CREATE TRIGGER poitemAfterDeleteTrigger AFTER DELETE ON poitem FOR EACH ROW EXECUTE PROCEDURE _poitemAfterDeleteTrigger();
+CREATE TRIGGER poitemAfterDeleteTrigger
+  AFTER DELETE
+  ON poitem
+  FOR EACH ROW
+  EXECUTE PROCEDURE _poitemAfterDeleteTrigger();

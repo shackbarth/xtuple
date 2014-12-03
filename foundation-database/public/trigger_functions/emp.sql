@@ -45,8 +45,11 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 SELECT dropIfExists('TRIGGER', 'empBeforeTrigger');
-CREATE TRIGGER empBeforeTrigger BEFORE INSERT OR UPDATE ON emp
-       FOR EACH ROW EXECUTE PROCEDURE _empBeforeTrigger();
+CREATE TRIGGER empBeforeTrigger
+  BEFORE INSERT OR UPDATE
+  ON emp
+  FOR EACH ROW
+  EXECUTE PROCEDURE _empBeforeTrigger();
 
 CREATE OR REPLACE FUNCTION _empAfterTrigger () RETURNS TRIGGER AS $$
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
@@ -147,8 +150,11 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 SELECT dropIfExists('TRIGGER', 'empAfterTrigger');
-CREATE TRIGGER empAfterTrigger AFTER INSERT OR UPDATE ON emp
-       FOR EACH ROW EXECUTE PROCEDURE _empAfterTrigger();
+CREATE TRIGGER empAfterTrigger
+  AFTER INSERT OR UPDATE
+  ON emp
+  FOR EACH ROW
+  EXECUTE PROCEDURE _empAfterTrigger();
 
 CREATE OR REPLACE FUNCTION _empBeforeDeleteTrigger() RETURNS TRIGGER AS $$
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
@@ -172,8 +178,11 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 SELECT dropIfExists('TRIGGER', 'empBeforeDeleteTrigger');
-CREATE TRIGGER empBeforeDeleteTrigger BEFORE DELETE ON emp
-       FOR EACH ROW EXECUTE PROCEDURE _empBeforeDeleteTrigger();
+CREATE TRIGGER empBeforeDeleteTrigger
+  BEFORE DELETE
+  ON emp
+  FOR EACH ROW
+  EXECUTE PROCEDURE _empBeforeDeleteTrigger();
 
 CREATE OR REPLACE FUNCTION _empAfterDeleteTrigger() RETURNS TRIGGER AS $$
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
@@ -196,5 +205,8 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 SELECT dropIfExists('TRIGGER', 'empAfterDeleteTrigger');
-CREATE TRIGGER empAfterDeleteTrigger AFTER DELETE ON emp
-       FOR EACH ROW EXECUTE PROCEDURE _empAfterDeleteTrigger();
+CREATE TRIGGER empAfterDeleteTrigger
+  AFTER DELETE
+  ON emp
+  FOR EACH ROW
+  EXECUTE PROCEDURE _empAfterDeleteTrigger();

@@ -21,7 +21,11 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 SELECT dropIfExists('TRIGGER', 'prjtaskTrigger');
-CREATE TRIGGER prjtaskTrigger BEFORE INSERT OR UPDATE ON prjtask FOR EACH ROW EXECUTE PROCEDURE _prjtaskTrigger();
+CREATE TRIGGER prjtaskTrigger
+  BEFORE INSERT OR UPDATE
+  ON prjtask
+  FOR EACH ROW
+  EXECUTE PROCEDURE _prjtaskTrigger();
 
 CREATE OR REPLACE FUNCTION _prjtaskAfterTrigger () RETURNS TRIGGER AS $$
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
@@ -73,7 +77,11 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 SELECT dropIfExists('TRIGGER', 'prjtaskAfterTrigger');
-CREATE TRIGGER prjtaskAfterTrigger AFTER INSERT OR UPDATE ON prjtask FOR EACH ROW EXECUTE PROCEDURE _prjtaskAfterTrigger();
+CREATE TRIGGER prjtaskAfterTrigger
+  AFTER INSERT OR UPDATE
+  ON prjtask
+  FOR EACH ROW
+  EXECUTE PROCEDURE _prjtaskAfterTrigger();
 
 CREATE OR REPLACE FUNCTION _prjtaskAfterDeleteTrigger() RETURNS TRIGGER AS $$
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
@@ -92,4 +100,8 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 SELECT dropIfExists('TRIGGER', 'prjtaskAfterDeleteTrigger');
-CREATE TRIGGER prjtaskAfterDeleteTrigger AFTER DELETE ON prjtask FOR EACH ROW EXECUTE PROCEDURE _prjtaskAfterDeleteTrigger();
+CREATE TRIGGER prjtaskAfterDeleteTrigger
+  AFTER DELETE
+  ON prjtask
+  FOR EACH ROW
+  EXECUTE PROCEDURE _prjtaskAfterDeleteTrigger();
