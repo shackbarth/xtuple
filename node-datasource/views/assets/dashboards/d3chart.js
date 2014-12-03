@@ -55,7 +55,7 @@ d3Chart._drawPoints = function (el, scales, data, stuff) {
   // ENTER & UPDATE
   point.attr('cx', function (d) { return scales.x(d.x); })
       .attr('cy', function (d) { return scales.y(d.y); })
-      .attr('r', function (d) { return scales.z(d.z) + 100 * stuff.length; });
+      .attr('r', function (d) { return scales.z(d.z) + 10 * stuff.length; });
 
   // EXIT
   point.exit()

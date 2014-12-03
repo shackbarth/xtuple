@@ -108,9 +108,7 @@ var App = React.createClass({
       url: "/demo_dev/browser-api/v1/resources/incident-list-item",
       dataType: "json",
       success: function (data) {
-        console.log("ajax success");
-        this.state.stuff = this.getStuff(data.data.data); // not a joke
-        this.setState(this.state);
+        this.setState({stuff: this.getStuff(data.data.data)});
       }.bind(this)
     });
   },
