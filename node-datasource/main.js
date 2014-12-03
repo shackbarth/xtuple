@@ -127,6 +127,7 @@ var app;
   var loadExtensionClientside = function (extension) {
     var extensionLocation = extension.location === "npm" ? extension.location : extension.location + "/source";
     useClientDir(extensionLocation + "/" + extension.name + "/client", X.path.join(getExtensionDir(extension), "client"));
+    useClientDir(extensionLocation + "/" + extension.name + "/client", X.path.join(getExtensionDir(extension), "public"));
   };
   var loadExtensionServerside = function (extension) {
     var packagePath = X.path.join(getExtensionDir(extension), "package.json");
@@ -468,9 +469,6 @@ app.all('/:org/oauth/generate-key', routes.generateOauthKey);
 app.get('/:org/reset-password', routes.resetPassword);
 app.post('/:org/oauth/revoke-token', routes.revokeOauthToken);
 app.all('/:org/vcfExport', routes.vcfExport);
-
-X.useClientDir('/accounting', '../../xtuple-accounting/assets');
-X.useClientDir('/js', '../../xtuple-accounting/assets/js');
 
 // Set up the other servers we run on different ports.
 
