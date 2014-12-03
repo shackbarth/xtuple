@@ -126,7 +126,9 @@ var app;
   };
   var loadExtensionClientside = function (extension) {
     var extensionLocation = extension.location === "npm" ? extension.location : extension.location + "/source";
+    // add static assets in client folder
     useClientDir(extensionLocation + "/" + extension.name + "/client", X.path.join(getExtensionDir(extension), "client"));
+    // add static assets in public folder
     useClientDir(extensionLocation + "/" + extension.name + "/client", X.path.join(getExtensionDir(extension), "public"));
   };
   var loadExtensionServerside = function (extension) {
@@ -312,9 +314,7 @@ var conditionalExpressSession = function (req, res, next) {
   // The 'assets' folder and login page are sessionless.
   if ((/^api/i).test(req.path.split("/")[2]) ||
       (/^\/assets/i).test(req.path) ||
-      (/^\/accounting/i).test(req.path) ||
       (/^\/browser-api/i).test(req.path) ||
-      (/^\/js/i).test(req.path) ||
       (/^\/stylesheets/i).test(req.path) ||
       (/^\/bower_components/i).test(req.path) ||
       req.path === '/' ||
@@ -418,6 +418,7 @@ require('./oauth2/passport');
  */
 var that = this;
 
+/* Static assets */
 app.use(express.favicon(__dirname + '/views/assets/favicon.ico'));
 app.use('/assets', express.static('views/assets', { maxAge: 86400000 }));
 app.use('/stylesheets', express.static('views/stylesheets', { maxAge: 86400000 }));
