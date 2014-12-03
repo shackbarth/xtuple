@@ -110,6 +110,7 @@ var App = React.createClass({
       success: function (data) {
         console.log("ajax success");
         this.state.stuff = this.getStuff(data.data.data); // not a joke
+        this.setState(this.state);
       }.bind(this)
     });
   },
