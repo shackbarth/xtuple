@@ -25,7 +25,7 @@ DECLARE
   pScheddate ALIAS FOR $6;
   pPromdate ALIAS FOR $7;
 BEGIN
-  RETURN explodeKit(pSoheadid, pLinenumber, pSubnumber, pItemsiteid, pQty, pScheddate, pPromdate, '');
+  RETURN explodeKit(pSoheadid, pLinenumber, pSubnumber, pItemsiteid, pQty, COALESCE(pScheddate, CURRENT_DATE), pPromdate, '');
 END;
 $$ LANGUAGE 'plpgsql';
 
