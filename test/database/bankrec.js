@@ -69,7 +69,7 @@ var _    = require("underscore"),
                        '   AND bankrecitem_source=<? value("src") ?>'        +
                        '   AND bankrecitem_source_id <? literal("srcid") ?>;',
       toggleCheckSql = "SELECT toggleBankRecCleared(<? value('bankrecid') ?>,'GL'," +
-                       "  gltrans_id, checkhead_curr_rate, checkhead_amount)"  +
+                       "  gltrans_id, checkhead_curr_rate, gltrans_amount)"    +
                        "  AS result"                                           +
                        " FROM checkhead JOIN gltrans ON (gltrans_doctype='CK'" +
                        "                    AND gltrans_misc_id=checkhead_id)" +
