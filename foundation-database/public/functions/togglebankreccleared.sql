@@ -1,30 +1,26 @@
 SELECT dropIfExists('FUNCTION', 'toggleBankrecCleared(int,text,int)', 'public');
 
-CREATE OR REPLACE FUNCTION toggleBankrecCleared(INTEGER, TEXT, INTEGER, NUMERIC, NUMERIC) RETURNS BOOLEAN AS $$
+CREATE OR REPLACE FUNCTION toggleBankrecCleared(pBankrecid INTEGER,
+                                                pSource TEXT,
+                                                pSourceid INTEGER,
+                                                pCurrrate NUMERIC,
+                                                pBaseAmount NUMERIC) RETURNS BOOLEAN AS $$
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
-DECLARE
-  pBankrecid ALIAS FOR $1;
-  pSource    ALIAS FOR $2;
-  pSourceid  ALIAS FOR $3;
-  pCurrrate  ALIAS FOR $4;
-  pAmount    ALIAS FOR $5;
-
 BEGIN
-  RETURN toggleBankrecCleared(pBankrecid, pSource, pSourceid, pCurrrate, pAmount, NULL);
+  RETURN toggleBankrecCleared(pBankrecid, pSource, pSourceid, pCurrrate, pBaseAmount, NULL);
 END;
-$$ LANGUAGE 'plpgsql';
+$$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION toggleBankrecCleared(INTEGER, TEXT, INTEGER, NUMERIC, NUMERIC, DATE) RETURNS BOOLEAN AS $$
+CREATE OR REPLACE FUNCTION toggleBankrecCleared(pBankrecid INTEGER,
+                                                pSource TEXT,
+                                                pSourceid INTEGER,
+                                                pCurrrate NUMERIC,
+                                                pBaseAmount NUMERIC,
+                                                pDate DATE) RETURNS BOOLEAN AS $$
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
-  pBankrecid ALIAS FOR $1;
-  pSource    ALIAS FOR $2;
-  pSourceid  ALIAS FOR $3;
-  pCurrrate  ALIAS FOR $4;
-  pAmount    ALIAS FOR $5;
-  pDate      ALIAS FOR $6;
   _cleared BOOLEAN;
   _r RECORD;
 
@@ -44,7 +40,10 @@ BEGIN
     VALUES
     (pBankrecid, pSource,
      pSourceid, _cleared,
-     pCurrrate, pAmount,
+     CASE WHEN (fetchMetricValue('CurrencyExchangeSense') = 1) THEN ROUND(1.0 / pCurrrate, 8)
+          ELSE ROUND(pCurrrate,8) END,
+     CASE WHEN (fetchMetricValue('CurrencyExchangeSense') = 1) THEN ROUND(pBaseAmount * ROUND(1.0 / pCurrrate,8),2)
+          ELSE ROUND(pBaseAmount * ROUND(pCurrrate,8),2) END,
      pDate);
   ELSE
     _cleared := FALSE;
@@ -54,5 +53,5 @@ BEGIN
 
   RETURN _cleared;
 END;
-$$ LANGUAGE 'plpgsql';
+$$ LANGUAGE plpgsql;
 
