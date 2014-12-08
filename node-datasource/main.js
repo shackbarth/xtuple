@@ -126,7 +126,10 @@ var app;
   };
   var loadExtensionClientside = function (extension) {
     var extensionLocation = extension.location === "npm" ? extension.location : extension.location + "/source";
+    // add static assets in client folder
     useClientDir(extensionLocation + "/" + extension.name + "/client", X.path.join(getExtensionDir(extension), "client"));
+    // add static assets in public folder
+    useClientDir(extensionLocation + "/" + extension.name + "/public", X.path.join(getExtensionDir(extension), "public"));
   };
   var loadExtensionServerside = function (extension) {
     var packagePath = X.path.join(getExtensionDir(extension), "package.json");
@@ -466,7 +469,6 @@ app.all('/:org/oauth/generate-key', routes.generateOauthKey);
 app.get('/:org/reset-password', routes.resetPassword);
 app.post('/:org/oauth/revoke-token', routes.revokeOauthToken);
 app.all('/:org/vcfExport', routes.vcfExport);
-
 
 // Set up the other servers we run on different ports.
 
