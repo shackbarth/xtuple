@@ -151,104 +151,6 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
-  */
-  XM.AccountAccount = XM.Model.extend({
-    /** @scope XM.AccountAccount.prototype */
-
-    recordType: 'XM.AccountAccount',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.AccountContact = XM.Model.extend({
-    /** @scope XM.AccountContact.prototype */
-
-    recordType: 'XM.AccountContact',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.AccountIncident = XM.Model.extend({
-    /** @scope XM.AccountIncident.prototype */
-
-    recordType: 'XM.AccountIncident',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.AccountItem = XM.Model.extend({
-    /** @scope XM.AccountItem.prototype */
-
-    recordType: 'XM.AccountItem',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.AccountFile = XM.Model.extend({
-    /** @scope XM.AccountFile.prototype */
-
-    recordType: 'XM.AccountFile',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.AccountUrl = XM.Model.extend({
-    /** @scope XM.AccountUrl.prototype */
-
-    recordType: 'XM.AccountUrl',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.AccountProject = XM.Model.extend({
-    /** @scope XM.AccountProject.prototype */
-
-    recordType: 'XM.AccountProject',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
     @extends XM.Info
   */
   XM.AccountRelation = XM.Info.extend({
@@ -261,6 +163,11 @@ white:true*/
     descriptionKey: "name"
 
   });
+
+  XT.documentAssociations.CRMA = {
+    model: "XM.AccountRelation",
+    label: "_account".loc()
+  };
 
   /**
     @class

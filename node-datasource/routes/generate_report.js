@@ -13,9 +13,68 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     async = require("async"),
     fs = require("fs"),
     path = require("path"),
-    ipp = require("ipp"),
+    child_process = require("child_process"),
     Report = require('fluentreports').Report,
+    qr = require('qr-image'),
     queryForData = require("./export").queryForData;
+
+
+  //
+  // FLUENT REPORT FORMAT TRANFORMS
+  //
+  var formatAddress = function (name, address1, address2, address3, city, state, code, country) {
+    var address = [];
+    if (name) { address.push(name); }
+    if (address1) {address.push(address1); }
+    if (address2) {address.push(address2); }
+    if (address3) {address.push(address3); }
+    if (city || state || code) {
+      var cityStateZip = (city || '') +
+            (city && (state || code) ? ' '  : '') +
+            (state || '') +
+            (state && code ? ' '  : '') +
+            (code || '');
+      address.push(cityStateZip);
+    }
+    if (country) { address.push(country); }
+    return address;
+  };
+
+  // this is very similar to a function on the XM.Location model
+  var formatArbl = function (aisle, rack, bin, location) {
+    return [_.filter(arguments, function (item) {
+      return !_.isEmpty(item);
+    }).join("-")];
+  };
+
+  var format3of9 = function (string) {
+    return "*" + string + "*";
+  };
+
+  var formatArbl3of9 = function (aisle, rack, bin, location) {
+    return format3of9(formatArbl(aisle, rack, bin, location));
+  };
+
+  var formatFullName = function (firstName, lastName, honorific, suffix) {
+    var fullName = [];
+    if (honorific) { fullName.push(honorific +  ' '); }
+    fullName.push(firstName + ' ' + lastName);
+    if (suffix) { fullName.push(' ' + suffix); }
+    return fullName;
+  };
+
+  var formatInteger = function (numeric) {
+    return ~~numeric;  // Returns a numeric as an integer type
+  };
+
+  XT.transformFunctions = {
+    fullname: formatFullName,
+    address: formatAddress,
+    "3of9": format3of9,
+    arbl: formatArbl,
+    arbl3of9: formatArbl3of9,
+    integer: formatInteger
+  };
 
   /**
     Generates a report using fluentReports
@@ -42,6 +101,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       // TODO: introduce pseudorandomness (maybe a timestamp) to avoid collisions
       reportName = req.query.type.toLowerCase() + req.query.id + ".pdf",
       auxilliaryInfo = req.query.auxilliaryInfo,
+      printer = req.query.printer,
+      printQty = req.query.printQty || 1,
       workingDir = path.join(__dirname, "../temp", databaseName),
       reportPath = path.join(workingDir, reportName),
       imageFilenameMap = {},
@@ -65,19 +126,17 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     var transformDataStructure = function (data) {
       // TODO: detailAttribute could be inferred by looking at whatever comes before the *
       // in the detailElements definition.
-
-      if (!reportDefinition.settings.detailAttribute) {
-        // no children, so no transformation is necessary
-        return [data];
-      }
-
-      return _.map(data[reportDefinition.settings.detailAttribute], function (detail) {
-        var pathedDetail = {};
-        _.each(detail, function (detailValue, detailKey) {
-          pathedDetail[reportDefinition.settings.detailAttribute + "*" + detailKey] = detailValue;
+      if (reportDefinition.settings.detailAttribute && !_.isEmpty(data[reportDefinition.settings.detailAttribute])) {
+        return _.map(data[reportDefinition.settings.detailAttribute], function (detail) {
+          var pathedDetail = {};
+          _.each(detail, function (detailValue, detailKey) {
+            pathedDetail[reportDefinition.settings.detailAttribute + "*" + detailKey] = detailValue;
+          });
+          return _.extend({}, data, pathedDetail);
         });
-        return _.extend({}, data, pathedDetail);
-      });
+      }
+      // no children, so no transformation is necessary
+      return [data];
     };
 
     /**
@@ -102,7 +161,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
       return _.map(detailDef, function (def) {
         var text = def.attr ? XT.String.traverseDots(data, def.attr) : loc(def.text);
-        if (def.text && def.label === true) {
+        if (def.transform) {
+           // Transform works for a single input attribute.  Refactor if multiple inputs
+          // required, although I do not think this is possible with the report detail section
+          text = XT.transformFunctions[def.transform].apply(this, [text]);
+        } else if (def.text && def.label === true) {
           // label=true on text just means add a colon
           text = text + ": ";
         } else if (def.label === true) {
@@ -137,21 +200,23 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
      */
     var transformElementData = function (def, data) {
       var textOnly,
+        mapSource,
         params;
 
       if (def.transform) {
         params = marryData(def.definition, data, true);
-        return transformFunctions[def.transform].apply(this, params);
+        return XT.transformFunctions[def.transform].apply(this, params);
       }
 
       if (def.element === 'image') {
         // if the image is not found, we don't want to print it
-        if (!imageFilenameMap[def.definition]) {
+        mapSource = _.isString(def.definition) ? def.definition : (def.definition[0].attr || def.definition[0].text);
+        if (!imageFilenameMap[mapSource]) {
           return "";
         }
 
-        // we save the images under a different name then they're described in the definition
-        return path.join(workingDir, imageFilenameMap[def.definition]);
+        // we save the images under a different name than they're described in the definition
+        return path.join(workingDir, imageFilenameMap[mapSource]);
       }
 
       // these elements are expecting a parameter that is a number, not
@@ -164,45 +229,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       textOnly = def.element === "print" || !def.element;
 
       return marryData(def.definition, data, textOnly);
-    };
-
-    var formatAddress = function (name, address1, address2, address3, city, state, code, country) {
-      var address = [];
-      if (name) { address.push(name); }
-      if (address1) {address.push(address1); }
-      if (address2) {address.push(address2); }
-      if (address3) {address.push(address3); }
-      if (city || state || code) {
-        var cityStateZip = (city || '') +
-              (city && (state || code) ? ' '  : '') +
-              (state || '') +
-              (state && code ? ' '  : '') +
-              (code || '');
-        address.push(cityStateZip);
-      }
-      if (country) { address.push(country); }
-      return address;
-    };
-
-    // this is very similar to a function on the XM.Location model
-    var formatArbl = function (aisle, rack, bin, location) {
-      return [_.filter(arguments, function (item) {
-        return !_.isEmpty(item);
-      }).join("-")];
-    };
-
-    var formatFullName = function (firstName, lastName, honorific, suffix) {
-      var fullName = [];
-      if (honorific) { fullName.push(honorific +  ' '); }
-      fullName.push(firstName + ' ' + lastName);
-      if (suffix) { fullName.push(' ' + suffix); }
-      return fullName;
-    };
-
-    var transformFunctions = {
-      fullname: formatFullName,
-      address: formatAddress,
-      arbl: formatArbl
     };
 
     /**
@@ -307,25 +333,22 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       Silent-print to a printer registered in the node-datasource.
      */
     var responsePrint = function (res, data, done) {
-      var printer = ipp.Printer(X.options.datasource.printer),
-        msg = {
-          "operation-attributes-tag": {
-            "job-name": "Silent Print",
-            "document-format": "application/pdf"
-          },
-          data: data
-        };
+      var print = child_process.spawn('lp', ['-d', printer, '-n', printQty, reportPath]);
 
-      printer.execute("Print-Job", msg, function (error, result) {
-        if (error) {
-          X.log("Print error", error);
-          res.send({isError: true, message: "Error printing"});
-          done();
-        } else {
-          res.send({message: "Print Success"});
-          done();
-        }
+      print.stdout.on('data', function (data) {
+        res.send({message: "Print Success"});
+        done();
       });
+
+      print.stderr.on('data', function (data) {
+        res.send({isError: true, message: "Error printing: " + data});
+        done();
+      });
+      /*
+      print.on('close', function (code) {
+        console.log('child process exited with code ' + code);
+      });
+      */
     };
 
     // Convenience hash to avoid if-else
@@ -451,7 +474,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       //
       var allElements = _.flatten(_.union(reportDefinition.headerElements,
           reportDefinition.detailElements, reportDefinition.footerElements)),
-        allImages = _.unique(_.pluck(_.where(allElements, {element: "image"}), "definition"));
+        allImages = _.unique(_.pluck(_.filter(allElements, function (el) {
+          return el.element === "image" && el.imageType !== "qr";
+        }), "definition"));
         // thanks Jeremy
 
       if (allImages.length === 0) {
@@ -507,6 +532,57 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         done();
       };
       queryForData(req.session, requestDetails, callback);
+    };
+
+
+    /*
+     Elements can be defined by attr or text
+     {
+       "element": "image",
+       "imageType": "qr",
+       "definition": [{"attr": "billtoName"}],
+       "options": {"x": 200, "y": 180}
+    },
+    {
+       "element": "image",
+       "imageType": "qr",
+       "definition": [{"text": "_invoiceNumber"}],
+       "options": {"x": 0, "y": 195}
+     },
+    */
+    var createQrCodes = function (done) {
+      //
+      // Figure out what images we need to fetch, if any
+      //
+      var allElements = _.flatten(_.union(reportDefinition.headerElements,
+          reportDefinition.detailElements, reportDefinition.footerElements)),
+        allQrElements = _.unique(_.pluck(_.where(allElements, {element: "image", imageType: "qr"}), "definition")),
+        marriedQrElements = _.map(allQrElements, function (el) {
+          return {
+            source: el[0].attr || el[0].text,
+            target: marryData(el, reportData[0])[0].data
+          };
+        });
+        // thanks Jeremy
+
+      if (allQrElements.length === 0) {
+        // no need to try to fetch no images
+        done();
+        return;
+      }
+
+      async.eachSeries(marriedQrElements, function (element, next) {
+        var targetFilename = element.target.replace(/\W+/g, "") + ".png",
+        qr_svg = qr.image(element.target, { type: 'png' }),
+        writeStream = fs.createWriteStream(path.join(workingDir, targetFilename));
+
+        qr_svg.pipe(writeStream);
+        writeStream.on("finish", function () {
+          imageFilenameMap[element.source] = targetFilename;
+          next();
+        });
+
+      }, done);
     };
 
     /**
@@ -645,6 +721,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       fetchTranslations,
       fetchData,
       fetchImages,
+      createQrCodes,
       printReport,
       sendReport,
       cleanUpFiles

@@ -49,7 +49,7 @@ DECLARE
   _cost NUMERIC;
 BEGIN
   SELECT CASE WHEN (itemsite_costmethod='A' AND itemsite_qtyonhand != 0.0) THEN (itemsite_value / itemsite_qtyonhand)
-              WHEN (itemsite_costmethod='A' AND itemsite_qtyonhand = 0.0) THEN 0.0
+              WHEN (itemsite_costmethod='A' AND itemsite_qtyonhand = 0.0) THEN stdCost(itemsite_item_id)
               WHEN (itemsite_costmethod='N') THEN 0.0
               ELSE stdCost(itemsite_item_id)
          END INTO _cost

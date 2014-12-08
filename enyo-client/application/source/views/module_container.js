@@ -20,6 +20,7 @@ trailing:true, white:true*/
       ]},
       {name: "setup", label: "_setup".loc(), sortAlpha: true, panels: [
         {name: "configureList", kind: "XV.ConfigurationsList", toggleSelected: false},
+        {name: "printerList", kind: "XV.PrinterList"},
         {name: "userAccountList", kind: "XV.UserAccountList", toggleSelected: false},
         {name: "userAccountRoleList", kind: "XV.UserAccountRoleList"}
       ]}
@@ -83,8 +84,33 @@ trailing:true, white:true*/
           }
         }
       });
+    },
+    insertDashboardCharts: function (newActions) {
+      if (!XT.session.settings.get("DashboardLite")) {
+        return;
+      }
+      var preExistingDashboard = _.find(this.modules, function (module) {
+        return module.name === "dashboardLite";
+      });
+
+      if (preExistingDashboard) {
+        preExistingDashboard.panels[0].newActions = _.union(preExistingDashboard.panels[0].newActions, newActions);
+
+      } else {
+        var dashboardModule = {
+          name: "dashboardLite",
+          label: "_dashboardLite".loc(),
+          panels: [
+            {
+              name: "dashboardLite",
+              kind: "XV.DashboardLite",
+              newActions: newActions
+            }
+          ]
+        };
+
+        this.insertModule(dashboardModule, 0);
+      }
     }
-
   });
-
 }());

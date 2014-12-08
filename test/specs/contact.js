@@ -37,17 +37,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     @property {String} email
     @property {String} Comments
     @property {ContactCharacteristics} Characteristics
-    @property {ContactAccounts} Accounts
-    @property {ContactContacts} Contacts
-    @property {ContactItems} Items
-    @property {ContactFiles} Files
-    @property {ContactUrls} Urls
-    @property {ContactUsers} ContactUsers
-    @property {ContactIncidents} Incidents
-    @property {ContactOpportunities} Opportunities
-    @property {ContactToDos} Todos
-    @property {ContactProjects} Projects
-    @property {ContactCustomers} Customers
+    @property {DocumentAssociations} documents
   */
   var spec = {
     recordType: "XM.Contact",
@@ -70,10 +60,9 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     enforceUpperKey: true,
     attributes: ["id", "number", "isActive", "honorific", "firstName", "middleName", "lastName",
     "suffix", "jobTitle", "initials", "phone", "alternate", "fax", "primaryEmail", "webAddress",
-    "account", "owner", "notes", "address", "email", "comments", "characteristics", "accounts",
-    "contacts", "items", "files", "urls", "crmaccountUsers", "incidents", "opportunities",
-    "toDos", "incidentRelations", "opportunityRelations", "toDoRelations", "projects",
-    "projectRelations", "customers"],
+    "account", "owner", "notes", "address", "email", "comments", "characteristics", "crmaccountUsers",
+    "incidentRelations", "opportunityRelations", "toDoRelations", "projectRelations",
+    "documents"],
     requiredAttributes: ["number"],
     /**
       @member -

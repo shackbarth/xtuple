@@ -4,6 +4,8 @@ CREATE OR REPLACE FUNCTION convertQuoteToInvoice(INTEGER) RETURNS INTEGER AS $$
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pQuheadid ALIAS FOR $1;
+  _qunumber TEXT;
+  _ponumber TEXT;
   _iheadid INTEGER;
   _iitemid INTEGER;
   _orderid INTEGER;
@@ -67,17 +69,47 @@ BEGIN
   END IF;
 
 -- PO/blanket PO checks
-
-  IF ( (_usespos) AND (NOT _blanketpos) ) THEN
-    PERFORM invchead_id
-    FROM quhead JOIN invchead ON ( (invchead_cust_id=quhead_cust_id) AND
-                                 (UPPER(invchead_custponumber)=UPPER(quhead_custponumber)) )
+  IF (_usespos) THEN
+    SELECT quhead_number, COALESCE(quhead_custponumber, ''), invchead_id INTO _qunumber, _ponumber, _iheadid
+    FROM quhead LEFT OUTER JOIN invchead ON ( (invchead_cust_id=quhead_cust_id) AND
+                                              (UPPER(invchead_ponumber)=UPPER(quhead_custponumber)) )
     WHERE (quhead_id=pQuheadid);
-    IF (FOUND) THEN
-      RAISE EXCEPTION 'Duplicate Customer PO';
+    IF (_ponumber = '') THEN
+      RAISE EXCEPTION 'Customer PO required for Quote % [xtuple: convertQuote, -7, %]',
+                      _qunumber, _qunumber;
+    END IF;
+  
+    IF ( (NOT _blanketpos) AND (_iheadid IS NOT NULL) ) THEN
+      RAISE EXCEPTION 'Duplicate Customer PO % for Quote % [xtuple: convertQuote, -8, %, %]',
+                      _ponumber, _qunumber,
+                      _ponumber, _qunumber;
     END IF;
   END IF;
+  
 
+  IF (_usespos) THEN
+    SELECT quhead_number INTO _qunumber
+    FROM quhead
+    WHERE (quhead_id=pQuheadid)
+      AND (COALESCE(quhead_custponumber, '') = '');
+    IF (FOUND) THEN
+      RAISE EXCEPTION 'Customer PO required for Quote % [xtuple: convertQuote, -7, %]',
+                      _qunumber, _qunumber;
+    END IF;
+  END IF;
+  
+  IF ( (_usespos) AND (NOT _blanketpos) ) THEN
+    SELECT quhead_number, quhead_custponumber INTO _qunumber, _ponumber
+    FROM quhead JOIN invchead ON ( (invchead_cust_id=quhead_cust_id) AND
+                                   (UPPER(invchead_ponumber)=UPPER(quhead_custponumber)) )
+    WHERE (quhead_id=pQuheadid);
+    IF (FOUND) THEN
+      RAISE EXCEPTION 'Duplicate Customer PO % for Quote % [xtuple: convertQuote, -8, %, %]',
+                      _ponumber, _qunumber,
+                      _ponumber, _qunumber;
+    END IF;
+  END IF;
+  
 --Check to see if an invoice exists with the quote number
   
   PERFORM quhead_number, invchead_id 
@@ -182,7 +214,7 @@ BEGIN
 */
 
   FOR _r IN SELECT quitem.*,
-                   quhead_number, quhead_prj_id,
+                   quhead_number, quhead_prj_id, quhead_saletype_id,
                    itemsite_item_id, itemsite_leadtime,
                    itemsite_createsopo, itemsite_createsopr,
                    item_type, COALESCE(quitem_itemsrc_id, itemsrc_id, -1) AS itemsrcid
@@ -220,7 +252,8 @@ BEGIN
 
     IF (fetchMetricBool('enablextcommissionission')) THEN
       PERFORM xtcommission.getSalesReps(quhead_cust_id, quhead_shipto_id,
-                                        _r.itemsite_item_id, _r.quitem_price,
+                                        _r.itemsite_item_id, _r.quhead_saletype_id,
+                                        _r.quitem_price, _r.quitem_custprice,
                                         _iitemid, 'InvoiceItem')
       FROM quhead
       WHERE (quhead_id=pQuheadid);

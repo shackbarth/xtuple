@@ -1,0 +1,48 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "Printer",
+    "table": "xt.printer",
+    "isRest": true,
+    "idSequenceName": "printer_printer_id_seq",
+    "lockable": true,
+    "comment": "Printer Setup Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainPrinters",
+        "read": true,
+        "update": "MaintainPrinters",
+        "delete": "MaintainPrinters"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "printer_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "printer_name",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "printer_description",
+          "required": true
+        }
+      }
+    ],
+    "isSystem": true,
+    "sourceCode": "Printer"
+  }
+]

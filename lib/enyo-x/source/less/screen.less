@@ -56,6 +56,10 @@
 @defaultPanelWidth: 320px;
 @toolbarHeight: 55px;
 @searchLength: 185px;
+@mobileLength: 100px;
+// popups
+@maxMessageHeight: 500px;
+@maxMessageWidth: 500px;
 
 // libs
 @import "../../lib/font-awesome/less/font-awesome.less";
@@ -74,6 +78,24 @@ body {
 .disabled {
   opacity: 0.8;
   cursor: default;
+}
+
+a, .hyperlink {
+  color: @slate-blue;
+  cursor: pointer;
+}
+
+.xv-invisible-wrapper {
+  padding: 0;
+  border: none;
+}
+
+  // This gives them 4 lines of description
+.xv-limit-description {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
 }
 
 .xv-app-panel {
@@ -178,12 +200,15 @@ body {
 */
 .xv-popup {
   background: @header-gray;
-  margin: 0;
-  max-height: 400px;
-  width: 400px;
   min-width: @defaultPanelWidth;
-  padding: 7px;
+  padding: 10px;
   text-align: center;
+
+  .message {
+    margin-bottom: 10px;
+    max-height: @maxMessageHeight;
+    max-width: @maxMessageWidth;
+  }
 
   &.xv-groupbox-popup {
     .xv-workspace-container > .xv-workspace > .xv-workspace-panel;
@@ -250,9 +275,10 @@ body {
   }
 }
 
-.icon-folder-open-alt, .icon-calendar, .icon-sort {
+.icon-folder-open-alt, .icon-calendar, .icon-sort, .icon-angle-up, .icon-angle-down {
   color: @slate-blue;
   vertical-align: middle;
+  text-align: center;
 }
 
 .xv-short-textarea {
@@ -343,10 +369,16 @@ body {
   }
 
   .xv-toolbar-label, .xv-search {
-    color: @white;
     width: @searchLength;
     margin: 0;
     margin-left: 6px;
+    @media (max-width: 480px) {
+      width: @mobileLength;
+      font-size: 18px;
+    }
+  }
+  .xv-search {
+    color: @med-gray;
   }
 }
 
@@ -362,8 +394,6 @@ body {
 @import "dashboard.less";
 @import "list.less";
 @import "pullout.less";
-@import "widgets.less";
-@import "characteristics.less";
 @import "relations.less";
 @import "address.less";
 @import "search.less";

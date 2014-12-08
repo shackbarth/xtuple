@@ -2,7 +2,8 @@
   immed:true, eqeqeq:true, forin:true, latedef:true,
   newcap:true, noarg:true, undef:true */
 /*global XT:true, XM:true, XV:true, describe:true, it:true, setTimeout:true,
-  console:true, before:true, after:true, module:true, require:true */
+  console:true, before:true, after:true, module:true, require:true, setInterval:true,
+  clearInterval:true */
 
 (function () {
   "use strict";
@@ -43,8 +44,9 @@
       });
     };
 
-  describe('Sales Order Workspace', function () {
-    this.timeout(20 * 1000);
+  // TODO: move to sales order spec
+  describe.skip('Sales Order Workspace', function () {
+    this.timeout(30 * 1000);
 
     //
     // We'll want to have TTOYS, BTRUCK1, and WH1 onhand and ready for the test to work.
@@ -133,6 +135,43 @@
             });
         */
       });
+      it('deleting an item through SalesOrderLineWorkspace should remove it from the line item ' +
+        'list', function (done) {
+        var lineItemBox = workspace.$.salesOrderLineItemBox,
+          model = lineItemBox.value.models[0],
+          startModelLength = lineItemBox.liveModels().length,
+          moduleContainer = XT.app.$.postbooks;
+
+        /** Open the first model's salesOrderLineWorkspace...
+            Copied from gridBox buttonTapped function (expandGridRowButton)
+        */
+        lineItemBox.doChildWorkspace({
+          workspace: lineItemBox.getWorkspace(),
+          collection: lineItemBox.getValue(),
+          index: lineItemBox.getValue().indexOf(model)
+        });
+
+        /** The line item's workspace model has been deleted (DESTROYED_CLEAN).
+            Client is now in SalesOrderWorkspace.
+        */
+        var statusChanged = function () {
+          assert.notEqual(startModelLength, lineItemBox.liveModels().length);
+          done();
+        };
+
+        model.once("status:DESTROYED_CLEAN", statusChanged);
+
+        // Function to keep checking for notifyPopup showing and then tap yes.
+        // This will fire right after the delete below.
+        var notifyPopupInterval = setInterval(function () {
+          if (!moduleContainer.$.notifyPopup.showing) { return; }
+          clearInterval(notifyPopupInterval);
+          moduleContainer.notifyTap(null, {originator: {name: "notifyYes" }});
+        }, 100);
+        // Delete the item in the workspace
+        moduleContainer.getActive().deleteItem();
+      });
+
       it('save, then delete order', function (done) {
         assert.isTrue((workspace.value.status === XM.Model.READY_DIRTY ||
           workspace.value.status === XM.Model.READY_NEW));

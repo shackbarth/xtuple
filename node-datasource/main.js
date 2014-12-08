@@ -93,9 +93,23 @@ var express = require('express'),
     }
   });
 
-
   XT.session = Object.create(XT.Session);
   XT.session.schemas.SYS = false;
+
+  // Load the Database hostname and port into metrics to enable Qt client deep linking
+  X.options.datasource.databases.map(function (database) {
+    var queryPayload,
+      query = "SELECT setmetric('%@', '%@');";
+
+    queryPayload = query.f('WebappHostname', X.options.datasource.hostname);
+    XT.dataSource.query(queryPayload, XT.dataSource.getAdminCredentials(database), function (error, res) {
+      if (error) { console.log("An error occurred writing the hostname to the metric table " + error); }
+    });
+    queryPayload = query.f('WebappPort', X.options.datasource.port);
+    XT.dataSource.query(queryPayload, XT.dataSource.getAdminCredentials(database), function (error, res) {
+      if (error) { console.log("An error occurred writing the port to the metric table" + error); }
+    });
+  });
 
   var getExtensionDir = function (extension) {
     var dirMap = {
@@ -106,7 +120,7 @@ var express = require('express'),
     };
     return dirMap[extension.location];
   };
-  var useClientDir = function (path, dir) {
+  var useClientDir = X.useClientDir = function (path, dir) {
     path = path.indexOf("npm") === 0 ? "/" + path : path;
     _.each(X.options.datasource.databases, function (orgValue, orgKey, orgList) {
       app.use("/" + orgValue + path, express.static(dir, { maxAge: 86400000 }));
@@ -116,9 +130,15 @@ var express = require('express'),
     var extensionLocation = extension.location === "npm" ? extension.location : extension.location + "/source";
     useClientDir(extensionLocation + "/" + extension.name + "/client", X.path.join(getExtensionDir(extension), "client"));
   };
-  var loadExtensionRoutes = function (extension) {
-    var manifest = JSON.parse(X.fs.readFileSync(X.path.join(getExtensionDir(extension),
-        "database/source/manifest.js")));
+  var loadExtensionServerside = function (extension) {
+    var packagePath = X.path.join(getExtensionDir(extension), "package.json");
+    var packageJson = X.fs.existsSync(packagePath) ? require(packagePath) : undefined;
+    var manifestPath = X.path.join(getExtensionDir(extension), "database/source/manifest.js");
+    var manifest = X.fs.existsSync(manifestPath) ? JSON.parse(X.fs.readFileSync(manifestPath)) : {};
+    var version = packageJson ? packageJson.version : manifest.version;
+    X.versions[extension.name] = version || "none"; // XXX the "none" is temporary until we have core extensions in npm
+
+    // TODO: be able to define routes in package.json
     _.each(manifest.routes || [], function (routeDetails) {
       var verb = (routeDetails.verb || "all").toLowerCase(),
         func = require(X.path.join(getExtensionDir(extension),
@@ -126,8 +146,10 @@ var express = require('express'),
 
       if (_.contains(["all", "get", "post", "patch", "delete"], verb)) {
         app[verb]('/:org/' + routeDetails.path, func);
+      } else if (verb === "no-route") {
+        func();
       } else {
-        console.log("Invalid verb for extension-defined route " + routeDetails.path);
+        console.log("Invalid verb (" + verb + ") for extension-defined route " + routeDetails.path);
       }
     });
   };
@@ -151,7 +173,7 @@ var express = require('express'),
           return;
         }
         useClientDir("/client", "../enyo-client/application");
-        _.each(results, loadExtensionRoutes);
+        _.each(results, loadExtensionServerside);
         _.each(results, loadExtensionClientside);
       }
     });
@@ -197,11 +219,9 @@ var express = require('express'),
  */
 
 var packageJson = X.fs.readFileSync("../package.json");
-try {
-  X.version = JSON.parse(packageJson).version;
-} catch (error) {
-
-}
+X.versions = {
+  core: JSON.parse(packageJson).version
+};
 
 /**
  * Module dependencies.
@@ -320,10 +340,13 @@ var conditionalExpressSession = function (req, res, next) {
   // The 'assets' folder and login page are sessionless.
   if ((/^api/i).test(req.path.split("/")[2]) ||
       (/^\/assets/i).test(req.path) ||
-      req.path === "/" ||
-      req.path === "/favicon.ico" ||
-      req.path === "/forgot-password" ||
-      req.path === "/recover") {
+      (/^\/stylesheets/i).test(req.path) ||
+      (/^\/bower_components/i).test(req.path) ||
+      req.path === '/' ||
+      req.path === '/favicon.ico' ||
+      req.path === '/forgot-password' ||
+      req.path === '/assets' ||
+      req.path === '/recover') {
 
     next();
   } else {
@@ -420,8 +443,11 @@ require('./oauth2/passport');
  */
 var that = this;
 
-app.use(express.favicon(__dirname + '/views/login/assets/favicon.ico'));
-app.use('/assets', express.static('views/login/assets', { maxAge: 86400000 }));
+/* Static assets */
+app.use(express.favicon(__dirname + '/views/assets/favicon.ico'));
+app.use('/assets', express.static('views/assets', { maxAge: 86400000 }));
+app.use('/stylesheets', express.static('views/stylesheets', { maxAge: 86400000 }));
+app.use('/bower_components', express.static('../bower_components', { maxAge: 86400000 }));
 
 app.get('/:org/dialog/authorize', oauth2.authorization);
 app.post('/:org/dialog/authorize/decision', oauth2.decision);
@@ -438,6 +464,11 @@ app.all('/:org/api/v1alpha1/resources/:model/:id', routes.restRouter);
 app.all('/:org/api/v1alpha1/resources/:model', routes.restRouter);
 app.all('/:org/api/v1alpha1/resources/*', routes.restRouter);
 
+app.post('/:org/browser-api/v1/services/:service/:id', routes.restBrowserRouter);
+app.all('/:org/browser-api/v1/resources/:model/:id', routes.restBrowserRouter);
+app.all('/:org/browser-api/v1/resources/:model', routes.restBrowserRouter);
+app.all('/:org/browser-api/v1/resources/*', routes.restBrowserRouter);
+
 app.get('/', routes.loginForm);
 app.post('/login', routes.login);
 app.get('/forgot-password', routes.forgotPassword);
@@ -451,7 +482,6 @@ app.get('/:org/logout', routes.logout);
 app.get('/:org/app', routes.app);
 app.get('/:org/debug', routes.debug);
 
-app.get('/:org/analysis', routes.analysis);
 app.all('/:org/credit-card', routes.creditCard);
 app.all('/:org/change-password', routes.changePassword);
 app.all('/:org/client/build/client-code', routes.clientCode);
@@ -668,10 +698,10 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
           data: session.passport.user,
           code: 1,
           debugging: X.options.datasource.debugging,
-          biAvailable: _.isObject(X.options.biServer) && !_.isEmpty(X.options.biServer),
           emailAvailable: _.isString(X.options.datasource.smtpHost) && X.options.datasource.smtpHost !== "",
+          // TODO - printAvailable is deprecated after issues #1806 & #1807 are pulled in.
           printAvailable: _.isString(X.options.datasource.printer) && X.options.datasource.printer !== "",
-          version: X.version
+          versions: X.versions
         });
       callback(callbackObj);
     }, data && data.payload);

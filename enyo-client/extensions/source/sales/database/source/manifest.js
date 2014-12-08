@@ -17,6 +17,7 @@
     "xt/views/share_users_shipto.sql",
     "xt/views/share_users_shipto_cntct.sql",
     "xt/views/share_users_shipto_addr.sql",
+    "xt/views/share_users_shipto_cust.sql",
     "xt/tables/sharetype.sql"
   ]
 }

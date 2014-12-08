@@ -1,6 +1,12 @@
 /*
   Styles relating to the grid box
 */
+@widgetFontSize: 13px;
+@gridIconWidth: 4px;
+@gridIconPadding: 2px;
+@gridFieldDecoratorWidth: 100%;
+@gridFieldWidth: @gridFieldDecoratorWidth - (2 * @decoratorPadding);
+@iconGridFieldWidth: @gridFieldWidth - @gridIconWidth - (2 * @gridIconPadding);
 
 
 /* Entire box including the grid and the summary panel */
@@ -35,11 +41,7 @@
   }
 
   .xv-grid-attr {
-    // This limits the text to three lines
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
+    .xv-limit-description
 
     &.bold {
     font-weight: bold;
@@ -160,7 +162,7 @@
       border: 1px solid @bright-orange;
       .xv-grid-column {
         .onyx-input-decorator {
-          .tightened-input-decorator;
+          .tightened-input-decorator(100%);
         }
         .onyx-picker-decorator {
           padding-top: 6px;
@@ -169,81 +171,45 @@
             height: 26px;
             padding-top: 3px;
             width: 100%;
-            font-size: 13px;
+            font-size: @widgetFontSize;
           }
         }
         .xv-input {
+          padding-top: 6px;
+          width: @gridFieldDecoratorWidth;
           border: none;
+
         }
-        .xv-picker-label {
+        .xv-label, .xv-flexible-label, .xv-picker-label {
           display: none;
         }
-        .xv-datewidget {
-          margin-right: 10px;
-          padding-top: 0;
+        .xv-relationwidget {
+          .xv-description {
+            margin: 0;
+            margin-top: 5px;
+          }
+          &.xv-private-item-site-widget {
+            border-bottom: 0;
+          }
           .onyx-input-decorator {
-            padding: 0;
-            width: 100%;
-            input {
-              width: 85%;
-              font-size: 13px;
-            }
+            .tightened-input-decorator;
           }
         }
-        .xv-numberwidget {
-          padding-top: 6px;
+        .xv-datewidget {
           .onyx-input-decorator {
             .tightened-input-decorator;
           }
         }
         .xv-combobox {
-          padding-left: 0;
-          input {
-            padding-top: 3px;
-            width: 80px;
-            font-size: 13px;
-          }
-        }
-        .xv-moneywidget {
-          padding-bottom: 0;
           .onyx-input-decorator {
             .tightened-input-decorator;
           }
         }
-        .xv-relationwidget {
-          .onyx-input-decorator {
-            width: 100%;
-            padding-top: 6px;
-          }
-          .onyx-input {
-            width: 85%;
-            padding-right: 4px;
-          }
-        }
         .xv-useraccount-widget {
-          // Hack: we shouldn't have to force this.
-          .xv-subinput {
+          .xv-input {
             width: 80px;
             height: 16px;
           }
-        }
-        .xv-subinput {
-          width: 100%;
-        }
-        .xv-input {
-          padding-top: 6px;
-          width: 100%;
-          border: none;
-        }
-        .xv-label, .xv-flexible-label, .xv-relationwidget-secondarydescription {
-          display: none;
-        }
-        .xv-relationwidget-description {
-          margin: 0;
-          margin-top: 5px;
-        }
-        .xv-private-item-site-widget {
-          border-bottom: 0;
         }
       }
     }
@@ -285,12 +251,12 @@
   }
 }
 
-.tightened-input-decorator (@width: 100%) {
+.tightened-input-decorator (@inputWidth: @iconGridFieldWidth) {
   padding: 0;
-  width: @width;
+  width: @gridFieldDecoratorWidth;
   margin: 0;
   input {
-    width: (@width);
-    font-size: 13px;
+    width: @inputWidth;
+    font-size: @widgetFontSize;
   }
 }

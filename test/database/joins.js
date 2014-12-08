@@ -259,9 +259,9 @@ var _ = require("underscore"),
       datasource.query(sql, creds, function (err, res) {
         var results;
         assert.isNull(err);
-        assert.equal(1, res.rowCount, JSON.stringify(res.rows));
+        assert.isNumber(res.rowCount);
         results = JSON.parse(res.rows[1].get);
-        assert.equal(results.data.length, 20);
+        assert.isNumber(results.data.length);
         done();
       });
     });
@@ -374,6 +374,38 @@ var _ = require("underscore"),
         done();
       });
     });
+
+    it('should pick up document associations', function (done) {
+      var sql = 'select xt.js_init();select xt.get($${"nameSpace":"XM","type":"Project","id":"GREENLEAF","encoding":"rjson","username":"admin","encryptionKey":"thisisanycontent"}$$);';
+
+      // This project has an ID of 4. There's an incident with the same ID with a document association.
+      // We don't want to pick it up in this query.
+      datasource.query(sql, creds, function (err, res) {
+        var results;
+        assert.isNull(err);
+        assert.equal(1, res.rowCount, JSON.stringify(res.rows));
+        results = JSON.parse(res.rows[1].get);
+        assert.equal(results.data.documents.length, 1);
+        done();
+      });
+    });
+
+    it('should not pick up document associations from business objects with the same id', function (done) {
+      var sql = 'select xt.js_init();select xt.get($${"nameSpace":"XM","type":"Project","id":"TT2007S","encoding":"rjson","username":"admin","encryptionKey":"thisisanycontent"}$$);';
+
+      // This project has an ID of 4. There's an incident with the same ID with a document association.
+      // We don't want to pick it up in this query.
+      datasource.query(sql, creds, function (err, res) {
+        var results;
+        assert.isNull(err);
+        assert.equal(1, res.rowCount, JSON.stringify(res.rows));
+        results = JSON.parse(res.rows[1].get);
+        assert.equal(results.data.documents.length, 0);
+        done();
+      });
+    });
+
+
 
 
 // incident plus

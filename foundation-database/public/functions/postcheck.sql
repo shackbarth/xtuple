@@ -81,7 +81,8 @@ BEGIN
     END IF;
   END IF;
 
-  _gltransNote := _t.checkrecip_number || '-' || _t.checkrecip_name;
+  _gltransNote := _t.checkrecip_number || '-' || _t.checkrecip_name ||
+                  '\n' || _p.checkhead_for || '\n' || _p.checkhead_notes;
 
   IF (_p.checkhead_misc AND NOT _cm) THEN
     IF (COALESCE(_p.checkhead_expcat_id, -1) < 0) THEN
@@ -269,6 +270,23 @@ BEGIN
                               _p.bankaccntid,
 			      round(_p.checkhead_amount_base, 2),
                               _p.checkhead_checkdate, _gltransNote, pcheckid );
+
+  -- Post any gain/loss from the alternate currency exchange rate
+  IF (COALESCE(_p.checkhead_alt_curr_rate, 0.0) <> 0.0) THEN
+    _exchGain := ROUND((_p.checkhead_curr_rate - _p.checkhead_alt_curr_rate) * _p.checkhead_amount_base, 2);
+
+    IF (_exchGain <> 0) THEN
+      PERFORM insertIntoGLSeries( _sequence, _t.checkrecip_gltrans_source, 'CK',
+                          CAST(_p.checkhead_number AS TEXT),
+                          _p.bankaccntid, (_exchGain * -1.0),
+                          _p.checkhead_checkdate, _gltransNote, pcheckid );      
+                          
+      PERFORM insertIntoGLSeries( _sequence, _t.checkrecip_gltrans_source, 'CK',
+                          CAST(_p.checkhead_number AS TEXT),
+                          getGainLossAccntId(_p.bankaccntid), _exchGain,
+                          _p.checkhead_checkdate, _gltransNote, pcheckid );      
+    END IF;
+  END IF;
 
   PERFORM postGLSeries(_sequence, _journalNumber);
 

@@ -2,7 +2,7 @@
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
 /*global _:true, console:true, XM:true, XT:true, require:true, assert:true,
-setTimeout:true, clearTimeout:true, exports:true, it:true */
+setTimeout:true, clearTimeout:true, exports:true, it:true, Globalize: true */
 
 var _ = require("underscore"),
   zombieAuth = require("./zombie_auth"),
@@ -366,7 +366,7 @@ var _ = require("underscore"),
     // Step 1: load the environment with Zombie
     //
     it('can be loaded with a zombie session', function (done) {
-      this.timeout(40 * 1000);
+      this.timeout(60 * 1000);
       zombieAuth.loadApp({callback: done, verbose: data.verbose,
         loginDataPath: data.loginDataPath});
     });
@@ -383,7 +383,7 @@ var _ = require("underscore"),
     // Step 3: initialize the model to get the ID from the database
     //
     it('can be initialized by fetching an id from the server', function (done) {
-      this.timeout(20 * 1000);
+      this.timeout(60 * 1000);
       init(data, done);
     });
 
@@ -392,13 +392,13 @@ var _ = require("underscore"),
     //
     _.each(data.beforeSetActions || [], function (spec) {
       it(spec.it, function (done) {
-        this.timeout(20 * 1000);
+        this.timeout(60 * 1000);
         spec.action(data, done);
       });
     });
 
     it('can have its values set', function (done) {
-      this.timeout(20 * 1000);
+      this.timeout(60 * 1000);
       data.updated = false;
       setModel(data, done);
     });
@@ -406,14 +406,14 @@ var _ = require("underscore"),
     // if this model has comments, set them on the model
     if (data.commentType) {
       it('can have its comments set', function (done) {
-        this.timeout(20 * 1000);
+        this.timeout(60 * 1000);
         setComments(data, done);
       });
     }
 
     _.each(data.beforeSaveActions || [], function (spec) {
       it(spec.it, function (done) {
-        this.timeout(20 * 1000);
+        this.timeout(60 * 1000);
         spec.action(data, done);
       });
     });
@@ -423,12 +423,12 @@ var _ = require("underscore"),
     //
     if (!data.skipSave) {
       it('can be saved to the database', function (done) {
-        this.timeout(10 * 1000);
+        this.timeout(60 * 1000);
         save(data, done);
       });
       _.each(data.afterSaveActions || [], function (spec) {
         it(spec.it, function (done) {
-          this.timeout(20 * 1000);
+          this.timeout(60 * 1000);
           spec.action(data, done);
         });
       });
@@ -446,7 +446,7 @@ var _ = require("underscore"),
       // Step 7: save the updated model to the database
       //
       it('can be re-saved to the database', function (done) {
-        this.timeout(20 * 1000);
+        this.timeout(60 * 1000);
         save(data, done);
       });
     }
@@ -456,21 +456,21 @@ var _ = require("underscore"),
     //
     _.each(data.beforeDeleteActions || [], function (spec) {
       it(spec.it, function (done) {
-        this.timeout(20 * 1000);
+        this.timeout(60 * 1000);
         spec.action(data, done);
       });
     });
 
     if (!data.skipDelete) {
       it('can be deleted from the database', function (done) {
-        this.timeout(20 * 1000);
+        this.timeout(60 * 1000);
         destroy(data, done);
       });
     }
 
     _.each(data.afterDeleteActions || [], function (spec) {
       it(spec.it, function (done) {
-        this.timeout(20 * 1000);
+        this.timeout(60 * 1000);
         spec.action(data, done);
       });
     });

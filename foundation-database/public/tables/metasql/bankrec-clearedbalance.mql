@@ -16,6 +16,7 @@ SELECT (COALESCE(SUM(amount),0.0) + <? value("begBal") ?>) AS cleared_amount,
             AND (bankrecitem_source_id=gltrans_id)
             AND (bankrecitem_bankrec_id=<? value("bankrecid") ?>)
             AND (bankrecitem_cleared)
+            AND (NOT gltrans_deleted)
             AND (NOT gltrans_rec)
             AND (bankaccnt_id=<? value("bankaccntid") ?>) ) 
           UNION ALL

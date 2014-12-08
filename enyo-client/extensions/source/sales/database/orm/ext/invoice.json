@@ -33,15 +33,6 @@
           "type": "Date",
           "column": "invchead_orderdate"
         }
-      },
-      {
-        "name": "salesOrders",
-        "toMany": {
-          "isNested": true,
-          "type": "InvoiceSalesOrder",
-          "column": "invchead_id",
-          "inverse": "source"
-        }
       }
     ],
     "sequence": 0,

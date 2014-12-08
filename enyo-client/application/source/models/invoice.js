@@ -259,7 +259,7 @@ white:true*/
       var isPosted = this.get("isPosted");
 
       this.setReadOnly(["lineItems", "number", this.documentDateKey, "salesRep", "commission",
-        "taxZone", "saleType", "taxAdjustments"], isPosted);
+        "taxZone", "saleType", "taxAdjustments", "miscCharge"], isPosted);
 
       if (_.contains(this.getAttributeNames(), "terms")) {
         this.setReadOnly("terms", isPosted);
@@ -522,7 +522,7 @@ white:true*/
         total: 0,
         balance: 0,
         authorizedCredit: 0
-      
+
       };
     },
 
@@ -654,6 +654,11 @@ white:true*/
     editableModel: 'XM.Invoice'
 
   });
+
+  XT.documentAssociations.INV = {
+    model: "XM.InvoiceRelation",
+    label: "_invoice".loc()
+  };
 
   /**
     @class
@@ -930,92 +935,6 @@ white:true*/
     idAttribute: 'uuid'
 
   });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.InvoiceContact = XM.Model.extend({
-    /** @scope XM.InvoiceContact.prototype */
-
-    recordType: 'XM.InvoiceContact',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.InvoiceAccount = XM.Model.extend({
-    /** @scope XM.InvoiceAccount.prototype */
-
-    recordType: 'XM.InvoiceAccount',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.InvoiceCustomer = XM.Model.extend({
-    /** @scope XM.InvoiceCustomer.prototype */
-
-    recordType: 'XM.InvoiceCustomer',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.InvoiceFile = XM.Model.extend({
-    /** @scope XM.InvoiceFile.prototype */
-
-    recordType: 'XM.InvoiceFile',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.InvoiceUrl = XM.Model.extend({
-    /** @scope XM.InvoiceUrl.prototype */
-
-    recordType: 'XM.InvoiceUrl',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.InvoiceItem = XM.Model.extend({
-    /** @scope XM.InvoiceItem.prototype */
-
-    recordType: 'XM.InvoiceItem',
-
-    isDocumentAssignment: true
-
-  });
-
-
 
 
   // ..........................................................

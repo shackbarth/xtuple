@@ -1,8 +1,7 @@
-CREATE OR REPLACE FUNCTION itemInventoryUOMInUse(INTEGER) RETURNS BOOLEAN AS '
+CREATE OR REPLACE FUNCTION itemInventoryUOMInUse(pItemid INTEGER) RETURNS BOOLEAN AS $$
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
-  pItemid ALIAS FOR $1;
   _uomid INTEGER;
   _result INTEGER;
 BEGIN
@@ -20,7 +19,7 @@ BEGIN
 
   SELECT itemsite_id INTO _result
   FROM itemsite WHERE ( (itemsite_item_id=pItemid)
-                  AND   ((itemsite_qtyonhand <> 0) OR (itemsite_nnqoh <> 0)) )
+                  AND   (itemsite_qtyonhand <> 0) )
   LIMIT 1;
   IF (FOUND) THEN
     RETURN TRUE;
@@ -28,4 +27,4 @@ BEGIN
 
   RETURN FALSE;
 END;
-' LANGUAGE 'plpgsql';
+$$ LANGUAGE plpgsql;

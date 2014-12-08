@@ -19,9 +19,15 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     //passport.authenticate('local', { successReturnToOrRedirect: '/login/scope', failureRedirect: '/', failureFlash: 'Invalid username or password.' }),
     passport.authenticate('local', { failureRedirect: '/?login=fail' }),
     function (req, res, next) {
-
+      var pathName = "/app";
       if (req && req.session && !req.session.oauth2 && req.session.passport && req.session.passport.user && req.session.passport.user.organization) {
-        res.redirect("/" + req.session.passport.user.organization + '/app');
+        if (req.body.extensions) {
+          pathName = pathName + "?extensions=" + req.body.extensions;
+        }
+        if (req.body.hash && req.body.hash.charAt(0) === "#") {
+          pathName = pathName + req.body.hash;
+        }
+        res.redirect("/" + req.session.passport.user.organization + pathName);
         //next();
       } else {
         exports.scopeForm(req, res, next);
@@ -39,7 +45,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       message = ["Invalid username or password."];
     }
 
-    res.render('login', { message: message, databases: X.options.datasource.databases });
+    res.render('login', { message: message, databases: X.options.datasource.databases,
+      freeDemo: X.options.client.freeDemo });
   };
 
   /**

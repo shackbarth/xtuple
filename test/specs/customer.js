@@ -47,15 +47,11 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
     @property {String} Comments
     @property {TaxRegistration} TaxRegistration
     @property {CustomerCharacteristics} Characteristics
-    @property {CustomerAccounts} Accounts
-    @property {CustomerContacts} Contacts
-    @property {CustomerItems} Items
-    @property {CustomerFiles} Files
-    @property {CustomerUrls} Urls
     @property {CustomerRelatedCustomers} Customers
     @property {Site} PreferredSite
     @property {CreditCards} CreditCards
     @property {CustomerAccount} CRMAccount
+    @property {DocumentAssociations} documents
     */
   var spec = {
     recordType: "XM.Customer",
@@ -87,9 +83,9 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
     "balanceMethod", "creditLimit", "creditLimitCurrency", "creditRating", "graceDays",
     "taxZone", "shiptos", "comments", "taxRegistration", "characteristics", "backorder",
     "partialShip", "blanketPurchaseOrders", "usesPurchaseOrders", "autoUpdateStatus",
-    "autoHoldOrders", "accounts", "contacts", "items", "files", "urls", "customers",
+    "autoHoldOrders",
     "preferredSite", "creditCards", "account", "contactRelations", "incidentRelations",
-    "opportunityRelations", "toDoRelations", "projects", "quoteRelations", "salesOrderRelations"],
+    "opportunityRelations", "toDoRelations", "documents", "quoteRelations", "salesOrderRelations"],
     requiredAttributes: ["number", "name", "isActive", "isFreeFormShipto", "isFreeFormBillto",
     "discount", "creditStatus", "balanceMethod", "backorder", "partialShip",
     "blanketPurchaseOrders", "usesPurchaseOrders", "autoUpdateStatus",

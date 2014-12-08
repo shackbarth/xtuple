@@ -32,7 +32,8 @@ white:true*/
               {kind: "XV.DateWidget", attr: "issued"},
               {kind: "XV.InputWidget", attr: "organization"},
               {kind: "XV.CheckboxWidget", name: "delegatedAccess", attr: "delegatedAccess"},
-              {kind: "XV.InputWidget", name: "clientX509PubCert", attr: "clientX509PubCert", label: "_x509PubCert".loc()},
+              {kind: "onyx.GroupboxHeader", content: "_x509PubCert".loc()},
+              {kind: "XV.TextArea", name: "clientX509PubCert", attr: "clientX509PubCert"},
               {kind: "onyx.GroupboxHeader", content: "_fullListUrl".loc()},
               {kind: "XV.TextArea", name: "fullListUrl", classes: "xv-short-textarea", disabled: true},
               {kind: "onyx.GroupboxHeader", content: "_singleResourceUrl".loc()},
@@ -45,7 +46,7 @@ white:true*/
               {kind: "XV.TextArea", name: "tokenRevocationURI", classes: "xv-short-textarea", disabled: true}
             ]}
           ]},
-          {kind: "XV.Oauth2clientRedirectBox", name: "redirectBox", attr: "redirectURIs" }
+          {kind: "XV.Oauth2clientRedirectBox", name: "redirectBox", attr: "redirectURIs", showing: false}
         ]}
       ],
       create: function () {
@@ -61,15 +62,15 @@ white:true*/
       attributesChanged: function (model, options) {
         this.inherited(arguments);
 
-        this.$.delegatedAccess.setShowing(model.get("clientType") === 'jwt bearer');
-        this.$.clientX509PubCert.setShowing(model.get("clientType") === 'jwt bearer');
-        // Enyo messes this one up for some reason, so use CSS
-        if (model.get("clientType") === 'web server') {
-          this.$.redirectBox.applyStyle("visibility", "showing");
-        } else {
-          this.$.redirectBox.applyStyle("visibility", "hidden");
-        }
+        var serviceAccount = model.get("clientType") === 'jwt bearer',
+          webServer = model.get("clientType") === 'web server';
 
+        // Delegated Access is only meaningful for Service Accounts
+        this.$.delegatedAccess.setShowing(serviceAccount);
+        this.$.clientX509PubCert.setShowing(serviceAccount);
+        this.$.redirectBox.setShowing(webServer);
+        // There is some rendering issue with this box that this fixes w/o css
+        this.$.redirectBox.render();
       }
     });
 

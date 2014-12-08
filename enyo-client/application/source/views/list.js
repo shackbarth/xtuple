@@ -54,7 +54,7 @@ trailing:true, white:true, strict: false*/
             {kind: "XV.ListAttr", attr: "name"}
           ]},
           {kind: "XV.ListColumn", classes: "right-column", components: [
-            {kind: "XV.ListAttr", attr: "primaryContact.phone", },
+            {kind: "XV.ListAttr", attr: "primaryContact.phone"},
             {kind: "XV.ListAttr", attr: "primaryContact.primaryEmail"}
           ]},
           {kind: "XV.ListColumn", fit: true, components: [
@@ -188,7 +188,7 @@ trailing:true, white:true, strict: false*/
       });
     },
     getWorkspace: function () {
-      if (!this._lastTapIndex) {
+      if (_.isUndefined(this._lastTapIndex)) {
         // don't respond to events waterfalled from other models
         return;
       }
@@ -690,10 +690,13 @@ trailing:true, white:true, strict: false*/
             {kind: "XV.ListAttr", attr: "billingContact.phone", },
             {kind: "XV.ListAttr", attr: "billingContact.primaryEmail"}
           ]},
-          {kind: "XV.ListColumn", fit: true, components: [
+          {kind: "XV.ListColumn", classes: "descr", components: [
             {kind: "XV.ListAttr", attr: "billingContact.name",
               placeholder: "_noContact".loc()},
             {kind: "XV.ListAttr", attr: "billingContact.address"}
+          ]},
+          {kind: "XV.ListColumn", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "customerType.code"}
           ]}
         ]}
       ]}
@@ -1575,6 +1578,35 @@ trailing:true, white:true, strict: false*/
   XV.registerModelList("XM.PlannerCode", "XV.PlannerCodeList");
 
   // ..........................................................
+  // PRINTER
+  //
+
+  enyo.kind({
+    name: "XV.PrinterList",
+    kind: "XV.List",
+    label: "_printers".loc(),
+    collection: "XM.PrinterCollection",
+    parameterWidget: null,
+    query: {orderBy: [
+      {attribute: 'name'}
+    ]},
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", components: [
+            {kind: "XV.ListAttr", attr: "name", isKey: true}
+          ]},
+          {kind: "XV.ListColumn", components: [
+            {kind: "XV.ListAttr", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelList("XM.Printer", "XV.PrinterList");
+
+  // ..........................................................
   // PRODUCT CATEGORY
   //
 
@@ -1812,12 +1844,15 @@ trailing:true, white:true, strict: false*/
             ]},
             {kind: "XV.ListColumn", classes: "right-column", components: [
               {kind: "XV.ListAttr", attr: "scheduleDate",
-                placeholder: "_noSchedule".loc()},
+                placeholder: "_noSched.".loc()},
               {kind: "XV.ListAttr", attr: "total", formatter: "formatTotal"}
             ]},
-            {kind: "XV.ListColumn", fit: true, components: [
+            {kind: "XV.ListColumn", classes: "descr", components: [
               {kind: "XV.ListAttr", formatter: "formatName"},
               {kind: "XV.ListAttr", formatter: "formatShiptoOrBillto"}
+            ]},
+            {kind: "XV.ListColumn", components: [
+              {kind: "XV.ListAttr", attr: "formatHoldType", style: "color: red"}
             ]}
           ]}
         ]}
@@ -1863,6 +1898,7 @@ trailing:true, white:true, strict: false*/
     }
   });
 
+  XV.registerModelList("XM.SalesOrderListItem", "XV.SalesOrderList");
   XV.registerModelList("XM.SalesOrderRelation", "XV.SalesOrderList");
 
   // ..........................................................
@@ -2531,7 +2567,7 @@ trailing:true, white:true, strict: false*/
       ]}
     ]
   });
-  
+
   XV.registerModelList("XM.UserAccountRelation", "XV.UserAccountList");
 
   // ..........................................................

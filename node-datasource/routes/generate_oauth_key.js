@@ -7,8 +7,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 (function () {
   "use strict";
 
-  var ursa = require("ursa"),
-    exec = require("child_process").exec,
+  var exec = require("child_process").exec,
     forge = require("node-forge"),
     spawn = require("child_process").spawn,
     async = require("async"),
@@ -29,10 +28,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         res.send({isError: true, error: err});
       },
       genKey = function (model, result) {
-        /**
-          * This is REALLY slow in pure javascript. ursa is much faster.
-          * @See: https://github.com/digitalbazaar/forge/issues/125
-        forge.pki.rsa.generateKeyPair({bits: 2048, workers: 2}, function(err, keypair) {
+        forge.pki.rsa.generateKeyPair({bits: 2048, workers: -1}, function (err, keypair) {
           if (err) {
             res.send({isError: true, message: "Error generating keypair: " + err.message, error: err});
             return;
@@ -40,16 +36,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
           fetchSuccess(model, result, keypair);
         });
-        */
-
-        // Use ursa for the key gen and then convert to forge's format.
-        var keypair = ursa.generatePrivateKey();
-        var keys = {
-          privateKey: forge.pki.privateKeyFromPem(keypair.toPrivatePem().toString()),
-          publicKey: forge.pki.publicKeyFromPem(keypair.toPublicPem().toString())
-        };
-
-        fetchSuccess(model, result, keys);
       },
       sendP12 = function (keys) {
         // It's possible and much easier to generate the p12 file without a

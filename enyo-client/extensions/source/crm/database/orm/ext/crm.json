@@ -14,24 +14,6 @@
     ],
     "properties": [
       {
-        "name": "opportunities",
-        "toMany": {
-          "isNested": true,
-          "type": "AccountOpportunity",
-          "column": "crmacct_id",
-          "inverse": "source"
-        }
-      },
-      {
-        "name": "toDos",
-        "toMany": {
-          "isNested": true,
-          "type": "AccountToDo",
-          "column": "crmacct_id",
-          "inverse": "source"
-        }
-      },
-      {
         "name": "incidentRelations",
         "toMany": {
           "type": "IncidentRelation",
@@ -73,33 +55,6 @@
       }
     ],
     "properties": [
-      {
-        "name": "incidents",
-        "toMany": {
-          "isNested": true,
-          "type": "ContactIncident",
-          "column": "cntct_id",
-          "inverse": "source"
-        }
-      },
-      {
-        "name": "opportunities",
-        "toMany": {
-          "isNested": true,
-          "type": "ContactOpportunity",
-          "column": "cntct_id",
-          "inverse": "source"
-        }
-      },
-      {
-        "name": "toDos",
-        "toMany": {
-          "isNested": true,
-          "type": "ContactToDo",
-          "column": "cntct_id",
-          "inverse": "source"
-        }
-      },
       {
         "name": "incidentRelations",
         "toMany": {
@@ -181,24 +136,6 @@
           "isNested": true,
           "type": "OpportunityRelation",
           "column": "todoitem_ophead_id"
-        }
-      },
-      {
-        "name": "incidents",
-        "toMany": {
-          "isNested": true,
-          "type": "ToDoIncident",
-          "column": "todoitem_id",
-          "inverse": "source"
-        }
-      },
-      {
-        "name": "opportunities",
-        "toMany": {
-          "isNested": true,
-          "type": "ToDoOpportunity",
-          "column": "todoitem_id",
-          "inverse": "source"
         }
       }
     ],
@@ -284,24 +221,6 @@
     ],
     "properties": [
       {
-        "name": "opportunities",
-        "toMany": {
-          "isNested": true,
-          "type": "IncidentOpportunity",
-          "column": "incdt_id",
-          "inverse": "source"
-        }
-      },
-      {
-        "name": "toDos",
-        "toMany": {
-          "isNested": true,
-          "type": "IncidentToDo",
-          "column": "incdt_id",
-          "inverse": "source"
-        }
-      },
-      {
         "name": "toDoRelations",
         "toMany": {
           "type": "ToDoRelation",
@@ -359,24 +278,6 @@
       }
     ],
     "properties": [
-      {
-        "name": "incidents",
-        "toMany": {
-          "isNested": true,
-          "type": "OpportunityIncident",
-          "column": "ophead_id",
-          "inverse": "source"
-        }
-      },
-      {
-        "name": "toDos",
-        "toMany": {
-          "isNested": true,
-          "type": "OpportunityToDo",
-          "column": "ophead_id",
-          "inverse": "source"
-        }
-      },
       {
         "name": "toDoRelations",
         "toMany": {

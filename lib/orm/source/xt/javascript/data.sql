@@ -965,9 +965,23 @@ select xt.install_js('XT','Data','xtuple', $$
         encryptionKey = options.encryptionKey,
         i,
         orm = this.fetchOrm(options.nameSpace, options.type),
-        sql = this.prepareInsert(orm, data, null, encryptionKey),
+        sql,
         pkey = XT.Orm.primaryKey(orm),
         rec;
+
+      /*
+        https://github.com/xtuple/xtuple/pull/1964
+        Document associations are stored "wrong" on the client.
+        Swap out the object of a document association for its primary key
+      */
+      if (orm.type === "DocumentAssociation" && typeof data.target === "object") {
+        var targetType = XT.documentAssociations[data.targetType];
+        var targetOrm = this.fetchOrm("XM", targetType);
+        var targetNaturalKeyAttr = XT.Orm.naturalKey(targetOrm);
+        var targetId = this.getId(targetOrm, data.target[targetNaturalKeyAttr]);
+        data.target = targetId;
+      }
+      sql = this.prepareInsert(orm, data, null, encryptionKey);
 
       /* Handle extensions on the same table. */
       for (var i = 0; i < orm.extensions.length; i++) {
@@ -2136,7 +2150,7 @@ select xt.install_js('XT','Data','xtuple', $$
       }
 
       /* If this object uses a natural key, go get the primary key id. */
-      if (nkey) {
+      if (nkey && !options.queryOnPrimaryKey) {
         id = this.getId(map, id);
         if (!id) {
           return false;
@@ -2435,13 +2449,15 @@ select xt.install_js('XT','Data','xtuple', $$
                  "from pg_stat_activity " +
                  "where datname=current_database() " +
                  " and usename=$1 " +
-                 " and procpid=$2;".replace("{pidcol}", pidcol),
+                 " and {pidcol}=$2;",
         query,
         selectSql = "select * " +
                     "from xt.lock " +
                     "where lock_table_oid = $1 " +
                     " and lock_record_id = $2;",
         username = XT.username;
+
+      pidSql = pidSql.replace(/{pidcol}/g, pidcol);
 
       /* If passed a table name, look up the oid. */
       oid = typeof table === "string" ? this.getTableOid(table) : table;
