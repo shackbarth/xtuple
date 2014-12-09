@@ -672,7 +672,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         .detail(printDetail)
         .pageFooter(printPageFooter)
         .fontSize(reportDefinition.settings.defaultFontSize)
-        .margins(reportDefinition.settings.defaultMarginSize);
+        .margins(reportDefinition.settings.defaultMarginSize)
+        .paper(reportDefinition.settings.paper)//"A7")
+        .landscape(reportDefinition.settings.landscape);//true);
 
       rpt.groupBy(req.query.id)
         .header(printHeader)
