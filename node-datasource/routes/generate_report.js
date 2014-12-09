@@ -711,13 +711,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     var execOpenRPT = function (done) {
       var args = [
-        "-display",
-        ":17",
+        "-display", ":17",
         "-close",
-        "-h",
-        X.options.databaseServer.hostname,
-        "-U",
-        username,
+        "-h", X.options.databaseServer.hostname,
+        "-U", username,
         "-pdf",
         "-outpdf=" + reportPath,
         "-loadfromdb=" + req.query.type
