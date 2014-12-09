@@ -99,7 +99,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       username = req.session.passport.user.id,
       databaseName = req.session.passport.user.organization,
       // TODO: introduce pseudorandomness (maybe a timestamp) to avoid collisions
-      reportName = req.query.type.toLowerCase() + req.query.id + ".pdf",
+      reportName = req.query.type.toLowerCase() + (req.query.id || "") + ".pdf",
       auxilliaryInfo = req.query.auxilliaryInfo,
       printer = req.query.printer,
       printQty = req.query.printQty || 1,
@@ -724,7 +724,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       if (req.query.params) {
         args.push("-param=" + req.query.params);
       }
-      console.log("args are", args);
       child_process.execFile("rptrender", args, done);
     };
 
