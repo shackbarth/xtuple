@@ -1506,6 +1506,13 @@
          }
       },
       {
+        "name": "holdType",
+        "attr": {
+          "type": "String",
+          "column": "cohead_holdtype"
+         }
+      },
+      {
         "name": "orderNotes",
         "attr": {
           "type": "String",

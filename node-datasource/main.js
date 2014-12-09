@@ -126,7 +126,10 @@ var app;
   };
   var loadExtensionClientside = function (extension) {
     var extensionLocation = extension.location === "npm" ? extension.location : extension.location + "/source";
+    // add static assets in client folder
     useClientDir(extensionLocation + "/" + extension.name + "/client", X.path.join(getExtensionDir(extension), "client"));
+    // add static assets in public folder
+    useClientDir(extensionLocation + "/" + extension.name + "/public", X.path.join(getExtensionDir(extension), "public"));
   };
   var loadExtensionServerside = function (extension) {
     var packagePath = X.path.join(getExtensionDir(extension), "package.json");
@@ -467,7 +470,6 @@ app.get('/:org/reset-password', routes.resetPassword);
 app.post('/:org/oauth/revoke-token', routes.revokeOauthToken);
 app.all('/:org/vcfExport', routes.vcfExport);
 
-
 // Set up the other servers we run on different ports.
 
 var redirectServer = express();
@@ -670,6 +672,7 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
           code: 1,
           debugging: X.options.datasource.debugging,
           emailAvailable: _.isString(X.options.datasource.smtpHost) && X.options.datasource.smtpHost !== "",
+          // TODO - printAvailable is deprecated after issues #1806 & #1807 are pulled in.
           printAvailable: _.isString(X.options.datasource.printer) && X.options.datasource.printer !== "",
           versions: X.versions
         });

@@ -219,7 +219,7 @@ BEGIN
       _r.quitem_qtyord, 0, 0,
       _r.quitem_qty_uom_id, _r.quitem_qty_invuomratio,
       _r.quitem_price_uom_id, _r.quitem_price_invuomratio,
-      stdcost(_r.itemsite_item_id), _r.quitem_prcost,
+      _r.quitem_unitcost, _r.quitem_prcost,
       _r.quitem_custpn, _r.quitem_memo, _r.quitem_taxtype_id, -1 );
 
     IF (fetchMetricBool('enablextcommissionission')) THEN
