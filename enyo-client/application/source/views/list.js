@@ -101,15 +101,20 @@ trailing:true, white:true, strict: false*/
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "button-column", components: [
+            {kind: "XV.ListAttr", components: [
+              {tag: "i", classes: "icon-edit-sign hyperlink", isKey: true}
+            ]}
+          ]},
           {kind: "XV.ListColumn", classes: "name-column", components: [
-            {kind: "XV.ListAttr", formatter: "formatName", isKey: true},
+            {kind: "XV.ListAttr", formatter: "formatName"},
             {kind: "XV.ListAttr", formatter: "formatDescription1"},
           ]},
           {kind: "XV.ListColumn", classes: "right-column", components: [
             {kind: "XV.ListAttr", attr: "dueDate", placeholder: "_noDueDate".loc()},
             {kind: "XV.ListAttr", attr: "getActivityStatusString"}
           ]},
-          {kind: "XV.ListColumn", classes: "second",
+          {kind: "XV.ListColumn", classes: "third",
             components: [
             {kind: "XV.ListAttr", attr: "activityType",
               formatter: "formatType",
