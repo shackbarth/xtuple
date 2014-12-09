@@ -714,16 +714,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     };
 
     var execOpenRPT = function (done) {
-      var databaseUrl = "psql://localhost:" + // XXX FIXME
-        X.options.databaseServer.port + "/" +
-        databaseName;
       var args = [
         "-display",
-        ":0",
+        ":17",
         "-close",
-        "-databaseUrl="  + databaseUrl,
-        "-username=" + X.options.databaseServer.user,
-        "-passwd=admin", // XXX FIXME
+        "-h=" + X.options.databaseServer.hostname,
+        "-U",
+        username,
         "-pdf",
         "-outpdf=" + reportPath,
         "-loadfromdb=" + req.query.type
@@ -731,6 +728,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       if (req.query.params) {
         args.push("-param=" + req.query.params);
       }
+      console.log("args are", args);
       child_process.execFile("rptrender", args, done);
     };
 
