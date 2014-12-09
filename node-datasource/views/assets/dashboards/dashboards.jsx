@@ -1,89 +1,4 @@
 /**  @jsx React.DOM */
-var Chart = React.createClass({
-  propTypes: {
-    data: React.PropTypes.array,
-    stuff: React.PropTypes.array,
-    domain: React.PropTypes.object
-  },
-
-  componentDidMount: function() {
-    var el = this.getDOMNode();
-    d3Chart.create(el, {
-      width: '100%',
-      height: '300px'
-    }, this.getChartState());
-  },
-
-  componentDidUpdate: function() {
-    var el = this.getDOMNode();
-    d3Chart.update(el, this.getChartState());
-  },
-
-  getChartState: function() {
-    console.log("gcs", this.props);
-    return {
-      data: this.props.data,
-      domain: this.props.domain,
-      stuff: this.props.stuff
-    };
-  },
-
-  componentWillUnmount: function() {
-    var el = this.getDOMNode();
-    d3Chart.destroy(el);
-  },
-
-  render: function() {
-    return (
-      <div className="Chart"></div>
-    );
-  }
-});
-
-// App.js
-
-var Pagination = React.createClass({
-  propTypes: {
-    domain: React.PropTypes.object,
-    getData: React.PropTypes.func,
-    setAppState: React.PropTypes.func
-  },
-  
-  render: function () {
-    return (
-      <p>
-        {'Pages: '}
-        <a href="#" onClick={this.handlePrevious}>Previous</a>
-        <span> - </span>
-        <a href="#" onClick={this.handleNext}>Next</a>
-      </p>
-    );
-  },
-
-  handlePrevious: function (e) {
-    e.preventDefault();
-    this.shiftData(-20);
-  },
-
-  handleNext: function (e) {
-    e.preventDefault();
-    this.shiftData(20);
-  },
-
-  shiftData: function (step) {
-    var newDomain = _.cloneDeep(this.props.domain);
-    newDomain.x = _.map(newDomain.x, function (x) {
-      return x + step;
-    });
-    console.log("changing domain from to", this.props.domain, newDomain);
-    newData = this.props.getData(newDomain);
-    this.props.setAppState({
-      data: newData,
-      domain: newDomain
-    });
-  }
-});
-
 
 var sampleData = [
   {id: '5fbmzmtc', x: 7, y: 41, z: 6},
@@ -105,12 +20,22 @@ var App = React.createClass({
   componentDidMount: function () {
     console.log("ajax request");
     $.ajax({
+      url: "/demo_dev/discovery/v1alpha1/apis/v1alpha1/rest",
+      dataType: "json",
+      success: function (data) {
+        console.log(data);
+        this.setState({schema: data});
+      }.bind(this)
+    });
+    /*
+    $.ajax({
       url: "/demo_dev/browser-api/v1/resources/incident-list-item",
       dataType: "json",
       success: function (data) {
         this.setState({stuff: this.getStuff(data.data.data)});
       }.bind(this)
     });
+    */
   },
 
   getStuff: function (data) {
@@ -135,8 +60,7 @@ var App = React.createClass({
     return (
       <div className="App">
         <Pagination
-          domain={this.state.domain}
-          getData={this.getData}
+          schema={this.state.schema}
           setAppState={this.setAppState} />
         <Chart
           data={this.state.data}
@@ -147,6 +71,7 @@ var App = React.createClass({
   },
 
   setAppState: function (state, callback) {
+    console.log("set app state", arguments);
     return this.setState(state, callback);
   }
 });
