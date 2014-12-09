@@ -714,6 +714,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         "-display", ":17",
         "-close",
         "-h", X.options.databaseServer.hostname,
+        "-p", X.options.databaseServer.port,
+        "-d", req.session.passport.user.organization,
         "-U", username,
         "-pdf",
         "-outpdf=" + reportPath,
