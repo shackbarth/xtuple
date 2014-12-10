@@ -18,12 +18,10 @@ var App = React.createClass({
   },
 
   componentDidMount: function () {
-    console.log("ajax request");
     $.ajax({
       url: "/demo_dev/discovery/v1alpha1/apis/v1alpha1/rest",
       dataType: "json",
       success: function (data) {
-        console.log(data);
         this.setState({schema: data});
       }.bind(this)
     });
@@ -62,15 +60,32 @@ var App = React.createClass({
   },
 
   fetchList: function (options) {
-    console.log("fetch list", options.path, options.groupBy);
-    var path = options.path.substring(0, options.path.lastIndexOf("/"));
+    var that = this,
+      path = options.path.substring(0, options.path.lastIndexOf("/"));
+    
     $.ajax({
       url: "/demo_dev/browser-api/v1/" + path,
       dataType: "json",
       success: function (data) {
-        console.log("success", data);
-        //this.setState({stuff: this.getStuff(data.data.data)});
+        that.groupChart(data.data.data, options);
       }.bind(this)
+    });
+  },
+
+  groupChart: function (data, options) {
+    var groupedData = _.groupBy(data, options.groupBy);
+    var totalledData = _.map(groupedData, function (dataArray, key) {
+      return {
+        key: key,
+        total: _.reduce(dataArray, function (memo, value) {
+          memo += options.totalBy === "_count" ? 1 : value[options.totalBy];
+          return memo;
+        }, 0)
+      };
+    });
+
+    this.setState({
+      stuff: totalledData
     });
   }
 });
