@@ -158,7 +158,7 @@ white:true*/
     "Location": "Browser",
     "PurchaseOrder": "Browser",
     "SalesOrder": "Browser",
-    "Shipment": "Browser"
+    "ShipShipment": "Browser"
   };
 
   /**
