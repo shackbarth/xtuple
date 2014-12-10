@@ -27,15 +27,6 @@ var App = React.createClass({
         this.setState({schema: data});
       }.bind(this)
     });
-    /*
-    $.ajax({
-      url: "/demo_dev/browser-api/v1/resources/incident-list-item",
-      dataType: "json",
-      success: function (data) {
-        this.setState({stuff: this.getStuff(data.data.data)});
-      }.bind(this)
-    });
-    */
   },
 
   getStuff: function (data) {
@@ -58,21 +49,29 @@ var App = React.createClass({
   render: function() {
     console.log("render", this.state.domain, this.domain);
     return (
-      <div className="App">
-        <Pagination
-          schema={this.state.schema}
-          setAppState={this.setAppState} />
+      <div className="App container">
         <Chart
           data={this.state.data}
           stuff={this.state.stuff}
           domain={this.state.domain} />
+        <Pagination
+          schema={this.state.schema}
+          fetchList={this.fetchList} />
       </div>
     );
   },
 
-  setAppState: function (state, callback) {
-    console.log("set app state", arguments);
-    return this.setState(state, callback);
+  fetchList: function (options) {
+    console.log("fetch list", options.path, options.groupBy);
+    var path = options.path.substring(0, options.path.lastIndexOf("/"));
+    $.ajax({
+      url: "/demo_dev/browser-api/v1/" + path,
+      dataType: "json",
+      success: function (data) {
+        console.log("success", data);
+        //this.setState({stuff: this.getStuff(data.data.data)});
+      }.bind(this)
+    });
   }
 });
 
