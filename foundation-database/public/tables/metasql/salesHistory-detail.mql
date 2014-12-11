@@ -83,6 +83,9 @@ WHERE ( (true)
 <? if exists("item_id") ?>
   AND  (item_id=<? value("item_id") ?>)
 <? endif ?>
+<? if exists("item_pattern") ?>
+  AND  (itemnumber ~* <? value("item_pattern") ?>)
+<? endif ?>
 <? if exists("prodcat_id") ?>
   AND (prodcat_id=<? value("prodcat_id") ?>)
 <? endif ?>
