@@ -36,7 +36,7 @@ var _    = require("underscore"),
     return result;
   };
 
-  describe('test bank reconciliation functions', function () {
+  describe.skip('test bank reconciliation functions', function () {
 
     var loginData = require("../lib/login_data.js").data,
       datasource = require('../../../xtuple/node-datasource/lib/ext/datasource').dataSource,
