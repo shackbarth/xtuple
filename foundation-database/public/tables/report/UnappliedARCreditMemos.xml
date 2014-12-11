@@ -3,24 +3,22 @@
  <title>Unapplied A/R Credit Memos</title>
  <name>UnappliedARCreditMemos</name>
  <description></description>
+ <grid>
+  <snap/>
+  <show/>
+  <x>0.05</x>
+  <y>0.05</y>
+ </grid>
  <size>Letter</size>
  <portrait/>
  <topmargin>50</topmargin>
  <bottommargin>50</bottommargin>
  <rightmargin>50</rightmargin>
  <leftmargin>50</leftmargin>
- <querysource>
+ <querysource loadFromDb="true">
   <name>detail</name>
-  <sql>SELECT aropen_id, aropen_docnumber,
-       (cust_number || '-' || cust_name) AS cust,
-       formatMoney(aropen_amount) AS f_amount,
-       formatMoney(aropen_paid) AS f_paid,
-       formatMoney(aropen_amount - aropen_paid) AS f_balance
-FROM aropen, custinfo
-WHERE ( (aropen_doctype IN ('C', 'R'))
- AND (aropen_open)
- AND (aropen_cust_id=cust_id) )
-ORDER BY aropen_docnumber;</sql>
+  <mqlgroup>arCreditMemos</mqlgroup>
+  <mqlname>unapplied</mqlname>
  </querysource>
  <rpthead>
   <height>77</height>
@@ -36,7 +34,7 @@ ORDER BY aropen_docnumber;</sql>
     <size>8</size>
     <weight>normal</weight>
    </font>
-   <hcenter/>
+   <right/>
    <vcenter/>
    <string>Amount</string>
   </label>
@@ -91,7 +89,7 @@ ORDER BY aropen_docnumber;</sql>
     <size>8</size>
     <weight>normal</weight>
    </font>
-   <hcenter/>
+   <right/>
    <vcenter/>
    <string>Applied</string>
   </label>
@@ -123,7 +121,7 @@ ORDER BY aropen_docnumber;</sql>
     <size>8</size>
     <weight>normal</weight>
    </font>
-   <hcenter/>
+   <right/>
    <vcenter/>
    <string>Balance</string>
   </label>
@@ -146,7 +144,7 @@ ORDER BY aropen_docnumber;</sql>
     <size>8</size>
     <weight>normal</weight>
    </font>
-   <hcenter/>
+   <right/>
    <vcenter/>
    <string>Balance</string>
   </label>
@@ -169,7 +167,7 @@ ORDER BY aropen_docnumber;</sql>
     <size>8</size>
     <weight>normal</weight>
    </font>
-   <hcenter/>
+   <right/>
    <vcenter/>
    <string>Applied</string>
   </label>
@@ -217,7 +215,7 @@ ORDER BY aropen_docnumber;</sql>
     <size>8</size>
     <weight>normal</weight>
    </font>
-   <hcenter/>
+   <right/>
    <vcenter/>
    <string>Amount</string>
   </label>
@@ -283,7 +281,7 @@ ORDER BY aropen_docnumber;</sql>
     <vcenter/>
     <data>
      <query>detail</query>
-     <column>f_paid</column>
+     <column>f_applied</column>
     </data>
    </field>
    <field>
@@ -307,9 +305,9 @@ ORDER BY aropen_docnumber;</sql>
    </field>
    <field>
     <rect>
-     <x>100</x>
-     <y>0</y>
-     <width>300</width>
+     <x>190</x>
+     <y>1</y>
+     <width>255</width>
      <height>15</height>
     </rect>
     <font>
@@ -321,7 +319,26 @@ ORDER BY aropen_docnumber;</sql>
     <vcenter/>
     <data>
      <query>detail</query>
-     <column>cust</column>
+     <column>cust_name</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>100</x>
+     <y>1</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>cust_number</column>
     </data>
    </field>
   </detail>
