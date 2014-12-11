@@ -46,7 +46,6 @@ white:true*/
     @class
 
     @extends XM.Model
-    @extends XM.DocumentAssignmentsMixin
   */
   XM.ToDo = XM.Model.extend({
     /** @scope XM.ToDo.prototype */
@@ -69,8 +68,6 @@ white:true*/
     bindEvents: function () {
       XM.Model.prototype.bindEvents.apply(this, arguments);
       this.on('change:startDate change:completeDate change:statusProxy', this.toDoStatusDidChange);
-      // Bind document assignments
-      this.bindDocuments();
     },
 
     /**
@@ -98,8 +95,6 @@ white:true*/
     }
 
   });
-
-  XM.ToDo = XM.ToDo.extend(XM.DocumentAssignmentsMixin);
 
   // To-Do status mixin
   XM.ToDo = XM.ToDo.extend(XM.ToDoStatus);
@@ -159,20 +154,6 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
-  */
-  XM.ToDoAccount = XM.Model.extend({
-    /** @scope XM.ToDoAccount.prototype */
-
-    recordType: 'XM.ToDoAccount',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
     @extends XM.Alarm
   */
   XM.ToDoAlarm = XM.Alarm.extend({
@@ -199,76 +180,6 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
-  */
-  XM.ToDoContact = XM.Model.extend({
-    /** @scope XM.ToDoContact.prototype */
-
-    recordType: 'XM.ToDoContact',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.ToDoItem = XM.Model.extend({
-    /** @scope XM.ToDoItem.prototype */
-
-    recordType: 'XM.ToDoItem',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.ToDoFile = XM.Model.extend({
-    /** @scope XM.ToDoFile.prototype */
-
-    recordType: 'XM.ToDoFile',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.ToDoToDo = XM.Model.extend({
-    /** @scope XM.ToDoToDo.prototype */
-
-    recordType: 'XM.ToDoToDo',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.ToDoUrl = XM.Model.extend({
-    /** @scope XM.ToDoUrl.prototype */
-
-    recordType: 'XM.ToDoUrl',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
     @extends XM.Info
   */
   XM.ToDoRelation = XM.Info.extend({
@@ -281,6 +192,11 @@ white:true*/
     numberKey: 'name'
 
   });
+
+  XT.documentAssociations.TODO = {
+    model: "XM.ToDoRelation",
+    label: "_toDo".loc()
+  };
 
   /**
     @class

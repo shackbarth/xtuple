@@ -7,13 +7,16 @@ DECLARE
   _qty         NUMERIC := 0.0;
 
 BEGIN
-  SELECT CASE WHEN (pLocationid IS NULL) THEN itemsite_qtyonhand
-              ELSE COALESCE(SUM(itemloc_qty), 0.0)
-         END INTO _qty
-    FROM itemsite LEFT OUTER JOIN itemloc ON (itemloc_itemsite_id=itemsite_id)
-   WHERE ((itemsite_id=pItemsiteid)
-     AND  (itemloc_location_id=pLocationid))
-  GROUP BY itemsite_qtyonhand;
+  IF (pLocationid IS NULL) THEN
+    SELECT COALESCE(itemsite_qtyonhand, 0.0) INTO _qty
+    FROM itemsite
+    WHERE (itemsite_id=pItemsiteid);
+  ELSE
+    SELECT COALESCE(SUM(itemloc_qty), 0.0) INTO _qty
+      FROM itemsite LEFT OUTER JOIN itemloc ON (itemloc_itemsite_id=itemsite_id)
+     WHERE ((itemsite_id=pItemsiteid)
+       AND  (itemloc_location_id=pLocationid));
+  END IF;
 
   RETURN _qty;
 

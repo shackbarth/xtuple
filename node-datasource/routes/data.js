@@ -113,8 +113,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     // We need to convert js binary into pg hex (see the file route for
     // the opposite conversion). See issue #18661
+    if (payload.nameSpace === "XM" && payload.type === "File") {
+      binaryField = "data";
+    }
     if (functionName === 'post' && binaryField) {
-
       // this took quite a bit of research
       // https://github.com/joyent/node/issues/5727
       // http://stackoverflow.com/questions/17670395/sending-binary-images-as-buffer-from-forked-child-process-to-main-process-in-nod

@@ -129,7 +129,7 @@ var async = require("async"),
               });
               if (sortedModels[0]) {
                 return sortedModels[0].uuid;
-              } else {
+              } else if (language === "js") {
                 X.log("Could not find js uuid for extension " + ext.description);
                 return null;
               }

@@ -1,0 +1,16 @@
+{
+  "name": "xtuple",
+  "version": "4.8.0-beta2",
+  "dependencies": {
+    "bootstrap": "3.2.0",
+    "jquery": "2.1.1",
+    "less": "1.5.0",
+    "nvd3": "1.1.x",
+    "globalize": "~0.1.1",
+    "moment": "~2.8.3",
+    "signature_pad": "~1.3.3",
+    "async": "~0.9.0",
+    "fast-json-patch": "~0.4.1",
+    "underscore": "~1.7.0"
+  }
+}

@@ -2,7 +2,7 @@
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
 /*global _:true, console:true, XM:true, XT:true, require:true, assert:true,
-setTimeout:true, clearTimeout:true, exports:true, it:true */
+setTimeout:true, clearTimeout:true, exports:true, it:true, Globalize: true */
 
 var _ = require("underscore"),
   zombieAuth = require("./zombie_auth"),

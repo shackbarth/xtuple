@@ -143,7 +143,7 @@ BEGIN
                         UNION
                         SELECT apopen_docnumber AS docnumber, vend_name AS vendname,
                                apopen_curr_id AS currid, gltrans_date AS distdate,
-                               (vohead_amount / apopen_amount) AS percentpaid,
+                               (checkitem_amount / apopen_amount) AS percentpaid,
                                gltrans_source AS source, gltrans_doctype AS doctype,
                                tax_sales_accnt_id, tax_dist_accnt_id,
                                taxhist_tax, taxhist_docdate
@@ -160,7 +160,7 @@ BEGIN
                         UNION
                         SELECT apopen_docnumber AS docnumber, vend_name AS vendname,
                                apopen_curr_id AS currid, gltrans_date AS distdate,
-                               (vohead_amount / apopen_amount) AS percentpaid,
+                               (checkitem_amount / apopen_amount) AS percentpaid,
                                gltrans_source AS source, gltrans_doctype AS doctype,
                                tax_sales_accnt_id, tax_dist_accnt_id,
                                taxhist_tax, taxhist_docdate
@@ -179,7 +179,7 @@ BEGIN
                         UNION
                         SELECT apopen_docnumber AS docnumber, vend_name AS vendname,
                                apopen_curr_id AS currid, sltrans_date AS distdate,
-                               (vohead_amount / apopen_amount) AS percentpaid,
+                               (checkitem_amount / apopen_amount) AS percentpaid,
                                sltrans_source AS source, sltrans_doctype AS doctype,
                                tax_sales_accnt_id, tax_dist_accnt_id,
                                taxhist_tax, taxhist_docdate
@@ -196,7 +196,7 @@ BEGIN
                         UNION
                         SELECT apopen_docnumber AS docnumber, vend_name AS vendname,
                                apopen_curr_id AS currid, sltrans_date AS distdate,
-                               (vohead_amount / apopen_amount) AS percentpaid,
+                               (checkitem_amount / apopen_amount) AS percentpaid,
                                sltrans_source AS source, sltrans_doctype AS doctype,
                                tax_sales_accnt_id, tax_dist_accnt_id,
                                taxhist_tax, taxhist_docdate

@@ -3,34 +3,34 @@
   <head>
     <title>OAuth 2.0 Request for Permission</title>
     <link rel="shortcut icon" href="/assets/favicon.ico" />
-    <!-- -->
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/stylesheets/screen.css">
     <meta http-equiv="Content-Type" content="text/html; charset=utf8"/>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   </head>
-  <body class="enyo-unselectable">
-
-  <style type="text/css" media="all">
-  <% include login/stylesheets/screen.css %>
-  </style>
-  <section id="login" class="enyo-fit enyo-clip">
-    <section id="oauth" class="enyo-fit enyo-clip">
-      <div id="oauth_icon">
+  <body>
+  <div class="container">
+    <div class="oauth">
+      <div class="pull-left">
         <img src="/assets/oauth-2-sm.png">
       </div>
-      <div id="oauth_request">
-        <h2>Hi <%= user %>!</h2>
-        <p>The app, <b><%= client.name %></b>, is requesting access to your account on the <b><%= scope %></b> database of this xTuple server.</p>
-        <div class="clear"></div>
+      <div>
+        <div>
+          <h3>Hi <%= user %>!</h3>
+          <small>The app, <strong><%= client.name %></strong>, is requesting access to your account on the
+          <strong><%= scope %></strong> database of this xTuple server.</small>
+        </div>
       </div>
-    </section>
-    <section class="enyo-panels enyo-arranger enyo-arranger-fit enyo-panels-fit-narrow" id="oauth_party">
-      <div style="transform: translateZ(0px); opacity: 1;" id="form-fields">
+    </div>
+    <div class="panel panel-primary main">
+      <div class="panel-body">
       <% if (client.logo && client.logo.length > 0) { %>
         <img src="<%= client.logo %>">
       <% } %>
-        <h2>App: <%= client.name %></h2>
-        <h3>This app would like:</h3>
+        <h3>App: <%= client.name %></h3>
+        <h4>This app would like:</h4>
         <ul>
         <% for(var i = 0; i < scopes.length; i++) { %>
           <li><%= scopes[i] %></li>
@@ -38,13 +38,29 @@
         </ul>
         <form action="/<%= scope %>/dialog/authorize/decision" method="post">
           <input name="transaction_id" type="hidden" value="<%= transactionID %>">
-          <div style="display: block;">
-            <input class="enyo-tool-decorator onyx-button enyo-unselectable login-button" id="form-fields_acceptButton" type="submit" value="Accept" id="allow">
-            <input class="enyo-tool-decorator onyx-button enyo-unselectable login-button" id="form-fields_cancelButton" type="submit" value="Cancel" name="cancel" id="deny">
+          <div>
+            <div>
+              <button
+                class="btn btn-info"
+                name="submit"
+                id="form-fields_loginButton"
+                type="submit"
+                id="allow">
+                Accept
+              </button>
+              <button
+                class="btn btn-info"
+                name="submit"
+                id="form-fields_loginButton"
+                type="submit"
+                id="deny">
+                Cancel
+              </button>
+            </div>
           </div>
         </form>
       </div>
-    </section>
-  </section>
+    </div>
+  </div>
   </body>
 </html>

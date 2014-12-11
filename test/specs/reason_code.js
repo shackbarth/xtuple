@@ -50,7 +50,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
 
     it('verify that XM.reasonCodeDocumentTypes contains the constants', function () {
       assert.isDefined(XM.reasonCodeDocumentTypes);
-      assert.equal(XM.reasonCodeDocumentTypes.length, 2);
+      assert.equal(XM.reasonCodeDocumentTypes.length, 3);
 
       assert.ok(_.find(XM.reasonCodeDocumentTypes.models, function (m) {
         return m.id === XM.ReasonCode.CREDIT_MEMO;

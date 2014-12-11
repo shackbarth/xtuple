@@ -5,9 +5,9 @@ xTuple
 
 ### What we're about
 
-xTuple is open-source business management software. The code is managed by an eponymous
-company in Norfolk, VA, and our community stretches around the world. Our web application
-is implemented as an [HTML5 node.js app](https://github.com/xtuple/xtuple/wiki/Overview).
+xTuple is open-source business management software (learn more at [xTuple.com](http://www.xtuple.com)).
+The code is managed by an eponymous company in Norfolk, VA, and our community stretches around 
+the world. Our web application is implemented as an [HTML5 node.js app](https://github.com/xtuple/xtuple/wiki/Overview).
 The other client to our server is a [desktop app](https://github.com/xtuple/qt-client) written
 in the cross-platform Qt framework.
 
@@ -39,25 +39,16 @@ file a github issue.
 If you want to be a contributor and are looking for a place to
 make your mark, we're keeping a list of issues that are 
 [fair game](https://github.com/xtuple/xtuple/labels/fair%20game)
-to pick off and provide
-a convenient, well-documented starting point into our project.
+to pick off and provide a convenient, well-documented starting point into our project.
 
-In the month of August, we will be running haxTuple 2014. As in previous incarnations, 
-we will open up our bug-shooting derby for the Qt client to our community, with prizes 
-for the most effective bugsquashers! In this year's event, we will also introduce our 
-new technologies by opening up our webapp for haxxing. Those who write the best 
-JavaScript extensions or REST clients will get prizes. More details 
-[here](https://github.com/xtuple/xtuple/wiki/haxTuple-2014).
+### What's Here?
 
-Also, don't miss the xTuple event of the year! 
-[xTupleCon 2014](http://www.xtuple.com/xtuple-conference-2014)
-is going to be held October 13-18 in Norfolk, VA. With six days of events and a kickoff
-speech by Steve Wozniak, it promises to the be the biggest xTupleCon yet.
+[This repository](http://github.com/xtuple/xtuple) contains the source code for the _xTuple ERP Web app_, an [HTML5 node.js app](http://github.com/xtuple/xtuple/wiki/Overview).
 
 ### Installing this project
-
+If you are looking to install xTuple for demonstration or use, please follow the instructions on the [xTuple Server wiki](https://github.com/xtuple/xtuple-server/wiki).
 The best way to start coding on our stack is to use our
-[Vagrant setup](https://github.com/xtuple/xtuple/wiki/Become-an-xTuple-Developer!).
+[Vagrant setup for developers](https://github.com/xtuple/xtuple/wiki/Become-an-xTuple-Developer!).
 
 ### Release Notes
 
@@ -69,4 +60,4 @@ to see a change log.
   * [Developer Wiki](https://github.com/xtuple/xtuple/wiki)
   * xTuple U [Tutorial Videos](https://github.com/xtuple/xtuple/wiki/Tutorial-Videos)
   * [API documentation](http://xtuple.github.io/api/current)
-  * [Setting up a non-development demo environment](https://github.com/xtuple/xtuple/wiki/How-to-set-up-xTuple)
+  * [Setting up an xTuple demo environment](https://github.com/xtuple/xtuple-server/wiki)

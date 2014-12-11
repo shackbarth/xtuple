@@ -193,18 +193,42 @@ var  async = require('async'),
 
         // Without this, psql runs all input and returns success even if errors occurred
         allSql = "\\set ON_ERROR_STOP TRUE\n" + allSql;
-
         winston.info("Applying build to database " + spec.database);
         credsClone.database = spec.database;
         sendToDatabase(allSql, credsClone, spec, function (err, res) {
+          // If the user has included a -p flag to populate the data, parse
+          // and insert any files found at ext/database/source/populate_data.js
+          // This will get done after the rest of the database is built, and
+          // in the load order of the extensions.
+
+          // This method is more portable to hand-inserting the data, because it
+          // makes no assumptions about the username and the encryption key
+
+          // To generate the patches and posts that make up the populate_data.js
+          // file, set 'capture: true' in config.js and then copy/paste the
+          // logged contents of the datasource as you drive around the app creating
+          // and editing objects.
           if (spec.populateData && creds.encryptionKeyFile) {
             var populateSql = "DO $$ XT.disableLocks = true; $$ language plv8;";
-            var encryptionKey = fs.readFileSync(path.resolve(__dirname, "../../node-datasource", creds.encryptionKeyFile), "utf8");
-            var patches = require(path.join(__dirname, "../../enyo-client/database/source/populate_data")).patches;
-            _.each(patches, function (patch) {
-              patch.encryptionKey = encryptionKey;
-              patch.username = creds.username;
-              populateSql += "select xt.patch(\'" + JSON.stringify(patch) + "\');";
+            var encryptionKey = fs.readFileSync(path.resolve(__dirname, "../../node-datasource",
+              creds.encryptionKeyFile), "utf8");
+
+            _.each(spec.extensions, function (ext) {
+              if (fs.existsSync(path.resolve(ext, "database/source/populate_data.js"))) {
+                // look for a populate_data.js file
+                var populatedData = require(path.resolve(ext, "database/source/populate_data"));
+                _.each(populatedData, function (query) {
+                  var verb = query.patches ? "patch" : "post";
+                  query.encryptionKey = encryptionKey;
+                  query.username = creds.username;
+                  populateSql += "select xt." + verb + "(\'" + JSON.stringify(query) + "\');";
+                });
+              }
+              if (fs.existsSync(path.resolve(ext, "database/source/populate_data.sql"))) {
+                // look for a populate_data.sql file
+                populateSql += fs.readFileSync(path.resolve(ext, "database/source/populate_data.sql"));
+              }
+
             });
             populateSql += "DO $$ XT.disableLocks = undefined; $$ language plv8;";
             dataSource.query(populateSql, credsClone, databaseCallback);

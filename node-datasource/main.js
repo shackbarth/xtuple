@@ -93,9 +93,23 @@ var express = require('express'),
     }
   });
 
-
   XT.session = Object.create(XT.Session);
   XT.session.schemas.SYS = false;
+
+  // Load the Database hostname and port into metrics to enable Qt client deep linking
+  X.options.datasource.databases.map(function (database) {
+    var queryPayload,
+      query = "SELECT setmetric('%@', '%@');";
+
+    queryPayload = query.f('WebappHostname', X.options.datasource.hostname);
+    XT.dataSource.query(queryPayload, XT.dataSource.getAdminCredentials(database), function (error, res) {
+      if (error) { console.log("An error occurred writing the hostname to the metric table " + error); }
+    });
+    queryPayload = query.f('WebappPort', X.options.datasource.port);
+    XT.dataSource.query(queryPayload, XT.dataSource.getAdminCredentials(database), function (error, res) {
+      if (error) { console.log("An error occurred writing the port to the metric table" + error); }
+    });
+  });
 
   var getExtensionDir = function (extension) {
     var dirMap = {
@@ -114,7 +128,10 @@ var express = require('express'),
   };
   var loadExtensionClientside = function (extension) {
     var extensionLocation = extension.location === "npm" ? extension.location : extension.location + "/source";
+    // add static assets in client folder
     useClientDir(extensionLocation + "/" + extension.name + "/client", X.path.join(getExtensionDir(extension), "client"));
+    // add static assets in public folder
+    useClientDir(extensionLocation + "/" + extension.name + "/public", X.path.join(getExtensionDir(extension), "public"));
   };
   var loadExtensionServerside = function (extension) {
     var packagePath = X.path.join(getExtensionDir(extension), "package.json");
@@ -132,8 +149,10 @@ var express = require('express'),
 
       if (_.contains(["all", "get", "post", "patch", "delete"], verb)) {
         app[verb]('/:org/' + routeDetails.path, func);
+      } else if (verb === "no-route") {
+        func();
       } else {
-        console.log("Invalid verb for extension-defined route " + routeDetails.path);
+        console.log("Invalid verb (" + verb + ") for extension-defined route " + routeDetails.path);
       }
     });
   };
@@ -324,11 +343,13 @@ var conditionalExpressSession = function (req, res, next) {
   // The 'assets' folder and login page are sessionless.
   if ((/^api/i).test(req.path.split("/")[2]) ||
       (/^\/assets/i).test(req.path) ||
-      req.path === "/" ||
-      req.path === "/favicon.ico" ||
-      req.path === "/forgot-password" ||
-      req.path === '/node_modules/jquery/jquery.js' ||
-      req.path === "/recover") {
+      (/^\/stylesheets/i).test(req.path) ||
+      (/^\/bower_components/i).test(req.path) ||
+      req.path === '/' ||
+      req.path === '/favicon.ico' ||
+      req.path === '/forgot-password' ||
+      req.path === '/assets' ||
+      req.path === '/recover') {
 
     next();
   } else {
@@ -425,9 +446,11 @@ require('./oauth2/passport');
  */
 var that = this;
 
-app.use(express.favicon(__dirname + '/views/login/assets/favicon.ico'));
-app.use('/assets', express.static('views/login/assets', { maxAge: 86400000 }));
-app.use('/node_modules/jquery', express.static('../node_modules/jquery/dist', { maxAge: 86400000 }));
+/* Static assets */
+app.use(express.favicon(__dirname + '/views/assets/favicon.ico'));
+app.use('/assets', express.static('views/assets', { maxAge: 86400000 }));
+app.use('/stylesheets', express.static('views/stylesheets', { maxAge: 86400000 }));
+app.use('/bower_components', express.static('../bower_components', { maxAge: 86400000 }));
 
 app.get('/:org/dialog/authorize', oauth2.authorization);
 app.post('/:org/dialog/authorize/decision', oauth2.decision);
@@ -443,6 +466,11 @@ app.post('/:org/api/v1alpha1/services/:service/:id', routes.restRouter);
 app.all('/:org/api/v1alpha1/resources/:model/:id', routes.restRouter);
 app.all('/:org/api/v1alpha1/resources/:model', routes.restRouter);
 app.all('/:org/api/v1alpha1/resources/*', routes.restRouter);
+
+app.post('/:org/browser-api/v1/services/:service/:id', routes.restBrowserRouter);
+app.all('/:org/browser-api/v1/resources/:model/:id', routes.restBrowserRouter);
+app.all('/:org/browser-api/v1/resources/:model', routes.restBrowserRouter);
+app.all('/:org/browser-api/v1/resources/*', routes.restBrowserRouter);
 
 app.get('/', routes.loginForm);
 app.post('/login', routes.login);
@@ -470,7 +498,6 @@ app.all('/:org/oauth/generate-key', routes.generateOauthKey);
 app.get('/:org/reset-password', routes.resetPassword);
 app.post('/:org/oauth/revoke-token', routes.revokeOauthToken);
 app.all('/:org/vcfExport', routes.vcfExport);
-
 
 // Set up the other servers we run on different ports.
 
@@ -674,6 +701,7 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
           code: 1,
           debugging: X.options.datasource.debugging,
           emailAvailable: _.isString(X.options.datasource.smtpHost) && X.options.datasource.smtpHost !== "",
+          // TODO - printAvailable is deprecated after issues #1806 & #1807 are pulled in.
           printAvailable: _.isString(X.options.datasource.printer) && X.options.datasource.printer !== "",
           versions: X.versions
         });

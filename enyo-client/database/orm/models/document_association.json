@@ -1,11 +1,11 @@
 [
   {
-    "context": "project",
+    "context": "xtuple",
     "nameSpace": "XM",
-    "type": "ToDoProject",
+    "type": "DocumentAssociation",
     "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
-    "comment": "ToDo Project Map",
+    "comment": "Document Association Map",
     "privileges": {
       "all": {
         "create": true,
@@ -35,8 +35,7 @@
         "name": "sourceType",
         "attr": {
           "type": "String",
-          "column": "source_type",
-          "value": "TODO"
+          "column": "source_type"
         }
       },
       {
@@ -50,15 +49,13 @@
         "name": "targetType",
         "attr": {
           "type": "String",
-          "column": "target_type",
-          "value": "J"
+          "column": "target_type"
         }
       },
       {
-        "name": "project",
-        "toOne": {
-          "isNested": true,
-          "type": "ProjectRelation",
+        "name": "target",
+        "attr": {
+          "type": "Number",
           "column": "target_id"
         }
       },

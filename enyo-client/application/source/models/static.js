@@ -366,7 +366,8 @@ white:true*/
   K = XM.ReasonCode;
   var reasonDocTypeJson = [
     { id: K.DEBIT_MEMO, name: "_debitMemo".loc() },
-    { id: K.CREDIT_MEMO, name: "_creditMemo".loc() }
+    { id: K.CREDIT_MEMO, name: "_creditMemo".loc() },
+    { id: K.RETURN_AUTH, name: "_returnAuthorization".loc() }
   ];
   XM.ReasonDocTypeModel = Backbone.Model.extend({});
   XM.ReasonDocTypeCollection = Backbone.Collection.extend({

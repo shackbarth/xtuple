@@ -1889,6 +1889,12 @@ a,
 .onyx-toolbar .onyx-popup-decorator {
   margin: 0 5px 0 3px;
 }
+@media (max-width: 480px) {
+  .onyx-toolbar .onyx-icon-button,
+  .onyx-toolbar .onyx-popup-decorator {
+    margin: 0 7px 0 5px;
+  }
+}
 .onyx-toolbar .onyx-icon-button div,
 .onyx-toolbar .onyx-popup-decorator div {
   text-shadow: none;
@@ -1917,6 +1923,13 @@ a,
   width: 185px;
   margin: 0;
   margin-left: 6px;
+}
+@media (max-width: 480px) {
+  .onyx-toolbar .xv-toolbar-label,
+  .onyx-toolbar .xv-search {
+    width: 100px;
+    font-size: 18px;
+  }
 }
 .onyx-toolbar .xv-search {
   color: #939393;
@@ -2564,49 +2577,6 @@ a,
   margin: 10px;
   color: #357ec7;
   overflow: hidden;
-  /*  The chart-filters may not be need as we are using the class xv-pullout
-      for styles.  Delete when finished hacking the filter styles.
-
-  .chart-filters {
-  	  background-color: @white;
-  	  
-  	  -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
-	  -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
-	  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
-  }
-  
-  .chart-filters .xv-parameter-panel {
-  	  background-color: @ghost;
-  	  border: 1px solid @smoke;
-  	  margin: 0 4px 6px 0;
-  	  width: 100%;
-  }
-  
-  .chart-filters.xv-parameter-panel .onyx-groupbox-header {
-	  padding: 6px 10px;
-	  border-bottom: 1px solid @smoke;
-	  background: @lightest-gray;
-	  color: @near-black;
-  }
-
-  .chart-filters.xv-parameter-panel .enyo-fittable-columns-layout {
-	  border-bottom: 1px solid @smoke;
-	  background: @white;
-    color: @near-black;
-    position: relative;
-    text-align: left;
-    white-space: nowrap;
-  }
-
-  .chart-filters.xv-parameter-panel .enyo-fittable-columns-layout > * {
-    vertical-align: middle;
-  }
-
-  .chart-filters.xv-parameter-panel .xv-label {
-    text-align: right;
-  }
-  
-  */
 }
 .selectable-chart .xv-list-item {
   border-bottom: 1px solid grey;
@@ -2680,13 +2650,6 @@ a,
 .selectable-chart .chart-filterDrawer {
   top: 0px;
 }
-.selectable-chart .map-cluster {
-  width: 40px;
-  height: 40px;
-  background-color: greenyellow;
-  text-align: center;
-  font-size: 24px;
-}
 /**
   Styles relating to Lists
 */
@@ -2700,30 +2663,33 @@ a,
   padding-bottom: 4px;
   border-bottom: 1px solid #aaaaaa;
 }
+.xv-list-header .xv-list-column {
+  padding-left: 7px;
+}
 .xv-list-header .xv-list-column.last {
   border-right: none;
 }
-.xv-list-header .xv-list-column.name-column,
-.xv-list-header .xv-list-column.first,
-.xv-list-header .xv-list-column.second,
-.xv-list-header .xv-list-column.third,
-.xv-list-header .xv-list-column.short,
-.xv-list-header .xv-list-column.small,
-.xv-list-header .xv-list-column.medium,
-.xv-list-header .xv-list-column.descr {
-  padding-left: 7px;
-}
 /* List */
+.xv-list-column {
+  /*
+    This is named "button-" because "icon-"
+    clashes with font-awesome
+  */
+}
 .xv-list-column.line-number {
   width: 30px;
   text-align: right;
 }
 .xv-list-column.name-column {
-  width: 200px;
+  width: 175px;
 }
 .xv-list-column.right-column {
   width: 100px;
   text-align: right;
+}
+.xv-list-column.button-column {
+  width: 40px;
+  font-size: 2.3em;
 }
 .xv-list-column.short {
   width: 100px;
@@ -2750,9 +2716,6 @@ a,
 }
 .xv-list-column.descr {
   width: 200px;
-}
-.xv-list-column.icon {
-  width: 10px;
 }
 .xv-list {
   background: #f8f8f8;
@@ -2896,6 +2859,11 @@ a,
   overflow: hidden;
   text-overflow: ellipsis;
   color: #070707;
+}
+@media (max-width: 480px) {
+  .xv-list-attr {
+    padding: 2px 5px 2px 5px;
+  }
 }
 .xv-list-attr.header {
   padding: 4px;

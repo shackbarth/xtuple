@@ -775,6 +775,7 @@ trailing:true, white:true, strict:false*/
         }
       },
       {name: "name", label: "_name".loc(), attr: "name"},
+      {name: "number", label: "_number".loc(), attr: "number"},
       {kind: "onyx.GroupboxHeader", content: "_status".loc()},
       {name: "stage", label: "_stage".loc(), attr: "opportunityStage",
         defaultKind: "XV.OpportunityStagePicker"},

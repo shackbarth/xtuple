@@ -7,20 +7,6 @@ white:true*/
   "use strict";
 
   XT.extensions.project.initInvoiceModels = function () {
-    /**
-      @class
-
-      @extends XM.Model
-    */
-    XM.InvoiceProject = XM.Model.extend(
-      /** @scope XM.InvoiceProject.prototype */ {
-
-      recordType: 'XM.InvoiceProject',
-
-      isDocumentAssignment: true
-
-    });
-
     //
     // Extend invoice bindEvents so that posted invoices's project attribute will be read-only
     //

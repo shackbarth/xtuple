@@ -659,6 +659,16 @@ select xt.install_js('XT','Orm','xtuple', $$
           } else {
             conditions = toMany.column ? type + '."' + inverse + '" = ' +
               (toMany.isBase ? "t1" : tblAlias) + '.' + toMany.column : 'true';
+
+            /*
+              Document associations have a second key that must be joined on here,
+              to avoid different business objects with the same ID picking up
+              each other's document associations
+            */
+            if (toMany.sourceType) {
+              conditions = conditions + " AND " + type + ".\"sourceType\" = '" +
+                toMany.sourceType + "'";
+            }
           }
 
           /* build select */

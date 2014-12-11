@@ -12,11 +12,9 @@
   border-bottom: 1px solid @silver;
 
   .xv-list-column {
+    padding-left: 7px;
     &.last {
       border-right: none;
-    }
-    &.name-column, &.first, &.second, &.third, &.short, &.small, &.medium, &.descr {
-      padding-left: 7px;
     }
   }
 }
@@ -28,11 +26,19 @@
     text-align: right;
   }
   &.name-column {
-    width: 200px
+    width: 175px
   }
   &.right-column {
     width: 100px;
     text-align: right;
+  }
+  /*
+    This is named "button-" because "icon-"
+    clashes with font-awesome
+  */
+  &.button-column {
+    width: 40px;
+    font-size: 2.3em;
   }
   &.short {
     width: 100px;
@@ -58,9 +64,6 @@
   }
   &.descr {
     width: 200px;
-  }
-  &.icon {
-    width: 10px;
   }
 }
 
@@ -198,6 +201,9 @@
   overflow: hidden;
   text-overflow: ellipsis;
   color: @black;
+  @media (max-width: 480px) {
+    padding: 2px 5px 2px 5px;
+  }
   &.header {
     padding: 4px;
     background: @gray;
