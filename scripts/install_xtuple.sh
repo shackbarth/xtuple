@@ -241,6 +241,9 @@ init_everythings() {
 	log "Created testing login_data.js"
 
 	cdir $XT_DIR
+    cd enyo-client/application/tools
+    ./deploy.sh
+    log "finish test enyo deploy"
 	npm run-script test-build 2>&1 | tee -a $LOG_FILE
 
 	log "You can login to the database and mobile client with:"
