@@ -24,12 +24,12 @@ var _ = require("underscore"),
       });
     });
 
-    it("should add a new metric", function (done) {
+    it.skip("should add a new metric", function (done) {
       var sql = "select setmetric('Test999', 'Value999');";
       datasource.query(sql, creds, done);
     });
 
-    it("should verify that the metric was set", function (done) {
+    it.skip("should verify that the metric was set", function (done) {
       var sql = "select metric_value from public.metric where metric_name = 'Test999';";
       datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
@@ -38,12 +38,12 @@ var _ = require("underscore"),
       });
     });
 
-    it("should update the metric", function (done) {
+    it.skip("should update the metric", function (done) {
       var sql = "select setmetric('Test999', 'Value888');";
       datasource.query(sql, creds, done);
     });
 
-    it("should verify that the metric was set", function (done) {
+    it.skip("should verify that the metric was set", function (done) {
       var sql = "select metric_value from public.metric where metric_name = 'Test999';";
       datasource.query(sql, creds, function (err, res) {
         assert.equal(res.rowCount, 1);
@@ -60,6 +60,3 @@ var _ = require("underscore"),
 
   });
 }());
-
-
-

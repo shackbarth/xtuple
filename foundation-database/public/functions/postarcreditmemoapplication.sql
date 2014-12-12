@@ -65,7 +65,7 @@ BEGIN
       RETURN -4;
     END IF;
 
-    IF (_r.arcreditapply_amountTarget > 0) THEN
+    IF (_r.arcreditapply_amountTarget <> 0) THEN
 
 --  Update the aropen item to post the paid amount
       UPDATE aropen

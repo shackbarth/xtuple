@@ -97,7 +97,7 @@ BEGIN
   FROM checkitem, vohead, apopen
   WHERE ((checkitem_checkhead_id=pCheckheadid)
     AND  (checkitem_vouchernumber = vohead_number)
-    AND  (apopen_docnumber = checkitem_vouchernumber)
+    AND  (checkitem_apopen_id = apopen_id)
     AND  (apopen_doctype = 'V'))
   
   UNION
