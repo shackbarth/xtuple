@@ -105,7 +105,7 @@
   <label>
    <rect>
     <x>5</x>
-    <y>200</y>
+    <y>198</y>
     <width>100</width>
     <height>15</height>
    </rect>
@@ -120,8 +120,8 @@
   </label>
   <label>
    <rect>
-    <x>355</x>
-    <y>200</y>
+    <x>305</x>
+    <y>198</y>
     <width>80</width>
     <height>15</height>
    </rect>
@@ -137,7 +137,7 @@
   <label>
    <rect>
     <x>110</x>
-    <y>200</y>
+    <y>198</y>
     <width>100</width>
     <height>15</height>
    </rect>
@@ -168,8 +168,8 @@
   </label>
   <label>
    <rect>
-    <x>665</x>
-    <y>200</y>
+    <x>385</x>
+    <y>198</y>
     <width>80</width>
     <height>15</height>
    </rect>
@@ -178,14 +178,14 @@
     <size>8</size>
     <weight>normal</weight>
    </font>
-   <hcenter/>
+   <right/>
    <vcenter/>
-   <string>Total</string>
+   <string>Total Price</string>
   </label>
   <label>
    <rect>
-    <x>270</x>
-    <y>200</y>
+    <x>220</x>
+    <y>198</y>
     <width>80</width>
     <height>15</height>
    </rect>
@@ -225,6 +225,102 @@
     <column>filter</column>
    </data>
   </text>
+  <label>
+   <rect>
+    <x>5</x>
+    <y>183</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Cust. #</string>
+  </label>
+  <label>
+   <rect>
+    <x>110</x>
+    <y>183</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Cust. Type</string>
+  </label>
+  <label>
+   <rect>
+    <x>240</x>
+    <y>183</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Cust. Name</string>
+  </label>
+  <label>
+   <rect>
+    <x>475</x>
+    <y>198</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Total Cost</string>
+  </label>
+  <label>
+   <rect>
+    <x>565</x>
+    <y>198</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Margin</string>
+  </label>
+  <label>
+   <rect>
+    <x>655</x>
+    <y>198</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Margin %</string>
+  </label>
  </rpthead>
  <pghead>
   <firstpage/>
@@ -326,11 +422,11 @@
    <key>
     <query>detail</query>
    </key>
-   <height>16</height>
+   <height>37</height>
    <field>
     <rect>
      <x>5</x>
-     <y>0</y>
+     <y>17</y>
      <width>100</width>
      <height>15</height>
     </rect>
@@ -349,7 +445,7 @@
    <field>
     <rect>
      <x>110</x>
-     <y>0</y>
+     <y>17</y>
      <width>100</width>
      <height>15</height>
     </rect>
@@ -367,8 +463,8 @@
    </field>
    <field>
     <rect>
-     <x>665</x>
-     <y>0</y>
+     <x>565</x>
+     <y>17</y>
      <width>80</width>
      <height>15</height>
     </rect>
@@ -381,13 +477,13 @@
     <vcenter/>
     <data>
      <query>detail</query>
-     <column>f_baseextprice</column>
+     <column>f_margin</column>
     </data>
    </field>
    <field>
     <rect>
-     <x>355</x>
-     <y>0</y>
+     <x>305</x>
+     <y>17</y>
      <width>80</width>
      <height>15</height>
     </rect>
@@ -405,8 +501,8 @@
    </field>
    <field>
     <rect>
-     <x>270</x>
-     <y>0</y>
+     <x>220</x>
+     <y>17</y>
      <width>80</width>
      <height>15</height>
     </rect>
@@ -420,6 +516,120 @@
     <data>
      <query>detail</query>
      <column>f_orderdate</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>5</x>
+     <y>2</y>
+     <width>100</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>cust_number</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>110</x>
+     <y>2</y>
+     <width>100</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>custtype_code</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>225</x>
+     <y>2</y>
+     <width>320</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>cust_name</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>390</x>
+     <y>17</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_baseextprice</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>475</x>
+     <y>17</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_extcost</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>655</x>
+     <y>17</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_marginpercent</column>
     </data>
    </field>
   </detail>
@@ -501,8 +711,8 @@
   <height>21</height>
   <label>
    <rect>
-    <x>575</x>
-    <y>0</y>
+    <x>285</x>
+    <y>5</y>
     <width>80</width>
     <height>15</height>
    </rect>
@@ -517,8 +727,8 @@
   </label>
   <field>
    <rect>
-    <x>665</x>
-    <y>0</y>
+    <x>390</x>
+    <y>5</y>
     <width>80</width>
     <height>15</height>
    </rect>
@@ -532,6 +742,48 @@
    <data>
     <query>detail</query>
     <column>baseextprice</column>
+   </data>
+   <format builtin="true">money</format>
+   <tracktotal/>
+  </field>
+  <field>
+   <rect>
+    <x>475</x>
+    <y>5</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <data>
+    <query>detail</query>
+    <column>extcost</column>
+   </data>
+   <format builtin="true">money</format>
+   <tracktotal/>
+  </field>
+  <field>
+   <rect>
+    <x>565</x>
+    <y>5</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <data>
+    <query>detail</query>
+    <column>margin</column>
    </data>
    <format builtin="true">money</format>
    <tracktotal/>

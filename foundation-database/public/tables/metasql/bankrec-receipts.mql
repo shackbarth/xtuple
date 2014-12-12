@@ -52,7 +52,11 @@ SELECT gltrans_id AS id, 1 AS altid,
        gltrans_docnumber AS docnumber,
        gltrans_notes AS notes,
        currConcat(COALESCE(cashrcpt_curr_id, baseCurrId())) AS doc_curr,
-       COALESCE(bankrecitem_curr_rate, cashrcpt_curr_rate, currRate(bankaccnt_curr_id, gltrans_date)) AS doc_exchrate,
+       CASE WHEN (fetchMetricValue('CurrencyExchangeSense') = 1) THEN
+         ROUND(1.0 / COALESCE(bankrecitem_curr_rate, cashrcpt_curr_rate, currRate(bankaccnt_curr_id, gltrans_date)),5)
+            ELSE
+         ROUND(COALESCE(bankrecitem_curr_rate, cashrcpt_curr_rate, currRate(bankaccnt_curr_id, gltrans_date)),5)
+       END AS doc_exchrate,
        (gltrans_amount * -1.0) AS base_amount,
        CASE WHEN (bankaccnt_curr_id=cashrcpt_curr_id) THEN
          COALESCE( bankrecitem_amount,
@@ -102,7 +106,11 @@ SELECT sltrans_id AS id, 2 AS altid,
        sltrans_docnumber AS docnumber,
        sltrans_notes AS notes,
        currConcat(COALESCE(cashrcpt_curr_id, baseCurrId())) AS doc_curr,
-       COALESCE(bankrecitem_curr_rate, cashrcpt_curr_rate, currRate(bankaccnt_curr_id, sltrans_date)) AS doc_exchrate,
+       CASE WHEN (fetchMetricValue('CurrencyExchangeSense') = 1) THEN
+         ROUND(1.0 / COALESCE(bankrecitem_curr_rate, cashrcpt_curr_rate, currRate(bankaccnt_curr_id, sltrans_date)),5)
+            ELSE
+         ROUND(COALESCE(bankrecitem_curr_rate, cashrcpt_curr_rate, currRate(bankaccnt_curr_id, sltrans_date)),5)
+       END AS doc_exchrate,
        (sltrans_amount * -1.0) AS base_amount,
        CASE WHEN (bankaccnt_curr_id=cashrcpt_curr_id) THEN
          COALESCE( bankrecitem_amount,

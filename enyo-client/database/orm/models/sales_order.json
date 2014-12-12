@@ -1432,7 +1432,7 @@
       },
       "attribute": {
         "total": {
-          "view": "MaintainSalesOrders ViewSalesOrders"
+          "view": "MaintainSalesOrders ViewSalesOrders ViewSalesOrderTotals"
         }
       },
       "personal": {

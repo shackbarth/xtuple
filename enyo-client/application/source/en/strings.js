@@ -56,6 +56,7 @@
     "_new": "New",
     "_organization": "Organization",
     "_packingHoldType": "Packing Hold",
+    "_returnAuthorization": "Return Authorization",
     "_returnHoldType": "Return Hold",
     "_resolved": "Resolved",
     "_revenue": "Revenue",

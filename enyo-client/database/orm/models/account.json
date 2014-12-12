@@ -583,6 +583,15 @@
           "column":"crmacct_owner_username",
           "inverse":"username"
         }
+      },
+      {
+        "name":"userAccount",
+        "toOne":{
+          "isNested":true,
+          "type":"UserAccountRelation",
+          "column":"crmacct_usr_username",
+          "inverse":"username"
+        }
       }
     ],
     "isSystem":true

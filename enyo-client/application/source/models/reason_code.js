@@ -43,6 +43,14 @@ white:true*/
       @default "ARDM"
     */
     DEBIT_MEMO: "ARDM",
+    
+    /**
+      @static
+      @constant
+      @type String
+      @default "RA"
+    */
+    RETURN_AUTH: "RA",
 
   });
 

@@ -27,6 +27,10 @@ SELECT cohead_id, cust_id, cohist_ponumber,
        formatMoney(SUM(baseextprice)) AS f_baseextprice,
        formatMoney(SUM(extcost)) AS f_extcost,
        formatMoney(SUM(margin)) AS f_margin,
+       formatPrcnt(CASE WHEN (SUM(baseextprice) > 0.0) THEN
+                        ROUND(SUM(margin) / SUM(baseextprice), 4)
+                        ELSE 0.0
+                   END) AS f_marginpercent,
 <? endif ?>
        <? value("return") ?> AS cohist_invcdate_xtnullrole,
        'curr' AS extprice_xtnumericrole,
