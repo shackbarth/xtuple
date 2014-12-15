@@ -196,6 +196,12 @@ var  async = require('async'),
         winston.info("Applying build to database " + spec.database);
         credsClone.database = spec.database;
         sendToDatabase(allSql, credsClone, spec, function (err, res) {
+          if (err) {
+            // don't blaze on if the big exec failed!
+            // also: report the error
+            databaseCallback(err);
+            return;
+          }
           // If the user has included a -p flag to populate the data, parse
           // and insert any files found at ext/database/source/populate_data.js
           // This will get done after the rest of the database is built, and
