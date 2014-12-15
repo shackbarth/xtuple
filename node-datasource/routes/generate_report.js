@@ -99,7 +99,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       username = req.session.passport.user.id,
       databaseName = req.session.passport.user.organization,
       // TODO: introduce pseudorandomness (maybe a timestamp) to avoid collisions
-      reportName = req.query.type.toLowerCase() + req.query.id + ".pdf",
+      reportName = req.query.type.toLowerCase() + (req.query.id || "") + ".pdf",
       auxilliaryInfo = req.query.auxilliaryInfo,
       printer = req.query.printer,
       printQty = req.query.printQty || 1,
@@ -672,7 +672,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         .detail(printDetail)
         .pageFooter(printPageFooter)
         .fontSize(reportDefinition.settings.defaultFontSize)
-        .margins(reportDefinition.settings.defaultMarginSize);
+        .margins(reportDefinition.settings.defaultMarginSize)
+        .paper(reportDefinition.settings.paper)
+        .landscape(reportDefinition.settings.landscape);
 
       rpt.groupBy(req.query.id)
         .header(printHeader)
@@ -709,9 +711,46 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       done();
     };
 
+    var execOpenRPT = function (done) {
+      var args = [
+        "-display", ":17",
+        "-close",
+        "-h", X.options.databaseServer.hostname,
+        "-p", X.options.databaseServer.port,
+        "-d", req.session.passport.user.organization,
+        "-U", username,
+        "-pdf",
+        "-outpdf=" + reportPath,
+        "-loadfromdb=" + req.query.type
+      ];
+      if (req.query.params) {
+        args.push("-param=" + req.query.params);
+      }
+      child_process.execFile("rptrender", args, done);
+    };
+
     //
     // Actually perform the operations, one at a time
     //
+
+    // Support rendering through openRPT via the following API:
+    // https://localhost/demo_dev/generate-report?nameSpace=ORPT&type=AddressesMasterList
+    // https://localhost/demo_dev/generate-report?nameSpace=ORPT&type=AROpenItems&params=startDate:date=%272007-01-01%27
+    if (req.query.nameSpace === "ORPT") {
+      async.series([
+        createTempDir,
+        createTempOrgDir,
+        execOpenRPT,
+        sendReport,
+        cleanUpFiles
+      ], function (err, results) {
+        if (err) {
+          res.send({isError: true, message: err.description});
+        }
+      });
+
+      return;
+    }
 
     async.series([
       createTempDir,

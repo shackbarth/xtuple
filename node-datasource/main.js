@@ -10,8 +10,10 @@ _ = require("underscore");
 jsonpatch = require("json-patch");
 SYS = {};
 XT = { };
-var express = require('express');
-var app;
+
+var express = require('express'),
+  async = require("async"),
+  app;
 
 (function () {
   "use strict";
@@ -126,7 +128,10 @@ var app;
   };
   var loadExtensionClientside = function (extension) {
     var extensionLocation = extension.location === "npm" ? extension.location : extension.location + "/source";
+    // add static assets in client folder
     useClientDir(extensionLocation + "/" + extension.name + "/client", X.path.join(getExtensionDir(extension), "client"));
+    // add static assets in public folder
+    useClientDir(extensionLocation + "/" + extension.name + "/public", X.path.join(getExtensionDir(extension), "public"));
   };
   var loadExtensionServerside = function (extension) {
     var packagePath = X.path.join(getExtensionDir(extension), "package.json");
@@ -181,6 +186,33 @@ var app;
   privSessionOptions.username = X.options.databaseServer.user;
   privSessionOptions.database = X.options.datasource.databases[0];
   XT.session.loadSessionObjects(XT.session.PRIVILEGES, privSessionOptions);
+
+  var cacheCount = 0;
+  var cacheShareUsersWarmed = function (err, result) {
+    if (err) {
+      console.trace("Share Users Cache warming errors:");
+    } else {
+      cacheCount++;
+      if (cacheCount === X.options.datasource.databases.length) {
+        X.log("All Share Users Caches have been warmed.");
+      }
+    }
+  };
+
+  var warmCacheShareUsers = function (dbVal, callback) {
+    var cacheShareUsersOptions = {
+      user: X.options.databaseServer.user,
+      port: X.options.databaseServer.port,
+      hostname: X.options.databaseServer.hostname,
+      database: dbVal,
+      password: X.options.databaseServer.password
+    };
+
+    X.log("Warming Share Users Cache for database " + dbVal + "...");
+    datasource.api.query('select xt.refresh_share_user_cache()', cacheShareUsersOptions, cacheShareUsersWarmed);
+  };
+
+  async.map(X.options.datasource.databases, warmCacheShareUsers);
 
 }());
 
@@ -466,7 +498,6 @@ app.all('/:org/oauth/generate-key', routes.generateOauthKey);
 app.get('/:org/reset-password', routes.resetPassword);
 app.post('/:org/oauth/revoke-token', routes.revokeOauthToken);
 app.all('/:org/vcfExport', routes.vcfExport);
-
 
 // Set up the other servers we run on different ports.
 

@@ -68,8 +68,15 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
       this.timeout(10000);
       var workspace,
         // XXX: Avoid the need for this. To be replaced when Forms object created.
-        printSettingArray = ['SalesOrder', 'Invoice', 'PurchaseOrder', 'Location', 'EnterReceipt',
-          'Shipment'];
+        printSettingArray = [
+          "EnterReceipt",
+          "Invoice",
+          "IssueToShipping",
+          "Location",
+          "PurchaseOrder",
+          "SalesOrder",
+          "ShipShipment"
+        ];
       it("User navigates to User Preference workspace", function (done) {
         XT.app.$.postbooks.$.navigator.openPreferencesWorkspace();
         workspace = XT.app.$.postbooks.getActive().$.workspace;

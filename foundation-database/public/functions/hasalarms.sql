@@ -1,9 +1,10 @@
 
 CREATE OR REPLACE FUNCTION hasAlarms() RETURNS BOOLEAN AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _alarm          RECORD;
+  _alarmtype      TEXT := '';
   _batchId        INTEGER;
   _evntlogordtype TEXT;
   _evnttypeid     INTEGER;
@@ -32,6 +33,8 @@ BEGIN
       FROM todoitem
       WHERE (todoitem_id = _alarm.alarm_source_id);
 
+      _alarmtype = 'To-Do: ';
+
     ELSIF (_alarm.alarm_source = 'INCDT') THEN
       SELECT (incdt_number || '-' || incdt_summary),
              'I', 'IncidentAlarm', 'Incident'
@@ -39,12 +42,16 @@ BEGIN
       FROM incdt
       WHERE (incdt_id = _alarm.alarm_source_id);
 
+      _alarmtype = 'Incident: ';
+
     ELSIF (_alarm.alarm_source = 'J') THEN
       SELECT (prj_number || ' ' || prj_name || '-' || prjtask_name),
               'J', 'TaskAlarm', 'Project Task'
       INTO _summary, _evntlogordtype, _evnttypename, _longsource
       FROM prjtask JOIN prj ON (prj_id=prjtask_prj_id)
       WHERE (prjtask_id = _alarm.alarm_source_id);
+
+      _alarmtype = 'Project: ';
 
     ELSE
       CONTINUE; -- there's nothing to do for this iteration of the loop
@@ -87,7 +94,7 @@ BEGIN
         _recipient := SPLIT_PART(_alarm.alarm_email_recipient, ',', _recipientPart);
         EXIT WHEN (LENGTH(_recipient) <= 0);
         _batchId := xtbatch.submitEmailToBatch(_fromEmail, _recipient, '',
-                                               _summary,
+                                               _alarmtype || _summary,
                                                'Alarm reminder for '
                                                || _longsource || '.',
                                                NULL, CURRENT_TIMESTAMP,

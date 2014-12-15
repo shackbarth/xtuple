@@ -60,4 +60,4 @@ to see a change log.
   * [Developer Wiki](https://github.com/xtuple/xtuple/wiki)
   * xTuple U [Tutorial Videos](https://github.com/xtuple/xtuple/wiki/Tutorial-Videos)
   * [API documentation](http://xtuple.github.io/api/current)
-  * [Setting up a non-development demo environment](https://github.com/xtuple/xtuple/wiki/How-to-set-up-xTuple)
+  * [Setting up an xTuple demo environment](https://github.com/xtuple/xtuple-server/wiki)

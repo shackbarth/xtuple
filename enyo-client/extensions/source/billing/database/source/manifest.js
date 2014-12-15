@@ -3,6 +3,8 @@
   "comment": "Billing extension",
   "loadOrder": 30,
   "databaseScripts": [
+    "xt/trigger_functions/refresh_invchead_share_users_cache.sql",
+    "public/tables/invchead.sql",
     "xt/tables/rptdef.sql",
     "xm/javascript/billing.sql",
     "xm/javascript/cashrcpt.sql",

@@ -1166,6 +1166,7 @@
     "public/tables/metasql/apOpenItems-selectpayments.mql",
     "public/tables/metasql/arAging-detail.mql",
     "public/tables/metasql/arApplications-detail.mql",
+    "public/tables/metasql/arCreditMemos-unapplied.mql",
     "public/tables/metasql/arHistory-detail.mql",
     "public/tables/metasql/arOpenApplications-detail.mql",
     "public/tables/metasql/arOpenItems-detail.mql",

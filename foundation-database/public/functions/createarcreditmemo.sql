@@ -37,10 +37,6 @@ BEGIN
 
   _aropenid := pId;
 
-  IF (pAmount <= 0) THEN
-    RETURN 0;
-  END IF;
-
   _arAccntid := COALESCE(pARAccntid, findARAccount(pCustid));
   _prepaidAccntid := findPrepaidAccount(pCustid);
 
