@@ -146,14 +146,20 @@ var _ = require('underscore'),
         var credsClone = JSON.parse(JSON.stringify(creds));
         credsClone.database = database;
         inspectDatabaseExtensions(credsClone, function (err, paths) {
-          callback(null, {
+          callback(err, {
             extensions: paths,
             configPath: configPath,
             database: database,
             keepSql: options.keepSql,
             npmDev: options.npmDev,
+            // populate the data if you're explicitly asked to
+            // or if it's a demo build
+            // but even if it's a demo build, don't populate the
+            // data if it's a plv8-free build
             populateData: options.populateData ||
-              (options.source && options.source.indexOf("postbooks_demo_data.sql") >= 0),
+              (options.source &&
+              options.source.indexOf("postbooks_demo_data.sql") >= 0 &&
+              !_.isEqual(options.extensions, ["foundation-database"])),
             wipeViews: options.wipeViews,
             clientOnly: options.clientOnly,
             databaseOnly: options.databaseOnly
@@ -210,9 +216,10 @@ var _ = require('underscore'),
       buildSpecs.initialize = true;
       buildSpecs.keepSql = options.keepSql;
       buildSpecs.npmDev = options.npmDev;
-      buildSpecs.populateData = options.populateData;
       buildSpecs.populateData = options.populateData ||
-        (options.source && options.source.indexOf("postbooks_demo_data.sql") >= 0);
+        (options.source &&
+         options.source.indexOf("postbooks_demo_data.sql") >= 0 &&
+         options.extension !== "foundation-database");
       buildSpecs.wipeViews = options.wipeViews;
       buildSpecs.clientOnly = options.clientOnly;
       buildSpecs.databaseOnly = options.databaseOnly;
