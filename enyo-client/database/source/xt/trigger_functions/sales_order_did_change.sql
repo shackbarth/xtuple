@@ -8,28 +8,23 @@ return (function () {
     plv8.execute("select xt.js_init();"); 
   }
 
-  if (TG_OP === 'INSERT') {
-    var data = Object.create(XT.Data),
-      sqlUpdate = "update quhead set quhead_status = 'C' where quhead_id=$1",
-      sqlDelete = "perform deletequote($1);",
-      sql,
-      orm,
-      id;
+   var data = Object.create(XT.Data),
+     sqlUpdate = "update quhead set quhead_status = 'C' where quhead_id=$1",
+     sqlDelete = "perform deletequote($1);",
+     sql,
+     orm,
+     id;
 
-      /* Handle quote disposition if this is a new sales order converted from a quote */
-      if (NEW.cohead_wasquote && NEW.cohead_quote_number) {
-        orm = data.fetchOrm("XM", "Quote");
-        id = data.getId(orm, NEW.cohead_quote_number);
-        sql = data.fetchMetric('ShowQuotesAfterSO') ? sqlUpdate : sqlDelete;
-        plv8.execute(sql, [id]);
-      }
-
-    if (NEW.create_dfltworkflow) {
-      plv8.execute("SELECT xt.workflow_inheritsource($1, $2, $3, $4);", ['xt.saletypewf', 'XM.SalesOrderWorkflow', NEW.obj_uuid, NEW.cohead_saletype_id]);
-    }
-
+   /* Handle quote disposition if this is a new sales order converted from a quote */
+   if (TG_OP === 'INSERT' &&
+       NEW.cohead_wasquote &&
+       NEW.cohead_quote_number) {
+    orm = data.fetchOrm("XM", "Quote");
+    id = data.getId(orm, NEW.cohead_quote_number);
+    sql = data.fetchMetric('ShowQuotesAfterSO') ? sqlUpdate : sqlDelete;
+    plv8.execute(sql, [id]);
     return NEW;
-  }
+   }
 
 }());
 
