@@ -7,6 +7,8 @@
     var Imap = require('imap'),
       inspect = require('util').inspect,
       returnResults = [];
+    var MailParser = require("mailparser").MailParser,
+      mailparser = new MailParser();
 
     var imap = new Imap(X.options.datasource.imapUser);
 
@@ -19,7 +21,17 @@
         if (err) throw err;
         imap.search([ 'ALL', ['FROM', req.query.address] ], function (err, results) {
           if (err) throw err;
-          var f = imap.fetch(results, { bodies: ['HEADER.FIELDS (FROM TO)','TEXT'] });
+          console.log("res count", results.length);
+          mailparser.on("end", function (mail_object){
+            returnResults.push(mail_object);
+            console.log("mailparser end");
+            if (returnResults.length === results.length) {
+              res.send(returnResults);
+            }
+          });
+
+          var f = imap.fetch(results, { bodies: [''] });
+
           f.on('message', function (msg, seqno) {
             //console.log('Message #%d', seqno);
             var prefix = '(#' + seqno + ') ';
@@ -29,20 +41,21 @@
                 //console.log(prefix + 'Body [%s] found, %d total bytes', inspect(info.which), info.size);
               var buffer = '', count = 0;
               stream.on('data', function (chunk) {
-                count += chunk.length;
-                buffer += chunk.toString('utf8');
-                if (info.which === 'TEXT') {
+                //count += chunk.length;
+                mailparser.write(chunk.toString('utf8'));
+                //if (info.which === 'TEXT') {
                   //console.log(prefix + 'Body [%s] (%d/%d)', inspect(info.which), count, info.size);
-                }
+                //}
               });
               stream.once('end', function () {
-                if (info.which !== 'TEXT') {
+                console.log("stream end");
+                //if (info.which !== 'TEXT') {
                   //console.log(prefix + 'Parsed header: %s', inspect(Imap.parseHeader(buffer)));
-                  _.extend(returnResult, Imap.parseHeader(buffer));
-                } else {
-                  returnResult.body = inspect(buffer); // TODO: mime parsing
+                  //_.extend(returnResult, Imap.parseHeader(buffer));
+                //} else {
+                  //returnResult.body = inspect(buffer); // TODO: mime parsing
                   //console.log(prefix + 'Body [%s] Finished', inspect(buffer));
-                }
+                //}
               });
             });
             msg.once('attributes', function (attrs) {
@@ -50,8 +63,9 @@
               //console.log(prefix + 'Attributes: %s', inspect(attrs, false, 8));
             });
             msg.once('end', function () {
+              console.log("message end");
               //console.log(prefix + 'Finished');
-              returnResults.push(returnResult);
+              mailparser.end();
             });
           });
           f.once('error', function (err) {
@@ -60,7 +74,6 @@
           f.once('end', function () {
             console.log('Done fetching all messages!');
             imap.end();
-            res.send(returnResults);
           });
         });
       });

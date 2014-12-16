@@ -23,6 +23,7 @@
     "imap": "^0.8.14",
     "json-patch": "git://github.com/xtuple/JSON-Patch.git",
     "less": "1.5.0",
+    "mailparser": "^0.4.6",
     "moment": "2.4.x",
     "node-forge": "0.6.x",
     "nodemailer": "0.3.x",
