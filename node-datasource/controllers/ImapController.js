@@ -5,22 +5,30 @@
     Imap = require('imap'),
     inspect = require('util').inspect,
     MailParser = require("mailparser").MailParser,
-    mailparser = new MailParser(),
-    imap = new Imap(X.options.datasource.imapUser);
+    mailparser = new MailParser();
 
   // choosing to ignore attachments, headers, references, inReplyTo, priority, messageId
   var reportedFields = ["html", "text", "subject", "from", "to", "date"],
     returnResults = [];
 
-  // https://shackbarth-470-dev.localhost/demo_dev/imap/search?address=ned@xtuple.com
+  // https://shackbarth-470-dev.localhost/demo_dev/imap/search?address=to_or_from@mycompany.com
+
+  /*
+    Necessary setup: configure your mail server so that it automatically bcc's an "archive"
+    email address. Put the creds for that address in the config file.
+
+    Not sure if this is possible with gmail, I think it's unlikely:
+    http://thenextweb.com/google/2012/07/03/if-youre-a-google-apps-admin-you-will-now-have-access-to-a-gmail-log-search
+
+    Gmail has lots of nice integration options, and this route could easily be expanded to
+    use the gmail API without changing its own API to the xTuple clients.
+  */
   exports.search = function (req, res) {
 
-    function openInbox(cb) {
-      imap.openBox('INBOX', true, cb);
-    }
-
+    var imap = new Imap(X.options.datasource.imapUser);
+    // TODO: secure this route with a privilege
     imap.once('ready', function () {
-      openInbox(function (err, box) {
+      imap.openBox('INBOX', true, function (err, box) {
         if (err) throw err;
         imap.search([ 'ALL', ['OR', ['FROM', req.query.address], ['TO', req.query.address] ] ], function (err, results) {
           if (err) {
