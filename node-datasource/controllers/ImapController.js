@@ -1,16 +1,19 @@
 (function () {
   "use strict";
 
+  var _ = require("underscore"),
+    Imap = require('imap'),
+    inspect = require('util').inspect,
+    MailParser = require("mailparser").MailParser,
+    mailparser = new MailParser(),
+    imap = new Imap(X.options.datasource.imapUser);
+
+  // choosing to ignore attachments, headers, references, inReplyTo, priority, messageId
+  var reportedFields = ["html", "text", "subject", "from", "to", "date"],
+    returnResults = [];
+
   // https://shackbarth-470-dev.localhost/demo_dev/imap/search?address=ned@xtuple.com
   exports.search = function (req, res) {
-    console.log(req.query.address);
-    var Imap = require('imap'),
-      inspect = require('util').inspect,
-      returnResults = [];
-    var MailParser = require("mailparser").MailParser,
-      mailparser = new MailParser();
-
-    var imap = new Imap(X.options.datasource.imapUser);
 
     function openInbox(cb) {
       imap.openBox('INBOX', true, cb);
@@ -19,12 +22,14 @@
     imap.once('ready', function () {
       openInbox(function (err, box) {
         if (err) throw err;
-        imap.search([ 'ALL', ['FROM', req.query.address] ], function (err, results) {
-          if (err) throw err;
-          console.log("res count", results.length);
+        imap.search([ 'ALL', ['OR', ['FROM', req.query.address], ['TO', req.query.address] ] ], function (err, results) {
+          if (err) {
+            res.send(500);
+            return;
+          }
+
           mailparser.on("end", function (mail_object){
-            returnResults.push(mail_object);
-            console.log("mailparser end");
+            returnResults.push(_.pick(mail_object, reportedFields));
             if (returnResults.length === results.length) {
               res.send(returnResults);
             }
@@ -33,46 +38,20 @@
           var f = imap.fetch(results, { bodies: [''] });
 
           f.on('message', function (msg, seqno) {
-            //console.log('Message #%d', seqno);
-            var prefix = '(#' + seqno + ') ';
-            var returnResult = {};
             msg.on('body', function (stream, info) {
-              if (info.which === 'TEXT')
-                //console.log(prefix + 'Body [%s] found, %d total bytes', inspect(info.which), info.size);
-              var buffer = '', count = 0;
               stream.on('data', function (chunk) {
-                //count += chunk.length;
                 mailparser.write(chunk.toString('utf8'));
-                //if (info.which === 'TEXT') {
-                  //console.log(prefix + 'Body [%s] (%d/%d)', inspect(info.which), count, info.size);
-                //}
               });
-              stream.once('end', function () {
-                console.log("stream end");
-                //if (info.which !== 'TEXT') {
-                  //console.log(prefix + 'Parsed header: %s', inspect(Imap.parseHeader(buffer)));
-                  //_.extend(returnResult, Imap.parseHeader(buffer));
-                //} else {
-                  //returnResult.body = inspect(buffer); // TODO: mime parsing
-                  //console.log(prefix + 'Body [%s] Finished', inspect(buffer));
-                //}
-              });
-            });
-            msg.once('attributes', function (attrs) {
-              _.extend(returnResult, attrs);
-              //console.log(prefix + 'Attributes: %s', inspect(attrs, false, 8));
             });
             msg.once('end', function () {
-              console.log("message end");
-              //console.log(prefix + 'Finished');
               mailparser.end();
             });
           });
           f.once('error', function (err) {
             console.log('Fetch error: ' + err);
+            res.send(500);
           });
           f.once('end', function () {
-            console.log('Done fetching all messages!');
             imap.end();
           });
         });
@@ -80,14 +59,9 @@
     });
 
     imap.once('error', function (err) {
-      console.log(err);
-    });
-
-    imap.once('end', function () {
-      console.log('Connection ended');
+      res.send(500);
     });
 
     imap.connect();
-
   };
 }());
