@@ -499,6 +499,27 @@ app.get('/:org/reset-password', routes.resetPassword);
 app.post('/:org/oauth/revoke-token', routes.revokeOauthToken);
 app.all('/:org/vcfExport', routes.vcfExport);
 
+
+// sailsjs-style CoC route definitions from node-datasource/controllers
+// TODO: put these into the discovery doc
+// TODO: if this works, migrate all the above routes to this convention
+X.fs.readdir(X.path.resolve(__dirname, "controllers"), function (err, filenames) {
+  "use strict";
+  var controllerFilenames = _.filter(filenames, function (filename) {
+    return filename.indexOf("Controller.js") === filename.length - "Controller.js".length;
+  });
+
+  _.each(controllerFilenames, function (filename) {
+    var routes = require(X.path.resolve(__dirname, "controllers", filename));
+    // TODO: armadillo-case multi-word filenames
+    var urlBase = filename.substring(0, filename.indexOf("Controller.js")).toLowerCase();
+    _.each(routes, function (route, functionName) {
+      app.all("/:org/" + urlBase + "/" + functionName, route);
+    });
+  });
+});
+
+
 // Set up the other servers we run on different ports.
 
 var redirectServer = express();

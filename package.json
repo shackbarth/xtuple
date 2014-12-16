@@ -20,6 +20,7 @@
     "ejs": "0.8.x",
     "express": "3.1.x",
     "fluentreports": "git://github.com/xtuple/fluentreports.git",
+    "imap": "^0.8.14",
     "json-patch": "git://github.com/xtuple/JSON-Patch.git",
     "less": "1.5.0",
     "moment": "2.4.x",
