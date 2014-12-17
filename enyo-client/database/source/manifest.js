@@ -51,7 +51,6 @@
     "public/tables/shiphead.sql",
     "public/tables/shiptoinfo.sql",
     "public/tables/todoitem.sql",
-    "public/tables/tohead.sql",
     "public/tables/usrpref.sql",
     "public/tables/usrpriv.sql",
     "public/tables/vendinfo.sql",
