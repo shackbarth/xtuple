@@ -66,10 +66,6 @@ return (function () {
         if (!sourceModel || !parentId) {
           plv8.elog(WARNING, "Missing sourceModel and/or parentId needed to generate workflow!");
         }
-        plv8.elog(NOTICE, "about to call wf function");
-        plv8.elog(NOTICE, sourceModel);
-        plv8.elog(NOTICE, NEW.obj_uuid);
-        plv8.elog(NOTICE, parentId);
         plv8.execute("SELECT xt.workflow_inheritsource($1, $2, $3, $4);", ["xt." + sourceModel, 'XM.WorkOrderWorkflow', NEW.obj_uuid, parentId]);
       }
 
