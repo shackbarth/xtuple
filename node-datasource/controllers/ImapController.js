@@ -72,24 +72,34 @@
     imap.connect();
   };
 
-  exports.search = function (req, res) {
-    var query = [ 'ALL', ['OR', ['FROM', req.query.address], ['TO', req.query.address] ] ];
-    // TODO: secure this route with a privilege
-    async.map(X.options.datasource.imap.users, function (user, done) {
+  var searchAllImap = exports.searchAllImap = function (config, query, callback) {
+    async.map(config.users, function (user, done) {
       var creds = _.extend({},
-        _.omit(X.options.datasource.imap, "users"),
+        _.omit(config, "users"),
         _.omit(user, "box")
       );
       searchImap(creds, user.box, query, done);
 
     }, function (err, results) {
       if (err) {
+        callback(err);
+      }
+      callback(null, _.flatten(results, true));
+    });
+  };
+
+  exports.search = function (req, res) {
+    var query = [ 'ALL', ['OR', ['FROM', req.query.address], ['TO', req.query.address] ] ];
+    // TODO: secure this route with a privilege
+    // TODO: we should really store these creds in the database and have a UI to manage them
+    searchAllImap(X.options.datasource.imap, query, function (err, results) {
+      if (err) {
         console.log("Error searching imap", err);
         res.send(500);
         return;
       }
 
-      res.send({status: "OK", data: _.flatten(results, true)});
+      res.send({status: "OK", data: results});
     });
   };
 }());
