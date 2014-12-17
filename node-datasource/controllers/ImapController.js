@@ -2,6 +2,7 @@
   "use strict";
 
   var _ = require("underscore"),
+    async = require("async"),
     Imap = require('imap'),
     inspect = require('util').inspect,
     MailParser = require("mailparser").MailParser,
@@ -23,23 +24,22 @@
     Gmail has lots of nice integration options, and this route could easily be expanded to
     use the gmail API without changing its own API to the xTuple clients.
   */
-  exports.search = function (req, res) {
-
-    var imap = new Imap(X.options.datasource.imapUser);
-    // TODO: secure this route with a privilege
+  var searchImap = function (creds, box, query, callback) {
+    var imap = new Imap(creds);
     imap.once('ready', function () {
-      imap.openBox('INBOX', true, function (err, box) {
+      imap.openBox(box, true, function (err, box) {
         if (err) throw err;
-        imap.search([ 'ALL', ['OR', ['FROM', req.query.address], ['TO', req.query.address] ] ], function (err, results) {
+        imap.search(query, function (err, results) {
           if (err) {
-            res.send(500);
-            return;
+            return callback(err);
           }
-
-          mailparser.on("end", function (mail_object){
-            returnResults.push(_.pick(mail_object, reportedFields));
+          if (results.length === 0) {
+            return callback(null, []);
+          }
+          mailparser.on("end", function (mailObject){
+            returnResults.push(_.pick(mailObject, reportedFields));
             if (returnResults.length === results.length) {
-              res.send(returnResults);
+              callback(null, returnResults);
             }
           });
 
@@ -56,8 +56,7 @@
             });
           });
           f.once('error', function (err) {
-            console.log('Fetch error: ' + err);
-            res.send(500);
+            callback(err);
           });
           f.once('end', function () {
             imap.end();
@@ -67,9 +66,30 @@
     });
 
     imap.once('error', function (err) {
-      res.send(500);
+      callback(err);
     });
 
     imap.connect();
+  };
+
+  exports.search = function (req, res) {
+    var query = [ 'ALL', ['OR', ['FROM', req.query.address], ['TO', req.query.address] ] ];
+    // TODO: secure this route with a privilege
+    async.map(X.options.datasource.imap.users, function (user, done) {
+      var creds = _.extend({},
+        _.omit(X.options.datasource.imap, "users"),
+        _.omit(user, "box")
+      );
+      searchImap(creds, user.box, query, done);
+
+    }, function (err, results) {
+      if (err) {
+        console.log("Error searching imap", err);
+        res.send(500);
+        return;
+      }
+
+      res.send({status: "OK", data: _.flatten(results, true)});
+    });
   };
 }());

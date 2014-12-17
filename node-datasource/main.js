@@ -514,7 +514,10 @@ X.fs.readdir(X.path.resolve(__dirname, "controllers"), function (err, filenames)
     // TODO: armadillo-case multi-word filenames
     var urlBase = filename.substring(0, filename.indexOf("Controller.js")).toLowerCase();
     _.each(routes, function (route, functionName) {
-      app.all("/:org/" + urlBase + "/" + functionName, route);
+      app.all("/:org/" + urlBase + "/" + functionName, [
+        require('connect-ensure-login').ensureLoggedIn({redirectTo: "/logout"}),
+        route
+      ]);
     });
   });
 });
