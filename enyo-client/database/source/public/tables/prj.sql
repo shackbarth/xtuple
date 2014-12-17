@@ -15,5 +15,3 @@ create trigger prj_owner_change after insert on prj for each row execute procedu
 drop trigger if exists prjwf_after_insert on prj;
 create trigger prjwf_after_insert after insert on prj for each row
   execute procedure xt.createwf_after_insert();
-
-ALTER TABLE prj DISABLE TRIGGER prjwf_after_insert;

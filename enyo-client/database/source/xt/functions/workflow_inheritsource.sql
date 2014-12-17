@@ -42,6 +42,10 @@ $BODY$
   workflowTable = XT.Orm.fetch(namespace, modeltype, options).table;
 
   plv8.elog(NOTICE, "workflowTable: " + workflowTable);
+  plv8.elog(NOTICE, "source_model: " + source_model);
+  plv8.elog(NOTICE, "workflow_class: " + workflow_class);
+  plv8.elog(NOTICE, "item_uuid: " + item_uuid);
+  plv8.elog(NOTICE, "parent_id: " + parent_id);
   if (!sourceTable || !workflowTable || !item_uuid || !parent_id) {
     plv8.elog(ERROR,"Missing parameters supplied or invalid source/target models supplied");
   }  
