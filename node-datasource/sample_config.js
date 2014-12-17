@@ -43,6 +43,14 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
       smtpPort: 587,
       smtpUser: "",
       smtpPassword: "",
+      imap: {
+        users: [
+          { user: "bob", password: "mypass", box: "INBOX.ERP" }
+        ],
+        host: "mail.mycompany.com",
+        port: 993,
+        tls: true
+      },
       printer: "",
 
       // these properties are dynamically registered with the
