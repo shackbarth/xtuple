@@ -23,6 +23,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   program
     .option('-c, --config [/path/to/alternate_config.js]', 'Location of datasource config file. [config.js]')
     .parse(process.argv);
+
   configPath = program.config ?
     path.resolve(process.cwd(), program.config) :
     path.resolve(__dirname, "../node-datasource/config.js");
@@ -37,6 +38,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     }
     var options = JSON.parse(JSON.stringify(config.databaseServer));
     var sql = "SELECT setMetric('Test234', $1);";
+
+    // TODO: persist to email table
+    // TODO: if the message line matches some document, add to docass
+
     options.database = config.databases[0];
     options.parameters = [JSON.stringify(results)];
     dataSource.query(sql, options, function (err, insertResults) {
