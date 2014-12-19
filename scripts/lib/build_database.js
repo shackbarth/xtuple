@@ -215,7 +215,10 @@ var  async = require('async'),
           // logged contents of the datasource as you drive around the app creating
           // and editing objects.
           if (spec.populateData && creds.encryptionKeyFile) {
-            var populateSql = "DO $$ XT.disableLocks = true; $$ language plv8;";
+            var populateSql = "DO $$ " +
+              "if (typeof XT === 'undefined') { plv8.execute('select xt.js_init();'); } " +
+              "XT.disableLocks = true; " +
+              "$$ language plv8;";
             var encryptionKey = fs.readFileSync(path.resolve(__dirname, "../../node-datasource",
               creds.encryptionKeyFile), "utf8");
 
