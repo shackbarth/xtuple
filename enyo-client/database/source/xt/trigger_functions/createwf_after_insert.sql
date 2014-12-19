@@ -35,9 +35,14 @@ return (function () {
           ["xt." + sourceModel, 'XM.ProjectWorkflow', NEW.obj_uuid, NEW.prj_prjtype_id]);
       }
 
+      /*
+        This is not going to work at this time because xt.poheadext gets populated *after* this trigger runs on the
+        the pohead table. Potype needs to be built into Qt client or potypewf changed to use vendor type as the 
+        source for the "default" workflow functionality.
+
       if (TG_TABLE_NAME === 'pohead') {
         sourceModel = plv8.execute(sourceModSql, ['PO'])[0].srctblname;
-        parentIdSql = "select potype_id as parent_id from potype limit 1";
+        parentIdSql = "select poheadext_id as parent_id from xt.poheadext order by poheadext_id desc limit 1 ";
         parentId = plv8.execute(parentIdSql)[0].parent_id;
 
         if (!sourceModel || !parentId) {
@@ -46,6 +51,7 @@ return (function () {
         plv8.execute("SELECT xt.workflow_inheritsource($1, $2, $3, $4)",
           ["xt." + sourceModel, 'XM.PurchaseOrderWorkflow', NEW.obj_uuid, parentId]);
       }
+      */
 
       if (TG_TABLE_NAME === 'tohead') {
         sourceModel = plv8.execute(sourceModSql, ['TO'])[0].srctblname;
@@ -55,7 +61,8 @@ return (function () {
         if (!sourceModel || !parentId) {
           plv8.elog(WARNING, "Missing sourceModel and/or parentId needed to generate workflow!");
         }
-        plv8.execute("SELECT xt.workflow_inheritsource($1, $2, $3, $4);", ["xt." + sourceModel, 'XM.TransferOrderWorkflow', NEW.obj_uuid, parentId]);
+        plv8.execute("SELECT xt.workflow_inheritsource($1, $2, $3, $4);",
+          ["xt." + sourceModel, 'XM.TransferOrderWorkflow', NEW.obj_uuid, parentId]);
       }
 
       if (TG_TABLE_NAME === 'wo') {
