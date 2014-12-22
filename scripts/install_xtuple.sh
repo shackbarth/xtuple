@@ -214,8 +214,7 @@ setup_postgres() {
 	cdir $BASEDIR/postgres
 
   log "Setup database"
-    sudo wget -qO init.sql http://sourceforge.net/projects/postbooks/files/03%20PostBooks-databases/4.2.1/init.sql/download
-	sudo -u postgres psql -q -f 'init.sql' 2>&1 | tee -a $LOG_FILE
+	sudo -u postgres psql -q -f $XT_DIR/lib/orm/source/init.sql 2>&1 | tee -a $LOG_FILE
 }
 
 init_everythings() {
