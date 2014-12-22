@@ -148,7 +148,9 @@ trailing:true, white:true, strict: false*/
       var callback = function (resp, optionsObj) {
         var navigator = this.$.navigator;
         if (!resp.answer) {
-          this.$.notifyPopup.$.customComponent.$.pickerDecorator.destroyClientControls();
+          try {
+            this.$.notifyPopup.$.customComponent.$.pickerDecorator.destroyClientControls();
+          } catch (error) {}
           return;
         } else if (!resp.componentValue) {
           navigator.$.contentPanels.getActive().doNotify({
@@ -193,7 +195,11 @@ trailing:true, white:true, strict: false*/
           http://forums.enyojs.com/discussion/1069/render-appears-to-break-scrolling-in-onyx-picker
         */
 
-        this.$.notifyPopup.$.customComponent.$.pickerDecorator.destroyClientControls();
+        try {
+          this.$.notifyPopup.$.customComponent.$.pickerDecorator.destroyClientControls();
+        } catch (error) {
+
+        }
       };
 
       this.doNotify({
