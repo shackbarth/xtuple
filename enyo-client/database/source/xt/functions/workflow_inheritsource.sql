@@ -15,6 +15,7 @@ $BODY$
     workflowTable,
     wfsource,
     wfmodel,
+    templateExistsSql,
     templateSQL,
     insertSQL,
     updateCompletedSQL,
@@ -23,22 +24,28 @@ $BODY$
     options = {},
     i = 0;
     
-  namespace = source_model.split(".")[0];  
+  namespace = source_model.split(".")[0];
   modeltype = source_model.split(".")[1];
-  
-  wfsource = XT.Data.fetchOrm(namespace, modeltype, options).properties.filter(function (wf) {
-    return wf.name === "workflow";  })[0].toMany.type;   
-  sourceTable = XT.Orm.fetch(namespace, wfsource, options).table;
+  /* Check the first param to see if it's a 'workflow source table' */
+  wfsource = plv8.execute("select true from xt.wftype where wftype_src_tblname = $1; ", [modeltype]);
+  if (wfsource) {
+    sourceTable = source_model; /*i.e. xt.saletypewf */
+  } else {
+    wfsource = XT.Data.fetchOrm(namespace, modeltype, options).properties.filter(function (wf) {
+      return wf.name === "workflow";  })[0].toMany.type;
+    sourceTable = XT.Orm.fetch(namespace, wfsource, options).table; /* i.e. xt.coheadwf */
+  }
   
   namespace = workflow_class.split(".")[0];
   modeltype = workflow_class.split(".")[1];
 
   workflowTable = XT.Orm.fetch(namespace, modeltype, options).table;
- 
+
   if (!sourceTable || !workflowTable || !item_uuid || !parent_id) {
     plv8.elog(ERROR,"Missing parameters supplied or invalid source/target models supplied");
   }  
 
+  templateExistsSql = "SELECT count(*) as count FROM %1$I.%2$I WHERE wf_parent_uuid = $1";
   templateSQL = "SELECT obj_uuid, wfsrc_name as name,wfsrc_description as descr,wfsrc_type as type,wfsrc_status as status, " +
     "CASE WHEN wfsrc_start_set THEN current_date + wfsrc_start_offset ELSE null END as startDate, " +
     "CASE WHEN wfsrc_due_set THEN current_date + wfsrc_due_offset ELSE null END as dueDate, " +
@@ -55,6 +62,13 @@ $BODY$
       "WHERE wf_completed_successors = $2 AND wf_parent_uuid = $3";
   updateDeferredSQL = "UPDATE %1$I.%2$I SET wf_deferred_successors=$1 " +
       "WHERE wf_deferred_successors = $2 AND wf_parent_uuid = $3";
+
+  var templateExistsSqlf = XT.format(templateExistsSql, [workflowTable.split(".")[0], workflowTable.split(".")[1]]);
+  var templateWfExists = plv8.execute(templateExistsSqlf, [item_uuid])[0].count;
+  
+  if (templateWfExists > 0) {
+    return '';
+  }
 
 /* Retrieve source workflow information */
   var templateWfsql = XT.format(templateSQL, [sourceTable.split(".")[0], sourceTable.split(".")[1]]);
