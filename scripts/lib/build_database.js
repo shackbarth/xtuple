@@ -95,8 +95,6 @@ var  async = require('async'),
               isNpmExtension ? "npm" : "not-applicable"
           };
 
-        console.log("DEBUG123", extension, isApplicationCore, isExtension);
-
         explodeManifest(manifestOptions, extensionCallback);
       };
 
