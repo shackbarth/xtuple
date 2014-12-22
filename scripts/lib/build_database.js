@@ -67,7 +67,7 @@ var  async = require('async'),
             extension.indexOf("manufacturing/foundation-database") >= 0 ||
             extension.indexOf("distribution/foundation-database") >= 0,
           isLibOrm = extension.indexOf("lib/orm") >= 0,
-          isApplicationCore = extension.indexOf("xtuple") === extension.length - 6,
+          isApplicationCore = /xtuple$/.test(extension),
           isCoreExtension = extension.indexOf("enyo-client") >= 0,
           isPublicExtension = extension.indexOf("xtuple-extensions") >= 0,
           isPrivateExtension = extension.indexOf("private-extensions") >= 0,
@@ -94,6 +94,8 @@ var  async = require('async'),
               isPrivateExtension ? "/private-extensions" :
               isNpmExtension ? "npm" : "not-applicable"
           };
+
+        console.log("DEBUG123", extension, isApplicationCore, isExtension);
 
         explodeManifest(manifestOptions, extensionCallback);
       };

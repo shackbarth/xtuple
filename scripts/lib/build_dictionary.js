@@ -28,7 +28,7 @@ if (typeof XT === 'undefined') {
    */
   exports.getDictionarySql = function (extension, callback) {
     var isLibOrm = extension.indexOf("lib/orm") >= 0,
-      isApplicationCore = extension.indexOf("xtuple") === extension.length - 6,
+      isApplicationCore = /xtuple$/.test(extension),
       clientHash,
       databaseHash,
       filename;
