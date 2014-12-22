@@ -1,4 +1,4 @@
-<package id        = "enterprise-upgrade-480Beta"
+<package id        = "enterprise-upgrade-480"
          version   = "4.8.0"
          developer = "xTuple"
          descrip   = "load PostBooks resources"
