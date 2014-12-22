@@ -148,6 +148,7 @@ trailing:true, white:true, strict: false*/
       var callback = function (resp, optionsObj) {
         var navigator = this.$.navigator;
         if (!resp.answer) {
+          this.$.notifyPopup.$.customComponent.$.picker.removeNodeFromDom();
           return;
         } else if (!resp.componentValue) {
           navigator.$.contentPanels.getActive().doNotify({
@@ -180,6 +181,19 @@ trailing:true, white:true, strict: false*/
           // Send to server with dispath. Need to pass options.error callback for error handling
           XM.Model.prototype.dispatch("XM.Activity", "reassignUser", params, options);
         }
+        /*
+          XXX - hack to correct the broken scroller inside the picker (popup).
+
+          Destroy the UserPicker's decorator which removes the picker from the floatingLayer.
+          A better hack would be to address the problem of the UserPicker picker component (menu)
+          rendering directly into the floating layer. Maybe something similar to this is needed:
+          https://github.com/xtuple/xtuple/blob/4_8_x/lib/enyo-x/source/widgets/menu.js#L143
+
+          More info here:
+          http://forums.enyojs.com/discussion/1069/render-appears-to-break-scrolling-in-onyx-picker
+        */
+
+        this.$.notifyPopup.$.customComponent.$.picker.removeNodeFromDom();
       };
 
       this.doNotify({
