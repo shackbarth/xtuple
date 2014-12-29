@@ -499,6 +499,8 @@ app.get('/:org/reset-password', routes.resetPassword);
 app.post('/:org/oauth/revoke-token', routes.revokeOauthToken);
 app.all('/:org/vcfExport', routes.vcfExport);
 
+app.get('/:org/dashboard-anything', routes.dashboardAnything);
+
 // Set up the other servers we run on different ports.
 
 var redirectServer = express();

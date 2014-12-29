@@ -44,6 +44,7 @@
     "underscore": "1.4.x",
     "underscore.string": "~2.3.3",
     "winston": "0.7.x",
+    "xtuple-dashboard-anything": "0.0.x",
     "xtuple-linguist": "0.1.x"
   },
   "devDependencies": {

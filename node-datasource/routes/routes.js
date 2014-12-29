@@ -105,4 +105,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.revokeOauthToken = [ensureLogin, revokeOauthToken.revokeToken];
   exports.vcfExport = [ensureLogin, vcfExport.vcfExport];
 
+  exports.dashboardAnything = [ensureLogin, function (req, res) {
+    res.render('dashboard-anything');
+  }];
 }());
