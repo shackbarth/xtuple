@@ -76,7 +76,11 @@ SELECT 1 AS dummy,
          'curr' AS totalsales_xtnumericrole,
          0 AS totalunits_xttotalrole,
          0 AS totalsales_xttotalrole
-FROM saleshistorymisc
+<? if exists("includeMisc") ?>
+  FROM saleshistorymisc
+<? else ?>
+  FROM saleshistory
+<? endif ?>
 WHERE ( (TRUE)
 <? if exists("startDate") ?>
  AND (cohist_invcdate >= <? value("startDate") ?>)

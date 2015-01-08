@@ -55,89 +55,6 @@
   <mqlgroup>qoh</mqlgroup>
   <mqlname>detail</mqlname>
  </querysource>
- <querysource>
-  <name>total</name>
-  <sql>SELECT SUM(qoh) AS f_qoh,
-       SUM(nonnetable) AS f_nonnetable,
-       &lt;? if exists("showValue") ?>
-         FormatExtPrice(SUM(standardcost * qoh))
-       &lt;? else ?>
-         ''
-       &lt;? endif ?>
-       AS f_value,
-       &lt;? if exists("showValue") ?>
-         FormatExtPrice(SUM(CASE WHEN (itemsite_loccntrl) THEN (standardcost * nonnetable)
-                                 ELSE 0
-                            END))
-       &lt;? else ?>
-         ''
-       &lt;? endif ?>
-       AS f_nonnetvalue
-FROM ( SELECT itemsite_id, itemsite_costmethod,
-              item_number,
-              item_descrip1, item_descrip2, itemsite_loccntrl,
-              warehous_code,
-              uom_name,
-              CASE WHEN(itemsite_useparams) THEN itemsite_reorderlevel ELSE 0.0 END AS reorderlevel,
-              itemsite_qtyonhand AS qoh,
-              CASE WHEN ((itemsite_loccntrl) OR (itemsite_controlmethod IN ('L', 'S'))) THEN 1
-                   ELSE 0
-              END AS detail,
-              itemsite_nnqoh AS nonnetable,
-              &lt;? if exists("useActualCosts") ?>
-                actcost(itemsite_item_id)
-              &lt;? elseif exists("useStandardCosts") ?>
-                stdcost(itemsite_item_id)
-              &lt;? else ?>
-                (itemsite_value / CASE WHEN(itemsite_qtyonhand=0) THEN 1 ELSE itemsite_qtyonhand END)
-              &lt;? endif ?>
-              AS standardcost
-         FROM itemsite, item, uom, whsinfo, costcat
-        WHERE ((itemsite_item_id=item_id)
-          AND (item_inv_uom_id=uom_id)
-          AND (itemsite_warehous_id=warehous_id)
-          AND (itemsite_costcat_id=costcat_id)
-          AND (itemsite_active)
-&lt;? if exists("item_id") ?>
-          AND (item_id=&lt;? value("item_id") ?>)
-&lt;? endif ?>
-&lt;? if exists("classcode_id") ?>
-          AND (item_classcode_id=&lt;? value("classcode_id") ?>)
-&lt;? endif ?>
-&lt;? if exists("classcode_pattern") ?>
-          AND (item_classcode_id IN (SELECT classcode_id
-                                       FROM classcode
-                                      WHERE (classcode_code ~ &lt;? value("classcode_pattern") ?>) ) )
-&lt;? endif ?>
-&lt;? if exists("costcat_id") ?>
-          AND (costcat_id=&lt;? value("costcat_id") ?>)
-&lt;? endif ?>
-&lt;? if exists("costcat_pattern") ?>
-          AND (costcat_id IN (SELECT costcat_id
-                                       FROM costcat
-                                      WHERE (costcat_code ~ &lt;? value("costcat_pattern") ?>) ) )
-&lt;? endif ?>
-&lt;? if exists("itemgrp_id") ?>
-          AND (item_id IN (SELECT itemgrpitem_item_id FROM itemgrpitem WHERE (itemgrpitem_itemgrp_id=&lt;? value("itemgrp_id") ?>)))
-&lt;? endif ?>
-&lt;? if exists("itemgrp_pattern") ?>
-          AND (item_id IN (SELECT itemgrpitem_item_id
-                             FROM itemgrpitem, itemgrp
-                            WHERE ( (itemgrpitem_itemgrp_id=itemgrp_id)
-                              AND (itemgrp_name ~ &lt;? value("itemgrp_pattern") ?>) ) ))
-&lt;? endif ?>
-&lt;? if exists("onlyShowPositive") ?>
-          AND (itemsite_qtyonhand > 0)
-&lt;? elseif exists("onlyShowNegative") ?>
-          AND (itemsite_qtyonhand &lt; 0)
-&lt;? endif ?>
-&lt;? if exists("warehous_id") ?>
-          AND (itemsite_warehous_id=&lt;? value("warehous_id") ?>)
-&lt;? endif ?>
-) ) AS data
-;
-</sql>
- </querysource>
  <rpthead>
   <height>234</height>
   <label>
@@ -794,7 +711,7 @@ FROM ( SELECT itemsite_id, itemsite_costmethod,
     <vcenter/>
     <data>
      <query>detail</query>
-     <column>f_nnvalue</column>
+     <column>f_nonnetvalue</column>
     </data>
    </field>
    <field>
@@ -851,7 +768,7 @@ FROM ( SELECT itemsite_id, itemsite_costmethod,
     <vcenter/>
     <data>
      <query>detail</query>
-     <column>f_nnqoh</column>
+     <column>f_nonnetqoh</column>
     </data>
    </field>
   </detail>
@@ -947,7 +864,7 @@ FROM ( SELECT itemsite_id, itemsite_costmethod,
    <vcenter/>
    <data>
     <query>detail</query>
-    <column>nnqoh</column>
+    <column>nonnetqoh</column>
    </data>
    <format builtin="true">qty</format>
    <tracktotal/>
@@ -989,7 +906,7 @@ FROM ( SELECT itemsite_id, itemsite_costmethod,
    <vcenter/>
    <data>
     <query>detail</query>
-    <column>f_nnvalue</column>
+    <column>nonnetvalue</column>
    </data>
    <format builtin="true">money</format>
    <tracktotal/>

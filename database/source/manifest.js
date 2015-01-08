@@ -5,6 +5,7 @@
     "drop_deprecated.sql",
     "xt/trigger_functions/acttype_did_change.sql",
     "xt/trigger_functions/comment_did_change.sql",
+    "xt/trigger_functions/createwf_after_insert.sql",
     "xt/trigger_functions/customer_did_change.sql",
     "xt/trigger_functions/obj_type_did_change.sql",
     "xt/trigger_functions/owner_record_did_change.sql",
