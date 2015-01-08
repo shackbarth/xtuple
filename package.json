@@ -76,6 +76,7 @@
     "start": "node_modules/.bin/nodemon node-datasource/main.js --debug --watch node-datasource",
     "test-build": "./node_modules/.bin/mocha -R spec test/build/build_app.js",
     "test": "./node_modules/.bin/mocha -R spec test/lib/login.js test/models/* test/database/* test/extensions/* test/lib/test_runner.js",
-    "test-datasource": "./node_modules/.bin/mocha -R spec test/routes/*"
+    "test-datasource": "./node_modules/.bin/mocha -R spec test/routes/*",
+    "test-database": "./node_modules/.bin/mocha -R spec test/database/*"
   }
 }
