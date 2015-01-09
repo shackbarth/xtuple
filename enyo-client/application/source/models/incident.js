@@ -161,7 +161,9 @@ white:true*/
     },
 
     assignedToDidChange: function (model, value, options) {
-      if (value) { this.set('status', XM.Incident.ASSIGNED); }
+      if (value && this.get("status") !== XM.Incident.RESOLVED && this.get("status") !== XM.Incident.CLOSED) {
+        this.set('status', XM.Incident.ASSIGNED);
+      }
     },
 
     validate: function () {
@@ -335,93 +337,9 @@ white:true*/
     @extends XM.Model
   */
   XM.IncidentHistory = XM.Model.extend({
-    /** @scope XM.IncidentAccount.prototype */
+    /** @scope XM.IncidentHistory.prototype */
 
     recordType: 'XM.IncidentHistory'
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.IncidentAccount = XM.Model.extend({
-    /** @scope XM.IncidentAccount.prototype */
-
-    recordType: 'XM.IncidentAccount',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.IncidentContact = XM.Model.extend({
-    /** @scope XM.IncidentContact.prototype */
-
-    recordType: 'XM.IncidentContact',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.IncidentItem = XM.Model.extend({
-    /** @scope XM.IncidentItem.prototype */
-
-    recordType: 'XM.IncidentItem',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.IncidentFile = XM.Model.extend({
-    /** @scope XM.IncidentFile.prototype */
-
-    recordType: 'XM.IncidentFile',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.IncidentUrl = XM.Model.extend({
-    /** @scope XM.IncidentUrl.prototype */
-
-    recordType: 'XM.IncidentUrl',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.IncidentIncident = XM.Model.extend({
-    /** @scope XM.IncidentIncident.prototype */
-
-    recordType: 'XM.IncidentIncident',
-
-    isDocumentAssignment: true
 
   });
 
@@ -453,6 +371,11 @@ white:true*/
 
   // Incident status mixin
   XM.IncidentRelation = XM.IncidentRelation.extend(XM.IncidentStatus);
+
+  XT.documentAssociations.INCDT = {
+    model: "XM.IncidentRelation",
+    label: "_incident".loc()
+  };
 
   /**
     @class

@@ -1,6 +1,6 @@
 
 CREATE OR REPLACE FUNCTION explodeKit(INTEGER, INTEGER, INTEGER, INTEGER, NUMERIC) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pSoheadid ALIAS FOR $1;
@@ -14,7 +14,7 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 CREATE OR REPLACE FUNCTION explodeKit(INTEGER, INTEGER, INTEGER, INTEGER, NUMERIC, DATE, DATE) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pSoheadid ALIAS FOR $1;
@@ -25,12 +25,12 @@ DECLARE
   pScheddate ALIAS FOR $6;
   pPromdate ALIAS FOR $7;
 BEGIN
-  RETURN explodeKit(pSoheadid, pLinenumber, pSubnumber, pItemsiteid, pQty, CURRENT_DATE, NULL, '');
+  RETURN explodeKit(pSoheadid, pLinenumber, pSubnumber, pItemsiteid, pQty, COALESCE(pScheddate, CURRENT_DATE), pPromdate, '');
 END;
 $$ LANGUAGE 'plpgsql';
 
 CREATE OR REPLACE FUNCTION explodeKit(INTEGER, INTEGER, INTEGER, INTEGER, NUMERIC, DATE, DATE, TEXT) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pSoheadid ALIAS FOR $1;
@@ -62,7 +62,7 @@ BEGIN
   END IF;
 
   FOR _item IN
-  SELECT bomitem_id, 
+  SELECT bomitem_id,
          itemsite_id,
          itemsite_warehous_id,
          COALESCE((itemsite_active AND item_active), false) AS active,
@@ -124,32 +124,6 @@ BEGIN
              '', pMemo,
              0);
 
-      IF (_item.itemsite_createsopr) THEN
-        SELECT createPR(cohead_number::INTEGER, 'S', _coitemid) INTO _orderid
-        FROM cohead
-        WHERE (cohead_id=pSoheadid);
-        IF (_orderid > 0) THEN
-          UPDATE coitem SET coitem_order_id=_orderid
-          WHERE (coitem_id=_coitemid);
-        ELSE
-          RAISE EXCEPTION 'Could not explode kit. CreatePR failed, result=%', _orderid; 
-        END IF;
-      END IF;
-
-      IF (_item.itemsite_createsopo) THEN
-        SELECT itemsrc_id INTO _itemsrcid
-        FROM itemsrc
-        WHERE ((itemsrc_item_id=_item.item_id)
-        AND (itemsrc_default));
-
-        GET DIAGNOSTICS _count = ROW_COUNT;
-        IF (_count > 0) THEN
-          PERFORM createPurchaseToSale(_coitemid, _itemsrcid, _item.itemsite_dropship);
-        ELSE
-          RAISE WARNING 'One or more Kit items are flagged as purchase-to-order for this site, but no default item source is defined.';
-        END IF;
-      END IF;
-     
     END IF;
   END LOOP;
 

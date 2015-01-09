@@ -6,6 +6,8 @@ select xt.install_js('XM','ProjectManagement','project', $$
 
   XM.ProjectManagement.isDispatchable = true;
 
+  XT.documentAssociations.J = "ProjectRelation";
+
   XM.ProjectManagement.options = [
     "UseProjects",
     "RequireProjectAssignment"

@@ -1,7 +1,7 @@
 /*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
-/*global XT:true, XM:true, Backbone:true, _:true */
+/*global XT:true, XM:true, Backbone:true, _:true, async:true */
 
 (function () {
   "use strict";
@@ -233,6 +233,31 @@ white:true*/
       var K = XM.SalesOrderBase,
         status = this.get("status");
       return status === K.OPEN_STATUS;
+    },
+
+    /**
+    Returns sales order hold type as a localized string.
+
+    @returns {String}
+    */
+    formatHoldType: function () {
+      var K = XM.SalesOrderBase,
+        holdType = this.get('holdType');
+
+      switch (holdType)
+      {
+      // Lists don't need to say None. Just return null to avoid need for enyo component formatter.
+      case K.NONE_HOLD_TYPE:
+        return null;
+      case K.CREDIT_HOLD_TYPE:
+        return '_creditHoldType'.loc();
+      case K.PACKING_HOLD_TYPE:
+        return '_packingHoldType'.loc();
+      case K.RETURN_HOLD_TYPE:
+        return '_returnHoldType'.loc();
+      case K.SHIPPING_HOLD_TYPE:
+        return '_shippingHoldType'.loc();
+      }
     },
 
     /**
@@ -901,60 +926,58 @@ white:true*/
       // Confirm the user really wants to reschedule, then check whether all lines
       // can be updated to the requested schedule date
       options.callback = function (response) {
-        var counter = lineItems.length,
-          custOptions = {},
-          results = [],
-          id,
-          reschedule = function (ids) {
-            _.each(ids, function (id) {
+        var processLine,
+          finish,
+          reschedule = function (results) {
+            _.each(results, function (id) {
               lineItems.get(id).set("scheduleDate", scheduleDate);
             });
           };
 
         if (response.answer) {
-          // Callback for each check
-          custOptions.success = function (canPurchase) {
-            counter--;
-            if (canPurchase) { results.push(id); }
+          processLine = function (line, done) {
+            var custOptions = {},
+              item = line.getValue("item");
+            custOptions.success = function (canPurchase) {
+              if (canPurchase) {
+                done(null, {
+                  id: line.id
+                });
+              } else { done(); }
+              return;
+            };
 
-            // If all items have been checked, proceed
-            if (!counter) {
+            customer.canPurchase(item, scheduleDate, custOptions);
+          };
 
-              // First check for mix of items that can be rescheduled and not
-              // If partial, then ask if they only want to reschedule partial
-              if (results.length && results.length !== lineItems.length) {
-                message = "_partialReschedule".loc() + "_continue?".loc();
-                options.callback = function (response) {
-                  if (response.answer) { reschedule(results); }
+          finish = function (err, results) {
+            // First check for mix of items that can be rescheduled and not
+            // If partial, then ask if they only want to reschedule partial
+            if (results.length && results.length !== lineItems.length) {
+              message = "_partialReschedule".loc() + "_continue?".loc();
+              options.callback = function (response) {
+                if (response.answer) { reschedule(results); }
 
-                  // Recalculate the date because some lines may not have changed
-                  that.calculateScheduleDate();
-                };
-                that.notify(message, options);
+                // Recalculate the date because some lines may not have changed
+                that.calculateScheduleDate();
+              };
+              that.notify(message, options);
 
-              // If we have results, then reschedule all of them
-              } else if (results.length) {
-                reschedule(results);
+            // If we have results, then reschedule all of them
+            } else if (results.length) {
+              reschedule(results);
 
-              // No lines can be rescheduled, just tell user "no can do"
-              } else {
-                that.notify("_noReschedule".loc());
-                that.calculateScheduleDate(); // Recalculate the date
-              }
+            // No lines can be rescheduled, just tell user "no can do"
+            } else {
+              that.notify("_noReschedule".loc());
+              that.calculateScheduleDate(); // Recalculate the date
             }
           };
 
-          // Loop through each item and see if we can sell on
-          // requested date
-          _.each(lineItems.models, function (line) {
-            var item = line.getValue("item");
-            id = line.id;
-            customer.canPurchase(item, scheduleDate, custOptions);
-          });
+          async.mapSeries(lineItems.models, processLine, finish);
         }
       };
       this.notify(message, options);
-
     },
 
     /**
@@ -1902,7 +1925,9 @@ white:true*/
         }
         parent.calculateScheduleDate();
 
-        this.set("site", parent.get("site") || XT.defaultSite());
+        if (!this.get("site")) {
+          this.set("site", parent.get("site") || XT.defaultSite());
+        }
       }
     },
 

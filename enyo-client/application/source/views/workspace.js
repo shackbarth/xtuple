@@ -430,9 +430,62 @@ strict: false*/
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "DatabaseComments"}
           ]}
+        ]},
+        {kind: "XV.Groupbox",
+          title: "_commandCenter".loc(), name: "commandPanel", components: [
+          {kind: "XV.ScrollableGroupbox",
+            classes: "in-panel", components: [
+            {kind: "onyx.GroupboxHeader", content: "_installExtension".loc()},
+            {kind: "XV.InputWidget", name: "extensionName", label: "_extensionName".loc()},
+            {kind: "FittableColumns", classes: "xv-buttons center", components: [
+              {kind: "onyx.Button", name: "extensionButton", classes: "icon-ok", ontap: "installExtension"},
+            ]},
+          ]}
         ]}
       ]}
-    ]
+    ],
+    create: function () {
+      this.inherited(arguments);
+      var hasPriv = XT.session.privileges.get("InstallExtension");
+      this.$.extensionName.setDisabled(!hasPriv);
+      this.$.extensionButton.setDisabled(!hasPriv);
+    },
+    installExtension: function () {
+      var that = this,
+        callback = function (response) {
+          if (!response.answer) {
+            return;
+          }
+
+          XT.dataSource.callRoute("install-extension",
+            {
+              extensionName: that.$.extensionName.getValue()
+            },
+            {
+              success: function (message) {
+                that.doNotify({message: message && message.loc()});
+              },
+              error: function (error) {
+                that.doNotify({message: error.message ? error.message() : error});
+              }
+            }
+          );
+        };
+
+      if (!this.$.extensionName.getValue()) {
+        this.doNotify({
+          type: XM.Model.WARNING,
+          message: "_attributeIsRequired".loc().replace("{attr}", "_extensionName".loc())
+        });
+        return;
+      }
+
+      this.doNotify({
+        type: XM.Model.QUESTION,
+        message: "_installExtensionWarning".loc() + "_confirmAction".loc(),
+        callback: callback
+      });
+    }
   });
 
   enyo.kind({
@@ -455,7 +508,7 @@ strict: false*/
             {kind: "XV.InputWidget", attr: "CCLogin",
               label: "_login".loc()},
             {kind: "XV.InputWidget", attr: "CCPassword",
-                label: "_password".loc()},
+                label: "_transactionKey".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "CCTest",
                 label: "_testMode".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "CCRequireCCV",
@@ -465,6 +518,10 @@ strict: false*/
       ]}
     ]
   });
+
+  // ..........................................................
+  // USER PREFERENCES
+  //
 
   enyo.kind({
     name: "XV.UserPreferenceWorkspace",
@@ -482,10 +539,57 @@ strict: false*/
           {kind: "XV.ScrollableGroupbox", name: "mainGroup",
             classes: "in-panel", components: [
           ]}
+        ]},
+        {kind: "XV.Groupbox", components: [
+          {kind: "onyx.GroupboxHeader", content: "_printSettings".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "printSettingsGroup",
+            classes: "in-panel", components: [
+          ]}
         ]}
       ]}
-    ]
+    ],
+    /**
+      On create, cycle through the XM.printableObjects cache and create the enyo PrinterPickers
+      components.
+    */
+    create: function () {
+      this.inherited(arguments);
+      var printableObjects = XM.printableObjects,
+        that = this;
+
+      _.each(printableObjects, function (val, key) {
+        that.$.printSettingsGroup.createComponents([
+            {kind: "XV.PrinterPicker", attr: key, name: key, label: key.loc(),
+              onValueChange: "metaChanged"}
+          ], {owner: that});
+      });
+    },
+    /** 
+      PrintPicker value changed, call model's metaChanged for some special handling.
+    */
+    metaChanged: function (inSender, inEvent) {
+      var model = this.getValue(),
+        val = inSender.value ? inSender.value.id : null;
+      model.meta.set(inSender.attr, val);
+      model.metaChanged();
+    },
+    /**
+      Overload: Some special handling for start up. Go and set PrinterPicker value's based on
+      User's Print Settings preferences.
+    */
+    recordIdChanged: function () {
+      this.inherited(arguments);
+      var model = this.getValue();
+
+      if (!this._started && model && model.getStatus() === XM.Model.READY_CLEAN) {
+        model.statusReadyClean();
+        // Repaint workspace
+        this.attributesChanged();
+      }
+    }
   });
+
+  XV.registerModelWorkspace("XM.UserPreference", "XV.UserPreferenceWorkspace");
 
   // ..........................................................
   // CONTACT
@@ -588,12 +692,12 @@ strict: false*/
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup",
             classes: "in-panel", components: [
-            {kind: "XV.InputWidget", attr: "abbreviation"},
+            {kind: "XV.InputWidget", attr: "abbreviation", maxlength: 2},
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.InputWidget", attr: "currencyName"},
             {kind: "XV.InputWidget", attr: "currencySymbol"},
-            {kind: "XV.InputWidget", attr: "currencyAbbreviation"},
-            {kind: "XV.InputWidget", attr: "currencyNumber"}
+            {kind: "XV.InputWidget", attr: "currencyAbbreviation", maxlength: 3},
+            {kind: "XV.InputWidget", attr: "currencyNumber", maxlength: 3}
           ]}
         ]}
       ]}
@@ -1252,7 +1356,7 @@ strict: false*/
                   city: "billtoCity", state: "billtoState",
                   postalCode: "billtoPostalCode", country: "billtoCountry"}
               },
-              {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+              {kind: "onyx.GroupboxHeader", content: "_notes".loc(), name: "notesHeader"},
               {kind: "XV.TextArea", attr: "notes", fit: true}
             ]}
           ]}
@@ -1283,12 +1387,12 @@ strict: false*/
       this.inherited(arguments);
       if (enyo.platform.touch) {
         this.$.panels.createComponents([
-          {kind: "XV.InvoiceLineItemBox", name: "invoiceLineItemBox", attr: "lineItems",
+          {kind: "XV.InvoiceLineItemBox", name: "lineItemBox", attr: "lineItems",
             title: "_lineItems".loc(), addBefore: this.$.settingsPanel, classes: "medium-panel"}
         ], {owner: this});
       } else {
         this.$.panels.createComponents([
-          {kind: "XV.InvoiceLineItemGridBox", name: "invoiceLineItemBox", title: "_lineItems".loc(),
+          {kind: "XV.InvoiceLineItemGridBox", name: "lineItemBox", title: "_lineItems".loc(),
             attr: "lineItems", addBefore: this.$.settingsPanel}
         ], {owner: this});
       }
@@ -1680,6 +1784,32 @@ strict: false*/
   XV.registerModelWorkspace("XM.PlannerCode", "XV.PlannerCodeWorkspace");
 
   // ..........................................................
+  // PRINTER
+  //
+
+  enyo.kind({
+    name: "XV.PrinterWorkspace",
+    kind: "XV.Workspace",
+    title: "_printers".loc(),
+    model: "XM.Printer",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.InputWidget", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.Printer", "XV.PrinterWorkspace");
+
+  // ..........................................................
   // PRIORITY
   //
 
@@ -1829,13 +1959,13 @@ strict: false*/
       this.inherited(arguments);
       if (enyo.platform.touch) {
         this.$.panels.createComponents([
-          {kind: "XV.ReturnLineItemBox", name: "returnLineItemBox",
+          {kind: "XV.ReturnLineItemBox", name: "lineItemBox",
             attr: "lineItems", title: "_lineItems".loc(),
               addBefore: this.$.settingsPanel, classes: "medium-panel"}
         ], {owner: this});
       } else {
         this.$.panels.createComponents([
-          {kind: "XV.ReturnLineItemGridBox", name: "returnLineItemBox",
+          {kind: "XV.ReturnLineItemGridBox", name: "lineItemBox",
             title: "_lineItems".loc(), attr: "lineItems", addBefore: this.$.settingsPanel}
         ], {owner: this});
       }
@@ -2161,9 +2291,7 @@ strict: false*/
             {kind: "onyx.GroupboxHeader", content: "_delivery".loc()},
             {kind: "XV.DateWidget", attr: "scheduleDate"},
             {kind: "XV.DateWidget", attr: "promiseDate", showing: false,
-              name: "promiseDate"},
-            {kind: "XV.PurchaseOrderLineCharacteristicsWidget",
-              attr: "characteristics"}
+              name: "promiseDate"}
           ]}
         ]},
         {kind: "XV.Groupbox", name: "detailsPanel", title: "_detail".loc(),
@@ -2732,19 +2860,17 @@ strict: false*/
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
-            {kind: "XV.InputWidget", attr: "code"},
-            {kind: "XV.CheckboxWidget", attr: "isActive"},
-            {kind: "XV.SiteTypePicker", attr: "siteType"},
-            {kind: "XV.InputWidget", attr: "description"},
-            {kind: "XV.ContactWidget", attr: "contact"},
-            {kind: "XV.AddressWidget", attr: "address"},
-            {kind: "XV.TaxZonePicker", attr: "taxZone"},
-            {kind: "XV.InputWidget", attr: "incoterms"},
-            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
-            {kind: "XV.TextArea", attr: "notes", fit: true}
+            {name: "mainSubgroup", components: [ // not a scroller, so we can addBefore
+              {kind: "XV.InputWidget", attr: "code"},
+              {kind: "XV.CheckboxWidget", attr: "isActive"},
+              {kind: "XV.SiteTypePicker", attr: "siteType"},
+              {kind: "XV.InputWidget", attr: "description"},
+              {kind: "XV.ContactWidget", attr: "contact", name: "contactWidget"},
+              {kind: "XV.AddressWidget", attr: "address"}
+            ]}
           ]}
         ]},
-        {kind: "XV.SiteCommentBox", attr: "comments"}
+        {kind: "XV.SiteCommentBox", attr: "comments", name: "commentsPanel"}
       ]}
     ]
   });
@@ -3291,6 +3417,5 @@ strict: false*/
   XV.registerModelWorkspace("XM.UserAccountRole", "XV.UserAccountRoleWorkspace");
   XV.registerModelWorkspace("XM.UserAccountRoleRelation", "XV.UserAccountRoleWorkspace");
   XV.registerModelWorkspace("XM.UserAccountRoleListItem", "XV.UserAccountRoleWorkspace");
-
 
 }());

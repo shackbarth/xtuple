@@ -1,5 +1,7 @@
 
-CREATE OR REPLACE FUNCTION explodeWo(INTEGER, BOOLEAN) RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION explodewo(INTEGER, BOOLEAN)
+  RETURNS integer AS
+$BODY$
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
@@ -186,7 +188,7 @@ BEGIN
       wooper_suconsumed, wooper_sucomplete,
       wooper_rnconsumed, wooper_rncomplete,
       wooper_qtyrcv, wooper_instruc, wooper_scheduled,
-      wooper_wip_location_id, wooper_price )
+      wooper_wip_location_id, wooper_price, wooper_opntype_id )
     SELECT wo_id, booitem_id, booitem_seqnumber,
            booitem_wrkcnt_id, booitem_stdopn_id,
            booitem_descrip1, booitem_descrip2, booitem_toolref,
@@ -210,7 +212,8 @@ BEGIN
            0::NUMERIC, booitem_instruc,
            calculatenextworkingdate(itemsite_warehous_id,wo_startdate,booitem_execday-1),
            booitem_wip_location_id,
-           (xtmfg.directlaborcostoper(booitem_id) + xtmfg.overheadcostoper(booitem_id) + xtmfg.machineoverheadcostoper(booitem_id))
+           (xtmfg.directlaborcostoper(booitem_id) + xtmfg.overheadcostoper(booitem_id) + xtmfg.machineoverheadcostoper(booitem_id)),
+           booitem_opntype_id
     FROM xtmfg.booitem, wo, itemsite
     WHERE ((wo_itemsite_id=itemsite_id)
      AND (itemsite_item_id=booitem_item_id)
@@ -320,4 +323,5 @@ BEGIN
 
   RETURN pWoid;
 END;
-$$ LANGUAGE 'plpgsql';
+$BODY$
+  LANGUAGE 'plpgsql';

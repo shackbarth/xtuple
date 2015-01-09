@@ -47,18 +47,13 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
     @property {String} Comments
     @property {TaxRegistration} TaxRegistration
     @property {CustomerCharacteristics} Characteristics
-    @property {CustomerAccounts} Accounts
-    @property {CustomerContacts} Contacts
-    @property {CustomerItems} Items
-    @property {CustomerFiles} Files
-    @property {CustomerUrls} Urls
     @property {CustomerRelatedCustomers} Customers
     @property {Site} PreferredSite
     @property {CreditCards} CreditCards
     @property {CustomerAccount} CRMAccount
+    @property {DocumentAssociations} documents
     */
   var spec = {
-    skipAll: true,
     recordType: "XM.Customer",
     collectionType: "XM.CustomerListItemCollection",
     /**
@@ -88,9 +83,9 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
     "balanceMethod", "creditLimit", "creditLimitCurrency", "creditRating", "graceDays",
     "taxZone", "shiptos", "comments", "taxRegistration", "characteristics", "backorder",
     "partialShip", "blanketPurchaseOrders", "usesPurchaseOrders", "autoUpdateStatus",
-    "autoHoldOrders", "accounts", "contacts", "items", "files", "urls", "customers",
+    "autoHoldOrders",
     "preferredSite", "creditCards", "account", "contactRelations", "incidentRelations",
-    "opportunityRelations", "toDoRelations", "projects", "quoteRelations", "salesOrderRelations"],
+    "opportunityRelations", "toDoRelations", "documents", "quoteRelations", "salesOrderRelations"],
     requiredAttributes: ["number", "name", "isActive", "isFreeFormShipto", "isFreeFormBillto",
     "discount", "creditStatus", "balanceMethod", "backorder", "partialShip",
     "blanketPurchaseOrders", "usesPurchaseOrders", "autoUpdateStatus",
@@ -139,12 +134,20 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
           };
         creditCardModel.on("change:uuid", setCreditCard);
         creditCardModel.initialize(null, {isNew: true});
+        assert.isTrue(creditCardModel.canEdit("creditCardType"));
       }
     }],
     afterSaveActions: [{
       it: "should have saved the credit card correctly",
       action: function (data, next) {
         assert.equal(data.model.get("creditCards").models[0].get("number"), "************1111");
+        next();
+      }
+    }, {
+      it: "should not allow an edit to the saved credit card",
+      action: function (data, next) {
+        var creditCardModel = data.model.get("creditCards").models[0];
+        assert.isFalse(creditCardModel.canEdit("creditCardType"));
         next();
       }
     }],
@@ -269,7 +272,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
     @description Tax Registrations panel should exist to attach existing/new Tax Registrations
     to the Customer
     @property {String} id ID attribute
-    @property {Customer} Customer 
+    @property {Customer} Customer
     @property {TaxAuthority} TaxAuthority
     @property {String} Number
     @property {TaxZone} TaxZone
@@ -287,7 +290,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
         "'number', 'taxZone', 'effective', 'expires', 'notes'", function () {
       });
        /**
-      @member 
+      @member
       @memberof CustomerTaxRegistration
       @description Users can create, update, and delete Tax Registrations if they have the
         MaintainTaxRegistrations privilege, and they can read Tax Registrations if they have

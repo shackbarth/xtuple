@@ -4,6 +4,8 @@ CREATE OR REPLACE FUNCTION convertQuote(INTEGER) RETURNS INTEGER AS $$
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pQuheadid ALIAS FOR $1;
+  _qunumber TEXT;
+  _ponumber TEXT;
   _soheadid INTEGER;
   _soitemid INTEGER;
   _orderid INTEGER;
@@ -62,13 +64,20 @@ BEGIN
     RETURN -5;
   END IF;
 
-  IF ( (_usespos) AND (NOT _blanketpos) ) THEN
-    PERFORM cohead_id
-    FROM quhead JOIN cohead ON ( (cohead_cust_id=quhead_cust_id) AND
-                                 (UPPER(cohead_custponumber)=UPPER(quhead_custponumber)) )
+  IF (_usespos) THEN
+    SELECT quhead_number, COALESCE(quhead_custponumber, ''), cohead_id INTO _qunumber, _ponumber, _soheadid
+    FROM quhead LEFT OUTER JOIN cohead ON ( (cohead_cust_id=quhead_cust_id) AND
+                                            (UPPER(cohead_custponumber)=UPPER(quhead_custponumber)) )
     WHERE (quhead_id=pQuheadid);
-    IF (FOUND) THEN
-      RAISE EXCEPTION 'Duplicate Customer PO';
+    IF (_ponumber = '') THEN
+      RAISE EXCEPTION 'Customer PO required for Quote % [xtuple: convertQuote, -7, %]',
+                      _qunumber, _qunumber;
+    END IF;
+  
+    IF ( (NOT _blanketpos) AND (_soheadid IS NOT NULL) ) THEN
+      RAISE EXCEPTION 'Duplicate Customer PO % for Quote % [xtuple: convertQuote, -8, %, %]',
+                      _ponumber, _qunumber,
+                      _ponumber, _qunumber;
     END IF;
   END IF;
   
@@ -143,6 +152,7 @@ BEGIN
   FROM quhead JOIN custinfo ON (cust_id=quhead_cust_id)
   WHERE (quhead_id=pQuheadid);
 
+  -- Move Documents
   UPDATE url SET url_source_id = _soheadid,
                  url_source = 'S'
   WHERE ((url_source='Q') AND (url_source_id = pQuheadid));
@@ -155,6 +165,21 @@ BEGIN
                     docass_source_type = 'S'
   WHERE ((docass_source_type='Q') AND (docass_source_id = pQuheadid));
 
+  -- Move Email
+  IF (fetchMetricBool('EnableBatchManager')) THEN
+    UPDATE xtbatch.emlassc SET emlassc_type='S',
+                               emlassc_assc_id=_soheadid
+    WHERE ((emlassc_type='Q') AND (emlassc_assc_id=pQuheadid));
+  END IF;
+
+  -- Copy Characteristics
+  INSERT INTO charass
+        (charass_target_type, charass_target_id, charass_char_id, charass_value, charass_default, charass_price)
+  SELECT 'SO', _soheadid, charass_char_id, charass_value, charass_default, charass_price
+    FROM charass
+   WHERE ((charass_target_type='QU')
+     AND  (charass_target_id=pQuheadid));
+
   -- Copy Comments
   INSERT INTO comment
   ( comment_cmnttype_id, comment_source, comment_source_id, comment_date, comment_user, comment_text, comment_public )
@@ -164,7 +189,7 @@ BEGIN
     AND   (comment_source_id=pQuheadid) );
 
   FOR _r IN SELECT quitem.*,
-                   quhead_number, quhead_prj_id,
+                   quhead_number, quhead_prj_id, quhead_saletype_id,
                    itemsite_item_id, itemsite_leadtime,
                    itemsite_createsopo, itemsite_createsopr,
                    item_type, COALESCE(quitem_itemsrc_id, itemsrc_id, -1) AS itemsrcid
@@ -194,17 +219,19 @@ BEGIN
       _r.quitem_qtyord, 0, 0,
       _r.quitem_qty_uom_id, _r.quitem_qty_invuomratio,
       _r.quitem_price_uom_id, _r.quitem_price_invuomratio,
-      stdcost(_r.itemsite_item_id), _r.quitem_prcost,
+      _r.quitem_unitcost, _r.quitem_prcost,
       _r.quitem_custpn, _r.quitem_memo, _r.quitem_taxtype_id, -1 );
 
     IF (fetchMetricBool('enablextcommissionission')) THEN
       PERFORM xtcommission.getSalesReps(quhead_cust_id, quhead_shipto_id,
-                                        _r.itemsite_item_id, _r.quitem_price,
+                                        _r.itemsite_item_id, _r.quhead_saletype_id,
+                                        _r.quitem_price, _r.quitem_custprice,
                                         _soitemid, 'SalesItem')
       FROM quhead
       WHERE (quhead_id=pQuheadid);
     END IF;
 
+    -- Copy Characteristics
     INSERT INTO charass
           (charass_target_type, charass_target_id, charass_char_id, charass_value, charass_default, charass_price)
     SELECT 'SI', _soitemid, charass_char_id, charass_value, charass_default, charass_price
@@ -225,8 +252,10 @@ BEGIN
     IF (_r.quitem_createorder) THEN
 
       IF (_r.item_type IN ('M')) THEN
-        SELECT createWo( CAST(_r.quhead_number AS INTEGER), supply.itemsite_id, 1, (_r.quitem_qtyord * _r.quitem_qty_invuomratio),
-                         _r.itemsite_leadtime, _r.quitem_scheddate, _r.quitem_memo, 'S', _soitemid, _r.quhead_prj_id ) INTO _orderId
+        SELECT createWo( CAST(_soNum AS INTEGER), supply.itemsite_id, 1,
+                         (_r.quitem_qtyord * _r.quitem_qty_invuomratio),
+                         _r.itemsite_leadtime, _r.quitem_scheddate, _r.quitem_memo,
+                         'S', _soitemid, _r.quhead_prj_id ) INTO _orderId
         FROM itemsite sold, itemsite supply
         WHERE ((sold.itemsite_item_id=supply.itemsite_item_id)
          AND (supply.itemsite_warehous_id=_r.quitem_order_warehous_id)
@@ -241,7 +270,8 @@ BEGIN
            AND  (charass_target_id=_r.quitem_id));
 
       ELSIF ( (_r.item_type IN ('P', 'O')) AND (_r.itemsite_createsopr) ) THEN
-        SELECT createPr( CAST(_r.quhead_number AS INTEGER), _r.quitem_itemsite_id, (_r.quitem_qtyord * _r.quitem_qty_invuomratio),
+        SELECT createPr( CAST(_soNum AS INTEGER), _r.quitem_itemsite_id,
+                         (_r.quitem_qtyord * _r.quitem_qty_invuomratio),
                          _r.quitem_scheddate, '', 'S', _soitemid ) INTO _orderId;
         _orderType := 'R';
         UPDATE pr SET pr_prj_id=_r.quhead_prj_id WHERE pr_id=_orderId;

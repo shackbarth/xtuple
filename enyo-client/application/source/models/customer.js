@@ -360,89 +360,6 @@ white:true*/
     recordType: "XM.CustomerEmailProfile"
 
   });
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.CustomerAccount = XM.Model.extend({
-    /** @scope XM.CustomerAccount.prototype */
-
-    recordType: 'XM.CustomerAccount',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.CustomerCustomer = XM.Model.extend({
-    /** @scope XM.CustomerCustomer.prototype */
-
-    recordType: 'XM.CustomerCustomer',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.CustomerContact = XM.Model.extend({
-    /** @scope XM.CustomerContact.prototype */
-
-    recordType: 'XM.CustomerContact',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.CustomerItem = XM.Model.extend({
-    /** @scope XM.CustomerItem.prototype */
-
-    recordType: 'XM.CustomerItem',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.CustomerFile = XM.Model.extend({
-    /** @scope XM.CustomerFile.prototype */
-
-    recordType: 'XM.CustomerFile',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.CustomerUrl = XM.Model.extend({
-    /** @scope XM.CustomerUrl.prototype */
-
-    recordType: 'XM.CustomerUrl',
-
-    isDocumentAssignment: true
-
-  });
 
   /**
     @class
@@ -719,6 +636,11 @@ white:true*/
     descriptionKey: "name"
 
   });
+
+  XT.documentAssociations.C = {
+    model: "XM.CustomerRelation",
+    label: "_customer".loc()
+  };
 
   /**
     @class

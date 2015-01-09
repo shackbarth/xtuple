@@ -175,7 +175,8 @@ trailing:true, white:true, strict:false*/
       // see if toggle is on and update params
       _.each(keys, function (key) {
         _.each(actTypes[key], function (obj) {
-          if (that.$[_namify(obj)].getValue()) {
+          // the pluralize function in _namify is imperfect
+          if (that.$[_namify(obj)] && that.$[_namify(obj)].getValue()) {
             value.push(obj.type);
           }
         });
@@ -774,6 +775,7 @@ trailing:true, white:true, strict:false*/
         }
       },
       {name: "name", label: "_name".loc(), attr: "name"},
+      {name: "number", label: "_number".loc(), attr: "number"},
       {kind: "onyx.GroupboxHeader", content: "_status".loc()},
       {name: "stage", label: "_stage".loc(), attr: "opportunityStage",
         defaultKind: "XV.OpportunityStagePicker"},

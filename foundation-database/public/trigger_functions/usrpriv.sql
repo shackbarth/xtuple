@@ -1,10 +1,12 @@
 CREATE OR REPLACE FUNCTION _usrprivTrigger() RETURNS TRIGGER AS $$
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
-DECLARE
-  _check BOOLEAN;
-  _returnVal INTEGER;
 BEGIN
+  IF NOT checkPrivilege('MaintainUsers') THEN
+    RAISE EXCEPTION '% does not have privileges to modify user privileges.',
+                    getEffectiveXtUser();
+  END IF;
+
   -- This looks like a candidate for a foreign key but isn't.
   -- fkeys don't work if the foreign key value resides in a child of the 
   -- table and not the table itself.

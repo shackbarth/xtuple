@@ -32,7 +32,7 @@ require:true, __dirname:true, console:true, process:true */
     specFiles = _.filter(fs.readdirSync(path.join(__dirname, "../specs")), function (fileName) {
       // filter out .swp files, etc.
       return path.extname(fileName) === '.js';
-    }),
+    }).sort(),
     specs = _.map(specFiles, function (specFile) {
       var fileExports = require(path.join(__dirname, "../specs", specFile));
       if (!fileExports || !fileExports.spec) {

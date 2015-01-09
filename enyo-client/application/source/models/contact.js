@@ -123,76 +123,6 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
-  */
-  XM.ContactAccount = XM.Model.extend({
-    /** @scope XM.ContactAccount.prototype */
-
-    recordType: 'XM.ContactAccount',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.ContactContact = XM.Model.extend({
-    /** @scope XM.ContactContact.prototype */
-
-    recordType: 'XM.ContactContact',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.ContactItem = XM.Model.extend({
-    /** @scope XM.ContactItem.prototype */
-
-    recordType: 'XM.ContactItem',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.ContactFile = XM.Model.extend({
-    /** @scope XM.ContactFile.prototype */
-
-    recordType: 'XM.ContactFile',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.ContactUrl = XM.Model.extend({
-    /** @scope XM.ContactUrl.prototype */
-
-    recordType: 'XM.ContactUrl',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
     @extends XM.Info
   */
   XM.ContactRelation = XM.Info.extend({
@@ -207,6 +137,11 @@ white:true*/
     numberKey: "name"
 
   });
+
+  XT.documentAssociations.T = {
+    model: "XM.ContactRelation",
+    label: "_contact".loc()
+  };
 
   /**
     @class

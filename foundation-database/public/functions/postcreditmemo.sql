@@ -420,34 +420,32 @@ BEGIN
   WHERE (cmhead_id=pCmheadid);
 
 -- Handle the Inventory and G/L Transactions for any returned Inventory where cmitem_updateinv is true
-  FOR _r IN SELECT cmitem_itemsite_id AS itemsite_id, cmitem_id,
-                   (cmitem_qtyreturned * cmitem_qty_invuomratio) AS qty,
-                   cmhead_number, cmhead_cust_id AS cust_id, item_number,
-                   cmhead_saletype_id AS saletype_id, cmhead_shipzone_id AS shipzone_id,
-                   stdCost(item_id) AS std_cost, cmhead_prj_id,
-                   itemsite_costmethod
-            FROM cmhead, cmitem, itemsite, item
-            WHERE ( (cmitem_cmhead_id=cmhead_id)
-             AND (cmitem_itemsite_id=itemsite_id)
-             AND (itemsite_item_id=item_id)
-             AND (cmitem_qtyreturned <> 0)
+  FOR _r IN SELECT itemsite_id, itemsite_costmethod,
+                   item_number, stdCost(item_id) AS std_cost,
+                   costcat_asset_accnt_id,
+                   SUM(cmitem_qtyreturned * cmitem_qty_invuomratio) AS qty
+            FROM cmhead JOIN cmitem ON (cmitem_cmhead_id=cmhead_id)
+                        JOIN itemsite ON (itemsite_id=cmitem_itemsite_id)
+                        JOIN item ON (item_id=itemsite_item_id)
+                        JOIN costcat ON (costcat_id=itemsite_costcat_id)
+            WHERE ( (cmitem_qtyreturned <> 0)
              AND (cmitem_updateinv)
-             AND (cmhead_id=pCmheadid) ) LOOP
+             AND (cmhead_id=pCmheadid) )
+            GROUP BY itemsite_id, itemsite_costmethod,
+                     item_number, item_id,
+                     costcat_asset_accnt_id LOOP
 
 --  Return credited stock to inventory
     IF (_itemlocSeries = 0) THEN
       _itemlocSeries := NEXTVAL('itemloc_series_seq');
     END IF;
     IF (_r.itemsite_costmethod != 'J') THEN
-      SELECT postInvTrans(itemsite_id, 'RS', _r.qty,
-                         'S/O', 'CM', _r.cmhead_number, '',
+      SELECT postInvTrans(_r.itemsite_id, 'RS', _r.qty,
+                         'S/O', 'CM', _p.cmhead_number, '',
                          ('Credit Return ' || _r.item_number),
-                         costcat_asset_accnt_id,
-                         getPrjAccntId(_r.cmhead_prj_id, resolveCOSAccount(itemsite_id, _r.cust_id, _r.saletype_id, _r.shipzone_id)), 
-                         _itemlocSeries, _glDate, (_r.std_cost * _r.qty)) INTO _invhistid
-        FROM itemsite, costcat
-       WHERE ((itemsite_costcat_id=costcat_id)
-          AND (itemsite_id=_r.itemsite_id));
+                         _r.costcat_asset_accnt_id,
+                         getPrjAccntId(_p.cmhead_prj_id, resolveCOSAccount(_r.itemsite_id, _p.cmhead_cust_id, _p.cmhead_saletype_id, _p.cmhead_shipzone_id)), 
+                         _itemlocSeries, _glDate, (_r.std_cost * _r.qty)) INTO _invhistid;
     ELSE
       RAISE DEBUG 'postCreditMemo(%, %, %) tried to postInvTrans a %-costed item',
                   pCmheadid, pJournalNumber, pItemlocSeries,

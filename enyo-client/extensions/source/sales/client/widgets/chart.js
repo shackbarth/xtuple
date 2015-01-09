@@ -5,44 +5,25 @@ trailing:true, white:true*/
 
 (function () {
 
-
-/*
-unused and out of date. if we want to use this, add correct parameters to
-filter options
-  enyo.kind({
-    name: "XV.SalesHistoryBarChart",
-    kind: "XV.DrilldownBarChart",
-    collection: "XM.SalesHistoryCollection",
-    chartTitle: "_salesHistory".loc(),
-    drillDownAttr: "orderNumber",
-    drillDownRecordType: "XM.SalesOrderRelation",
-    filterOptions: [
-      { name: "today" },
-      { name: "thisWeek" },
-      { name: "thisMonth" },
-      { name: "thisYear" },
-      { name: "twoYears" },
-      { name: "fiveYears" }
-    ],
-    groupByOptions: [
-      { name: "customer" },
-      { name: "salesRep" }
-    ],
-    totalField: "totalPrice",
-    filterData: filterData
-  });
-*/
-
   enyo.kind({
     name: "XV.SalesHistoryTimeSeriesChart",
     kind: "XV.TimeSeriesChart",
     collection: "XM.SalesHistoryCollection",
-    chartTitle: "_salesHistory".loc(),
+    chartTitle: "_salesHistoryLast30Days".loc(),
     groupByOptions: [
-      { name: "" },
-      { name: "customer" },
-      { name: "salesRep" }
+      { name: "" }
     ],
+    query: {
+      parameters: [{
+        attribute: "shipDate",
+        operator: ">=",
+        value: XT.date.applyTimezoneOffset(XV.DateWidget.prototype.textToDate("-30"), true)
+      }, {
+        attribute: "shipDate",
+        operator: "<=",
+        value: XT.date.applyTimezoneOffset(XV.DateWidget.prototype.textToDate("0"), true)
+      }]
+    },
     dateField: "shipDate",
     totalField: "totalPrice"
   });
@@ -51,13 +32,46 @@ filter options
     name: "XV.SalesOrderTimeSeriesChart",
     kind: "XV.TimeSeriesChart",
     collection: "XM.SalesOrderListItemCollection",
-    chartTitle: "_bookings".loc(),
+    chartTitle: "_salesOrdersNext30Days".loc(),
     groupByOptions: [
       { name: "" },
-      { name: "customer" },
       { name: "salesRep" }
     ],
+    query: {
+      parameters: [{
+        attribute: "orderDate",
+        operator: ">=",
+        value: XT.date.applyTimezoneOffset(XV.DateWidget.prototype.textToDate("0"), true)
+      }, {
+        attribute: "orderDate",
+        operator: "<=",
+        value: XT.date.applyTimezoneOffset(XV.DateWidget.prototype.textToDate("+30"), true)
+      }]
+    },
     dateField: "orderDate",
+    totalField: "total"
+  });
+
+  enyo.kind({
+    name: "XV.PastDueSalesOrderTimeSeriesChart",
+    kind: "XV.DrilldownBarChart",
+    collection: "XM.SalesOrderListItemCollection",
+    chartTitle: "_pastDueSalesOrders".loc(),
+    groupByOptions: [
+      { name: "" },
+      { name: "salesRep" }
+    ],
+    query: {
+      parameters: [{
+        attribute: "status",
+        operator: "=",
+        value: "O"
+      }, {
+        attribute: "scheduleDate",
+        operator: "<=",
+        value: XT.date.applyTimezoneOffset(XV.DateWidget.prototype.textToDate("0"), true)
+      }]
+    },
     totalField: "total"
   });
 

@@ -4,8 +4,8 @@
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 
-SELECT formatQty(itemsite_qtyonhand) AS f_qoh,itemsite_qtyonhand
-       , qtyAllocated(itemsite_id, findPeriodStart(<? value("cursorId") ?>),
+SELECT qtyNetable(itemsite_id) AS qoh, formatQty(qtyNetable(itemsite_id)) AS f_qoh,
+       qtyAllocated(itemsite_id, findPeriodStart(<? value("cursorId") ?>),
                        findPeriodEnd(<? value("cursorId") ?>)) AS allocations<? value("counter") ?>,
        qtyOrdered(itemsite_id, findPeriodStart(<? value("cursorId") ?>),
                        findPeriodEnd(<? value("cursorId") ?>)) AS orders<? value("counter") ?>,

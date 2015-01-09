@@ -194,6 +194,7 @@ BEGIN
                             COALESCE(itemsite_id, -1) AS itemsiteid,
                             COALESCE(itemsite_costcat_id, -1) AS costcatid,
                             COALESCE(itemsite_item_id, -1) AS itemsite_item_id,
+                            COALESCE(item_type, '') AS item_type,
                             (SELECT SUM(value) 
                              FROM (
                                 SELECT SUM(recv_value) AS value
@@ -215,6 +216,7 @@ BEGIN
                                        _p.vohead_distdate) AS voitem_freight_base
             FROM vodist, voitem,
                  poitem LEFT OUTER JOIN itemsite ON (poitem_itemsite_id=itemsite_id)
+                        LEFT OUTER JOIN item ON (item_id=itemsite_item_id)
             WHERE ( (vodist_poitem_id=poitem_id)
              AND (voitem_poitem_id=poitem_id)
              AND (voitem_vohead_id=vodist_vohead_id)
@@ -271,8 +273,11 @@ BEGIN
        END IF;
 
 --  Post the cost to the Actual if requested
+--  and item type is not manufactured
 --      IF ( (pPostCosts) AND (_d.vodist_costelem_id <> -1) ) THEN
-      IF ( (_d.vodist_costelem_id <> -1) AND (_g.itemsite_item_id <> -1) ) THEN
+      IF ( (_d.vodist_costelem_id <> -1) AND
+           (_g.itemsite_item_id <> -1) AND
+           (_g.item_type <> 'M') ) THEN
         PERFORM updateCost( _g.itemsite_item_id, _d.vodist_costelem_id,
                             _pExplain, (_d.vodist_amount / (_g.voitem_qty * _g.poitem_invvenduomratio)),
 			    _p.vohead_curr_id );

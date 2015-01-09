@@ -196,32 +196,6 @@ white:true*/
       return defaults;
     },
 
-    destroy: function (options) {
-      var status = this.getParent().get("status"),
-        K = XM.SalesOrder,
-        that = this,
-        payload = {
-          type: K.QUESTION,
-        },
-        args = arguments,
-        message;
-
-      if (status !== K.CLOSED_STATUS &&
-        status !== K.CANCELLED_STATUS) {
-        message = "_deleteLine?".loc();
-        payload.callback = function (response) {
-          if (response.answer) {
-            XM.Model.prototype.destroy.apply(that, args);
-          }
-        };
-      } else {
-        // Must be closed, shouldn't have come here.
-        return;
-      }
-
-      this.notify(message, payload);
-    },
-
     isActive: function () {
       return this.get("status") === XM.SalesOrder.OPEN_STATUS;
     }
@@ -244,58 +218,6 @@ white:true*/
     recordType: 'XM.SalesOrderComment',
 
     sourceName: 'S'
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.SalesOrderAccount = XM.Model.extend(/** @lends XM.SalesOrderAccount.prototype */{
-
-    recordType: 'XM.SalesOrderAccount',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.SalesOrderContact = XM.Model.extend(/** @lends XM.SalesOrderContact.prototype */{
-
-    recordType: 'XM.SalesOrderContact',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.SalesOrderFile = XM.Model.extend(/** @lends XM.SalesOrderFile.prototype */{
-
-    recordType: 'XM.SalesOrderFile',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.SalesOrderItem = XM.Model.extend(/** @lends XM.SalesOrderItem.prototype */{
-
-    recordType: 'XM.SalesOrderItem',
-
-    isDocumentAssignment: true
 
   });
 
@@ -394,83 +316,10 @@ white:true*/
 
   });
 
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.SalesOrderUrl = XM.Model.extend(/** @lends XM.SalesOrderUrl.prototype */{
-
-    recordType: 'XM.SalesOrderUrl',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.SalesOrderProject = XM.Model.extend(/** @lends XM.SalesOrderProject.prototype */{
-
-    recordType: 'XM.SalesOrderProject',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.SalesOrderIncident = XM.Model.extend(/** @lends XM.SalesOrderIncident.prototype */{
-
-    recordType: 'XM.SalesOrderIncident',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.SalesOrderOpportunity = XM.Model.extend(/** @lends XM.SalesOrderOpportunity.prototype */{
-
-    recordType: 'XM.SalesOrderOpportunity',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.SalesOrderCustomer = XM.Model.extend(/** @lends XM.SalesOrderCustomer.prototype */{
-
-    recordType: 'XM.SalesOrderCustomer',
-
-    isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.SalesOrderToDo = XM.Model.extend(/* @lends XM.SalesOrderToDo */{
-
-    recordType: 'XM.SalesOrderToDo',
-
-    isDocumentAssignment: true
-
-  });
+  XT.documentAssociations.S = {
+    model: "XM.SalesOrderRelation",
+    label: "_salesOrder".loc()
+  };
 
   // ..........................................................
   // COLLECTIONS

@@ -6,6 +6,12 @@ select xt.install_js('XM','crm','crm', $$
 
   XM.Crm.isDispatchable = true,
 
+  XT.documentAssociations.CRMA = "AccountRelation";
+  XT.documentAssociations.INCDT = "IncidentRelation";
+  XT.documentAssociations.OPP = "OpportunityRelation";
+  XT.documentAssociations.T = "ContactRelation";
+  XT.documentAssociations.TODO = "ToDoRelation";
+
   XM.Crm.options = [
     "NextCRMAccountNumber",
     "NextIncidentNumber",

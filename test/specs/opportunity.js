@@ -21,13 +21,13 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     @property {String} name [required] (Enter a name to identify the Opportunity)
     @property {Boolean} isActive [required, default: true] (Select to specify the Opportunity is active. If not selected, the Opportunity will be marked as inactive, causing it to be hidden in some lists)
     @property {Account} account [required] (Specify the CRM Account the Opportunity is associated with)
-    @property {Contact} contact (Enter the name of the Contactâor select a name from the Contacts list. Details for the Contact will be shown after selection)
+    @property {Contact} contact (Enter the name of the Contact or select a name from the Contacts list. Details for the Contact will be shown after selection)
     @property {OpportunityStage} opportunityStage [required] (Specify the current Stage of the Opportunity. It's possible an Opportunity will be automatically marked as inactive when it reaches a certain stage, depending on how your system is configured)
     @property {Priority} priority (Specify the priority level for the Opportunity)
     @property {OpportunityType} opportunityType [required] (Specify the type of Opportunity)
     @property {OpportunitySource} opportunitySource [required] (Specify the source which generated the Opportunity)
     @property {Number} amount (Enter the monetary value of the Opportunity)
-    @property {Currency} currency 
+    @property {Currency} currency
     @property {Number} probability (Project the likelihood the Opportunity will be closed)
     @property {Date} startDate (Specify the date when the Opportunity was first identified. This date will be auto-populated when the Opportunity is created)
     @property {Date} assignDate (Specify the date when the Opportunity was assigned. This date will be auto-populated when the Opportunity is assigned)
@@ -36,18 +36,9 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     @property {String} notes (This is a scrolling text field with word-wrapping for entering Notes related to the Opportunity. Any Notes entered on this screen are for internal purposes only)
     @property {UserAccount} owner (Specify the user who owns the Opportunity)
     @property {UserAccount} assignedTo (Specify the user the Opportunity is assigned to)
-    @property {OpportunityAccount} accounts
     @property {OpportunityComment} comments
     @property {OpportunityCharacterisitic} characterisitcs
-    @property {OpportunityOpportunity} opportunities
-    @property {OpportunityItem} items
-    @property {OpportunityFile} file
-    @property {OpportunityContact} contact
-    @property {OpportunityUrl} urls
-    @property {OpportunityIncident} incidents
-    @property {OpportunityToDo} todos
-    @property {OpportunityProject} projects
-    @property {OpportunityCustomer} customers
+    @property {DocumentAssociations} documents
   */
   var spec = {
     recordType: "XM.Opportunity",
@@ -69,13 +60,13 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     idAttribute: "number",
     enforceUpperKey: true,
     attributes: ["id", "number", "name", "isActive", "account", "contact", "opportunityStage",
-    "priority", "opportunitySource", "opportunityType", "amount", "currency", "probability", 
-    "startDate", "assignDate", "targetClose", "actualClose", "notes", "owner", "assignedTo", 
-    "comments", "characteristics", "contacts", "items", "files", "urls", "accounts", 
-    "opportunities", "incidents", "toDos", "toDoRelations", "projects", "customers", 
-    "quoteRelations", "salesOrderRelations"],
+      "priority", "opportunitySource", "opportunityType", "amount", "currency", "probability",
+      "startDate", "assignDate", "targetClose", "actualClose", "notes", "owner", "assignedTo",
+      "comments", "characteristics", "toDoRelations", "quoteRelations", "salesOrderRelations",
+      "documents"
+    ],
     requiredAttributes: ["number", "name", "isActive", "account", "opportunityStage",
-    "opportunitySource", "opportunityType"], 
+    "opportunitySource", "opportunityType"],
     /**
       @member Setup
       @memberof Opportunity
@@ -103,14 +94,14 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
       name: "SmallOne" + Math.random()
     }
   };
-   var additionalTests = function () {  
+   var additionalTests = function () {
     /**
     @member Privileges
     @memberof Opportunity
     @description Users with "ViewPersonalOpportunities" privilege can read their personal Opportunities
-    but cannot read the Opportunities owned by other users. Users with "MaintainPersonalOpportunities" 
+    but cannot read the Opportunities owned by other users. Users with "MaintainPersonalOpportunities"
     privilege can create, update or delete their personal Opportunities but not the Opportunities owned
-    by other users 
+    by other users
     */
     it.skip("Users with \"ViewPersonalOpportunities\" privilege can read their personal Opportunities" +
       "but cannot read the Opportunities owned by other users. ", function () {
@@ -227,4 +218,4 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
   exports.spec = spec;
   exports.additionalTests = additionalTests;
 }());
-  
+

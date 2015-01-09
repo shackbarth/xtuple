@@ -48,7 +48,7 @@ SELECT saveCntct(
           NEW.contact_number,
           getCrmAcctid(NEW.crm_account),
           saveAddr(
-            getAddrId(NEW.address_number),
+            CASE WHEN NOT EXISTS (SELECT addr_id FROM addr WHERE addr_number = NEW.address_number) THEN NULL ELSE getaddrid(new.address_number) END,
             NEW.address_number,
             NEW.address1,
             NEW.address2,

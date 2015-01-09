@@ -41,7 +41,7 @@ BEGIN
                 item_descrip1, 
                 item_descrip2, 
                 uom_name,
-                noNeg(itemsite_qtyonhand) AS qoh, 
+                noNeg(qtyAvailable(itemsite_id)) AS qoh, 
                 noNeg(itemuomtouom(itemsite_item_id, womatl_uom_id, NULL, womatl_qtyreq - womatl_qtyiss)) AS wobalance, 
                 qtyAllocated(itemsite_id, womatl_duedate) AS allocated, 
                 qtyOrdered(itemsite_id, womatl_duedate) AS ordered,

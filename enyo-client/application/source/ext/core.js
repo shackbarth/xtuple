@@ -194,6 +194,27 @@ white:true*/
     },
 
     /**
+      Returns the (user pref) default printer if set through User Preferences.
+    */
+    defaultPrinter: function (modelName) {
+      // TODO - review below handling of the preferences object/stringified object.
+      var userPrintPref = _.isString(XT.session.preferences.getValue("PrintSettings")) ?
+            JSON.parse(XT.session.preferences.getValue("PrintSettings")) :
+            XT.session.preferences.getValue("PrintSettings"),
+        foundPrinter;
+
+      if (userPrintPref) {
+        foundPrinter = _.find(userPrintPref, function (val, key) {
+          // TODO: What if the printer name doesn't match a real printer in CUPS? Return notify
+          // popup error message and print in browser. Somehow need to go look at CUPS printers.
+          return key === modelName.suffix();
+        });
+      }
+      // Currently XV.List and XV.Workspace handle false by opening the report in a new tab.
+      return foundPrinter === "Browser" ? false : foundPrinter;
+    },
+
+    /**
       Returns the default site if profiled, otherwise returns
       the first alpha active selling site
     */

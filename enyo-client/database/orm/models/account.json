@@ -173,6 +173,16 @@
         }
       },
       {
+        "name": "documents",
+        "toMany": {
+          "type": "DocumentAssociation",
+          "column": "crmacct_id",
+          "inverse": "source",
+          "sourceType": "CRMA",
+          "isNested": true
+        }
+      },
+      {
         "name":"comments",
         "toMany":{
           "isNested":true,
@@ -189,136 +199,8 @@
           "column":"crmacct_id",
           "inverse":"account"
         }
-      },
-      {
-        "name":"contacts",
-        "toMany":{
-          "isNested":true,
-          "type":"AccountContact",
-          "column":"crmacct_id",
-          "inverse":"source"
-        }
-      },
-      {
-        "name":"incidents",
-        "toMany":{
-          "isNested":true,
-          "type":"AccountIncident",
-          "column":"crmacct_id",
-          "inverse":"source"
-        }
-      },
-      {
-        "name":"items",
-        "toMany":{
-          "isNested":true,
-          "type":"AccountItem",
-          "column":"crmacct_id",
-          "inverse":"source"
-        }
-      },
-      {
-        "name":"files",
-        "toMany":{
-          "isNested":true,
-          "type":"AccountFile",
-          "column":"crmacct_id",
-          "inverse":"source"
-        }
-      },
-      {
-        "name":"urls",
-        "toMany":{
-          "isNested":true,
-          "type":"AccountUrl",
-          "column":"crmacct_id",
-          "inverse":"source"
-        }
-      },
-      {
-        "name":"accounts",
-        "toMany":{
-          "isNested":true,
-          "type":"AccountAccount",
-          "column":"crmacct_id",
-          "inverse":"source"
-        }
       }
     ],
-    "isSystem":true
-  },
-  {
-    "context":"xtuple",
-    "nameSpace":"XM",
-    "type":"AccountAccount",
-    "table":"xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
-    "comment":"Account Account Map",
-    "privileges":{
-      "all":{
-        "create":true,
-        "read":true,
-        "update":false,
-        "delete":true
-      }
-    },
-    "properties":[
-      {
-        "name":"id",
-        "attr":{
-          "type":"Number",
-          "column":"id",
-          "isPrimaryKey":true
-        }
-      },
-      {
-        "name":"sourceType",
-        "attr":{
-          "type":"String",
-          "column":"source_type",
-          "value":"CRMA"
-        }
-      },
-      {
-        "name": "uuid",
-        "attr": {
-          "type": "String",
-          "column": "obj_uuid",
-          "isNaturalKey": true
-        }
-      },
-      {
-        "name":"source",
-        "attr":{
-          "type":"Number",
-          "column":"source_id"
-        }
-      },
-      {
-        "name":"targetType",
-        "attr":{
-          "type":"String",
-          "column":"target_type",
-          "value":"CRMA"
-        }
-      },
-      {
-        "name":"account",
-        "toOne":{
-          "isNested":true,
-          "type":"AccountRelation",
-          "column":"target_id"
-        }
-      },
-      {
-        "name":"purpose",
-        "attr":{
-          "type":"String",
-          "column":"purpose"
-        }
-      }
-    ],
-    "isNestedOnly":true,
     "isSystem":true
   },
   {
@@ -640,154 +522,6 @@
   {
     "context":"xtuple",
     "nameSpace":"XM",
-    "type":"AccountContact",
-    "table":"xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
-    "comment":"Account Contact Map",
-    "privileges":{
-      "all":{
-        "create":true,
-        "read":true,
-        "update":false,
-        "delete":true
-      }
-    },
-    "properties":[
-      {
-        "name":"id",
-        "attr":{
-          "type":"Number",
-          "column":"id",
-          "isPrimaryKey":true
-        }
-      },
-      {
-        "name": "uuid",
-        "attr": {
-          "type": "String",
-          "column": "obj_uuid",
-          "isNaturalKey": true
-        }
-      },
-      {
-        "name":"sourceType",
-        "attr":{
-          "type":"String",
-          "column":"source_type",
-          "value":"CRMA"
-        }
-      },
-      {
-        "name":"source",
-        "attr":{
-          "type":"Number",
-          "column":"source_id"
-        }
-      },
-      {
-        "name":"targetType",
-        "attr":{
-          "type":"String",
-          "column":"target_type",
-          "value":"T"
-        }
-      },
-      {
-        "name":"contact",
-        "toOne":{
-          "isNested":true,
-          "type":"ContactRelation",
-          "column":"target_id"
-        }
-      },
-      {
-        "name":"purpose",
-        "attr":{
-          "type":"String",
-          "column":"purpose"
-        }
-      }
-    ],
-    "isNestedOnly":true,
-    "isSystem":true
-  },
-  {
-    "context":"xtuple",
-    "nameSpace":"XM",
-    "type":"AccountFile",
-    "table":"xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
-    "comment":"Account File Map",
-    "privileges":{
-      "all":{
-        "create":true,
-        "read":true,
-        "update":false,
-        "delete":true
-      }
-    },
-    "properties":[
-      {
-        "name":"id",
-        "attr":{
-          "type":"Number",
-          "column":"id",
-          "isPrimaryKey":true
-        }
-      },
-      {
-        "name": "uuid",
-        "attr": {
-          "type": "String",
-          "column": "obj_uuid",
-          "isNaturalKey": true
-        }
-      },
-      {
-        "name":"sourceType",
-        "attr":{
-          "type":"String",
-          "column":"source_type",
-          "value":"CRMA"
-        }
-      },
-      {
-        "name":"source",
-        "attr":{
-          "type":"Number",
-          "column":"source_id"
-        }
-      },
-      {
-        "name":"targetType",
-        "attr":{
-          "type":"String",
-          "column":"target_type",
-          "value":"FILE"
-        }
-      },
-      {
-        "name":"file",
-        "toOne":{
-          "isNested":true,
-          "type":"FileRelation",
-          "column":"target_id"
-        }
-      },
-      {
-        "name":"purpose",
-        "attr":{
-          "type":"String",
-          "column":"purpose"
-        }
-      }
-    ],
-    "isNestedOnly":true,
-    "isSystem":true
-  },
-  {
-    "context":"xtuple",
-    "nameSpace":"XM",
     "type":"AccountRelation",
     "table":"crmacct",
     "isRest":true,
@@ -847,6 +581,15 @@
           "isNested":true,
           "type":"UserAccountRelation",
           "column":"crmacct_owner_username",
+          "inverse":"username"
+        }
+      },
+      {
+        "name":"userAccount",
+        "toOne":{
+          "isNested":true,
+          "type":"UserAccountRelation",
+          "column":"crmacct_usr_username",
           "inverse":"username"
         }
       }
@@ -937,228 +680,6 @@
         }
       }
     ],
-    "isSystem":true
-  },
-  {
-    "context":"xtuple",
-    "nameSpace":"XM",
-    "type":"AccountIncident",
-    "table":"xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
-    "comment":"Account Incident Map",
-    "privileges":{
-      "all":{
-        "create":true,
-        "read":true,
-        "update":false,
-        "delete":true
-      }
-    },
-    "properties":[
-      {
-        "name":"id",
-        "attr":{
-          "type":"Number",
-          "column":"id",
-          "isPrimaryKey":true
-        }
-      },
-      {
-        "name": "uuid",
-        "attr": {
-          "type": "String",
-          "column": "obj_uuid",
-          "isNaturalKey": true
-        }
-      },
-      {
-        "name":"sourceType",
-        "attr":{
-          "type":"String",
-          "column":"source_type",
-          "value":"CRMA"
-        }
-      },
-      {
-        "name":"source",
-        "attr":{
-          "type":"Number",
-          "column":"source_id"
-        }
-      },
-      {
-        "name":"targetType",
-        "attr":{
-          "type":"String",
-          "column":"target_type",
-          "value":"INCDT"
-        }
-      },
-      {
-        "name":"incident",
-        "toOne":{
-          "isNested":true,
-          "type":"IncidentRelation",
-          "column":"target_id"
-        }
-      },
-      {
-        "name":"purpose",
-        "attr":{
-          "type":"String",
-          "column":"purpose"
-        }
-      }
-    ],
-    "isNestedOnly":true,
-    "isSystem":true
-  },
-  {
-    "context":"xtuple",
-    "nameSpace":"XM",
-    "type":"AccountItem",
-    "table":"xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
-    "comment":"Account Item Map",
-    "privileges":{
-      "all":{
-        "create":true,
-        "read":true,
-        "update":false,
-        "delete":true
-      }
-    },
-    "properties":[
-      {
-        "name":"id",
-        "attr":{
-          "type":"Number",
-          "column":"id",
-          "isPrimaryKey":true
-        }
-      },
-      {
-        "name": "uuid",
-        "attr": {
-          "type": "String",
-          "column": "obj_uuid",
-          "isNaturalKey": true
-        }
-      },
-      {
-        "name":"sourceType",
-        "attr":{
-          "type":"String",
-          "column":"source_type",
-          "value":"CRMA"
-        }
-      },
-      {
-        "name":"source",
-        "attr":{
-          "type":"Number",
-          "column":"source_id"
-        }
-      },
-      {
-        "name":"targetType",
-        "attr":{
-          "type":"String",
-          "column":"target_type",
-          "value":"I"
-        }
-      },
-      {
-        "name":"item",
-        "toOne":{
-          "isNested":true,
-          "type":"ItemRelation",
-          "column":"target_id"
-        }
-      },
-      {
-        "name":"purpose",
-        "attr":{
-          "type":"String",
-          "column":"purpose"
-        }
-      }
-    ],
-    "isNestedOnly":true,
-    "isSystem":true
-  },
-  {
-    "context":"xtuple",
-    "nameSpace":"XM",
-    "type":"AccountUrl",
-    "table":"xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
-    "comment":"Account Url Map",
-    "privileges":{
-      "all":{
-        "create":true,
-        "read":true,
-        "update":false,
-        "delete":true
-      }
-    },
-    "properties":[
-      {
-        "name":"id",
-        "attr":{
-          "type":"Number",
-          "column":"id",
-          "isPrimaryKey":true
-        }
-      },
-      {
-        "name": "uuid",
-        "attr": {
-          "type": "String",
-          "column": "obj_uuid",
-          "isNaturalKey": true
-        }
-      },
-      {
-        "name":"sourceType",
-        "attr":{
-          "type":"String",
-          "column":"source_type",
-          "value":"CRMA"
-        }
-      },
-      {
-        "name":"source",
-        "attr":{
-          "type":"Number",
-          "column":"source_id"
-        }
-      },
-      {
-        "name":"targetType",
-        "attr":{
-          "type":"String",
-          "column":"target_type",
-          "value":"URL"
-        }
-      },
-      {
-        "name":"url",
-        "toOne":{
-          "isNested":true,
-          "type":"Url",
-          "column":"target_id"
-        }
-      },
-      {
-        "name":"purpose",
-        "attr":{
-          "type":"String",
-          "column":"purpose"
-        }
-      }
-    ],
-    "isNestedOnly":true,
     "isSystem":true
   }
 ]

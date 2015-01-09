@@ -26,7 +26,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     @property {String} status [required, default: New](Specify a system-defined Incident status to assign to the Incident from the available options)
     @property {IncidentResolution} resolution (Specify a user-defined Resolution to assign the Incident)
     @property {IncidentSeverity} severity (Specify a user-defined Severity to assign the Incident)
-    @property {UserAccount} owner 
+    @property {UserAccount} owner
     @property {Employee}  assignedTo (Specify the user you want to assign the Incident to)
     @property {String} notes (This is a scrolling text field with word-wrapping for entering general Notes related to the Incident. When a Note is entered, the content of the Note will also automatically be inserted as a Comment on the Incident. The Comment created this way may not be edited; however, if you edit the Note, the associated Comment will include your edits)
     @property {Item} item (Use the field to link an Incident to a specific Item or Lot/Serial Number)
@@ -34,18 +34,9 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     @property {Date} updated
     @property {IncidentHistory} history (To view the history associated with an Incident, select the "History" tab)
     @property {IncidentAlarm} alarms ()
-    @property {IncidentAccount} accounts
     @property {IncidentComment} comments (To view system-generated Comments associated with an Incident or to add new Comments of your own. select the "Comments" tab)
-    @property {IncidentCharacterisitic} characterisitcs 
-    @property {IncidentContact} contacts
-    @property {IncidentIncident} incidents
-    @property {IncidentOpportunity} opportunities
-    @property {IncidentItem} items
-    @property {IncidentFile} files
-    @property {IncidentUrl} urls
-    @property {IncidentToDo} Todos
-    @property {IncidentProject} Projects
-    @property {IncidentCustomer} Customers
+    @property {IncidentCharacterisitic} characterisitcs
+    @property {DocumentAssociations} documents
   */
   var spec = {
     recordType: "XM.Incident",
@@ -71,10 +62,9 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     attributes: ["id", "number", "description", "category", "isPublic", "account", "contact",
     "priority", "status", "resolution", "severity", "owner", "assignedTo", "notes", "item",
     "recurrences", "created", "updated", "alarms", "history", "comments", "characteristics",
-    "contacts", "items", "files", "urls", "accounts", "incidents", "uuid", "opportunities",
-    "toDos", "toDoRelations", "project", "projects", "customers"],
+    "uuid", "toDoRelations", "project", "documents"],
     requiredAttributes: ["description", "status", "created", "category", "account", "contact",
-    "number"], 
+    "number"],
     /**
       @member Setup
       @memberof Incident
@@ -108,13 +98,38 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     }
   };
   var additionalTests = function () {
+    describe("Incident status behavior", function () {
+      var incidentModel;
+
+      beforeEach(function () {
+        incidentModel = new XM.Incident();
+        incidentModel.initialize(null, {isNew: true});
+      });
+      it("Incident status starts out as new", function () {
+        assert.equal(incidentModel.get("status"), XM.Incident.NEW);
+      });
+      it("Incident status gets set to assigned when user is assigned to it", function () {
+        incidentModel.set("assignedTo", new XM.UserAccountRelation());
+        assert.equal(incidentModel.get("status"), XM.Incident.ASSIGNED);
+      });
+      it("Incident status does not revert to assigned from closed when user is assigned to it", function () {
+        incidentModel.set("status", XM.Incident.CLOSED);
+        incidentModel.set("assignedTo", new XM.UserAccountRelation());
+        assert.equal(incidentModel.get("status"), XM.Incident.CLOSED);
+      });
+      it("Incident status does not revert to assigned from resolved when user is assigned to it", function () {
+        incidentModel.set("status", XM.Incident.RESOLVED);
+        incidentModel.set("assignedTo", new XM.UserAccountRelation());
+        assert.equal(incidentModel.get("status"), XM.Incident.RESOLVED);
+      });
+    });
     /**
     @member Privileges
     @memberof Incident
     @description Users with "ViewPersonalIncidents" privilege can read their personal Incidents
-    but cannot read the contact's owned by other users. Users with "MaintainPersonalIncidents" 
+    but cannot read the contact's owned by other users. Users with "MaintainPersonalIncidents"
     privilege can create and update their personal Incidents but not the Incidents owned
-    by other users 
+    by other users
     */
     it.skip("Users with \"ViewPersonalIncidents\" privilege can read their personal Incidents" +
       "but cannot read the Incidents owned by other users. ", function () {
@@ -188,7 +203,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     @description Contacts search should display only contacts related to the specific account, if
     account is already selected
     */
-    it.skip("History panel should be available which displays the Incident history", function () {
+    it.skip("Contacts search should display only contacts related to the specific account", function () {
     });
     /**
     @member Other
@@ -196,7 +211,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     @description Characteristics Drop down list should display the characteristics assigned to the
      Incidents
     */
-    it.skip("History panel should be available which displays the Incident history", function () {
+    it.skip("Characteristics Drop down list should display incident characteristics", function () {
     });
   };
   exports.spec = spec;

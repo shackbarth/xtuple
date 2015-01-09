@@ -206,7 +206,7 @@ white:true*/
                   XM.jsonpatch.apply(attrs, data.patches);
                   cModel.etag = data.etag;
 
-                  // This is a hack to work around Backbone messing with 
+                  // This is a hack to work around Backbone messing with
                   // attributes when we don't want it to. Parse function
                   // on model handles the other side of this
                   options.fixAttributes = cModel.attributes;
@@ -241,7 +241,8 @@ white:true*/
         };
 
       _(payload).extend({
-        encoding: options.encoding || XT.session.config.encoding
+        encoding: options.encoding || XT.session.config.encoding,
+        queryOnPrimaryKey: options.queryOnPrimaryKey
       });
 
       return XT.Request
@@ -259,7 +260,8 @@ white:true*/
       // handle error
       if (inResponse.isError) {
         if (inSender.error) {
-          params.error = inResponse.message;
+          // inResponse.message sometimes gets lost in the vagaries of socket-io
+          params.error = inResponse.message || inResponse.errorMessage;
           error = XT.Error.clone('xt1001', { params: params });
           inSender.error.call(this, error);
         }

@@ -10,3 +10,8 @@ select xt.add_inheritance('prj', 'xt.obj');
 select xt.add_constraint('prj', 'prj_obj_uui_id','unique(obj_uuid)', 'public');
 
 create trigger prj_owner_change after insert on prj for each row execute procedure xt.owner_record_did_change();
+
+-- auto workflow generatation trigger
+drop trigger if exists prjwf_after_insert on prj;
+create trigger prjwf_after_insert after insert on prj for each row
+  execute procedure xt.createwf_after_insert();

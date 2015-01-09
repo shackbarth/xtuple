@@ -25,7 +25,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     // is a function that returns another function, and express allows routes to
     // be defined in such a way as to chain these types of functions together in an array.
     ensureLogin = require('connect-ensure-login').ensureLoggedIn(logoutPath),
-    analysis = require('./analysis'),
     app = require('./app'),
     auth = require('./auth'),
     authorizeNet = require('./authorize-net'),
@@ -37,6 +36,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     file = require('./file'),
     generateReport = require('./generate_report'),
     generateOauthKey = require('./generate_oauth_key'),
+    installExtension = require('./install_extension'),
     locale = require('./locale'),
     passport = require('passport'),
     redirector = require('./redirector'),
@@ -82,6 +82,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     passport.authenticate('bearer', { session: false }),
     restRouter.router
   ];
+  exports.restBrowserRouter = [
+    ensureLogin,
+    restRouter.router
+  ];
 
   //
   // Custom routes
@@ -94,9 +98,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.file = [ensureLogin, file.file];
   exports.generateOauthKey = [ensureLogin, generateOauthKey.generateKey];
   exports.generateReport = [ensureLogin, generateReport.generateReport];
+  exports.installExtension = [ensureLogin, installExtension.installExtension];
   exports.locale = [ensureLogin, locale.locale];
   exports.redirect = redirector.redirect;
-  exports.analysis = [ensureLogin, analysis.analysis];
   exports.resetPassword = [ensureLogin, changePassword.resetPassword];
   exports.revokeOauthToken = [ensureLogin, revokeOauthToken.revokeToken];
   exports.vcfExport = [ensureLogin, vcfExport.vcfExport];

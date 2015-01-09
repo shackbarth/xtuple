@@ -14,15 +14,6 @@
     ],
     "properties": [
       {
-        "name": "customers",
-        "toMany": {
-          "isNested": true,
-          "type": "OpportunityCustomer",
-          "column": "ophead_id",
-          "inverse": "source"
-        }
-      },
-      {
         "name": "quoteRelations",
         "toMany": {
           "type": "QuoteRelation",

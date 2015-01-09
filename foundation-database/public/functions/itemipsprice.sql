@@ -18,7 +18,7 @@ DECLARE
   _item RECORD;
   _cust RECORD;
   _shipto RECORD;
-  _iteminvpricerat NUMERIC := 1.0;
+  _itempricepricerat NUMERIC := 1.0;
   _listprice NUMERIC := 0.0;
   _qty NUMERIC;
   _asof DATE;
@@ -38,7 +38,7 @@ BEGIN
   _asof := COALESCE(pAsOf, CURRENT_DATE);
 
 --  Cache Item, Customer and Shipto
-  SELECT item.*, itemCost(itemsite_id) AS invcost INTO _item
+  SELECT item.*, (itemCost(itemsite_id) / itemuomtouomratio(item_id, item_inv_uom_id, item_price_uom_id)) AS invcost INTO _item
   FROM item LEFT OUTER JOIN itemsite ON (itemsite_item_id=item_id AND itemsite_warehous_id=pSiteid)
   WHERE (item_id=pItemid);
 
@@ -52,7 +52,7 @@ BEGIN
 
 -- Get a value here so we do not have to call the function several times
   SELECT itemuomtouomratio(pItemid, pPriceUOM, _item.item_price_uom_id) AS ratio
-    INTO _iteminvpricerat;
+    INTO _itempricepricerat;
 
 -- First get a sales price if any so we when we find other prices
 -- we can determine if we want that price or this price.
@@ -64,15 +64,15 @@ BEGIN
          CASE WHEN (ipsitem_type = 'N') THEN
                (ipsitem_price * itemuomtouomratio(_item.item_id, pPriceUOM, ipsitem_price_uom_id))
               WHEN (ipsitem_type = 'D') THEN
-               noNeg(_item.item_listprice - (_item.item_listprice * ipsitem_discntprcnt) - ipsitem_fixedamtdiscount) * _iteminvpricerat
+               noNeg(_item.item_listprice - (_item.item_listprice * ipsitem_discntprcnt) - ipsitem_fixedamtdiscount) * _itempricepricerat
               WHEN ((ipsitem_type = 'M') AND _long30markups AND _wholesalepricecosting) THEN
-               (_item.item_listcost / (1.0 - ipsitem_discntprcnt) + ipsitem_fixedamtdiscount) * _iteminvpricerat
+               (_item.item_listcost / (1.0 - ipsitem_discntprcnt) + ipsitem_fixedamtdiscount) * _itempricepricerat
               WHEN ((ipsitem_type = 'M') AND _long30markups) THEN
-               (_item.invcost / (1.0 - ipsitem_discntprcnt) + ipsitem_fixedamtdiscount) * _iteminvpricerat
+               (_item.invcost / (1.0 - ipsitem_discntprcnt) + ipsitem_fixedamtdiscount) * _itempricepricerat
               WHEN (ipsitem_type = 'M' AND _wholesalepricecosting) THEN
-               (_item.item_listcost + (_item.item_listcost * ipsitem_discntprcnt) + ipsitem_fixedamtdiscount) * _iteminvpricerat
+               (_item.item_listcost + (_item.item_listcost * ipsitem_discntprcnt) + ipsitem_fixedamtdiscount) * _itempricepricerat
               WHEN (ipsitem_type = 'M') THEN
-               (_item.invcost + (_item.invcost * ipsitem_discntprcnt) + ipsitem_fixedamtdiscount) * _iteminvpricerat
+               (_item.invcost + (_item.invcost * ipsitem_discntprcnt) + ipsitem_fixedamtdiscount) * _itempricepricerat
               ELSE 0.00
          END AS ipsprice_price,
          CASE WHEN (ipsitem_item_id=_item.item_id) THEN itemuomtouom(ipsitem_item_id, ipsitem_qty_uom_id, NULL, ipsitem_qtybreak)
@@ -86,7 +86,7 @@ BEGIN
         ipsprice, ipshead, ipsass, sale
   WHERE ( (ipsprice_ipshead_id=ipshead_id)
     AND   (sale_ipshead_id=ipsprice_ipshead_id)
-    AND   (_asof BETWEEN sale_startdate AND sale_enddate)
+    AND   (_asof BETWEEN sale_startdate AND (sale_enddate - 1))
     AND   (ipsprice_qtybreak <= _qty)
     AND   (ipsass_ipshead_id=ipshead_id)
     AND ( (ipsass_shipto_id=_shipto.shipto_id)
@@ -115,15 +115,15 @@ BEGIN
            CASE WHEN (ipsitem_type = 'N') THEN
                  (ipsitem_price * itemuomtouomratio(_item.item_id, pPriceUOM, ipsitem_price_uom_id))
                 WHEN (ipsitem_type = 'D') THEN
-                 noNeg(_item.item_listprice - (_item.item_listprice * ipsitem_discntprcnt) - ipsitem_fixedamtdiscount) * _iteminvpricerat
+                 noNeg(_item.item_listprice - (_item.item_listprice * ipsitem_discntprcnt) - ipsitem_fixedamtdiscount) * _itempricepricerat
                 WHEN ((ipsitem_type = 'M') AND _long30markups AND _wholesalepricecosting) THEN
-                 (_item.item_listcost / (1.0 - ipsitem_discntprcnt) + ipsitem_fixedamtdiscount) * _iteminvpricerat
+                 (_item.item_listcost / (1.0 - ipsitem_discntprcnt) + ipsitem_fixedamtdiscount) * _itempricepricerat
                 WHEN ((ipsitem_type = 'M') AND _long30markups) THEN
-                 (_item.invcost / (1.0 - ipsitem_discntprcnt) + ipsitem_fixedamtdiscount) * _iteminvpricerat
+                 (_item.invcost / (1.0 - ipsitem_discntprcnt) + ipsitem_fixedamtdiscount) * _itempricepricerat
                 WHEN (ipsitem_type = 'M' AND _wholesalepricecosting) THEN
-                 (_item.item_listcost + (_item.item_listcost * ipsitem_discntprcnt) + ipsitem_fixedamtdiscount) * _iteminvpricerat
+                 (_item.item_listcost + (_item.item_listcost * ipsitem_discntprcnt) + ipsitem_fixedamtdiscount) * _itempricepricerat
                 WHEN (ipsitem_type = 'M') THEN
-                 (_item.invcost + (_item.invcost * ipsitem_discntprcnt) + ipsitem_fixedamtdiscount) * _iteminvpricerat
+                 (_item.invcost + (_item.invcost * ipsitem_discntprcnt) + ipsitem_fixedamtdiscount) * _itempricepricerat
                 ELSE 0.00
            END AS protoprice,
            CASE WHEN (ipsitem_item_id=_item.item_id) THEN itemuomtouom(ipsitem_item_id, ipsitem_qty_uom_id, NULL, ipsitem_qtybreak)
@@ -135,7 +135,7 @@ BEGIN
     FROM ipsass JOIN ipshead ON (ipshead_id=ipsass_ipshead_id)
                 JOIN ipsiteminfo ON (ipsitem_ipshead_id=ipshead_id)
     WHERE ((ipsitem_item_id=_item.item_id) OR (ipsitem_prodcat_id=_item.item_prodcat_id))
-      AND (_asof BETWEEN ipshead_effective AND ipshead_expires)
+      AND (_asof BETWEEN ipshead_effective AND (ipshead_expires - 1))
       AND ((ipsitem_warehous_id=pSiteid) OR (ipsitem_warehous_id IS NULL))
       AND ( (ipsass_shipto_id=_shipto.shipto_id)
        OR   ((COALESCE(LENGTH(ipsass_shipto_pattern), 0) > 0) AND (_shipto.shipto_num ~ ipsass_shipto_pattern))

@@ -19,6 +19,7 @@ SELECT DISTINCT ON (incdtpriority_order, ophead_target_date, ophead_name, ophead
        optype_name,
        (ophead_probability_prcnt * .01) AS ophead_probability_prcnt,
        ophead_amount,
+       (COALESCE(ophead_amount,0) * COALESCE(ophead_probability_prcnt * 0.01)) AS value,	
        currConcat(ophead_curr_id) As f_currency,
        ophead_target_date,
        ophead_actual_date,
@@ -27,6 +28,9 @@ SELECT DISTINCT ON (incdtpriority_order, ophead_target_date, ophead_name, ophead
        formatDate(ophead_target_date) AS f_targetdate,
        formatDate(ophead_actual_date) AS f_actualdate,
        'extprice' AS ophead_amount_xtnumericrole,
+       'extprice' AS value_xtnumericrole,
+       0 AS ophead_amount_xttotalrole,
+       0 AS value_xttotalrole,
        'percent' AS ophead_probability_prcnt_xtnumericrole
 <? foreach("char_id_text_list") ?>
   , charass_alias<? literal("char_id_text_list") ?>.charass_value AS char<? literal("char_id_text_list") ?>

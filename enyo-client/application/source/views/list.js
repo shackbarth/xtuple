@@ -54,7 +54,7 @@ trailing:true, white:true, strict: false*/
             {kind: "XV.ListAttr", attr: "name"}
           ]},
           {kind: "XV.ListColumn", classes: "right-column", components: [
-            {kind: "XV.ListAttr", attr: "primaryContact.phone", },
+            {kind: "XV.ListAttr", attr: "primaryContact.phone"},
             {kind: "XV.ListAttr", attr: "primaryContact.primaryEmail"}
           ]},
           {kind: "XV.ListColumn", fit: true, components: [
@@ -101,15 +101,20 @@ trailing:true, white:true, strict: false*/
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "button-column", components: [
+            {kind: "XV.ListAttr", components: [
+              {tag: "i", classes: "icon-edit-sign hyperlink", isKey: true}
+            ]}
+          ]},
           {kind: "XV.ListColumn", classes: "name-column", components: [
-            {kind: "XV.ListAttr", formatter: "formatName", isKey: true},
+            {kind: "XV.ListAttr", formatter: "formatName"},
             {kind: "XV.ListAttr", formatter: "formatDescription1"},
           ]},
           {kind: "XV.ListColumn", classes: "right-column", components: [
             {kind: "XV.ListAttr", attr: "dueDate", placeholder: "_noDueDate".loc()},
             {kind: "XV.ListAttr", attr: "getActivityStatusString"}
           ]},
-          {kind: "XV.ListColumn", classes: "second",
+          {kind: "XV.ListColumn", classes: "third",
             components: [
             {kind: "XV.ListAttr", attr: "activityType",
               formatter: "formatType",
@@ -143,6 +148,7 @@ trailing:true, white:true, strict: false*/
       var callback = function (resp, optionsObj) {
         var navigator = this.$.navigator;
         if (!resp.answer) {
+          this.$.notifyPopup.$.customComponent.$.picker.removeNodeFromDom();
           return;
         } else if (!resp.componentValue) {
           navigator.$.contentPanels.getActive().doNotify({
@@ -175,6 +181,19 @@ trailing:true, white:true, strict: false*/
           // Send to server with dispath. Need to pass options.error callback for error handling
           XM.Model.prototype.dispatch("XM.Activity", "reassignUser", params, options);
         }
+        /*
+          XXX - hack to correct the broken scroller inside the picker (popup).
+
+          Destroy the UserPicker's decorator which removes the picker from the floatingLayer.
+          A better hack would be to address the problem of the UserPicker picker component (menu)
+          rendering directly into the floating layer. Maybe something similar to this is needed:
+          https://github.com/xtuple/xtuple/blob/4_8_x/lib/enyo-x/source/widgets/menu.js#L143
+
+          More info here:
+          http://forums.enyojs.com/discussion/1069/render-appears-to-break-scrolling-in-onyx-picker
+        */
+
+        this.$.notifyPopup.$.customComponent.$.picker.removeNodeFromDom();
       };
 
       this.doNotify({
@@ -188,7 +207,7 @@ trailing:true, white:true, strict: false*/
       });
     },
     getWorkspace: function () {
-      if (!this._lastTapIndex) {
+      if (_.isUndefined(this._lastTapIndex)) {
         // don't respond to events waterfalled from other models
         return;
       }
@@ -656,6 +675,9 @@ trailing:true, white:true, strict: false*/
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
             {kind: "XV.ListAttr", attr: "name"}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "isBase"}
           ]}
         ]}
       ]}
@@ -687,10 +709,13 @@ trailing:true, white:true, strict: false*/
             {kind: "XV.ListAttr", attr: "billingContact.phone", },
             {kind: "XV.ListAttr", attr: "billingContact.primaryEmail"}
           ]},
-          {kind: "XV.ListColumn", fit: true, components: [
+          {kind: "XV.ListColumn", classes: "descr", components: [
             {kind: "XV.ListAttr", attr: "billingContact.name",
               placeholder: "_noContact".loc()},
             {kind: "XV.ListAttr", attr: "billingContact.address"}
+          ]},
+          {kind: "XV.ListColumn", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "customerType.code"}
           ]}
         ]}
       ]}
@@ -1572,6 +1597,35 @@ trailing:true, white:true, strict: false*/
   XV.registerModelList("XM.PlannerCode", "XV.PlannerCodeList");
 
   // ..........................................................
+  // PRINTER
+  //
+
+  enyo.kind({
+    name: "XV.PrinterList",
+    kind: "XV.List",
+    label: "_printers".loc(),
+    collection: "XM.PrinterCollection",
+    parameterWidget: null,
+    query: {orderBy: [
+      {attribute: 'name'}
+    ]},
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", components: [
+            {kind: "XV.ListAttr", attr: "name", isKey: true}
+          ]},
+          {kind: "XV.ListColumn", components: [
+            {kind: "XV.ListAttr", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelList("XM.Printer", "XV.PrinterList");
+
+  // ..........................................................
   // PRODUCT CATEGORY
   //
 
@@ -1809,12 +1863,15 @@ trailing:true, white:true, strict: false*/
             ]},
             {kind: "XV.ListColumn", classes: "right-column", components: [
               {kind: "XV.ListAttr", attr: "scheduleDate",
-                placeholder: "_noSchedule".loc()},
+                placeholder: "_noSched.".loc()},
               {kind: "XV.ListAttr", attr: "total", formatter: "formatTotal"}
             ]},
-            {kind: "XV.ListColumn", fit: true, components: [
+            {kind: "XV.ListColumn", classes: "descr", components: [
               {kind: "XV.ListAttr", formatter: "formatName"},
               {kind: "XV.ListAttr", formatter: "formatShiptoOrBillto"}
+            ]},
+            {kind: "XV.ListColumn", components: [
+              {kind: "XV.ListAttr", attr: "formatHoldType", style: "color: red"}
             ]}
           ]}
         ]}
@@ -1860,6 +1917,7 @@ trailing:true, white:true, strict: false*/
     }
   });
 
+  XV.registerModelList("XM.SalesOrderListItem", "XV.SalesOrderList");
   XV.registerModelList("XM.SalesOrderRelation", "XV.SalesOrderList");
 
   // ..........................................................
@@ -2529,6 +2587,8 @@ trailing:true, white:true, strict: false*/
     ]
   });
 
+  XV.registerModelList("XM.UserAccountRelation", "XV.UserAccountList");
+
   // ..........................................................
   // STATES AND COUNTRIES
   //
@@ -2652,7 +2712,7 @@ trailing:true, white:true, strict: false*/
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
-          {kind: "XV.ListColumn", classes: "short",
+          {kind: "XV.ListColumn", classes: "first",
             components: [
             {kind: "XV.ListAttr", attr: "name", isKey: true}
           ]}

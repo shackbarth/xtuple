@@ -17,7 +17,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     @property {String} id
     @property {String} number
     @property {Boolean} isActive
-    @property {String} description1 
+    @property {String} description1
     @property {String} description2
     @property {String} itemType
     @property {ClassCode} classCode
@@ -38,13 +38,8 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     @property {String} aliases
     @property {ItemComment} comments
     @property {ItemCharacteristic} characteristics
-    @property {ItemAccount} accounts
-    @property {ItemContact} contacts
-    @property {ItemItem} items
-    @property {ItemFile} files
-    @property {ItemUrl} urls
     @property {Number} maximumDesiredcost
-    @property {ItemCustomer} customers
+    @property {DocumentAssociations} documents
   */
   var spec = {
     recordType: "XM.Item",
@@ -74,7 +69,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     "classCode", "inventoryUnit", "isFractional", "isConfigured", "notes", "extendedDescription",
     "isSold", "productCategory", "freightClass", "barcode", "listPrice", "wholesalePrice",
     "priceUnit", "productWeight", "packageWeight", "aliases", "comments", "characteristics",
-    "accounts", "contacts", "items", "files", "urls", "maximumDesiredCost", "customers"],
+    "maximumDesiredCost", "documents"],
     /**
       @member -
       @memberof Item.prototype
@@ -167,7 +162,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
       /**
       @member -
       @memberof ItemAlias.prototype
-      @description Description field should be enabled when 'Use Description' 
+      @description Description field should be enabled when 'Use Description'
           option is selected
       */
       it("Description field should be enabled when 'Use Description' " +

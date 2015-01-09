@@ -102,16 +102,48 @@ select xt.install_js('XT','Data','xtuple', $$
           attributes = attributeIsString ? [parameter.attribute] : parameter.attribute;
 
         attributes.map(function (attribute) {
-          var prop = XT.Orm.getProperty(orm, attribute),
+          var rootAttribute = (attribute.indexOf('.') < 0) ? attribute : attribute.split(".")[0],
+            prop = XT.Orm.getProperty(orm, rootAttribute),
             propName = prop.name,
             childOrm,
             naturalKey,
-            index;
+            index,
+            walkPath = function (pathParts, currentOrm, pathIndex) {
+              var currentAttributeIsString = typeof pathParts[pathIndex] === 'string',
+                currentProp = XT.Orm.getProperty(currentOrm, pathParts[pathIndex]),
+                subChildOrm,
+                naturalKey;
 
-          if ((prop.toOne || prop.toMany) && attribute.indexOf('.') < 0) {
+              if ((currentProp.toOne || currentProp.toMany)) {
+                if (currentProp.toOne && currentProp.toOne.type) {
+                  subChildOrm = that.fetchOrm(nameSpace, currentProp.toOne.type);
+                } else if (currentProp.toMany && currentProp.toMany.type) {
+                  subChildOrm = that.fetchOrm(nameSpace, currentProp.toMany.type);
+                } else {
+                  plv8.elog(ERROR, "toOne or toMany property is missing it's 'type': " + currentProp.name);
+                }
+
+                if (pathIndex < pathParts.length - 1) {
+                  /* Recurse. */
+                  walkPath(pathParts, subChildOrm, pathIndex + 1);
+                } else {
+                  /* This is the end of the path. */
+                  naturalKey = XT.Orm.naturalKey(subChildOrm);
+                  if (currentAttributeIsString) {
+                    /* add the natural key to the end of the requested attribute */
+                    parameter.attribute = attribute + "." + naturalKey;
+                  } else {
+                    /* swap out the attribute in the array for the one with the prepended natural key */
+                    index = parameter.attribute.indexOf(attribute);
+                    parameter.attribute.splice(index, 1);
+                    parameter.attribute.splice(index, 0, attribute + "."  + naturalKey);
+                  }
+                }
+              }
+            }
+
+          if ((prop.toOne || prop.toMany)) {
             /* Someone is querying on a toOne without using a path */
-            /* TODO: even if there's a path x.y, it's possible that it's still not
-              correct because the correct path maybe is x.y.naturalKeyOfY */
             if (prop.toOne && prop.toOne.type) {
               childOrm = that.fetchOrm(nameSpace, prop.toOne.type);
             } else if (prop.toMany && prop.toMany.type) {
@@ -119,15 +151,22 @@ select xt.install_js('XT','Data','xtuple', $$
             } else {
               plv8.elog(ERROR, "toOne or toMany property is missing it's 'type': " + prop.name);
             }
-            naturalKey = XT.Orm.naturalKey(childOrm);
-            if (attributeIsString) {
-              /* add the natural key to the end of the requested attribute */
-              parameter.attribute = attribute + "." + naturalKey;
+
+            if (attribute.indexOf('.') < 0) {
+              naturalKey = XT.Orm.naturalKey(childOrm);
+              if (attributeIsString) {
+                /* add the natural key to the end of the requested attribute */
+                parameter.attribute = attribute + "." + naturalKey;
+              } else {
+                /* swap out the attribute in the array for the one with the prepended natural key */
+                index = parameter.attribute.indexOf(attribute);
+                parameter.attribute.splice(index, 1);
+                parameter.attribute.splice(index, 0, attribute + "."  + naturalKey);
+              }
             } else {
-              /* swap out the attribute in the array for the one with the prepended natural key */
-              index = parameter.attribute.indexOf(attribute);
-              parameter.attribute.splice(index, 1);
-              parameter.attribute.splice(index, 0, attribute + "."  + naturalKey);
+              /* Even if there's a path x.y, it's possible that it's still not
+                correct because the correct path maybe is x.y.naturalKeyOfY */
+              walkPath(attribute.split("."), orm, 0);
             }
           }
         });
@@ -367,9 +406,6 @@ select xt.install_js('XT','Data','xtuple', $$
                       identifiers.push("jt" + (joins.length - 1));
                       identifiers.push(prop.attr.column);
                       params[pcount] += "%" + (identifiers.length - 1) + "$I.%" + identifiers.length + "$I";
-                      if (param.isLower) {
-                        params[pcount] = "lower(" + params[pcount] + ")";
-                      }
                     } else {
                       sourceTableAlias = n === 0 && !isExtension ? "t1" : "jt" + (joins.length - 1);
                       if (prop.toOne && prop.toOne.type) {
@@ -457,8 +493,15 @@ select xt.install_js('XT','Data','xtuple', $$
                 /* e.g. %1$I = $1 or %1$I is null */
                 params[pcount] = params[pcount] + " " + op + ' $' + count + ' or ' + params[pcount] + ' is null';
               } else {
-                /* e.g. %1$I = $1 */
-                params[pcount] += " " + op + ' $' + count;
+                /* It's much faster to chech that param and check it again in */
+                /* all uppercase than to lowercase all column, so add an or upper() */
+                /* e.g. (%1$I.%2$I = $1 or %1$I.%2$I = upper($1)) */
+                if (param.isLower) {
+                var foo = params[pcount];
+                  params[pcount] = '(' + params[pcount] + ' ' + op + ' $' + count + ' or ' + params[pcount] + ' ' + op + ' upper($' + count + '))';
+                } else {
+                  params[pcount] += ' ' + op + ' $' + count;
+                }
               }
 
               orClause.push(params[pcount]);
@@ -922,9 +965,23 @@ select xt.install_js('XT','Data','xtuple', $$
         encryptionKey = options.encryptionKey,
         i,
         orm = this.fetchOrm(options.nameSpace, options.type),
-        sql = this.prepareInsert(orm, data, null, encryptionKey),
+        sql,
         pkey = XT.Orm.primaryKey(orm),
         rec;
+
+      /*
+        https://github.com/xtuple/xtuple/pull/1964
+        Document associations are stored "wrong" on the client.
+        Swap out the object of a document association for its primary key
+      */
+      if (orm.type === "DocumentAssociation" && typeof data.target === "object") {
+        var targetType = XT.documentAssociations[data.targetType];
+        var targetOrm = this.fetchOrm("XM", targetType);
+        var targetNaturalKeyAttr = XT.Orm.naturalKey(targetOrm);
+        var targetId = this.getId(targetOrm, data.target[targetNaturalKeyAttr]);
+        data.target = targetId;
+      }
+      sql = this.prepareInsert(orm, data, null, encryptionKey);
 
       /* Handle extensions on the same table. */
       for (var i = 0; i < orm.extensions.length; i++) {
@@ -1689,6 +1746,31 @@ select xt.install_js('XT','Data','xtuple', $$
     },
 
     /**
+     * Get the current database server version.
+     * If the optional precision argument is passed, return the first prec
+     * fields of the full version number.
+     *
+     * @example
+     * var x   = getPgVersion(1),       // '9'
+     *     xy  = getPgVersion(2),       // '9.1'
+     *     xyz = getPgVersion(3),       // '9.1.3'
+     *     all = getPgVersion();        // '9.1.3'
+     *
+     * @param   {Number} proc - optional precision
+     * @returns {String} X[.Y[.Z]]
+     */
+    getPgVersion: function (prec) {
+      var q = plv8.execute("select setting from pg_settings " +
+                           "where name='server_version';"),
+          ret;
+      ret = q[0].setting;
+      if (typeof prec === 'number') {
+        ret = ret.split(".").slice(0,prec).join(".");
+      }
+      return ret;
+    },
+
+    /**
      * Get the oid for a given table name.
      *
      * @param {String} table name
@@ -2068,7 +2150,7 @@ select xt.install_js('XT','Data','xtuple', $$
       }
 
       /* If this object uses a natural key, go get the primary key id. */
-      if (nkey) {
+      if (nkey && !options.queryOnPrimaryKey) {
         id = this.getId(map, id);
         if (!id) {
           return false;
@@ -2360,18 +2442,22 @@ select xt.install_js('XT','Data','xtuple', $$
         lockExp,
         oid,
         pcheck,
+        pgver = 0 + XT.Data.getPgVersion(2),
         pid = options.pid || null,
-        pidSql = "select usename, procpid " +
+        pidcol = (pgver < 9.2) ? "procpid" : "pid",
+        pidSql = "select usename, {pidcol} " +
                  "from pg_stat_activity " +
                  "where datname=current_database() " +
                  " and usename=$1 " +
-                 " and procpid=$2;",
+                 " and {pidcol}=$2;",
         query,
         selectSql = "select * " +
                     "from xt.lock " +
                     "where lock_table_oid = $1 " +
                     " and lock_record_id = $2;",
         username = XT.username;
+
+      pidSql = pidSql.replace(/{pidcol}/g, pidcol);
 
       /* If passed a table name, look up the oid. */
       oid = typeof table === "string" ? this.getTableOid(table) : table;

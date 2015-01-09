@@ -7,19 +7,6 @@ white:true*/
   "use strict";
 
   XT.extensions.sales.initInvoiceModels = function () {
-    /**
-      @class
-
-      @extends XM.Model
-    */
-    XM.InvoiceSalesOrder = XM.Model.extend(
-      /** @scope XM.InvoiceSalesOrder.prototype */ {
-
-      recordType: 'XM.InvoiceSalesOrder',
-
-      isDocumentAssignment: true
-
-    });
 
     //
     // Extend invoice defaults so that the default invoice date is today
