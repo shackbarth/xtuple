@@ -60,7 +60,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     if (options.wipeViews) {
       // If we want to pre-emptively wipe out the views, the best place to do it
       // is at the start of the core application code
-      fs.readFile(path.join(__dirname, "../../../enyo-client/database/source/wipe_views.sql"),
+      fs.readFile(path.join(__dirname, "../../../database/source/wipe_views.sql"),
           function (err, wipeSql) {
         if (err) {
           callback(err);
@@ -73,7 +73,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     } else if (options.wipeOrms) {
       // If we want to pre-emptively wipe out the views, the best place to do it
       // is at the start of the core application code
-      fs.readFile(path.join(__dirname, "../../../enyo-client/database/source/delete_system_orms.sql"),
+      fs.readFile(path.join(__dirname, "../../../database/source/delete_system_orms.sql"),
           function (err, wipeSql) {
         if (err) {
           callback(err);

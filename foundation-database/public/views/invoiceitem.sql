@@ -12,12 +12,15 @@ SELECT invcitem.*, itemsite_id, cohead_number,
        ( SELECT COALESCE(SUM(taxhist_tax), 0)
          FROM invcitemtax
          WHERE (taxhist_parent_id = invcitem_id) ) AS tax,
-       ( SELECT COALESCE(SUM(shipitem_value), (itemCost(itemsite_id) * invcitem_billed), 0)
+       ( SELECT COALESCE((coitem_unitcost * invcitem_billed),
+                         SUM(shipitem_value),
+                         (itemCost(itemsite_id) * invcitem_billed),
+                         0.0)
          FROM shipitem
          WHERE (shipitem_invcitem_id = invcitem_id) ) / 
          (CASE WHEN (invcitem_billed != 0) THEN
-           (invcitem_billed * invcitem_qty_invuomratio) 
-         ELSE 1 END) AS unitcost
+                        (invcitem_billed * invcitem_qty_invuomratio) 
+               ELSE 1 END) AS unitcost
 FROM invcitem JOIN invchead ON (invchead_id = invcitem_invchead_id)
               LEFT OUTER JOIN coitem ON (coitem_id=invcitem_coitem_id)
               LEFT OUTER JOIN cohead ON (cohead_id=coitem_cohead_id)

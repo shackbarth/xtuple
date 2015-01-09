@@ -28,8 +28,7 @@ if (typeof XT === 'undefined') {
    */
   exports.getDictionarySql = function (extension, callback) {
     var isLibOrm = extension.indexOf("lib/orm") >= 0,
-      isApplicationCore = extension.indexOf("enyo-client") >= 0 &&
-        extension.indexOf("extension") < 0,
+      isApplicationCore = /xtuple$/.test(extension),
       clientHash,
       databaseHash,
       filename;
@@ -49,7 +48,7 @@ if (typeof XT === 'undefined') {
     } else if (isApplicationCore) {
       // put the client strings into one query
       // put the database strings into another query
-      clientHash = require(path.join(extension, "application/source/en/strings.js")).language.strings;
+      clientHash = require(path.join(extension, "enyo-client/application/source/en/strings.js")).language.strings;
       databaseHash = require(path.join(extension, "database/source/en/strings.js")).language.strings;
       callback(null, createQuery(clientHash) + createQuery(databaseHash, "_database_"));
 

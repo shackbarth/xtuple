@@ -723,9 +723,15 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         "-outpdf=" + reportPath,
         "-loadfromdb=" + req.query.type
       ];
-      if (req.query.params) {
-        args.push("-param=" + req.query.params);
-      }
+      var params = [];
+      if (_.isArray(req.query.param)) {
+        params = req.query.param;
+      } else if (req.query.param) {
+        params = [req.query.param];
+      } // else keep it as an empty array
+      _.each(params, function (param) {
+        args.push("-param=" + param);
+      });
       child_process.execFile("rptrender", args, done);
     };
 

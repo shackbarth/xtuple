@@ -10,7 +10,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.extensions = [
     path.join(__dirname, '../../../foundation-database'),
     path.join(__dirname, '../../../lib/orm'),
-    path.join(__dirname, '../../../enyo-client'),
+    path.join(__dirname, '../../..'),
     path.join(__dirname, '../../../enyo-client/extensions/source/crm'),
     path.join(__dirname, '../../../enyo-client/extensions/source/project'),
     path.join(__dirname, '../../../enyo-client/extensions/source/sales'),
