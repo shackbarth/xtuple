@@ -24,7 +24,8 @@ select xt.install_js('XM','UserPreference','xtuple', $$
 
   XM.UserPreference.commitPreference = function (name, value) {
     var sql = "update xt.userpref set userpref_value = $3 where userpref_usr_username = $1 and userpref_name = $2; " +
-      "insert into xt.userpref (userpref_usr_username, userpref_name, userpref_value) VALUES ($1, $2, $3) " +
+      "insert into xt.userpref (userpref_usr_username, userpref_name, userpref_value) " +
+      "select $1, $2, $3 " +
       "where not exists (select 1 from xt.userpref where userpref_usr_username = $1 and userpref_name = $2)";
     var result = plv8.execute(sql, [XT.username, name, value]);
     return {status: 200, result: result, name: name};
