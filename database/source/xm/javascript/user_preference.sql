@@ -20,6 +20,26 @@ select xt.install_js('XM','UserPreference','xtuple', $$
     "name"
   ];
   XM.UserPreference.getPreference.schema = {
+    UserPreference: {
+      properties: {
+        attributes: {
+          title: "Service request attributes",
+          description: "An array of attributes needed to get a users preferences.",
+          type: "array",
+          items: [
+            {
+              title: "Name",
+              description: "Preference Name",
+              type: "text",
+              required: true
+            }
+          ],
+          "minItems": 1,
+          "maxItems": 1,
+          required: true
+        }
+      }
+    }
   };
 
   XM.UserPreference.commitPreference = function (name, value) {
@@ -39,6 +59,32 @@ select xt.install_js('XM','UserPreference','xtuple', $$
     "value"
   ];
   XM.UserPreference.commitPreference.schema = {
+    UserPreference: {
+      properties: {
+        attributes: {
+          title: "Service request attributes",
+          description: "An array of attributes needed to set a users preferences.",
+          type: "array",
+          items: [
+            {
+              title: "Name",
+              description: "Preference Name",
+              type: "text",
+              required: true
+            },
+            {
+              title: "Value",
+              description: "Preference Value",
+              type: "text",
+              required: true
+            }
+          ],
+          "minItems": 2,
+          "maxItems": 2,
+          required: true
+        }
+      }
+    }
   };
 
 $$ );
