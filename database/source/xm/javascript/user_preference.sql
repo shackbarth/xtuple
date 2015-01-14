@@ -10,7 +10,7 @@ select xt.install_js('XM','UserPreference','xtuple', $$
   XM.UserPreference.getPreference = function (name) {
     var sql = "select userpref_value from xt.userpref where userpref_usr_username = $1 and userpref_name = $2";
     var result = plv8.execute(sql, [XT.username, name]);
-    return {status: 200, result: result, name: name};
+    return {result: result};
   };
   XM.UserPreference.getPreference.description = "Return the user preferences for the logged-in user";
   XM.UserPreference.getPreference.request = {
@@ -28,7 +28,7 @@ select xt.install_js('XM','UserPreference','xtuple', $$
       "select $1, $2, $3 " +
       "where not exists (select 1 from xt.userpref where userpref_usr_username = $1 and userpref_name = $2)";
     var result = plv8.execute(sql, [XT.username, name, value]);
-    return {status: 200, result: result, name: name};
+    return {result: result};
   };
   XM.UserPreference.commitPreference.description = "Persist a user preferences for the logged-in user";
   XM.UserPreference.commitPreference.request = {
