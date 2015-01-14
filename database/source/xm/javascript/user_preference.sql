@@ -14,13 +14,13 @@ select xt.install_js('XM','UserPreference','xtuple', $$
   };
   XM.UserPreference.getPreference.description = "Return the user preferences for the logged-in user";
   XM.UserPreference.getPreference.request = {
-    "$ref": "UserPreference"
+    "$ref": "GetPreference"
   };
   XM.UserPreference.getPreference.parameterOrder = [
     "name"
   ];
   XM.UserPreference.getPreference.schema = {
-    UserPreference: {
+    GetPreference: {
       properties: {
         attributes: {
           title: "Service request attributes",
@@ -52,14 +52,14 @@ select xt.install_js('XM','UserPreference','xtuple', $$
   };
   XM.UserPreference.commitPreference.description = "Persist a user preferences for the logged-in user";
   XM.UserPreference.commitPreference.request = {
-    "$ref": "UserPreference"
+    "$ref": "CommitPreference"
   };
   XM.UserPreference.commitPreference.parameterOrder = [
     "name",
     "value"
   ];
   XM.UserPreference.commitPreference.schema = {
-    UserPreference: {
+    CommitPreference: {
       properties: {
         attributes: {
           title: "Service request attributes",
