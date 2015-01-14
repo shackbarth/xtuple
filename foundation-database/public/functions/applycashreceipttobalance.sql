@@ -128,11 +128,12 @@ BEGIN
             ORDER BY aropen_duedate, aropen_amount, balance LOOP
 
 --  Determine Max Discount as per Terms
-    SELECT  round(noNeg(_r.balance * 
+    SELECT  COALESCE(round(noNeg(_r.balance * 
             CASE WHEN (_docDate <= determineDiscountDate(terms_id, aropen_docdate)) THEN terms_discprcnt 
-            ELSE 0.00 END - applied),2),
-            CASE WHEN (_docDate <= determineDiscountDate(terms_id, aropen_docdate)) THEN terms_discprcnt 
-            ELSE 0.00 END INTO _discount, _discprct
+            ELSE 0.00 END - applied),2), 0),
+            COALESCE(CASE WHEN (_docDate <= determineDiscountDate(terms_id, aropen_docdate)) THEN terms_discprcnt 
+            ELSE 0.00 END, 0)
+            INTO _discount, _discprct
             FROM aropen LEFT OUTER JOIN terms ON (terms_id=aropen_terms_id), 
                  (SELECT COALESCE(SUM(arapply_applied), 0.00) AS applied  
 		          FROM arapply, aropen 
