@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION _incdtBeforeTrigger() RETURNS "trigger" AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _rec          RECORD;
@@ -28,7 +28,7 @@ BEGIN
   IF (LENGTH(COALESCE(NEW.incdt_summary,''))=0) THEN
     RAISE EXCEPTION 'You must supply a valid Incident Description.';
   END IF;
-  
+
   -- CRM Account is required
   IF (NEW.incdt_crmacct_id IS NULL) THEN
     RAISE EXCEPTION 'You must supply a valid CRM Account.';
@@ -53,7 +53,7 @@ CREATE TRIGGER incdtbeforetrigger
   EXECUTE PROCEDURE _incdtBeforeTrigger();
 
 CREATE OR REPLACE FUNCTION _incdtBeforeDeleteTrigger() RETURNS TRIGGER AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _recurid     INTEGER;
@@ -95,7 +95,7 @@ CREATE TRIGGER incdtbeforedeletetrigger
   EXECUTE PROCEDURE _incdtBeforeDeleteTrigger();
 
 CREATE OR REPLACE FUNCTION _incdttrigger() RETURNS "trigger" AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _r		RECORD;
@@ -327,3 +327,26 @@ CREATE TRIGGER incdttrigger
   ON incdt
   FOR EACH ROW
   EXECUTE PROCEDURE _incdttrigger();
+
+CREATE OR REPLACE FUNCTION _incdtAfterDeleteTrigger() RETURNS TRIGGER AS $$
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+DECLARE
+
+BEGIN
+
+  DELETE
+  FROM charass
+  WHERE charass_target_type = 'INCDT'
+    AND charass_target_id = OLD.incdt_id;
+
+  RETURN OLD;
+END;
+$$ LANGUAGE 'plpgsql';
+
+SELECT dropIfExists('TRIGGER', 'incdtAfterDeleteTrigger');
+CREATE TRIGGER incdtAfterDeleteTrigger
+  AFTER DELETE
+  ON incdt
+  FOR EACH ROW
+  EXECUTE PROCEDURE _incdtAfterDeleteTrigger();

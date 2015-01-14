@@ -509,7 +509,11 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 DROP TRIGGER IF EXISTS soheadTrigger ON cohead;
-CREATE TRIGGER soheadTrigger BEFORE INSERT OR UPDATE OR DELETE ON cohead FOR EACH ROW EXECUTE PROCEDURE _soheadTrigger();
+CREATE TRIGGER soheadTrigger
+  BEFORE INSERT OR UPDATE OR DELETE
+  ON cohead
+  FOR EACH ROW
+  EXECUTE PROCEDURE _soheadTrigger();
 
 CREATE OR REPLACE FUNCTION _soheadTriggerAfter() RETURNS TRIGGER AS $$
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
@@ -534,4 +538,31 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 SELECT dropifexists('TRIGGER','soheadTriggerAfter');
-CREATE TRIGGER soheadTriggerAfter AFTER UPDATE ON cohead FOR EACH ROW EXECUTE PROCEDURE _soheadTriggerAfter();
+CREATE TRIGGER soheadTriggerAfter
+  AFTER UPDATE
+  ON cohead
+  FOR EACH ROW
+  EXECUTE PROCEDURE _soheadTriggerAfter();
+
+CREATE OR REPLACE FUNCTION _coheadAfterDeleteTrigger() RETURNS TRIGGER AS $$
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+DECLARE
+
+BEGIN
+
+  DELETE
+  FROM charass
+  WHERE charass_target_type = 'SO'
+    AND charass_target_id = OLD.cohead_id;
+
+  RETURN OLD;
+END;
+$$ LANGUAGE 'plpgsql';
+
+SELECT dropIfExists('TRIGGER', 'coheadAfterDeleteTrigger');
+CREATE TRIGGER coheadAfterDeleteTrigger
+  AFTER DELETE
+  ON cohead
+  FOR EACH ROW
+  EXECUTE PROCEDURE _coheadAfterDeleteTrigger();

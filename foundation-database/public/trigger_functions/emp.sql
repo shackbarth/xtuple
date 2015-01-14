@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION _empBeforeTrigger () RETURNS TRIGGER AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 BEGIN
 
@@ -45,11 +45,14 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 SELECT dropIfExists('TRIGGER', 'empBeforeTrigger');
-CREATE TRIGGER empBeforeTrigger BEFORE INSERT OR UPDATE ON emp
-       FOR EACH ROW EXECUTE PROCEDURE _empBeforeTrigger();
+CREATE TRIGGER empBeforeTrigger
+  BEFORE INSERT OR UPDATE
+  ON emp
+  FOR EACH ROW
+  EXECUTE PROCEDURE _empBeforeTrigger();
 
 CREATE OR REPLACE FUNCTION _empAfterTrigger () RETURNS TRIGGER AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _cmnttypeid     INTEGER;
@@ -69,7 +72,7 @@ BEGIN
       BEGIN
         INSERT INTO crmacct(crmacct_number,  crmacct_name,    crmacct_active,
                             crmacct_type,    crmacct_emp_id,  crmacct_cntct_id_1
-                  ) VALUES (NEW.emp_code,    NEW.emp_name,    NEW.emp_active, 
+                  ) VALUES (NEW.emp_code,    NEW.emp_name,    NEW.emp_active,
                             'I',             NEW.emp_id,      NEW.emp_cntct_id);
         EXIT;
       EXCEPTION WHEN unique_violation THEN
@@ -147,11 +150,14 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 SELECT dropIfExists('TRIGGER', 'empAfterTrigger');
-CREATE TRIGGER empAfterTrigger AFTER INSERT OR UPDATE ON emp
-       FOR EACH ROW EXECUTE PROCEDURE _empAfterTrigger();
+CREATE TRIGGER empAfterTrigger
+  AFTER INSERT OR UPDATE
+  ON emp
+  FOR EACH ROW
+  EXECUTE PROCEDURE _empAfterTrigger();
 
 CREATE OR REPLACE FUNCTION _empBeforeDeleteTrigger() RETURNS TRIGGER AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 BEGIN
   IF NOT (checkPrivilege('MaintainEmployees')) THEN
@@ -172,11 +178,14 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 SELECT dropIfExists('TRIGGER', 'empBeforeDeleteTrigger');
-CREATE TRIGGER empBeforeDeleteTrigger BEFORE DELETE ON emp
-       FOR EACH ROW EXECUTE PROCEDURE _empBeforeDeleteTrigger();
+CREATE TRIGGER empBeforeDeleteTrigger
+  BEFORE DELETE
+  ON emp
+  FOR EACH ROW
+  EXECUTE PROCEDURE _empBeforeDeleteTrigger();
 
 CREATE OR REPLACE FUNCTION _empAfterDeleteTrigger() RETURNS TRIGGER AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 BEGIN
   IF (fetchMetricBool('EmployeeChangeLog')) THEN
@@ -186,10 +195,18 @@ BEGIN
      WHERE (cmnttype_name='ChangeLog');
   END IF;
 
+  DELETE
+  FROM charass
+  WHERE charass_target_type = 'EMP'
+    AND charass_target_id = OLD.emp_id;
+
   RETURN OLD;
 END;
 $$ LANGUAGE 'plpgsql';
 
 SELECT dropIfExists('TRIGGER', 'empAfterDeleteTrigger');
-CREATE TRIGGER empAfterDeleteTrigger AFTER DELETE ON emp
-       FOR EACH ROW EXECUTE PROCEDURE _empAfterDeleteTrigger();
+CREATE TRIGGER empAfterDeleteTrigger
+  AFTER DELETE
+  ON emp
+  FOR EACH ROW
+  EXECUTE PROCEDURE _empAfterDeleteTrigger();

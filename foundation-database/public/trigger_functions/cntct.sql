@@ -1,6 +1,6 @@
 -- Before trigger
 CREATE OR REPLACE FUNCTION _cntctTrigger() RETURNS "trigger" AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 BEGIN
 
@@ -11,7 +11,7 @@ BEGIN
     --- clear the number from the issue cache
     PERFORM clearNumberIssue('ContactNumber', NEW.cntct_number);
   END IF;
-  
+
   RETURN NEW;
 END;
 $$ LANGUAGE 'plpgsql';
@@ -24,7 +24,7 @@ CREATE TRIGGER cntcttrigger
   EXECUTE PROCEDURE _cntctTrigger();
 
 CREATE OR REPLACE FUNCTION _cntctTriggerBeforeDelete() RETURNS "trigger" AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 BEGIN
   IF (TG_OP = 'DELETE') THEN
@@ -69,9 +69,33 @@ CREATE TRIGGER cntcttriggerbeforedelete
   FOR EACH ROW
   EXECUTE PROCEDURE _cntctTriggerBeforeDelete();
 
+-- After Delete trigger
+CREATE OR REPLACE FUNCTION _cntctAfterDeleteTrigger() RETURNS TRIGGER AS $$
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+DECLARE
+
+BEGIN
+
+  DELETE
+  FROM charass
+  WHERE charass_target_type = 'CNTCT'
+    AND charass_target_id = OLD.cntct_id;
+
+  RETURN OLD;
+END;
+$$ LANGUAGE 'plpgsql';
+
+SELECT dropIfExists('TRIGGER', 'cntctAfterDeleteTrigger');
+CREATE TRIGGER cntctAfterDeleteTrigger
+  AFTER DELETE
+  ON cntct
+  FOR EACH ROW
+  EXECUTE PROCEDURE _cntctAfterDeleteTrigger();
+
 -- After trigger
 CREATE OR REPLACE FUNCTION _cntctTriggerAfter() RETURNS "trigger" AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _cntctemlid INTEGER;
@@ -99,11 +123,11 @@ BEGIN
           cntcteml_primary=false
         WHERE ((cntcteml_cntct_id=NEW.cntct_id)
          AND (cntcteml_primary=true));
-       
+
         INSERT INTO cntcteml (
           cntcteml_cntct_id, cntcteml_primary, cntcteml_email )
         VALUES (
-          NEW.cntct_id, true, NEW.cntct_email ); 
+          NEW.cntct_id, true, NEW.cntct_email );
       ELSE
         UPDATE cntcteml SET
           cntcteml_primary=false
@@ -121,7 +145,7 @@ BEGIN
       DELETE FROM docass
        WHERE (docass_source_id=OLD.cntct_id AND docass_source_type = 'T')
           OR (docass_target_id=OLD.cntct_id AND docass_target_type = 'T');
-      
+
       RETURN OLD;
   END IF;
 

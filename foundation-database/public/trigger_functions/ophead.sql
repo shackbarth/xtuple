@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION _opheadBeforeTrigger () RETURNS TRIGGER AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _rec record;
@@ -32,11 +32,14 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 SELECT dropIfExists('TRIGGER', 'opheadBeforeTrigger');
-CREATE TRIGGER opheadBeforeTrigger BEFORE INSERT OR UPDATE ON ophead 
-FOR EACH ROW EXECUTE PROCEDURE _opheadBeforeTrigger();
+CREATE TRIGGER opheadBeforeTrigger
+  BEFORE INSERT OR UPDATE
+  ON ophead
+  FOR EACH ROW
+  EXECUTE PROCEDURE _opheadBeforeTrigger();
 
 CREATE OR REPLACE FUNCTION _opheadAfterTrigger () RETURNS TRIGGER AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _cmnttypeid INTEGER;
@@ -45,7 +48,7 @@ BEGIN
     DELETE FROM docass WHERE docass_source_id = OLD.ophead_id AND docass_source_type = 'OPP';
     DELETE FROM docass WHERE docass_target_id = OLD.ophead_id AND docass_target_type = 'OPP';
   END IF;
-  
+
   --  Comments
   IF ( SELECT (metric_value='t') FROM metric WHERE (metric_name='OpportunityChangeLog') ) THEN
 
@@ -163,5 +166,31 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 SELECT dropIfExists('TRIGGER', 'opheadAfterTrigger');
-CREATE TRIGGER opheadAfterTrigger AFTER INSERT OR UPDATE OR DELETE ON ophead 
-FOR EACH ROW EXECUTE PROCEDURE _opheadAfterTrigger();
+CREATE TRIGGER opheadAfterTrigger
+  AFTER INSERT OR UPDATE OR DELETE
+  ON ophead
+  FOR EACH ROW
+  EXECUTE PROCEDURE _opheadAfterTrigger();
+
+CREATE OR REPLACE FUNCTION _opheadAfterDeleteTrigger() RETURNS TRIGGER AS $$
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+DECLARE
+
+BEGIN
+
+  DELETE
+  FROM charass
+  WHERE charass_target_type = 'OPP'
+    AND charass_target_id = OLD.ophead_id;
+
+  RETURN OLD;
+END;
+$$ LANGUAGE 'plpgsql';
+
+SELECT dropIfExists('TRIGGER', 'opheadAfterDeleteTrigger');
+CREATE TRIGGER opheadAfterDeleteTrigger
+  AFTER DELETE
+  ON ophead
+  FOR EACH ROW
+  EXECUTE PROCEDURE _opheadAfterDeleteTrigger();

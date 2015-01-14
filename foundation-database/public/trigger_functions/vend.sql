@@ -34,8 +34,11 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 SELECT dropIfExists('TRIGGER', 'vendTrigger');
-CREATE TRIGGER vendTrigger BEFORE INSERT OR UPDATE ON vendinfo
-       FOR EACH ROW EXECUTE PROCEDURE _vendTrigger();
+CREATE TRIGGER vendTrigger
+  BEFORE INSERT OR UPDATE
+  ON vendinfo
+  FOR EACH ROW
+  EXECUTE PROCEDURE _vendTrigger();
 
 CREATE OR REPLACE FUNCTION _vendAfterTrigger () RETURNS TRIGGER AS $$
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
@@ -118,8 +121,11 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 SELECT dropIfExists('TRIGGER', 'vendAfterTrigger');
-CREATE TRIGGER vendAfterTrigger AFTER INSERT OR UPDATE ON vendinfo
-       FOR EACH ROW EXECUTE PROCEDURE _vendAfterTrigger();
+CREATE TRIGGER vendAfterTrigger
+  AFTER INSERT OR UPDATE
+  ON vendinfo
+  FOR EACH ROW
+  EXECUTE PROCEDURE _vendAfterTrigger();
 
 CREATE OR REPLACE FUNCTION _vendinfoBeforeDeleteTrigger() RETURNS TRIGGER AS $$
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
@@ -148,8 +154,11 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 SELECT dropIfExists('TRIGGER', 'vendinfoBeforeDeleteTrigger');
-CREATE TRIGGER vendinfoBeforeDeleteTrigger BEFORE DELETE ON vendinfo
-       FOR EACH ROW EXECUTE PROCEDURE _vendinfoBeforeDeleteTrigger();
+CREATE TRIGGER vendinfoBeforeDeleteTrigger
+  BEFORE DELETE
+  ON vendinfo
+  FOR EACH ROW
+  EXECUTE PROCEDURE _vendinfoBeforeDeleteTrigger();
 
 CREATE OR REPLACE FUNCTION _vendinfoAfterDeleteTrigger () RETURNS TRIGGER AS $$
 -- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
@@ -173,10 +182,18 @@ BEGIN
      WHERE (cmnttype_name='ChangeLog');
   END IF;
 
+  DELETE
+  FROM charass
+  WHERE charass_target_type = 'V'
+    AND charass_target_id = OLD.vend_id;
+
   RETURN OLD;
 END;
 $$ LANGUAGE 'plpgsql';
 
 SELECT dropIfExists('TRIGGER', 'vendinfoAfterDeleteTrigger');
-CREATE TRIGGER vendinfoAfterDeleteTrigger AFTER DELETE ON vendinfo
-       FOR EACH ROW EXECUTE PROCEDURE _vendinfoAfterDeleteTrigger();
+CREATE TRIGGER vendinfoAfterDeleteTrigger
+  AFTER DELETE
+  ON vendinfo
+  FOR EACH ROW
+  EXECUTE PROCEDURE _vendinfoAfterDeleteTrigger();
