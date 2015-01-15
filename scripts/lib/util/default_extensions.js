@@ -16,6 +16,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     path.join(__dirname, '../../../enyo-client/extensions/source/sales'),
     path.join(__dirname, '../../../enyo-client/extensions/source/billing'),
     path.join(__dirname, '../../../enyo-client/extensions/source/purchasing'),
-    path.join(__dirname, '../../../enyo-client/extensions/source/oauth2')
+    path.join(__dirname, '../../../enyo-client/extensions/source/oauth2'),
+    path.join(__dirname, '../../../node_modules/xtuple-dashboard-anything')
   ];
 }());
