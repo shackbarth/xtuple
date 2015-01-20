@@ -7,8 +7,7 @@ xTuple
 
 xTuple is open-source business management software (learn more at [xTuple.com](http://www.xtuple.com)).
 The code is managed by an eponymous company in Norfolk, VA, and our community stretches around 
-the world. Our web application is implemented as an [HTML5 node.js app](https://github.com/xtuple/xtuple/wiki/Overview).
-The other client to our server is a [desktop app](https://github.com/xtuple/qt-client) written
+the world. The xTuple client is a [desktop app](https://github.com/xtuple/qt-client) written
 in the cross-platform Qt framework.
 
 Most of our commercial customers are inventory-based manufacturers or distributors, and we have a 
@@ -36,14 +35,10 @@ we've taken special care to implement it reliably across the application.
 
 Fork us, take a test drive with our [free trial](http://www.xtuple.com/free-trial), 
 file a github issue. 
-If you want to be a contributor and are looking for a place to
-make your mark, we're keeping a list of issues that are 
-[fair game](https://github.com/xtuple/xtuple/labels/fair%20game)
-to pick off and provide a convenient, well-documented starting point into our project.
 
 ### What's Here?
 
-[This repository](http://github.com/xtuple/xtuple) contains the source code for the _xTuple ERP Web app_, an [HTML5 node.js app](http://github.com/xtuple/xtuple/wiki/Overview).
+[This repository](http://github.com/xtuple/xtuple) contains the source code for the xTuple database and its node.js middleware. You can also find code for the _xTuple ERP Web app_, an [HTML5 node.js app](http://github.com/xtuple/xtuple/wiki/Overview).
 
 ### Installing this project
 If you are looking to install xTuple for demonstration or use, please follow the instructions on the [xTuple Server wiki](https://github.com/xtuple/xtuple-server/wiki).
@@ -56,8 +51,6 @@ View the [Release Notes](https://github.com/xtuple/xtuple-documentation/tree/mas
 to see a change log.
 
 ### Additional Resources
-  * [Building an Extension Tutorial](https://github.com/xtuple/xtuple-extensions/blob/master/docs/TUTORIAL.md)
   * [Developer Wiki](https://github.com/xtuple/xtuple/wiki)
   * xTuple U [Tutorial Videos](https://github.com/xtuple/xtuple/wiki/Tutorial-Videos)
-  * [API documentation](http://xtuple.github.io/api/current)
   * [Setting up an xTuple demo environment](https://github.com/xtuple/xtuple-server/wiki)
