@@ -43,6 +43,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     });
   };
 
+  //
+  // An unmobilized database will have no xt.ext table, so we have to infer the
+  // extensions based on the packages that are installed.
+  //
   var inspectUnmobilizedDatabase = function (creds, done) {
     var extSql = "select * from public.pkghead where pkghead_name in ('xtmfg', 'xwd');",
       editionMap = {

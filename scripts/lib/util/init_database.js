@@ -13,11 +13,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     dataSource = require('../../../node-datasource/lib/ext/datasource').dataSource,
     inspectDatabaseExtensions = require("./inspect_database").inspectDatabaseExtensions;
 
-  //
-  // Wipe out the database
-  // and load it from scratch using pg_restore something.backup unless
-  // we're building from source.
-  //
+/**
+  Initialize the database by first dropping it (which will fail if you have open connections!)
+  and then building it either from source or from a backup
+*/
   var initDatabase = function (spec, creds, callback) {
     var databaseName = spec.database,
       credsClone = JSON.parse(JSON.stringify(creds)),
@@ -32,6 +31,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         dataSource.query("create database " + databaseName + " template template1;", credsClone, done);
       },
       buildSchema = function (done) {
+        // no matter which "source" file is chosen, the schema is the same: `440_schema.sql`
         var schemaPath = path.join(path.dirname(spec.source), "440_schema.sql");
         winston.info("Building schema for database " + databaseName);
 
@@ -40,7 +40,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           creds.port, '-d', databaseName, '-f', schemaPath
         ], { stdio: 'inherit' });
         process.on('exit', done);
-        
+
       },
       populateData = function (done) {
         winston.info("Populating data for database " + databaseName + " from " + spec.source);

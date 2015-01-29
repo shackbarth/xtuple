@@ -50,7 +50,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   };
 
   var composeExtensionSql = function (scriptSql, packageFile, options, callback) {
-    // each String of the scriptContents is the concatenated SQL for the script.
+    // each string of the scriptContents is the concatenated SQL for the script.
     // join these all together into a single string for the whole extension.
     var extensionSql = _.reduce(scriptSql, function (memo, script) {
       return memo + script;
