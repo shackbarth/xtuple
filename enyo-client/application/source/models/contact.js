@@ -6,13 +6,7 @@ white:true*/
 (function () {
   "use strict";
 
-  /**
-    @class
-
-    @extends XM.Document
-  */
-  XM.Honorific = XM.Document.extend({
-    /** @scope XM.Honorific.prototype */
+  XM.Honorific = XM.RestModel.extend({
 
     recordType: 'XM.Honorific',
 
@@ -173,12 +167,7 @@ white:true*/
   // METHODS
   //
 
-  /**
-    @class
-
-    @extends XM.Collection
-  */
-  XM.HonorificCollection = XM.Collection.extend(/** @lends XM.HonorificCollection.prototype */{
+  XM.HonorificCollection = XM.RestCollection.extend({
 
     model: XM.Honorific
 
