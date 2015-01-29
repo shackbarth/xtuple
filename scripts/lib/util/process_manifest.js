@@ -105,7 +105,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       packageJson = require(path.resolve(options.extensionPath, "package.json"));
     }
     //
-    // Step 2:
+    // Step 1:
     // Read the manifest files.
     //
 
@@ -140,7 +140,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       }
 
       //
-      // Step 2b:
+      // Step 2:
       //
 
       // supported use cases:
