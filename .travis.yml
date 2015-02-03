@@ -1,17 +1,24 @@
-language: node_js
-node_js:
-  - "0.10"
+language: c
 
 install:
-  - "bash scripts/install_xtuple.sh -ipn"
+  - npm install
+  - wget xtuple.com/bootstrap -qO- | sudo bash
+  - /usr/local/bin/npm install -g xtuple-server
+  - sudo xtuple-server install-dev --xt-version 4_8_x --xt-demo
 
 before_script:
-  - "cd node-datasource"
-  - "node main.js &"
-  - "sleep 10"
-  - "cd .."
+  - n 0.10.32
+  - /usr/local/bin/npm start > thelog.txt &
+  - sleep 10
 
 script:
-  - "npm run-script test-datasource"
-  - "npm run-script test"
-  - "npm run-script jshint"
+  - /usr/local/bin/npm run-script test-datasource
+  - /usr/local/bin/npm run-script test
+  - /usr/local/bin/npm run-script jshint
+
+after_failure:
+  - sudo tail -n 10000 thelog.txt
+  - sudo ls -l /var/log
+  - sudo ls -l /var/log/postgresql
+  - sudo tail -n 10000 /var/log/postgresql/postgresql-9.3-travis-4_8_x-dev.log
+  - sudo grep -r oom /var/log
