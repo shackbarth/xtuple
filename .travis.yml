@@ -3,18 +3,18 @@ language: c
 install:
   - npm install
   - wget xtuple.com/bootstrap -qO- | sudo bash
-  - /usr/local/bin/npm install -g xtuple-server
+  - npm install -g xtuple-server
   - sudo xtuple-server install-dev --xt-demo
 
 before_script:
   - n 0.10.32
-  - /usr/local/bin/npm start > thelog.txt &
+  - npm start > thelog.txt &
   - sleep 10
 
 script:
-  - /usr/local/bin/npm run-script test-datasource
-  - /usr/local/bin/npm run-script test
-  - /usr/local/bin/npm run-script jshint
+  - npm run-script test-datasource
+  - npm run-script test
+  - npm run-script jshint
 
 after_failure:
   - sudo tail -n 10000 thelog.txt
