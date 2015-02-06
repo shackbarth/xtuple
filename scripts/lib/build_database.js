@@ -60,7 +60,11 @@ var  async = require('async'),
           extensionCallback(null, "");
           return;
         }
-        // deal with directory structure quirks
+        // deal with directory structure quirks. There is a lot of business logic
+        // baked in here to deal with a lot of legacy baggage. This allows
+        // process_manifest to just deal with a bunch of instructions as far as what
+        // to do, without having to worry about the quirks that make those instructions
+        // necessary
         var baseName = path.basename(extension),
           isFoundation = extension.indexOf("foundation-database") >= 0,
           isFoundationExtension = extension.indexOf("inventory/foundation-database") >= 0 ||

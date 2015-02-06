@@ -14,6 +14,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     dataSource = require('../../../node-datasource/lib/ext/datasource').dataSource,
     inspectDatabaseExtensions = require("./inspect_database").inspectDatabaseExtensions;
 
+/*
+ Given a path to a manifest.js file (and a bunch of other possible options), parse,
+ aggregate, and return the sql that's listed in that file.
+*/
+
   // register extension and dependencies
   var getRegistrationSql = function (options, extensionLocation) {
     var registerSql = 'do $$ plv8.elog(NOTICE, "About to register extension ' +
@@ -27,6 +32,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     // infer dependencies from package.json -> peerDependencies
     // infer dependencies from manifest.js -> dependencies
+    //
+    // This is all in an in-betweensy state. The idea was to use npm more for our extensions, which means
+    // putting extension metadata in package.json instead of manifest.js. This is a work in progress.
+    //
     var isPackageJson = !!options.engines; // XXX this is a pretty rough proxy
     var dependencies = (isPackageJson ? _.omit(options.peerDependencies, "xtuple") : options.dependencies) || [];
     _.each(dependencies, function (dependency) {
@@ -41,7 +50,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   };
 
   var composeExtensionSql = function (scriptSql, packageFile, options, callback) {
-    // each String of the scriptContents is the concatenated SQL for the script.
+    // each string of the scriptContents is the concatenated SQL for the script.
     // join these all together into a single string for the whole extension.
     var extensionSql = _.reduce(scriptSql, function (memo, script) {
       return memo + script;
@@ -52,7 +61,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         extensionSql;
     }
     if (options.runJsInit) {
-      // unless it it hasn't yet been defined (ie. lib/orm),
+      // unless it it hasn't yet been defined (ie. lib/orm, or foundation-database),
       // running xt.js_init() is probably a good idea.
       extensionSql = "select xt.js_init();" + extensionSql;
     }
@@ -96,7 +105,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       packageJson = require(path.resolve(options.extensionPath, "package.json"));
     }
     //
-    // Step 2:
+    // Step 1:
     // Read the manifest files.
     //
 
@@ -131,7 +140,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       }
 
       //
-      // Step 2b:
+      // Step 2:
       //
 
       // supported use cases:
@@ -155,6 +164,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       // not sure if this is necessary, but it would look like
       // -e ../private-extensions/source/inventory/foundation-database
 
+      //
+      // Foundation means plv8-free. Only relevant for the core, and for the three commercial
+      // extensions that we've ported into this process. Once everyone is on the xtuple server
+      // we can merge all the `foundation-database` code into `database` and remove the
+      // concept of foundation-ness
+      //
       if (options.useFoundationScripts) {
         extraManifest = JSON.parse(fs.readFileSync(path.join(dbSourceRoot, "../../foundation-database/manifest.js")));
         defaultSchema = defaultSchema || extraManifest.defaultSchema;
@@ -165,6 +180,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         databaseScripts.unshift(extraManifestScripts);
         databaseScripts = _.flatten(databaseScripts);
       }
+      //
+      // Frozen means non-idempotent. Only exists for foundation code, and is mostly for table definitions.
+      // As soon as we rewrite all this code to be idempotent we can remove the concept of frozen-ness
+      // Note that will also remove the distinction between installer installs and installer updates.
+      //
       if (options.useFrozenScripts) {
         // Frozen files are not idempotent and should only be run upon first registration
         extraManifestPath = alterPaths ?
@@ -209,7 +229,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
           //
           // Incorrectly-ended sql files (i.e. no semicolon) make for unhelpful error messages
-          // when we concatenate 100's of them together. Guard against these.
+          // when we concatenate 100's of them together. Guard against these, even if it throws
+          // some false postitives when for example a file ends in a comment.
           //
           scriptContents = scriptContents.trim();
           if (scriptContents.charAt(scriptContents.length - 1) !== ';') {

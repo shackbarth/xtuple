@@ -10,6 +10,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     path = require('path'),
     winston = require('winston');
 
+/**
+  Exec psql to actually execute the query
+*/
   var sendToDatabase = function (query, credsClone, options, callback) {
     var filename = path.join(__dirname, "../../output/build_" + credsClone.database + ".sql");
     if (!fs.existsSync(path.join(__dirname, "../../output"))) {

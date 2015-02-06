@@ -6,6 +6,9 @@ if (typeof XT === 'undefined') {
   XT = {};
 }
 
+/**
+  Manages the importation and export of foreign-language translations from the database.
+*/
 (function () {
   "use strict";
 

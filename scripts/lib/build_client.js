@@ -10,6 +10,20 @@ var _ = require('underscore'),
   path = require('path'),
   rimraf = require('rimraf');
 
+
+/*
+  We hook Enyo's native build process in very creative ways to make it work within the
+  context of our extension system. This involves symlinking (and cleaning up afterwards)
+  the enyo folder alongside the extension folder, and inventing (and cleaning up
+  afterwards) a root `package.js` file. Building the core is not quite so tricky, as it's
+  closer to the use-case enyo imagined.
+
+  We store the enyo client code for each extension
+  *in the database*, and it gets served up to the browser via a dispatch call.
+  This file (with the main entry point of the `buildClient` function, at the bottom) manages
+  the creating of the SQL.
+*/
+
 (function () {
   "use strict";
 
@@ -73,6 +87,14 @@ var _ = require('underscore'),
           return;
         }
         fs.readFile(path.join(__dirname, "build", extName + ".css"), "utf8", function (err, cssCode) {
+          // we store the version of each extension along with the code, so as to know what to serve
+          // up to the browser. In an original vision, the same datasource could be used to serve
+          // different versions of the app to different installs. The xTuple Server gets rid of that
+          // flexibility, but it's still baked in to the architecture. The whole notion of serving
+          // client code from the database is quite special.
+
+          // We can get the version from package.json or manifest.js. Package.json was intended to
+          // replace manifest.js altogether once everything was an npm package.
           var version;
           if (fs.existsSync(path.resolve(extPath, "package.json"))) {
             version = require(path.resolve(extPath, "package.json")).version;
