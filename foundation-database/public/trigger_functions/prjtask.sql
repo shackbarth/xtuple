@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION _prjtaskTrigger () RETURNS TRIGGER AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 BEGIN
 
@@ -13,7 +13,7 @@ BEGIN
   ELSIF (LENGTH(COALESCE(NEW.prjtask_number,'')) = 0) THEN
     RAISE EXCEPTION 'You must ender a valid number.';
   ELSIF (LENGTH(COALESCE(NEW.prjtask_name,'')) = 0) THEN
-    RAISE EXCEPTION 'You must ender a valid name.';	
+    RAISE EXCEPTION 'You must ender a valid name.';
   END IF;
 
   RETURN NEW;
@@ -21,10 +21,14 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 SELECT dropIfExists('TRIGGER', 'prjtaskTrigger');
-CREATE TRIGGER prjtaskTrigger BEFORE INSERT OR UPDATE ON prjtask FOR EACH ROW EXECUTE PROCEDURE _prjtaskTrigger();
+CREATE TRIGGER prjtaskTrigger
+  BEFORE INSERT OR UPDATE
+  ON prjtask
+  FOR EACH ROW
+  EXECUTE PROCEDURE _prjtaskTrigger();
 
 CREATE OR REPLACE FUNCTION _prjtaskAfterTrigger () RETURNS TRIGGER AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _cmnttypeid INTEGER;
@@ -58,19 +62,46 @@ BEGIN
                            ('Completed Date Changed from ' || formatDate(OLD.prjtask_completed_date) || ' to ' || formatDate(NEW.prjtask_completed_date)) );
     END IF;
     IF (OLD.prjtask_hours_actual != NEW.prjtask_hours_actual) THEN
-      PERFORM postComment(_cmnttypeid, 'TA', NEW.prjtask_id, 
+      PERFORM postComment(_cmnttypeid, 'TA', NEW.prjtask_id,
           'Actual Hours changed from ' || formatQty(OLD.prjtask_hours_actual) || ' to ' || formatQty(NEW.prjtask_hours_actual));
     END IF;
     IF (OLD.prjtask_exp_actual != NEW.prjtask_exp_actual) THEN
-      PERFORM postComment(_cmnttypeid, 'TA', NEW.prjtask_id, 
+      PERFORM postComment(_cmnttypeid, 'TA', NEW.prjtask_id,
           'Actual Expense changed from ' || formatQty(OLD.prjtask_exp_actual) || ' to ' || formatQty(NEW.prjtask_exp_actual));
     END IF;
 
   END IF;
-  
+
   RETURN NEW;
 END;
 $$ LANGUAGE 'plpgsql';
 
 SELECT dropIfExists('TRIGGER', 'prjtaskAfterTrigger');
-CREATE TRIGGER prjtaskAfterTrigger AFTER INSERT OR UPDATE ON prjtask FOR EACH ROW EXECUTE PROCEDURE _prjtaskAfterTrigger();
+CREATE TRIGGER prjtaskAfterTrigger
+  AFTER INSERT OR UPDATE
+  ON prjtask
+  FOR EACH ROW
+  EXECUTE PROCEDURE _prjtaskAfterTrigger();
+
+CREATE OR REPLACE FUNCTION _prjtaskAfterDeleteTrigger() RETURNS TRIGGER AS $$
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+DECLARE
+
+BEGIN
+
+  DELETE
+  FROM charass
+  WHERE charass_target_type = 'TASK'
+    AND charass_target_id = OLD.prjtask_id;
+
+  RETURN OLD;
+END;
+$$ LANGUAGE 'plpgsql';
+
+SELECT dropIfExists('TRIGGER', 'prjtaskAfterDeleteTrigger');
+CREATE TRIGGER prjtaskAfterDeleteTrigger
+  AFTER DELETE
+  ON prjtask
+  FOR EACH ROW
+  EXECUTE PROCEDURE _prjtaskAfterDeleteTrigger();

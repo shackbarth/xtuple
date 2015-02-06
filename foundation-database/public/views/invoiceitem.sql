@@ -12,8 +12,7 @@ SELECT invcitem.*, itemsite_id, cohead_number,
        ( SELECT COALESCE(SUM(taxhist_tax), 0)
          FROM invcitemtax
          WHERE (taxhist_parent_id = invcitem_id) ) AS tax,
-       ( SELECT COALESCE((coitem_unitcost * invcitem_billed),
-                         SUM(shipitem_value),
+       ( SELECT COALESCE(SUM(shipitem_value),
                          (itemCost(itemsite_id) * invcitem_billed),
                          0.0)
          FROM shipitem

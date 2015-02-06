@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION _soitemTrigger() RETURNS TRIGGER AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _changelog BOOLEAN := FALSE;
@@ -54,7 +54,7 @@ BEGIN
       _shipped := true;
     END IF;
   END IF;
-  
+
   IF (TG_OP ='UPDATE') THEN
     IF ((OLD.coitem_status <> 'C') AND (NEW.coitem_status = 'C')) THEN
       SELECT qtyAtShipping(NEW.coitem_id) INTO _atShipping;
@@ -176,7 +176,7 @@ BEGIN
 	    WHERE (wo_id=OLD.coitem_order_id))) THEN
       -- Close any associated W/O
         PERFORM closeWo(OLD.coitem_order_id, FALSE, CURRENT_DATE);
-      ELSIF (OLD.coitem_order_type = 'R') THEN 
+      ELSIF (OLD.coitem_order_type = 'R') THEN
       -- Delete any associated P/R
         PERFORM deletePr(OLD.coitem_order_id);
       END IF;
@@ -231,10 +231,14 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 SELECT dropIfExists('TRIGGER', 'soitemTrigger');
-CREATE TRIGGER soitemTrigger BEFORE INSERT OR UPDATE ON coitem FOR EACH ROW EXECUTE PROCEDURE _soitemTrigger();
+CREATE TRIGGER soitemTrigger
+  BEFORE INSERT OR UPDATE
+  ON coitem
+  FOR EACH ROW
+  EXECUTE PROCEDURE _soitemTrigger();
 
 CREATE OR REPLACE FUNCTION _soitemBeforeTrigger() RETURNS TRIGGER AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _check NUMERIC;
@@ -251,20 +255,20 @@ BEGIN
   WHERE((itemsite_item_id=item_id)
   AND (itemsite_id=NEW.coitem_itemsite_id));
   _kit := COALESCE(_kit, false);
-  
+
   IF (TG_OP = 'INSERT') THEN
 
     -- If this is imported, go ahead and insert default characteristics
     IF (NEW.coitem_imported) THEN
       INSERT INTO charass (charass_target_type, charass_target_id, charass_char_id, charass_value, charass_price)
       SELECT 'SI', NEW.coitem_id, char_id, charass_value,
-             itemcharprice(item_id,char_id,charass_value,cohead_cust_id,cohead_shipto_id,NEW.coitem_qtyord,cohead_curr_id,cohead_orderdate) 
+             itemcharprice(item_id,char_id,charass_value,cohead_cust_id,cohead_shipto_id,NEW.coitem_qtyord,cohead_curr_id,cohead_orderdate)
         FROM (
            SELECT DISTINCT char_id, char_name, charass_value, item_id, cohead_cust_id, cohead_shipto_id, cohead_curr_id, cohead_orderdate
              FROM cohead, charass, char, itemsite, item
             WHERE((itemsite_id=NEW.coitem_itemsite_id)
               AND (itemsite_item_id=item_id)
-              AND (charass_target_type='I') 
+              AND (charass_target_type='I')
               AND (charass_target_id=item_id)
               AND (charass_default)
               AND (char_id=charass_char_id)
@@ -285,26 +289,26 @@ BEGIN
                     'S',
                     NEW.coitem_id,
 		    cohead_prj_id) INTO NEW.coitem_order_id
-    FROM cohead, itemsite 
+    FROM cohead, itemsite
     WHERE ((cohead_id=NEW.coitem_cohead_id)
     AND (itemsite_id=NEW.coitem_itemsite_id));
 
     INSERT INTO charass
       (charass_target_type, charass_target_id,
-       charass_char_id, charass_value) 
+       charass_char_id, charass_value)
        SELECT 'W', NEW.coitem_order_id, charass_char_id, charass_value
        FROM charass
        WHERE ((charass_target_type='SI')
        AND  (charass_target_id=NEW.coitem_id));
   END IF;
-   
+
   IF (TG_OP = 'UPDATE') THEN
 --  Update P/R date if applicable
 
     IF (NEW.coitem_scheddate <> OLD.coitem_scheddate AND NEW.coitem_order_type='R' AND NEW.coitem_order_id > 1) THEN
       UPDATE pr SET pr_duedate = NEW.coitem_scheddate WHERE (pr_order_id=NEW.coitem_id AND pr_order_type='S');
     END IF;
-    
+
 --  If closing or cancelling and there is a job item work order, then close job and distribute remaining costs
     IF ((NEW.coitem_status = 'C' AND OLD.coitem_status <> 'C')
      OR (NEW.coitem_status = 'X' AND OLD.coitem_status <> 'X'))
@@ -359,9 +363,9 @@ BEGIN
     END IF;
 
 --  Handle links to Return Authorization
-    IF (fetchMetricBool('EnableReturnAuth')) THEN 
-      SELECT * INTO _r 
-      FROM raitem,rahead 
+    IF (fetchMetricBool('EnableReturnAuth')) THEN
+      SELECT * INTO _r
+      FROM raitem,rahead
       WHERE ((raitem_new_coitem_id=NEW.coitem_id)
       AND (rahead_id=raitem_rahead_id));
       IF (FOUND) THEN
@@ -398,30 +402,34 @@ BEGIN
            WHERE((raitem_new_coitem_id=NEW.coitem_id)
              AND (raitem_notes != NEW.coitem_memo));
         END IF;
-        IF ((OLD.coitem_qtyshipped <> NEW.coitem_qtyshipped) AND 
+        IF ((OLD.coitem_qtyshipped <> NEW.coitem_qtyshipped) AND
            (NEW.coitem_qtyshipped >= _r.raitem_qtyauthorized) AND
            ((_r.raitem_disposition = 'S') OR
            (_r.raitem_status = 'O') AND
            (_r.raitem_disposition IN ('P','V')) AND
            (_r.raitem_qtyreceived >= _r.raitem_qtyauthorized))) THEN
-          UPDATE raitem SET raitem_status = 'C' 
+          UPDATE raitem SET raitem_status = 'C'
           WHERE (raitem_new_coitem_id=NEW.coitem_id);
         END IF;
       END IF;
-    END IF; 
-  END IF; 
+    END IF;
+  END IF;
 
   RETURN NEW;
 END;
 $$ LANGUAGE 'plpgsql';
 
 SELECT dropIfExists('TRIGGER', 'soitemBeforeTrigger');
-CREATE TRIGGER soitemBeforeTrigger BEFORE INSERT OR UPDATE ON coitem FOR EACH ROW EXECUTE PROCEDURE _soitemBeforeTrigger();
+CREATE TRIGGER soitemBeforeTrigger
+  BEFORE INSERT OR UPDATE
+  ON coitem
+  FOR EACH ROW
+  EXECUTE PROCEDURE _soitemBeforeTrigger();
 -- TODO: there are two BEFORE triggers. should these be merged?
 
 
 CREATE OR REPLACE FUNCTION _soitemAfterTrigger() RETURNS TRIGGER AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _check NUMERIC;
@@ -579,7 +587,7 @@ BEGIN
         WHERE ( (poitem_id=OLD.coitem_order_id)
           AND   (poitem_duedate <= (CURRENT_DATE + itemsite_eventfence)) );
       --If soitem notes changed
-      ELSIF (NEW.coitem_memo <> OLD.coitem_memo) THEN 
+      ELSIF (NEW.coitem_memo <> OLD.coitem_memo) THEN
         UPDATE poitem SET poitem_comments=NEW.coitem_memo
         WHERE ((poitem_order_id=NEW.coitem_id) AND (poitem_order_type='S'));
       END IF;
@@ -676,10 +684,14 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 SELECT dropIfExists('TRIGGER', 'soitemAfterTrigger');
-CREATE TRIGGER soitemAfterTrigger AFTER INSERT OR UPDATE ON coitem FOR EACH ROW EXECUTE PROCEDURE _soitemAfterTrigger();
+CREATE TRIGGER soitemAfterTrigger
+  AFTER INSERT OR UPDATE
+  ON coitem
+  FOR EACH ROW
+  EXECUTE PROCEDURE _soitemAfterTrigger();
 
 CREATE OR REPLACE FUNCTION _soitemBeforeDeleteTrigger() RETURNS TRIGGER AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
 
@@ -761,10 +773,14 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 SELECT dropIfExists('TRIGGER', 'soitemBeforeDeleteTrigger');
-CREATE TRIGGER soitemBeforeDeleteTrigger BEFORE DELETE ON coitem FOR EACH ROW EXECUTE PROCEDURE _soitemBeforeDeleteTrigger();
+CREATE TRIGGER soitemBeforeDeleteTrigger
+  BEFORE DELETE
+  ON coitem
+  FOR EACH ROW
+  EXECUTE PROCEDURE _soitemBeforeDeleteTrigger();
 
 CREATE OR REPLACE FUNCTION _soitemAfterDeleteTrigger() RETURNS TRIGGER AS $$
--- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
 
@@ -772,19 +788,28 @@ BEGIN
 
   IF (OLD.coitem_status = 'O') THEN
     IF ( (SELECT (count(*) < 1)
-            FROM coitem
-           WHERE ((coitem_cohead_id=OLD.coitem_cohead_id)
-             AND  (coitem_id != OLD.coitem_id)
-             AND  (coitem_status = 'O')) ) ) THEN
+          FROM coitem
+          WHERE ((coitem_cohead_id=OLD.coitem_cohead_id)
+            AND  (coitem_id != OLD.coitem_id)
+            AND  (coitem_status = 'O')) ) ) THEN
       UPDATE cohead SET cohead_status = 'C'
-       WHERE ((cohead_id=OLD.coitem_cohead_id)
-         AND  (cohead_status='O'));
+      WHERE ((cohead_id=OLD.coitem_cohead_id)
+        AND  (cohead_status='O'));
     END IF;
   END IF;
+
+  DELETE
+  FROM charass
+  WHERE charass_target_type = 'SI'
+    AND charass_target_id = OLD.coitem_id;
 
   RETURN OLD;
 END;
 $$ LANGUAGE 'plpgsql';
 
 SELECT dropIfExists('TRIGGER', 'soitemAfterDeleteTrigger');
-CREATE TRIGGER soitemAfterDeleteTrigger AFTER DELETE ON coitem FOR EACH ROW EXECUTE PROCEDURE _soitemAfterDeleteTrigger();
+CREATE TRIGGER soitemAfterDeleteTrigger
+  AFTER DELETE
+  ON coitem
+  FOR EACH ROW
+  EXECUTE PROCEDURE _soitemAfterDeleteTrigger();

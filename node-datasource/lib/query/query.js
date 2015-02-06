@@ -20,7 +20,26 @@ noarg:true, regexp:true, undef:true, strict:true, trailing:true, white:true */
       code: null
     };
     this.query = _.clone(query);
-    this.valid = _.test(this.template, query, this.error.errors);
+    // underscore clone is not cloney enough
+    var testQuery = JSON.parse(JSON.stringify(query));
+
+    /*
+    Congruence doesn't deal well with the circumstance where there are two
+    operators on the same attribute, such as:
+    { attributes:
+      { orderDate:
+        { AT_LEAST: '2015-01-16T14:33:16-05:00',
+          AT_MOST: '2015-01-23T14:33:16-05:00' } } }
+    A bit of a hack as a workaround here... if there are more than one
+    attribute, we only test the first one.
+    */
+    _.each(testQuery.attributes, function (attribute, key) {
+      if (_.keys(attribute).length > 1) {
+        testQuery.attributes[key] = _.pick(attribute, _.keys(attribute)[0]);
+      }
+    });
+
+    this.valid = _.test(this.template, testQuery, this.error.errors);
   }
 
   Query.prototype = Object.create({

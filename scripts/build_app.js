@@ -4,10 +4,9 @@
 regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global _:true */
 
-//
-// This file really just parses the arguments, and sends the real work
-// off to scripts/lib/build_all.js.
-//
+/*
+ Command-line wrapper for scripts/lib/build_all.js
+*/
 
 (function () {
   "use strict";
@@ -21,6 +20,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     .option('-d, --database [database name]', 'Use specific database. [All databases in config file.]')
     .option('-e, --extension [/path/to/extension]', 'Extension to build. [Core plus all extensions registered for the database.]')
     .option('-f, --frozen', 'Apply frozen scripts for first-time foundation extension installs.')
+    // -i is redundant with -b or -s. It's here to prevent a fat-fingering disaster. Initialization is very destructive!
     .option('-i, --initialize', 'Initialize database. Must be used with the -b or -s flag.')
     .option('-k, --keepsql', 'Do not delete the temporary sql files that represent the payload of the build.')
     .option('-n, --npmdev', 'Build an npm-linked extension without using the npm registry.')

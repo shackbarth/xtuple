@@ -39,12 +39,10 @@ var _ = require('underscore'),
       function (done) {
         // step 0: init the database, if requested
 
-        if (specs.length === 1 &&
+        if (specs.length === 1 && // don't do this to more than one database!
             specs[0].initialize &&
             (specs[0].backup || specs[0].source)) {
 
-          // The user wants to initialize the database first (i.e. Step 0)
-          // Do that, then call this function again
           initDatabase(specs[0], creds, function (err, res) {
             specs[0].wasInitialized = true;
             done(err, res);
@@ -253,13 +251,11 @@ var _ = require('underscore'),
       if (options.unregister) {
         unregister(buildSpecs, creds, callback);
       } else {
-        // synchronous build
         buildAll(buildSpecs, creds, callback);
       }
     } else {
       // build all registered extensions for the database
       async.map(databases, getRegisteredExtensions, function (err, results) {
-        // asynchronous...
         buildAll(results, creds, callback);
       });
     }
